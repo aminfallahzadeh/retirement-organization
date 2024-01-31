@@ -1,7 +1,7 @@
 function Dashboard() {
   return (
-    <div className="bg">
-      <div className="dashboard">خوش آمدید</div>
+    <div className="dashboard">
+      <h1>خوش آمدید</h1>
     </div>
   );
 }
