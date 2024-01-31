@@ -59,8 +59,8 @@ function Login() {
   useEffect(() => {
     const form = document.getElementById("form");
     form.addEventListener("mouseover", (e) => {
-      const x = (window.innerWidth / 2 - e.pageX) / 20;
-      const y = (window.innerHeight / 2 - e.pageY) / 20;
+      const x = (window.innerWidth / 2 - e.pageX) / 35;
+      const y = (window.innerHeight / 2 - e.pageY) / 35;
 
       form.style.transform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
     });
@@ -126,10 +126,7 @@ function Login() {
         </div>
 
         <div className="loginContainer__box--register">
-          <span>
-            حساب کاربری ندارید ؟ <a href="#">بسازید</a>
-          </span>
-          <button type="submit" className="btn u-margin-bottom-medium">
+          <button type="submit" className="btn">
             ورود
           </button>
         </div>
