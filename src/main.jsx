@@ -8,15 +8,15 @@ import Dashboard from "./pages/Dashboard.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/login-screen/",
+    path: "/retirement-organization/",
     element: <App />,
     children: [
       {
-        path: "/login-screen/",
+        path: "/retirement-organization/",
         element: <Login />,
       },
       {
-        path: "/login-screen/dashboard",
+        path: "/retirement-organization/dashboard",
         element: <Dashboard />,
       },
     ],
