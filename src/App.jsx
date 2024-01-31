@@ -4,23 +4,16 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import { ToastContainer } from "react-toastify";
-import Main from "./layout/Main";
 import { AuthProvider } from "./providers/AuthProvider";
 
 const router = createBrowserRouter([
   {
     path: "/retirement-organization/",
-    element: <Main />,
-    children: [
-      {
-        index: true,
-        element: <Login />,
-      },
-      {
-        path: "/retirement-organization/dashboard",
-        element: <Dashboard />,
-      },
-    ],
+    element: <Login />,
+  },
+  {
+    path: "/retirement-organization/dashboard",
+    element: <Dashboard />,
   },
 ]);
 
