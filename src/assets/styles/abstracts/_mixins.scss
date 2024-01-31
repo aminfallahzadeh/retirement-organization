@@ -1,0 +1,59 @@
+// bug fixing
+
+@mixin clearfix {
+    &::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}
+
+// meadia query manager
+
+/*
+
+$breakpoint argument choices:
+
+- phone
+- tab-port
+- tab-land
+- big-desk
+
+*/
+
+@mixin responsive($breakpoint) {
+    @if $breakpoint==phone {
+        // 600px
+        @media (max-width: 37.5em) {
+            @content;
+        }
+    }
+
+    @if $breakpoint==tab-port {
+        // 900px
+        @media (max-width: 56.25em) {
+            @content;
+        }
+    }
+
+    @if $breakpoint==tab-land {
+        // 1200px
+        @media (max-width: 75em) {
+            @content;
+        }
+    }
+
+    @if $breakpoint==mid-desk {
+        // 1500px
+        @media (max-width: 93.75em) {
+            @content;
+        }
+    }
+
+    @if $breakpoint==big-desk {
+        // 1800px
+        @media (max-width: 112.5em) {
+            @content;
+        }
+    }
+}

@@ -1,0 +1,17 @@
+.captchaContainer {
+    &__text {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        column-gap: 4rem;
+        margin: 2rem 0;
+
+        canvas {
+            border: 2px solid $color-primary;
+            border-radius: 3rem;
+            height: 5rem;
+            width: 100%;
+        }
+    }
+}

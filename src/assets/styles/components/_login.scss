@@ -1,0 +1,100 @@
+.bg {
+    background-image: url("/images/winter.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+.loginContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    perspective: 1500px;
+
+    &__box {
+        width: 45rem;
+        position: relative;
+        backdrop-filter: blur(1rem);
+        border: 2px solid #cacacaca;
+        border-radius: 1.5rem;
+        padding: 5.5rem 2.5rem 4rem 2.5rem;
+        color: $color-secondary;
+        box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
+        transition: 0.2s;
+        transform-style: preserve-3d;
+
+        &--header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 4rem;
+
+            span {
+                font-size: 3rem;
+                text-align: center;
+            }
+        }
+
+        &--rememberForgot {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5rem;
+
+            &--remember {
+                &-label {
+                    margin-right: 1rem;
+                }
+            }
+
+            a {
+                transition: all 0.25s;
+
+                &:hover {
+                    color: $color-primary-darkest;
+                }
+            }
+        }
+
+        &--register {
+            text-align: center;
+            font-size: 2rem;
+            display: flex;
+            flex-direction: row;
+
+            a {
+                font-weight: 500;
+                transition: all 0.25s;
+
+                &:hover {
+                    color: $color-primary-darkest;
+                }
+            }
+
+            span {
+                width: 100%;
+            }
+        }
+    }
+}
+
+#user {
+    margin-bottom: 1rem;
+}
+
+a {
+    text-decoration: none;
+    color: $color-secondary;
+}
+
+@media only screen and (max-width: 564px) {
+    .loginContainer {
+        padding: 2rem;
+    }
+
+    .loginContainer__box {
+        padding: 5.5rem 1.5rem 4rem 1.5rem;
+    }
+}
