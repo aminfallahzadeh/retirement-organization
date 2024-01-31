@@ -1,0 +1,37 @@
+body {
+    background-color: $color-grey-4;
+}
+
+.errorContainer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    &__message {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 4rem;
+    }
+
+    &__buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        column-gap: 4rem;
+    }
+}
+
+h1 {
+    color: $color-accent-dark;
+    font-size: 6rem;
+}
+
+p {
+    font-size: 3rem;
+    color: $color-accent-light;
+    text-align: center;
+}

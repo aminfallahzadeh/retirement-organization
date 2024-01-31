@@ -1,6 +1,11 @@
-import { TiArrowSyncOutline } from "react-icons/ti";
+// react imports
 import { useState, useRef, useEffect, useContext } from "react";
+
+// rrd imports
 import { AuthContext } from "../providers/AuthProvider";
+
+// library imports
+import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/solid";
 
 function Captcha() {
   const [captchaText, setCaptchaText] = useState(generateCaptcha(6));
@@ -22,9 +27,8 @@ function Captcha() {
 
   const style = {
     position: "absolute",
-    top: "18px",
+    top: "15px",
     left: "25px",
-    fontSize: "20px",
   };
 
   useEffect(() => {
@@ -85,7 +89,7 @@ function Captcha() {
         <canvas ref={canvasRef} width="200" height="40">
           {captchaText}
         </canvas>
-        <button onClick={regenCaptcha} className="btn">
+        <button onClick={regenCaptcha} className="btn--login">
           تلاش مجدد
         </button>
       </div>
@@ -101,7 +105,7 @@ function Captcha() {
         <label htmlFor="captcha" className="label">
           کد را وارد کنید
         </label>
-        <TiArrowSyncOutline style={style} />
+        <ArrowPathRoundedSquareIcon style={style} width={25} />
       </div>
     </div>
   );

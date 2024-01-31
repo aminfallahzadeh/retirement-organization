@@ -18,10 +18,10 @@
         width: 45rem;
         position: relative;
         backdrop-filter: blur(1rem);
-        border: 2px solid #cacacaca;
-        border-radius: 1.5rem;
+        border: 2px solid $color-grey-3;
+        border-radius: $border-radius-secondary;
         padding: 5.5rem 2.5rem 4rem 2.5rem;
-        color: $color-secondary;
+        color: $color-grey-1;
         box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
         transition: 0.2s;
         transform-style: preserve-3d;
@@ -53,7 +53,7 @@
                 transition: all 0.25s;
 
                 &:hover {
-                    color: $color-primary-darkest;
+                    color: $color-accent-dark;
                 }
             }
         }
@@ -69,7 +69,7 @@
                 transition: all 0.25s;
 
                 &:hover {
-                    color: $color-primary-darkest;
+                    color: $color-accent-dark;
                 }
             }
 
@@ -86,7 +86,7 @@
 
 a {
     text-decoration: none;
-    color: $color-secondary;
+    color: $color-grey-1;
 }
 
 @media only screen and (max-width: 564px) {

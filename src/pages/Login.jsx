@@ -1,10 +1,19 @@
-import { CiLock, CiUser } from "react-icons/ci";
+// react imports
 import { useEffect, useContext, useState } from "react";
+
+// component imports
 import Captcha from "../components/Captcha";
+
+// rrd imports
 import { AuthContext } from "../providers/AuthProvider";
-import users from "../db/userdb";
 import { useNavigate } from "react-router-dom";
+
+// datab imports
+import users from "../db/userdb";
+
+// library imports
 import { toast } from "react-toastify";
+import { LockClosedIcon, UserIcon } from "@heroicons/react/24/solid";
 
 function Login() {
   const { isCaptchaValid } = useContext(AuthContext);
@@ -37,14 +46,18 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle the form submission logic here
+    // user authentication logic
     if (isCaptchaValid && isCredentialsValid) {
       navigate("/retirement-organization/dashboard");
       toast.success("وارد شدید", {
         autoClose: 4000,
       });
+    } else if (!isCaptchaValid) {
+      toast.error("! کد امنیتی اشتباه است", {
+        autoClose: 4000,
+      });
     } else {
-      toast.error("اطلاعات صحیح نیست", {
+      toast.error("! اطلاعات ورود صحیح نیست", {
         autoClose: 4000,
       });
     }
@@ -54,7 +67,6 @@ function Login() {
     position: "absolute",
     top: "18px",
     left: "25px",
-    fontSize: "20px",
   };
 
   useEffect(() => {
@@ -89,7 +101,7 @@ function Login() {
           <label htmlFor="user" className="label">
             نام کاربری
           </label>
-          <CiUser style={style} />
+          <UserIcon style={style} width={20} />
         </div>
 
         <div className="inputBox">
@@ -103,7 +115,7 @@ function Login() {
           <label htmlFor="pass" className="label">
             کلمه عبور
           </label>
-          <CiLock style={style} />
+          <LockClosedIcon style={style} width={20} />
         </div>
 
         <div className="loginContainer__box--rememberForgot">
@@ -127,7 +139,7 @@ function Login() {
         </div>
 
         <div className="loginContainer__box--register">
-          <button type="submit" className="btn">
+          <button type="submit" className="btn--login">
             ورود
           </button>
         </div>

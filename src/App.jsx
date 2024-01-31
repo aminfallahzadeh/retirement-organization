@@ -1,11 +1,15 @@
-// import Login from "./pages/Login";
-import "react-toastify/dist/ReactToastify.css";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+// component imports
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import { ToastContainer } from "react-toastify";
-import { AuthProvider } from "./providers/AuthProvider";
 import Error from "./pages/Error";
+
+// library imports
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
+// rrd imports
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./providers/AuthProvider";
 
 const router = createBrowserRouter([
   {

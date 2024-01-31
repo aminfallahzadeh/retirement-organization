@@ -10,10 +10,10 @@
     height: 5.5rem;
     font-size: 1.6rem;
     background: transparent;
-    color: $color-secondary;
+    color: $color-grey-1;
     padding-inline: 2rem 5rem;
-    border: 2px solid $color-primary;
-    border-radius: 3rem;
+    border: 2px solid $color-grey-2;
+    border-radius: $border-radius-secondary;
     outline: none;
     text-align: right;
 }
@@ -32,8 +32,8 @@
     top: -1rem;
     right: 2rem;
     font-size: 1.6rem;
-    background-color: $color-primary;
+    background-color: $color-grey-2;
     color: $color-grey-5;
-    border-radius: 3rem;
+    border-radius: $border-radius-secondary;
     padding: 0 1rem;
 }

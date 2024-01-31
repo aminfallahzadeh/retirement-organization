@@ -8,8 +8,8 @@
         margin: 2rem 0;
 
         canvas {
-            border: 2px solid $color-primary;
-            border-radius: 3rem;
+            border: 2px solid $color-grey-2;
+            border-radius: $border-radius-secondary;
             height: 5rem;
             width: 100%;
         }

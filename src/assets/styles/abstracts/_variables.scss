@@ -1,3 +1,4 @@
+// colors
 // grey color
 $color-grey-1: #eee;
 $color-grey-2: #d6d6d6;
@@ -5,21 +6,14 @@ $color-grey-3: #a0a0a0;
 $color-grey-4: #333533;
 $color-grey-5: #252422;
 
-// yellow colors
-$color-primary-light: #ffee32;
-$color-primary-dark: #ffd100;
-$color-primary-darkest: #ff9e01;
-
-$color-orange: #eb5e28;
+// accent colors
+$color-accent-dark: #ff9e01;
+$color-accent-light: #ffcf43;
 
 // main colors
 $color-black: #000;
 $color-white: #fff;
 
-$bg-color-main: #fffcf2;
-
-$test1: #ccc5b9;
-$test2: #403d39;
-
-$color-primary: #c6c3c3;
-$color-secondary: #fff;
+// radius
+$border-radius-primary: 0.3rem;
+$border-radius-secondary: 0.6rem;
