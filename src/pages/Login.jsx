@@ -26,8 +26,9 @@ function Login() {
   const validateCredentials = (user, password) => {
     setIsCredentialsValid(false);
 
-    for (let i = 0; i < users.length; i++) {
-      if (password === users[i].psw && user === users[i].userName) {
+    for (let usr of users) {
+      console.log(usr);
+      if (password === usr.psw && user === usr.userName) {
         setIsCredentialsValid(true);
         return;
       }
@@ -38,7 +39,7 @@ function Login() {
     e.preventDefault();
     // Handle the form submission logic here
     if (isCaptchaValid && isCredentialsValid) {
-      navigate("/login-screen/dashboard");
+      navigate("/retirement-organization/dashboard");
       toast.success("وارد شدید", {
         autoClose: 4000,
       });
