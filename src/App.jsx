@@ -9,6 +9,8 @@ import { ToastContainer } from "react-toastify";
 
 // rrd imports
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+// providers
 import { AuthProvider } from "./providers/AuthProvider";
 
 const router = createBrowserRouter([
@@ -30,12 +32,10 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <>
-      <AuthProvider>
-        <RouterProvider router={router} />
-        <ToastContainer />
-      </AuthProvider>
-    </>
+    <AuthProvider>
+      <RouterProvider router={router} />
+      <ToastContainer />
+    </AuthProvider>
   );
 }
 

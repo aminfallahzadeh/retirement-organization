@@ -10,7 +10,7 @@ import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/solid";
 function Captcha() {
   const [captchaText, setCaptchaText] = useState(generateCaptcha(6));
   const [userInput, setUserInput] = useState("");
-  const { setCaptchaValid } = useContext(AuthContext);
+  const { CapthaHandler } = useContext(AuthContext);
   const canvasRef = useRef(null);
 
   function generateCaptcha(length) {
@@ -69,7 +69,7 @@ function Captcha() {
     e.preventDefault();
     setCaptchaText(generateCaptcha(6));
     setUserInput("");
-    setCaptchaValid(false);
+    CapthaHandler(false);
   }
 
   function handleInputChange(e) {
@@ -77,9 +77,9 @@ function Captcha() {
     setUserInput(input);
 
     if (input.toLowerCase() === captchaText.toLowerCase()) {
-      setCaptchaValid(true);
+      CapthaHandler(true);
     } else {
-      setCaptchaValid(false);
+      CapthaHandler(false);
     }
   }
 
