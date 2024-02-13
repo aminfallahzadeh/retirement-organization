@@ -1,10 +1,52 @@
+// react imports
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "./assets/styles/main.scss";
 import React from "react";
+
+// providers
+import { AuthProvider } from "./providers/AuthProvider";
+
+// rrd imports
+import {
+  createBrowserRouter,
+  Route,
+  RouterProvider,
+  createRoutesFromElements,
+} from "react-router-dom";
+
+// scss import
+import "./assets/styles/main.scss";
+
+// redux imports
+import { Provider } from "react-redux";
+import store from "./store";
+
+// component imports
+import App from "./App.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Login from "./pages/Login.jsx";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/retirement-organization/" element={<App />}>
+      <Route
+        index={true}
+        path="/retirement-organization/"
+        element={<Login />}
+      />
+      <Route
+        path="/retirement-organization/dashboard"
+        element={<Dashboard />}
+      />
+    </Route>
+  )
+);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </Provider>
   </React.StrictMode>
 );

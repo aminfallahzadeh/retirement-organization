@@ -4,12 +4,14 @@ import { useEffect, useContext, useState } from "react";
 // component imports
 import Captcha from "../components/Captcha";
 
+// redux imports
+import { useDispatch, useSelector } from "react-redux";
+import { useLoginMutation } from "../slices/usersApiSlice";
+import { setCredentials } from "../slices/authSlice";
+
 // rrd imports
 import { AuthContext } from "../providers/AuthProvider";
-import { useNavigate } from "react-router-dom";
-
-// datab imports
-import users from "../db/userdb";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // library imports
 import { toast } from "react-toastify";
@@ -17,37 +19,41 @@ import { LockClosedIcon, UserIcon } from "@heroicons/react/24/solid";
 
 function Login() {
   const { isCaptchaValid } = useContext(AuthContext);
-  const [userName, setUserName] = useState("");
-  const [psw, setPsw] = useState("");
-  const [isCredentialsValid, setIsCredentialsValid] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleUserInput = (e) => {
-    setUserName(e.target.value);
-    validateCredentials(e.target.value, psw);
-  };
+  const [login] = useLoginMutation();
 
-  const handlePswInput = (e) => {
-    setPsw(e.target.value);
-    validateCredentials(userName, e.target.value);
-  };
+  const { userInfo } = useSelector((state) => state.auth);
 
-  const validateCredentials = (user, password) => {
-    setIsCredentialsValid(false);
+  // check if the user logged in with serching params
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const redirect = sp.get("redirect") || "/retirement-organization/";
 
-    for (let usr of users) {
-      console.log(usr);
-      if (password === usr.psw && user === usr.userName) {
-        setIsCredentialsValid(true);
-        return;
-      }
+  //   if logged in then redirect to redirect value
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
     }
-  };
+  }, [userInfo, redirect, navigate]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // user authentication logic
-    if (isCaptchaValid && isCredentialsValid) {
+    try {
+      const res = await login({ username, password }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      navigate(redirect);
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error);
+    }
+
+    if (isCaptchaValid) {
       navigate("/retirement-organization/dashboard");
       toast.success("وارد شدید", {
         autoClose: 4000,
@@ -95,8 +101,9 @@ function Login() {
             type="text"
             id="user"
             className="input field"
+            value={username}
             required
-            onChange={handleUserInput}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <label htmlFor="user" className="label">
             نام کاربری
@@ -109,8 +116,9 @@ function Login() {
             type="password"
             id="pass"
             className="input field"
+            value={password}
             required
-            onChange={handlePswInput}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <label htmlFor="pass" className="label">
             کلمه عبور
@@ -139,7 +147,7 @@ function Login() {
         </div>
 
         <div className="loginContainer__box--register">
-          <button type="submit" className="btn--login">
+          <button type="submit" className="btn--login" onSubmit={handleSubmit}>
             ورود
           </button>
         </div>
