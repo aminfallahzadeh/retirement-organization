@@ -11,7 +11,7 @@ import { setCredentials } from "../slices/authSlice";
 
 // rrd imports
 import { AuthContext } from "../providers/AuthProvider";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // library imports
 import { toast } from "react-toastify";
@@ -29,44 +29,38 @@ function Login() {
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  // check if the user logged in with serching params
-  const { search } = useLocation();
-  const sp = new URLSearchParams(search);
-  const redirect = sp.get("redirect") || "/retirement-organization/";
-
   //   if logged in then redirect to redirect value
   useEffect(() => {
     if (userInfo) {
-      navigate(redirect);
+      navigate("/retirement-organization/dashboard");
     }
-  }, [userInfo, redirect, navigate]);
+  }, [userInfo, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // user authentication logic
     try {
       const res = await login({ username, password }).unwrap();
+      console.log(res);
       dispatch(setCredentials({ ...res }));
-      navigate(redirect);
     } catch (err) {
-      console.log(err);
       toast.error(err?.data?.message || err.error);
     }
 
-    if (isCaptchaValid) {
-      navigate("/retirement-organization/dashboard");
-      toast.success("وارد شدید", {
-        autoClose: 4000,
-      });
-    } else if (!isCaptchaValid) {
-      toast.error("! کد امنیتی اشتباه است", {
-        autoClose: 4000,
-      });
-    } else {
-      toast.error("! اطلاعات ورود صحیح نیست", {
-        autoClose: 4000,
-      });
-    }
+    // if (isCaptchaValid) {
+    //   navigate("/retirement-organization/dashboard");
+    //   toast.success("وارد شدید", {
+    //     autoClose: 4000,
+    //   });
+    // } else if (!isCaptchaValid) {
+    //   toast.error("! کد امنیتی اشتباه است", {
+    //     autoClose: 4000,
+    //   });
+    // } else {
+    //   toast.error("! اطلاعات ورود صحیح نیست", {
+    //     autoClose: 4000,
+    //   });
+    // }
   };
 
   const style = {
