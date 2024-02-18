@@ -17,10 +17,10 @@
     &__box {
         width: 450px;
         position: relative;
-        backdrop-filter: blur(1rem);
+        backdrop-filter: blur(10px);
         border: 2px solid $color-grey-3;
         border-radius: $border-radius-secondary;
-        padding: 5.5rem 2.5rem 4rem 2.5rem;
+        padding: 55px 25px 40px 25px;
         color: $color-grey-1;
         box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
         transition: 0.2s;
@@ -97,6 +97,6 @@ a {
     }
 
     .loginContainer__box {
-        padding: 5.5rem 1.5rem 4rem 1.5rem;
+        padding: 55px 15px 4px 15px;
     }
 }
