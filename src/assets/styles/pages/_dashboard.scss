@@ -1,14 +1,14 @@
-body {
-    background-color: $color-grey-5;
+.dashboard-body {
+    font-family: sahel, sans-serif;
+    text-align: right !important;
 }
 
-.dashboard {
-    position: absolute;
-    font-size: 10rem;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
+.dropdown-menu {
+    right: 0 !important;
+    left: auto !important;
+    text-align: center !important;
+}
 
-    -webkit-text-stroke: 2px red;
+.devider {
+    background-color: $color-grey-3;
 }

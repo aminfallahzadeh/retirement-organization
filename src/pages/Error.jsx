@@ -16,7 +16,7 @@ function Error() {
 
       <div className="errorContainer__buttons u-margin-top-medium">
         <button
-          className="btn btn--dark"
+          className="button btn--dark"
           onClick={() => {
             navigate(-1);
           }}
@@ -24,7 +24,7 @@ function Error() {
           صفحه قبل
           <ArrowUturnLeftIcon width={20} />
         </button>
-        <Link to="/retirement-organization/" className="btn btn--dark">
+        <Link to="/retirement-organization/" className="button btn--dark">
           صفحه اصلی
           <HomeIcon width={20} />
         </Link>

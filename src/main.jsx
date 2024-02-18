@@ -13,7 +13,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 
-// scss import
+// styles imports
 import "./assets/styles/main.scss";
 
 // redux imports

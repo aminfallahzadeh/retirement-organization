@@ -4,13 +4,13 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        column-gap: 4rem;
+        column-gap: 40px;
         margin: 2rem 0;
 
         canvas {
             border: 2px solid $color-grey-2;
             border-radius: $border-radius-secondary;
-            height: 5rem;
+            height: 50px;
             width: 100%;
         }
     }

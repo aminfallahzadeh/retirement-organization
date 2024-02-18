@@ -15,7 +15,7 @@
     perspective: 1500px;
 
     &__box {
-        width: 45rem;
+        width: 450px;
         position: relative;
         backdrop-filter: blur(1rem);
         border: 2px solid $color-grey-3;
@@ -30,10 +30,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 4rem;
+            margin-bottom: 40px;
 
             span {
-                font-size: 3rem;
+                font-size: 30px;
                 text-align: center;
             }
         }
@@ -41,16 +41,18 @@
         &--rememberForgot {
             display: flex;
             justify-content: space-between;
-            font-size: 1.5rem;
+            font-size: 15px;
 
             &--remember {
                 &-label {
-                    margin-right: 1rem;
+                    margin-right: 10px;
                 }
             }
 
             a {
                 transition: all 0.25s;
+                text-decoration: none;
+                color: $color-grey-1;
 
                 &:hover {
                     color: $color-accent-dark;
@@ -60,7 +62,7 @@
 
         &--register {
             text-align: center;
-            font-size: 2rem;
+            font-size: 20px;
             display: flex;
             flex-direction: row;
 
@@ -81,7 +83,7 @@
 }
 
 #user {
-    margin-bottom: 1rem;
+    margin-bottom: 10px;
 }
 
 a {
@@ -91,7 +93,7 @@ a {
 
 @media only screen and (max-width: 564px) {
     .loginContainer {
-        padding: 2rem;
+        padding: 20px;
     }
 
     .loginContainer__box {

@@ -14,7 +14,15 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         headers: { "Content-Type": "application/json" },
       }),
     }),
+    refresh: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/RefresToken`,
+        method: "POST",
+        body: data,
+        headers: { "Content-Type": "application/json" },
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation } = usersApiSlice;
+export const { useLoginMutation, useRefreshMutation } = usersApiSlice;
