@@ -12,22 +12,18 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 // react imports
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // react bootstrap
 import { Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Dashboard() {
+  const [userName, setUserName] = useState(" ");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  let parsedUserInfo;
   const { userInfo } = useSelector((state) => state.auth);
-
-  if (userInfo) {
-    parsedUserInfo = jwtDecode(userInfo.itemList[0].token);
-  }
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -37,6 +33,8 @@ function Dashboard() {
   useEffect(() => {
     if (!userInfo) {
       navigate("/retirement-organization/");
+    } else {
+      setUserName(jwtDecode(userInfo.itemList[0].token).name);
     }
   }, [userInfo, navigate]);
 
@@ -53,7 +51,7 @@ function Dashboard() {
               <Nav.Link href="#home">خانه</Nav.Link>
               <Nav.Link href="#link">اعلانات</Nav.Link>
               <NavDropdown
-                title="name"
+                title={userName}
                 id="basic-nav-dropdown"
                 menuVariant="dark"
                 drop="down-centered"

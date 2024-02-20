@@ -36,7 +36,7 @@ function App() {
   const { getRemainingTime } = useIdleTimer({
     onIdle,
     onActive,
-    timeout: 10_000,
+    timeout: 1000 * 60 * 30,
     throttle: 500,
   });
 
