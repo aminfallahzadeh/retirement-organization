@@ -22,7 +22,16 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         headers: { "Content-Type": "application/json" },
       }),
     }),
+    logout: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/Logout`,
+        method: "POST",
+        body: data,
+        headers: { "Content-Type": "application/json" },
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useRefreshMutation } = usersApiSlice;
+export const { useLoginMutation, useRefreshMutation, useLogoutMutation } =
+  usersApiSlice;

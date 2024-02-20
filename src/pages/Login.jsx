@@ -5,7 +5,7 @@ import { useEffect, useContext, useState } from "react";
 import Captcha from "../components/Captcha";
 
 // redux imports
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 
@@ -27,40 +27,40 @@ function Login() {
 
   const [login] = useLoginMutation();
 
-  const { userInfo } = useSelector((state) => state.auth);
-
-  //   if logged in then redirect to redirect value
-  useEffect(() => {
-    if (userInfo) {
-      navigate("/retirement-organization/dashboard");
-    }
-  }, [userInfo, navigate]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     // user authentication logic
     try {
       const res = await login({ username, password }).unwrap();
-      console.log(res);
       dispatch(setCredentials({ ...res }));
+      console.log(res);
+      console.log(isCaptchaValid);
+      if (isCaptchaValid) {
+        navigate("/retirement-organization/dashboard");
+        console.log(isCaptchaValid);
+        toast.success("وارد شدید", {
+          autoClose: 4000,
+          style: {
+            fontSize: "18px",
+          },
+        });
+      } else if (!isCaptchaValid) {
+        console.log(isCaptchaValid);
+        toast.error("! کد امنیتی اشتباه است", {
+          autoClose: 4000,
+          style: {
+            fontSize: "18px",
+          },
+        });
+      }
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 4000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     }
-
-    // if (isCaptchaValid) {
-    //   navigate("/retirement-organization/dashboard");
-    //   toast.success("وارد شدید", {
-    //     autoClose: 4000,
-    //   });
-    // } else if (!isCaptchaValid) {
-    //   toast.error("! کد امنیتی اشتباه است", {
-    //     autoClose: 4000,
-    //   });
-    // } else {
-    //   toast.error("! اطلاعات ورود صحیح نیست", {
-    //     autoClose: 4000,
-    //   });
-    // }
   };
 
   const style = {
@@ -141,7 +141,7 @@ function Login() {
         </div>
 
         <div className="loginContainer__box--register">
-          <button type="submit" className="btn--login" onSubmit={handleSubmit}>
+          <button type="submit" className="btn--login">
             ورود
           </button>
         </div>

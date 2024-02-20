@@ -10,8 +10,7 @@ import { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 // redux imports
-import { useRefreshMutation } from "./slices/usersApiSlice";
-
+import { useLogoutMutation } from "./slices/usersApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./slices/authSlice";
 
@@ -24,7 +23,7 @@ function App() {
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state) => state.auth);
-  // const [data] = userInfo.itemList;
+  const [logoutApiCall] = useLogoutMutation();
 
   const onIdle = () => {
     setIsActive(false);
@@ -41,23 +40,44 @@ function App() {
     throttle: 500,
   });
 
-  // useEffect(() => {
-  //   if (userInfo) {
-  //     const interval = setInterval(() => {
-  //       setRemaining(Math.ceil(getRemainingTime() / 1000));
-  //     }, 500);
+  useEffect(() => {
+    // let refreshToken = null;
+    // if (userInfo) {
+    //   refreshToken = userInfo.itemList[0].refreshToken;
+    // }
+    // const logoutHandler = async (data) => {
+    //   try {
+    //     await logoutApiCall(data).unwrap();
+    //     dispatch(logout());
+    //     navigate(0);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // };
+    if (userInfo) {
+      const interval = setInterval(() => {
+        setRemaining(Math.ceil(getRemainingTime() / 1000));
+      }, 500);
 
-  //     if (!isActive) {
-  //       dispatch(logout());
-  //       navigate(0);
-  //     }
-  //     console.log(isActive, remaining);
-  //     // console.log(data.token);
-  //     return () => {
-  //       clearInterval(interval);
-  //     };
-  //   }
-  // }, [getRemainingTime, isActive, remaining, navigate, dispatch, userInfo]);
+      if (!isActive) {
+        /*  logoutHandler({ refreshToken }); */
+        dispatch(logout());
+        navigate(0);
+      }
+      console.log(isActive, remaining);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [
+    getRemainingTime,
+    isActive,
+    remaining,
+    navigate,
+    dispatch,
+    userInfo,
+    logoutApiCall,
+  ]);
 
   return (
     <>
