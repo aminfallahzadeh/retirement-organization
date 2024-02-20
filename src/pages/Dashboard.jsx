@@ -4,12 +4,15 @@ import { logout } from "../slices/authSlice";
 
 // library imports
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
+import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
 
 // redux imports
 import { useDispatch } from "react-redux";
+import { useLogoutMutation } from "../slices/usersApiSlice";
 
 // react imports
 import { useEffect, useState } from "react";
@@ -24,10 +27,40 @@ function Dashboard() {
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state) => state.auth);
+  const token = userInfo?.itemList[0].token;
+  const refreshToken = userInfo?.itemList[0].refreshToken;
+  const expiredate = userInfo?.itemList[0].expiredate;
 
-  const logoutHandler = () => {
-    dispatch(logout());
-    navigate(0);
+  const [logoutApiCall] = useLogoutMutation();
+
+  const logoutHandler = async () => {
+    try {
+      const res = await logoutApiCall({
+        data: {
+          token,
+          refreshToken,
+          error: "<string>",
+          expiredate,
+        },
+        token: token,
+      });
+      console.log(res);
+      dispatch(logout());
+      // navigate(0);
+      toast.success(res.data.message, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
+    } catch (err) {
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
+    }
   };
 
   useEffect(() => {
@@ -40,10 +73,16 @@ function Dashboard() {
 
   return (
     <main className="dashboard-body">
-      <Navbar expand="lg" bg="dark" variant="dark" className="px-5 py-3">
+      <Navbar expand="lg" bg="dark" variant="dark" className="px-5 py-2">
         <Container fluid>
-          <Navbar.Brand href="#home" className="me-auto">
-            محل لوگو
+          <Navbar.Brand href="#home">
+            <img
+              alt="سازمان بازنشستگی"
+              src="./images/logo.png"
+              width="80"
+              height="80"
+              className="d-inline-block align-top"
+            />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -66,6 +105,18 @@ function Dashboard() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      <div>
+        <Sidebar>
+          <Menu>
+            <SubMenu label="Charts">
+              <MenuItem> Pie charts </MenuItem>
+              <MenuItem> Line charts </MenuItem>
+            </SubMenu>
+            <MenuItem> Documentation </MenuItem>
+            <MenuItem> Calendar </MenuItem>
+          </Menu>
+        </Sidebar>
+      </div>
     </main>
   );
 }

@@ -23,12 +23,18 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     logout: builder.mutation({
-      query: (data) => ({
-        url: `${USERS_URL}/Logout`,
-        method: "POST",
-        body: data,
-        headers: { "Content-Type": "application/json" },
-      }),
+      query: ({ data, token }) => {
+        console.log(data, token);
+        return {
+          url: `${USERS_URL}/Logout`,
+          method: "POST",
+          body: data,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        };
+      },
     }),
   }),
 });

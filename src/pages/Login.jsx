@@ -39,7 +39,7 @@ function Login() {
         navigate("/retirement-organization/dashboard");
         console.log(isCaptchaValid);
         toast.success("وارد شدید", {
-          autoClose: 4000,
+          autoClose: 2000,
           style: {
             fontSize: "18px",
           },
@@ -47,7 +47,7 @@ function Login() {
       } else if (!isCaptchaValid) {
         console.log(isCaptchaValid);
         toast.error("! کد امنیتی اشتباه است", {
-          autoClose: 4000,
+          autoClose: 2000,
           style: {
             fontSize: "18px",
           },
@@ -55,7 +55,7 @@ function Login() {
       }
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
-        autoClose: 4000,
+        autoClose: 2000,
         style: {
           fontSize: "18px",
         },

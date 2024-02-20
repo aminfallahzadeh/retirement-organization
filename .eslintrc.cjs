@@ -17,5 +17,6 @@ module.exports = {
       { allowConstantExport: true },
     ],
     "react/prop-types": "off",
+    "quote-props": ["error", "consistent"],
   },
 };
