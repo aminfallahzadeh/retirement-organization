@@ -1,0 +1,22 @@
+.ps-sidebar-root {
+	position: absolute !important;
+	right: 0 !important;
+}
+
+.ps-sidebar-container {
+	height: 100vh !important;
+	background-color: $color-dark-purple-1 !important;
+	color: $color-grey-2 !important;
+}
+
+.ps-menu-button {
+	transition: all 0.25s;
+
+	&:hover {
+		background-color: $color-dark-purple-2 !important;
+	}
+}
+
+.ps-submenu-content {
+	background-color: $color-grey-3 !important;
+}

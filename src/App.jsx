@@ -41,26 +41,12 @@ function App() {
   });
 
   useEffect(() => {
-    // let refreshToken = null;
-    // if (userInfo) {
-    //   refreshToken = userInfo.itemList[0].refreshToken;
-    // }
-    // const logoutHandler = async (data) => {
-    //   try {
-    //     await logoutApiCall(data).unwrap();
-    //     dispatch(logout());
-    //     navigate(0);
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // };
     if (userInfo) {
       const interval = setInterval(() => {
         setRemaining(Math.ceil(getRemainingTime() / 1000));
       }, 500);
 
       if (!isActive) {
-        /*  logoutHandler({ refreshToken }); */
         dispatch(logout());
         navigate(0);
       }

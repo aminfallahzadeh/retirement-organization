@@ -5,13 +5,7 @@ import { logout } from "../slices/authSlice";
 // library imports
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
-import {
-  Sidebar,
-  Menu,
-  MenuItem,
-  SubMenu,
-  sidebarClasses,
-} from "react-pro-sidebar";
+import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -111,16 +105,7 @@ function Dashboard() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <Sidebar
-        rtl={true}
-        style={{ position: "absolute", right: 0 }}
-        rootStyles={{
-          [`.${sidebarClasses.container}`]: {
-            backgroundColor: "#117df8",
-            color: "#3e3e3e",
-          },
-        }}
-      >
+      <Sidebar rtl={true}>
         <Menu>
           <SubMenu label="امور بازنشستان">
             <MenuItem> بازنشسته</MenuItem>
@@ -131,6 +116,11 @@ function Dashboard() {
           </SubMenu>
           <MenuItem>امورمشتریان </MenuItem>
           <MenuItem> حقوق و دستمزد </MenuItem>
+
+          <MenuItem>اجتماعی و رفاهی </MenuItem>
+          <MenuItem> مدیریت سیستم </MenuItem>
+          <MenuItem> اطلاعات پایه </MenuItem>
+          <MenuItem> گزارشات </MenuItem>
         </Menu>
       </Sidebar>
     </main>
