@@ -1,5 +1,5 @@
 // constant imports
-import { USERS_URL } from "../constants";
+import { USERS_URL_HTTPS } from "../constants";
 
 // slice imports
 import { apiSlice } from "./apiSlice";
@@ -8,7 +8,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (data) => ({
-        url: `${USERS_URL}/Login`,
+        url: `${USERS_URL_HTTPS}/Login`,
         method: "POST",
         body: data,
         headers: { "Content-Type": "application/json" },
@@ -16,7 +16,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     }),
     refresh: builder.mutation({
       query: (data) => ({
-        url: `${USERS_URL}/RefresToken`,
+        url: `${USERS_URL_HTTPS}/RefresToken`,
         method: "POST",
         body: data,
         headers: { "Content-Type": "application/json" },
@@ -26,7 +26,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       query: ({ data, token }) => {
         console.log(data, token);
         return {
-          url: `${USERS_URL}/Logout`,
+          url: `${USERS_URL_HTTPS}/Logout`,
           method: "POST",
           body: data,
           headers: {

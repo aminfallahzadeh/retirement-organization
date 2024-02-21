@@ -5,7 +5,13 @@ import { logout } from "../slices/authSlice";
 // library imports
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+import {
+  Sidebar,
+  Menu,
+  MenuItem,
+  SubMenu,
+  sidebarClasses,
+} from "react-pro-sidebar";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -105,18 +111,28 @@ function Dashboard() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <div>
-        <Sidebar>
-          <Menu>
-            <SubMenu label="Charts">
-              <MenuItem> Pie charts </MenuItem>
-              <MenuItem> Line charts </MenuItem>
-            </SubMenu>
-            <MenuItem> Documentation </MenuItem>
-            <MenuItem> Calendar </MenuItem>
-          </Menu>
-        </Sidebar>
-      </div>
+      <Sidebar
+        rtl={true}
+        style={{ position: "absolute", right: 0 }}
+        rootStyles={{
+          [`.${sidebarClasses.container}`]: {
+            backgroundColor: "#117df8",
+            color: "#3e3e3e",
+          },
+        }}
+      >
+        <Menu>
+          <SubMenu label="امور بازنشستان">
+            <MenuItem> بازنشسته</MenuItem>
+            <MenuItem> احکام گروهی </MenuItem>
+            <MenuItem> رویت تعرفه کارمندی </MenuItem>
+            <MenuItem> رویت احکام کارمندی </MenuItem>
+            <MenuItem> گزارشات </MenuItem>
+          </SubMenu>
+          <MenuItem>امورمشتریان </MenuItem>
+          <MenuItem> حقوق و دستمزد </MenuItem>
+        </Menu>
+      </Sidebar>
     </main>
   );
 }
