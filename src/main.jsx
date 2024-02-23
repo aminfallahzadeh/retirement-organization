@@ -2,9 +2,6 @@
 import ReactDOM from "react-dom/client";
 import React from "react";
 
-// providers
-import { AuthProvider } from "./providers/AuthProvider";
-
 // rrd imports
 import {
   createBrowserRouter,
@@ -37,16 +34,14 @@ const router = createBrowserRouter(
         path="/retirement-organization/dashboard"
         element={<Dashboard />}
       />
-    </Route>
-  )
+    </Route>,
+  ),
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <RouterProvider router={router} />
     </Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

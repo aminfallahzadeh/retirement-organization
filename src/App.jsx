@@ -5,25 +5,22 @@ import { useIdleTimer } from "react-idle-timer";
 
 // react imports
 import { useState, useEffect } from "react";
+import useLogout from "./hooks/useLogout";
 
 // rrd imports
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 // redux imports
-import { useLogoutMutation } from "./slices/usersApiSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "./slices/authSlice";
+import { useSelector } from "react-redux";
 
 function App() {
   // states for user activity
   const [isActive, setIsActive] = useState(true);
   const [remaining, setRemaining] = useState(0);
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
   const { userInfo } = useSelector((state) => state.auth);
-  const [logoutApiCall] = useLogoutMutation();
+
+  const logoutHandler = useLogout();
 
   const onIdle = () => {
     setIsActive(false);
@@ -47,23 +44,15 @@ function App() {
       }, 500);
 
       if (!isActive) {
-        dispatch(logout());
-        navigate(0);
+        logoutHandler();
       }
       console.log(isActive, remaining);
       return () => {
         clearInterval(interval);
       };
     }
-  }, [
-    getRemainingTime,
-    isActive,
-    remaining,
-    navigate,
-    dispatch,
-    userInfo,
-    logoutApiCall,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getRemainingTime, isActive, remaining, userInfo]);
 
   return (
     <>

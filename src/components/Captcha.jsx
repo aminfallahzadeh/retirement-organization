@@ -1,8 +1,9 @@
 // react imports
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useRef, useEffect } from "react";
 
-// rrd imports
-import { AuthContext } from "../providers/AuthProvider";
+// redux imports
+import { useDispatch } from "react-redux";
+import { setCaptcha } from "../slices/captchaSlice";
 
 // library imports
 import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/solid";
@@ -10,8 +11,10 @@ import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/solid";
 function Captcha() {
   const [captchaText, setCaptchaText] = useState(generateCaptcha(6));
   const [userInput, setUserInput] = useState("");
-  const { CapthaHandler } = useContext(AuthContext);
+
   const canvasRef = useRef(null);
+
+  const dispatch = useDispatch();
 
   function generateCaptcha(length) {
     const characters =
@@ -19,7 +22,7 @@ function Captcha() {
     let result = "";
     for (let i = 0; i < length; i++) {
       result += characters.charAt(
-        Math.floor(Math.random() * characters.length)
+        Math.floor(Math.random() * characters.length),
       );
     }
     return result;
@@ -69,7 +72,8 @@ function Captcha() {
     e.preventDefault();
     setCaptchaText(generateCaptcha(6));
     setUserInput("");
-    CapthaHandler(false);
+    dispatch(setCaptcha(false));
+    // CapthaHandler(false);
   }
 
   function handleInputChange(e) {
@@ -77,9 +81,11 @@ function Captcha() {
     setUserInput(input);
 
     if (input.toLowerCase() === captchaText.toLowerCase()) {
-      CapthaHandler(true);
+      /* CapthaHandler(true); */
+      dispatch(setCaptcha(true));
     } else {
-      CapthaHandler(false);
+      /* CapthaHandler(false); */
+      dispatch(setCaptcha(false));
     }
   }
 

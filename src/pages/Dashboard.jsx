@@ -1,67 +1,30 @@
-// redux imports
-import { useSelector } from "react-redux";
-import { logout } from "../slices/authSlice";
-
 // library imports
 import { jwtDecode } from "jwt-decode";
-import { toast } from "react-toastify";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
 
 // redux imports
-import { useDispatch } from "react-redux";
-import { useLogoutMutation } from "../slices/usersApiSlice";
+import { useSelector } from "react-redux";
 
 // react imports
 import { useEffect, useState } from "react";
+import useLogout from "../hooks/useLogout";
 
 // react bootstrap
 import { Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Dashboard() {
-  const [userName, setUserName] = useState(" ");
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // get username from userInfo
+  const [userName, setUserName] = useState("");
+
+  const logoutHandler = useLogout();
 
   const { userInfo } = useSelector((state) => state.auth);
-  const token = userInfo?.itemList[0].token;
-  const refreshToken = userInfo?.itemList[0].refreshToken;
-  const expiredate = userInfo?.itemList[0].expiredate;
 
-  const [logoutApiCall] = useLogoutMutation();
-
-  const logoutHandler = async () => {
-    try {
-      const res = await logoutApiCall({
-        data: {
-          token,
-          refreshToken,
-          error: "<string>",
-          expiredate,
-        },
-        token: token,
-      });
-      console.log(res);
-      dispatch(logout());
-      // navigate(0);
-      toast.success(res.data.message, {
-        autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
-      });
-    } catch (err) {
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
-      });
-    }
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!userInfo) {

@@ -1,16 +1,15 @@
 // react imports
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useState } from "react";
 
 // component imports
 import Captcha from "../components/Captcha";
 
 // redux imports
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 
 // rrd imports
-import { AuthContext } from "../providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
 // library imports
@@ -18,7 +17,8 @@ import { toast } from "react-toastify";
 import { LockClosedIcon, UserIcon } from "@heroicons/react/24/solid";
 
 function Login() {
-  const { isCaptchaValid } = useContext(AuthContext);
+  const { captcha } = useSelector((state) => state.captcha);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -34,18 +34,16 @@ function Login() {
       const res = await login({ username, password }).unwrap();
       dispatch(setCredentials({ ...res }));
       console.log(res);
-      console.log(isCaptchaValid);
-      if (isCaptchaValid) {
+
+      if (captcha) {
         navigate("/retirement-organization/dashboard");
-        console.log(isCaptchaValid);
         toast.success("وارد شدید", {
           autoClose: 2000,
           style: {
             fontSize: "18px",
           },
         });
-      } else if (!isCaptchaValid) {
-        console.log(isCaptchaValid);
+      } else if (!captcha) {
         toast.error("! کد امنیتی اشتباه است", {
           autoClose: 2000,
           style: {
@@ -142,7 +140,7 @@ function Login() {
           </div>
 
           <div className="loginContainer__box--inputBox">
-            <Captcha isCaptchaValid={isCaptchaValid} />
+            <Captcha />
           </div>
 
           <div className="loginContainer__box--register">
