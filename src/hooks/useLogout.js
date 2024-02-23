@@ -21,7 +21,7 @@ const useLogout = () => {
 				},
 				token: token,
 			});
-			console.log(res);
+			/* 	console.log(res); */
 			dispatch(logout());
 			toast.success(res.data.message, {
 				autoClose: 2000,
