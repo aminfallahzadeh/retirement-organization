@@ -25,7 +25,10 @@ function Grid() {
     console.log(groups);
     if (isSuccess) {
       groups.map((group, i) => {
-        setGridData((prev) => [...prev, { name: group.groupName, age: i + 1 }]);
+        setGridData((prev) => [
+          ...prev,
+          { name: group.groupName, number: i + 1 },
+        ]);
       });
     }
   }, [groups, isSuccess]);
@@ -35,22 +38,29 @@ function Grid() {
       {
         accessorKey: "name", //simple recommended way to define a column
         header: "نام گروه",
-        muiTableHeadCellProps: { sx: { color: "green" }, align: "right" }, //custom props
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+          align: "right",
+        },
         muiTableBodyCellProps: {
+          sx: { fontFamily: "sahel" },
           align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>, //optional custom cell render
         align: "right",
       },
       {
-        accessorFn: (row) => row.age, //alternate way
-        muiTableHeadCellProps: { sx: { color: "green" }, align: "right" }, //custom props
-        muiTableBodyCellProps: {
+        accessorKey: "number", //simple recommended way to define a column
+        header: "ردیف",
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
           align: "right",
         },
-        id: "age", //id required if you use accessorFn instead of accessorKey
-        header: "Age",
-        Header: <i style={{ color: "red" }}>ردیف</i>, //optional custom markup
+        muiTableBodyCellProps: {
+          sx: { fontFamily: "sahel" },
+          align: "right",
+        },
+        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>, //optional custom cell render
         align: "right",
       },
     ],
@@ -65,7 +75,9 @@ function Grid() {
   return (
     <>
       {isLoading ? (
-        <Skeleton count={10} />
+        <p className="skeleton">
+          <Skeleton count={3} />
+        </p>
       ) : (
         <MaterialReactTable table={table} />
       )}
