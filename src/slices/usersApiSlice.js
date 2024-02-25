@@ -16,21 +16,21 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     }),
     refresh: builder.mutation({
       query: (data) => ({
-        url: `${USERS_URL_HTTPS}/RefresToken`,
+        url: `${USERS_URL_HTTPS}/RefreshToken`,
         method: "POST",
         body: data,
         headers: { "Content-Type": "application/json" },
       }),
     }),
-    getGroup: builder.mutation({
+    getGroup: builder.query({
       query: (token) => ({
         url: `${USERS_URL_HTTPS}/GetGroup`,
-        method: "GET",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
       }),
+      keepUnusedDataFor: 5,
     }),
     logout: builder.mutation({
       query: ({ data, token }) => ({
@@ -50,5 +50,5 @@ export const {
   useLoginMutation,
   useRefreshMutation,
   useLogoutMutation,
-  useGetGroupMutation,
+  useGetGroupQuery,
 } = usersApiSlice;

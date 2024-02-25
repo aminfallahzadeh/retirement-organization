@@ -1,6 +1,6 @@
 // react imports
 import ReactDOM from "react-dom/client";
-import React from "react";
+// import React from "react";
 
 // rrd imports
 import {
@@ -34,14 +34,14 @@ const router = createBrowserRouter(
         path="/retirement-organization/dashboard"
         element={<Dashboard />}
       />
-    </Route>,
-  ),
+    </Route>
+  )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
+  // </React.StrictMode>,
 );

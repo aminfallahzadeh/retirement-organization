@@ -3,6 +3,7 @@ import { useMemo, useState, useEffect } from "react";
 
 // redux imports
 import { useSelector } from "react-redux";
+import { useGetGroupQuery } from "../slices/usersApiSlice";
 
 // library imports
 import {
@@ -11,20 +12,21 @@ import {
 } from "material-react-table";
 
 function Grid() {
-  const [data, setData] = useState([]);
-  const { getGroupData, getGroupStatus } = useSelector(
-    (state) => state.userReq
-  );
+  const [gridData, setGridData] = useState([]);
+  const { token } = useSelector((state) => state.auth);
+
+  const { data: groups, isLoading, isSuccess } = useGetGroupQuery(token);
 
   useEffect(() => {
-    if (getGroupStatus) {
-      getGroupData.map((name, i) => {
-        setData((prev) => [...prev, { name: name.groupName, age: i + 1 }]);
+    // clear the list for refresh
+    setGridData([]);
+    console.log(groups);
+    if (isSuccess) {
+      groups.map((group, i) => {
+        setGridData((prev) => [...prev, { name: group.groupName, age: i + 1 }]);
       });
-    } else {
-      setData([]);
     }
-  }, [getGroupData, getGroupStatus]);
+  }, [groups, isSuccess]);
 
   const columns = useMemo(
     () => [
@@ -54,10 +56,15 @@ function Grid() {
   );
 
   const table = useMaterialReactTable({
-    data,
+    data: gridData,
     columns,
   });
-  return <MaterialReactTable table={table} />;
+
+  return (
+    <>
+      {isLoading ? <h1>Loading ...</h1> : <MaterialReactTable table={table} />}
+    </>
+  );
 }
 
 export default Grid;
