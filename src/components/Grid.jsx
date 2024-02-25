@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
 
 // library imports
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -62,7 +64,11 @@ function Grid() {
 
   return (
     <>
-      {isLoading ? <h1>Loading ...</h1> : <MaterialReactTable table={table} />}
+      {isLoading ? (
+        <Skeleton count={10} />
+      ) : (
+        <MaterialReactTable table={table} />
+      )}
     </>
   );
 }
