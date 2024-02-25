@@ -14,54 +14,53 @@ import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function App() {
-	// states for user activity
-	const [isActive, setIsActive] = useState(true);
-	const [remaining, setRemaining] = useState(0);
+  // states for user activity
+  const [isActive, setIsActive] = useState(true);
+  const [remaining, setRemaining] = useState(0);
 
-	const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state) => state.auth);
 
-	const logoutHandler = useLogout();
+  const logoutHandler = useLogout();
 
-	const onIdle = () => {
-		setIsActive(false);
-	};
+  const onIdle = () => {
+    setIsActive(false);
+  };
 
-	const onActive = () => {
-		setIsActive(true);
-	};
+  const onActive = () => {
+    setIsActive(true);
+  };
 
-	const { getRemainingTime } = useIdleTimer({
-		onIdle,
-		onActive,
-		timeout: 1000 * 60 * 30,
-		throttle: 500,
-	});
+  const { getRemainingTime } = useIdleTimer({
+    onIdle,
+    onActive,
+    timeout: 1000 * 60 * 30,
+    throttle: 500,
+  });
 
-	useEffect(() => {
-		if (userInfo) {
-			const interval = setInterval(() => {
-				setRemaining(Math.ceil(getRemainingTime() / 1000));
-			}, 500);
+  useEffect(() => {
+    if (userInfo) {
+      const interval = setInterval(() => {
+        setRemaining(Math.ceil(getRemainingTime() / 1000));
+      }, 500);
+      if (!isActive) {
+        logoutHandler();
+      }
+      console.log(isActive, remaining);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getRemainingTime, isActive, remaining, userInfo]);
 
-			if (!isActive) {
-				logoutHandler();
-			}
-			/* console.log(isActive, remaining); */
-			return () => {
-				clearInterval(interval);
-			};
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [getRemainingTime, isActive, remaining, userInfo]);
-
-	return (
-		<>
-			<main>
-				<Outlet />
-			</main>
-			<ToastContainer />
-		</>
-	);
+  return (
+    <>
+      <main>
+        <Outlet />
+      </main>
+      <ToastContainer />
+    </>
+  );
 }
 
 export default App;
