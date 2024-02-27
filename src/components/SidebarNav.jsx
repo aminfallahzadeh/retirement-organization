@@ -11,13 +11,18 @@ import {
 } from "@heroicons/react/24/outline";
 
 // redux imports
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setGetGroupStatus } from "../slices/userReqSlice";
 
 function SidebarNav() {
   const dispatch = useDispatch();
 
+  const { expDate } = useSelector((state) => state.auth);
+
   const getGroupHandler = async () => {
+    const tokenDate = new Date(expDate);
+    const now = new Date();
+    console.log(tokenDate >= now);
     try {
       dispatch(setGetGroupStatus(true));
     } catch (err) {
@@ -59,10 +64,20 @@ function SidebarNav() {
           <AdjustmentsVerticalIcon width={20} color="#00863e" />
           &nbsp; &nbsp; مدیریت سیستم{" "}
         </MenuItem>
-        <MenuItem onClick={getGroupHandler}>
-          <Bars3BottomRightIcon width={20} color="#00863e" />
-          &nbsp; &nbsp; اطلاعات پایه{" "}
-        </MenuItem>
+
+        <SubMenu
+          label={
+            <>
+              <Bars3BottomRightIcon width={20} color="#00863e" />
+              &nbsp; &nbsp;
+              <span>اطلاعات پایه</span>
+            </>
+          }
+        >
+          <MenuItem onClick={getGroupHandler}>گروه ها</MenuItem>
+          <MenuItem>کاربران</MenuItem>
+        </SubMenu>
+
         <MenuItem>
           <ClipboardDocumentListIcon width={20} color="#00863e" />
           &nbsp; &nbsp; گزارشات{" "}
