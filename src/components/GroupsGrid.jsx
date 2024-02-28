@@ -13,7 +13,7 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-function Grid() {
+function GroupsGrid() {
   const [gridData, setGridData] = useState([]);
   const { token } = useSelector((state) => state.auth);
 
@@ -85,4 +85,4 @@ function Grid() {
   );
 }
 
-export default Grid;
+export default GroupsGrid;

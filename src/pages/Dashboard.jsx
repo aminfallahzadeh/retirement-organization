@@ -2,7 +2,7 @@
 import { jwtDecode } from "jwt-decode";
 
 // component imports
-import Grid from "../components/Grid";
+import GroupsGrid from "../components/GroupsGrid";
 import SidebarNav from "../components/SidebarNav";
 import TopbarNav from "../components/TopbarNav";
 
@@ -37,7 +37,7 @@ function Dashboard() {
     <main className="dashboard-body">
       <TopbarNav userName={userName} />
       <SidebarNav />
-      {getGroupStatus && <Grid />}
+      {getGroupStatus && <GroupsGrid />}
     </main>
   );
 }
