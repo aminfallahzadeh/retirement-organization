@@ -41,7 +41,6 @@ function Dashboard() {
       <TopbarNav userName={userName} />
       <SidebarNav />
       {getGroupStatus ? <GroupsGrid /> : getUserStatus ? <UserGrid /> : ""}
-      {/* {getGroupStatus && <GroupsGrid />} */}
     </main>
   );
 }

@@ -1,6 +1,9 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
+// bootstrap imports
+import { Button } from "react-bootstrap";
+
 // redux imports
 import { useSelector } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
@@ -22,7 +25,6 @@ function GroupsGrid() {
   useEffect(() => {
     // clear the list for refresh
     setGridData([]);
-    // console.log(groups);
     if (isSuccess) {
       groups.map((group, i) => {
         setGridData((prev) => [
@@ -79,7 +81,14 @@ function GroupsGrid() {
           <Skeleton count={3} />
         </p>
       ) : (
-        <MaterialReactTable table={table} />
+        <>
+          <MaterialReactTable table={table} />
+
+          <div className="double-buttons">
+            <Button>ویرایش</Button>
+            <Button>ایجاد گروه</Button>
+          </div>
+        </>
       )}
     </>
   );
