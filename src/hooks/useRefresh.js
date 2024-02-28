@@ -16,7 +16,7 @@ const useRefreshToken = () => {
 
   const refreshTokenHnadler = async () => {
     console.log(tokenDate < Date.now());
-    if (tokenDate < Date.now()) {
+    if (tokenDate - 3000 < Date.now()) {
       try {
         const res = await refreshApiCall({
           token: "string",

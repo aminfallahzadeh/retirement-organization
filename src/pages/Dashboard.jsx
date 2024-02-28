@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 // component imports
 import GroupsGrid from "../components/GroupsGrid";
+import UserGrid from "../components/UserGrid";
 import SidebarNav from "../components/SidebarNav";
 import TopbarNav from "../components/TopbarNav";
 
@@ -19,7 +20,9 @@ function Dashboard() {
   // get username from userInfo
   const [userName, setUserName] = useState("");
 
-  const { getGroupStatus } = useSelector((state) => state.userReq);
+  const { getGroupStatus, getUserStatus } = useSelector(
+    (state) => state.userReq
+  );
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -37,7 +40,8 @@ function Dashboard() {
     <main className="dashboard-body">
       <TopbarNav userName={userName} />
       <SidebarNav />
-      {getGroupStatus && <GroupsGrid />}
+      {getGroupStatus ? <GroupsGrid /> : getUserStatus ? <UserGrid /> : ""}
+      {/* {getGroupStatus && <GroupsGrid />} */}
     </main>
   );
 }

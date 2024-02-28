@@ -13,7 +13,7 @@ import {
 
 // redux imports
 import { useDispatch } from "react-redux";
-import { setGetGroupStatus } from "../slices/userReqSlice";
+import { setGetGroupStatus, setGetUserStatus } from "../slices/userReqSlice";
 
 // react imports
 import useRefreshToken from "../hooks/useRefresh";
@@ -22,10 +22,26 @@ function SidebarNav() {
   const dispatch = useDispatch();
   const refreshTokenHandler = useRefreshToken();
 
-  const getGroupHandler = () => {
+  const getGroupHandler = async () => {
     try {
-      refreshTokenHandler();
+      await refreshTokenHandler();
       dispatch(setGetGroupStatus(true));
+      dispatch(setGetUserStatus(false));
+    } catch (err) {
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
+    }
+  };
+
+  const getUserHandler = async () => {
+    try {
+      await refreshTokenHandler();
+      dispatch(setGetUserStatus(true));
+      dispatch(setGetGroupStatus(false));
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
@@ -81,7 +97,7 @@ function SidebarNav() {
           }
         >
           <MenuItem onClick={getGroupHandler}>گروه ها</MenuItem>
-          <MenuItem>کاربران</MenuItem>
+          <MenuItem onClick={getUserHandler}>کاربران</MenuItem>
         </SubMenu>
 
         <MenuItem>

@@ -36,7 +36,7 @@ function GroupsGrid() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "name", //simple recommended way to define a column
+        accessorKey: "name",
         header: "نام گروه",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
@@ -46,11 +46,11 @@ function GroupsGrid() {
           sx: { fontFamily: "sahel" },
           align: "right",
         },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>, //optional custom cell render
+        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
       },
       {
-        accessorKey: "number", //simple recommended way to define a column
+        accessorKey: "number",
         header: "ردیف",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
@@ -60,7 +60,7 @@ function GroupsGrid() {
           sx: { fontFamily: "sahel" },
           align: "right",
         },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>, //optional custom cell render
+        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
       },
     ],

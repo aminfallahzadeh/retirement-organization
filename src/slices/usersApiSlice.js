@@ -32,6 +32,16 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
     }),
+    getUser: builder.query({
+      query: (token) => ({
+        url: `${USERS_URL_HTTPS}/GetUser`,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+      keepUnusedDataFor: 5,
+    }),
     logout: builder.mutation({
       query: ({ data, token }) => ({
         url: `${USERS_URL_HTTPS}/Logout`,
@@ -51,4 +61,5 @@ export const {
   useRefreshMutation,
   useLogoutMutation,
   useGetGroupQuery,
+  useGetUserQuery,
 } = usersApiSlice;

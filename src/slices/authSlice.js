@@ -82,11 +82,11 @@ const authSlice = createSlice({
     },
 
     setNewCredentials: (state, action) => {
-      const { token, refreshToken, expiredate } = action.payload.itemList[0];
+      const { token, expiredate } = action.payload.itemList[0];
       state.userInfo.itemList[0].token = token;
       state.userInfo.itemList[0].expiredate = expiredate;
       state.token = token;
-      state.refreshToken = refreshToken;
+      state.refreshToken = state.userInfo.itemList[0].refreshToken;
       state.expDate = expiredate;
       console.log(state.userInfo);
       sessionStorage.clear();
