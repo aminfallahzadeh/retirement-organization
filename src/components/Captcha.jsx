@@ -22,7 +22,7 @@ function Captcha() {
     let result = "";
     for (let i = 0; i < length; i++) {
       result += characters.charAt(
-        Math.floor(Math.random() * characters.length),
+        Math.floor(Math.random() * characters.length)
       );
     }
     return result;
@@ -91,14 +91,6 @@ function Captcha() {
 
   return (
     <div className="captchaContainer">
-      <div className="captchaContainer__text">
-        <canvas ref={canvasRef} width="200" height="40">
-          {captchaText}
-        </canvas>
-        <button onClick={regenCaptcha} className="btn--login">
-          تلاش مجدد
-        </button>
-      </div>
       <div className="inputBox">
         <input
           type="text"
@@ -112,6 +104,14 @@ function Captcha() {
           کد را وارد کنید
         </label>
         <ArrowPathRoundedSquareIcon style={style} width={25} />
+      </div>
+      <div className="captchaContainer__text">
+        <canvas ref={canvasRef} width="200" height="40">
+          {captchaText}
+        </canvas>
+        <button onClick={regenCaptcha} className="btn--login">
+          تلاش مجدد
+        </button>
       </div>
     </div>
   );

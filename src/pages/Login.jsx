@@ -125,31 +125,18 @@ function Login() {
             </label>
             <LockClosedIcon style={style} width={20} />
           </div>
-
-          <div className="loginContainer__box--rememberForgot">
-            <div className="loginContainer__box--rememberForgot--forgot">
-              <a href="#">کلمه عبور را فراموش کرده اید ؟</a>
-            </div>
-
-            <div className="loginContainer__box--rememberForgot--remember">
-              <label
-                htmlFor="checkbox"
-                className="loginContainer__box--rememberForgot--remember-label"
-              >
-                مرا به خاطر بسپار
-              </label>
-              <input type="checkbox" id="checkbox" />
-            </div>
-          </div>
-
           <div className="loginContainer__box--inputBox">
             <Captcha />
           </div>
-
           <div className="loginContainer__box--register">
             <button type="submit" className="btn--login" disabled={isLoading}>
               {isLoading ? "...لطفا منتظر بمانید" : "ورود"}
             </button>
+          </div>
+          <div className="loginContainer__box--rememberForgot">
+            <div className="loginContainer__box--rememberForgot--forgot">
+              <a href="#">کلمه عبور را فراموش کرده اید ؟</a>
+            </div>
           </div>
         </div>
       </form>
