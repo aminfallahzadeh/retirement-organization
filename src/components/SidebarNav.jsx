@@ -1,4 +1,5 @@
 // library imports
+import { toast } from "react-toastify";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import {
   UserIcon,
@@ -11,22 +12,27 @@ import {
 } from "@heroicons/react/24/outline";
 
 // redux imports
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setGetGroupStatus } from "../slices/userReqSlice";
+
+// react imports
+import useRefreshToken from "../hooks/useRefresh";
 
 function SidebarNav() {
   const dispatch = useDispatch();
+  const refreshTokenHandler = useRefreshToken();
 
-  const { expDate } = useSelector((state) => state.auth);
-
-  const getGroupHandler = async () => {
-    const tokenDate = new Date(expDate);
-    const now = new Date();
-    console.log(tokenDate >= now);
+  const getGroupHandler = () => {
     try {
+      refreshTokenHandler();
       dispatch(setGetGroupStatus(true));
     } catch (err) {
-      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     }
   };
 

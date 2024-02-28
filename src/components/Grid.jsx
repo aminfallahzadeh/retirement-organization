@@ -22,7 +22,7 @@ function Grid() {
   useEffect(() => {
     // clear the list for refresh
     setGridData([]);
-    console.log(groups);
+    // console.log(groups);
     if (isSuccess) {
       groups.map((group, i) => {
         setGridData((prev) => [

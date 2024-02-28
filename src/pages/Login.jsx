@@ -33,7 +33,7 @@ function Login() {
     try {
       const res = await login({ username, password }).unwrap();
       dispatch(setCredentials({ ...res }));
-      /* 		console.log(res); */
+      console.log(res);
 
       if (captcha) {
         navigate("/retirement-organization/dashboard");
