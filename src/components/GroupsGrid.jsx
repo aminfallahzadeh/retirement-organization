@@ -1,6 +1,9 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
+// helpers
+import { convertToPersianNumber } from "../helper.js";
+
 // bootstrap imports
 import { Button } from "react-bootstrap";
 
@@ -10,11 +13,9 @@ import { useGetGroupQuery } from "../slices/usersApiSlice";
 
 // library imports
 import Skeleton from "react-loading-skeleton";
+import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from "material-react-table";
+import { MaterialReactTable } from "material-react-table";
 
 function GroupsGrid() {
   const [gridData, setGridData] = useState([]);
@@ -26,10 +27,10 @@ function GroupsGrid() {
     // clear the list for refresh
     setGridData([]);
     if (isSuccess) {
-      groups.map((group, i) => {
+      groups.itemList.map((group, i) => {
         setGridData((prev) => [
           ...prev,
-          { name: group.groupName, number: i + 1 },
+          { name: group.groupName, number: convertToPersianNumber(i + 1) },
         ]);
       });
     }
@@ -69,11 +70,6 @@ function GroupsGrid() {
     []
   );
 
-  const table = useMaterialReactTable({
-    data: gridData,
-    columns,
-  });
-
   return (
     <>
       {isLoading ? (
@@ -82,11 +78,17 @@ function GroupsGrid() {
         </p>
       ) : (
         <>
-          <MaterialReactTable table={table} />
+          <MaterialReactTable
+            columns={columns}
+            data={gridData}
+            enableColumnFilterModes
+            columnResizeDirection="rtl"
+            localization={MRT_Localization_FA}
+          />
 
           <div className="double-buttons">
-            <Button>ویرایش</Button>
-            <Button>ایجاد گروه</Button>
+            <Button variant="outline-success">ویرایش</Button>
+            <Button variant="outline-success">ایجاد گروه</Button>
           </div>
         </>
       )}

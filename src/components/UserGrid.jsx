@@ -5,13 +5,14 @@ import { useMemo, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useGetUserQuery } from "../slices/usersApiSlice";
 
+// helper imports
+import { convertToPersianNumber } from "../helper.js";
+
 // library imports
 import Skeleton from "react-loading-skeleton";
+import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from "material-react-table";
+import { MaterialReactTable } from "material-react-table";
 
 function UserGrid() {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ function UserGrid() {
             lname: user.lastName,
             fname: user.firstName,
             username: user.username,
-            number: i + 1,
+            number: convertToPersianNumber(i + 1),
           },
         ]);
       });
@@ -116,11 +117,6 @@ function UserGrid() {
     []
   );
 
-  const table = useMaterialReactTable({
-    data: gridData,
-    columns,
-  });
-
   return (
     <>
       {isLoading ? (
@@ -128,7 +124,13 @@ function UserGrid() {
           <Skeleton count={3} />
         </p>
       ) : (
-        <MaterialReactTable table={table} />
+        <MaterialReactTable
+          columns={columns}
+          data={gridData}
+          enableColumnFilterModes
+          columnResizeDirection="rtl"
+          localization={MRT_Localization_FA}
+        />
       )}
     </>
   );
