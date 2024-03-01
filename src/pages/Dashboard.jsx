@@ -44,7 +44,11 @@ function Dashboard() {
       <SidebarNav />
       <div className="dashboard__body">
         <div className="dashboard__body--topGrid">
-          {getGroupStatus ? <GroupsGrid /> : getUserStatus ? <UserGrid /> : ""}
+          {getGroupStatus ? (
+            <GroupsGrid />
+          ) : getUserStatus ? (
+            <UserGrid />
+          ) : null}
         </div>
         <div className="dashboard__body--bottomGrid">
           {getItemsStatus && (

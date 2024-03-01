@@ -21,35 +21,32 @@ import {
 function GroupItemGrid() {
   const [groupItemsData, setGroupItemsData] = useState([]);
   const { token } = useSelector((state) => state.auth);
-  const { data: groupItems, isLoading } = useGetGroupItemsQuery(token);
+  const {
+    data: groupItems,
+    isSuccess,
+    isLoading,
+    error,
+  } = useGetGroupItemsQuery(token);
 
   useEffect(() => {
     // clear the list for refresh
     setGroupItemsData([]);
-    try {
+    if (isSuccess) {
       groupItems.itemList.map((item, i) => {
         setGroupItemsData((prev) => [
           ...prev,
           { name: item.itemID, number: convertToPersianNumber(i + 1) },
         ]);
       });
-    } catch (err) {
-      toast.error(err?.data?.message || err.error, {
+    } else if (error && error.status === 401) {
+      toast.error("اطلاعات ورودی صحیح نیست", {
         autoClose: 2000,
         style: {
           fontSize: "18px",
         },
       });
     }
-    // if (isSuccess) {
-    //   groupItems.itemList.map((item, i) => {
-    //     setGroupItemsData((prev) => [
-    //       ...prev,
-    //       { name: item.itemID, number: convertToPersianNumber(i + 1) },
-    //     ]);
-    //   });
-    // }
-  }, [groupItems]);
+  }, [groupItems, isSuccess, error]);
 
   const columns = useMemo(
     () => [

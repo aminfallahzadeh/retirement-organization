@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { useGetItemsQuery } from "../slices/usersApiSlice";
 
 // library imports
+import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
 import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -21,7 +22,7 @@ import {
 function ItemsGrid() {
   const [itemsData, setItemsData] = useState([]);
   const { token } = useSelector((state) => state.auth);
-  const { data: items, isLoading, isSuccess } = useGetItemsQuery(token);
+  const { data: items, isLoading, isSuccess, error } = useGetItemsQuery(token);
 
   useEffect(() => {
     // clear the list for refresh
@@ -37,8 +38,15 @@ function ItemsGrid() {
           },
         ]);
       });
+    } else if (error && error.status === 401) {
+      toast.error("اطلاعات ورودی صحیح نیست", {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     }
-  }, [items, isSuccess]);
+  }, [items, isSuccess, error]);
 
   const columns = useMemo(
     () => [

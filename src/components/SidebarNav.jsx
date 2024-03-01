@@ -31,6 +31,7 @@ function SidebarNav() {
       await refreshTokenHandler();
       dispatch(setGetGroupStatus(true));
       dispatch(setGetUserStatus(false));
+      dispatch(setGetItemsStatus(false));
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,

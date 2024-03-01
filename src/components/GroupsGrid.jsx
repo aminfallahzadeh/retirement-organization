@@ -11,7 +11,7 @@ import { Button } from "react-bootstrap";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
-import { setGetItemsStatus } from "../slices/userReqSlice";
+import { setGetItemsStatus, setGetGroupStatus } from "../slices/userReqSlice";
 
 // library imports
 import { toast } from "react-toastify";
@@ -20,10 +20,12 @@ import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
+  getMRT_RowSelectionHandler,
   useMaterialReactTable,
 } from "material-react-table";
 
 function GroupsGrid() {
+  const [rowSelection, setRowSelection] = useState({});
   const [groupsData, setGroupsData] = useState([]);
   const { token } = useSelector((state) => state.auth);
 
@@ -31,16 +33,13 @@ function GroupsGrid() {
 
   const dispatch = useDispatch();
 
-  const {
-    data: groups,
-    isLoading: isLoading,
-    isSuccess: isSuccess,
-  } = useGetGroupQuery(token);
+  const { data: groups, isLoading, isSuccess, error } = useGetGroupQuery(token);
 
   const createNewHandler = async () => {
     try {
       await refreshTokenHandler();
       dispatch(setGetItemsStatus(true));
+      dispatch(setGetGroupStatus(false));
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
@@ -65,8 +64,19 @@ function GroupsGrid() {
           },
         ]);
       });
+    } else if (error && error.status === 401) {
+      toast.error("اطلاعات ورودی صحیح نیست", {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     }
-  }, [groups, isSuccess]);
+  }, [groups, isSuccess, error]);
+
+  useEffect(() => {
+    console.log(Object.keys(rowSelection)[0]);
+  }, [rowSelection]);
 
   const columns = useMemo(
     () => [
@@ -118,6 +128,16 @@ function GroupsGrid() {
       rowsPerPageOptions: [5, 10, 20],
       variant: "outlined",
     },
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
+    muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
+      onClick: (event) =>
+        getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
+      sx: { cursor: "pointer" },
+    }),
+    getRowId: (originalRow) => originalRow._id,
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
   });
 
   return (
@@ -131,9 +151,8 @@ function GroupsGrid() {
           <MaterialReactTable table={table} />
 
           <div className="double-buttons">
-            <Button variant="outline-success">ویرایش</Button>
             <Button variant="outline-success" onClick={createNewHandler}>
-              ایجاد گروه
+              ویرایش
             </Button>
           </div>
         </>
