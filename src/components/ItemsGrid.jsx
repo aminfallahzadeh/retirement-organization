@@ -1,6 +1,9 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
+// componsnet imports
+import CustomPagination from "./CustomPagination.jsx";
+
 // helpers
 import { convertToPersianNumber } from "../helper.js";
 
@@ -97,6 +100,13 @@ function ItemsGrid() {
       rowsPerPageOptions: [5, 10, 20],
       variant: "outlined",
     },
+    renderBottomToolbar: (
+      <CustomPagination
+        count={Math.ceil(itemsData.length / 5)}
+        page={1}
+        onChange={(page) => console.log("Page changed to", page)}
+      />
+    ),
     enableRowSelection: true,
     enableMultiRowSelection: false,
     muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({

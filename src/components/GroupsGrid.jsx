@@ -121,7 +121,9 @@ function GroupsGrid() {
     columnResizeDirection: "rtl",
     paginationDisplayMode: "pages",
     enableFullScreenToggle: false,
-    initialState: { pagination: { pageSize: 5 } },
+    initialState: {
+      pagination: { pageSize: 5 },
+    },
     muiPaginationProps: {
       color: "success",
       shape: "rounded",
