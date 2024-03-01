@@ -1,9 +1,6 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
-// componsnet imports
-import CustomPagination from "./CustomPagination.jsx";
-
 // helpers
 import { convertToPersianNumber } from "../helper.js";
 
@@ -12,7 +9,8 @@ import { useSelector } from "react-redux";
 import { useGetItemsQuery } from "../slices/usersApiSlice";
 
 // library imports
-import { toast } from "react-toastify";
+import { PaginationItem, Pagination } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
 import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -23,9 +21,22 @@ import {
 } from "material-react-table";
 
 function ItemsGrid() {
+  const [currentPage, setcurrentPage] = useState(1);
+  const [tableItems, setTableItems] = useState([]);
   const [itemsData, setItemsData] = useState([]);
+
   const { token } = useSelector((state) => state.auth);
-  const { data: items, isLoading, isSuccess, error } = useGetItemsQuery(token);
+  const { data: items, isLoading, isSuccess } = useGetItemsQuery(token);
+
+  const rowsPerPage = 5;
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex =
+    Math.min(startIndex + rowsPerPage, items?.itemList?.length) || 0;
+
+  const handlePageChagne = (event, page) => {
+    setcurrentPage(page);
+    setTableItems(itemsData.slice(startIndex, endIndex));
+  };
 
   useEffect(() => {
     // clear the list for refresh
@@ -41,15 +52,9 @@ function ItemsGrid() {
           },
         ]);
       });
-    } else if (error && error.status === 401) {
-      toast.error("اطلاعات ورودی صحیح نیست", {
-        autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
-      });
+      setTableItems(itemsData.slice(startIndex, endIndex));
     }
-  }, [items, isSuccess, error]);
+  }, [items, isSuccess, startIndex, itemsData, endIndex]);
 
   const columns = useMemo(
     () => [
@@ -88,17 +93,34 @@ function ItemsGrid() {
 
   const table = useMaterialReactTable({
     columns,
-    data: itemsData,
+    data: tableItems,
     localization: MRT_Localization_FA,
     columnResizeDirection: "rtl",
-    paginationDisplayMode: "pages",
     enableFullScreenToggle: false,
     initialState: { pagination: { pageSize: 5 } },
+    muiPaginationProps: {
+      color: "secondary",
+      shape: "rounded",
+      showRowsPerPage: false,
+      variant: "outlined",
+    },
+
     renderBottomToolbar: (
-      <CustomPagination
+      <Pagination
+        sx={{ paddingTop: 1.5, paddingBottom: 1.5, justifyContent: "right" }}
         count={Math.ceil(itemsData.length / 5)}
-        page={1}
-        onChange={(page) => console.log("Page changed to", page)}
+        page={currentPage}
+        dir="rtl"
+        variant="outlined"
+        color="secondary"
+        onChange={handlePageChagne}
+        renderItem={(item) => (
+          <PaginationItem
+            {...item}
+            slots={{ previous: ChevronRight, next: ChevronLeft }}
+            page={convertToPersianNumber(item.page)}
+          />
+        )}
       />
     ),
     enableRowSelection: true,

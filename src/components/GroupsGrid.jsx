@@ -5,9 +5,6 @@ import useRefreshToken from "../hooks/useRefresh.js";
 // helpers
 import { convertToPersianNumber } from "../helper.js";
 
-// component imports
-import CustomPagination from "./CustomPagination.jsx";
-
 // bootstrap imports
 import { Button } from "react-bootstrap";
 
@@ -18,6 +15,8 @@ import { setGetItemsStatus, setGetGroupStatus } from "../slices/userReqSlice";
 
 // library imports
 import { toast } from "react-toastify";
+import { PaginationItem, Pagination } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
 import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -28,8 +27,12 @@ import {
 } from "material-react-table";
 
 function GroupsGrid() {
-  const [rowSelection, setRowSelection] = useState({});
+  const [currentPage, setcurrentPage] = useState(1);
+  const [tableItems, setTableItems] = useState([]);
   const [groupsData, setGroupsData] = useState([]);
+
+  const [rowSelection, setRowSelection] = useState({});
+
   const { token } = useSelector((state) => state.auth);
 
   const refreshTokenHandler = useRefreshToken();
@@ -37,6 +40,16 @@ function GroupsGrid() {
   const dispatch = useDispatch();
 
   const { data: groups, isLoading, isSuccess, error } = useGetGroupQuery(token);
+
+  const rowsPerPage = 5;
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex =
+    Math.min(startIndex + rowsPerPage, groupsData?.itemList?.length) || 0;
+
+  const handlePageChagne = (event, page) => {
+    setcurrentPage(page);
+    setTableItems(groupsData.slice(startIndex, endIndex));
+  };
 
   const createNewHandler = async () => {
     try {
@@ -67,6 +80,7 @@ function GroupsGrid() {
           },
         ]);
       });
+      setTableItems(groupsData.slice(startIndex, endIndex));
     } else if (error && error.status === 401) {
       toast.error("اطلاعات ورودی صحیح نیست", {
         autoClose: 2000,
@@ -75,7 +89,7 @@ function GroupsGrid() {
         },
       });
     }
-  }, [groups, isSuccess, error]);
+  }, [groups, isSuccess, error, groupsData, startIndex, endIndex]);
 
   useEffect(() => {
     console.log(Object.keys(rowSelection)[0]);
@@ -119,19 +133,35 @@ function GroupsGrid() {
 
   const table = useMaterialReactTable({
     columns,
-    data: groupsData,
+    data: tableItems.length === 5 ? tableItems : groupsData,
     localization: MRT_Localization_FA,
     columnResizeDirection: "rtl",
-    paginationDisplayMode: "pages",
     enableFullScreenToggle: false,
     initialState: {
       pagination: { pageSize: 5 },
     },
+    muiPaginationProps: {
+      color: "secondary",
+      shape: "rounded",
+      showRowsPerPage: false,
+      variant: "outlined",
+    },
     renderBottomToolbar: (
-      <CustomPagination
+      <Pagination
+        sx={{ paddingTop: 1.5, paddingBottom: 1.5, justifyContent: "right" }}
         count={Math.ceil(groupsData.length / 5)}
-        page={1}
-        onChange={(page) => console.log("Page changed to", page)}
+        page={currentPage}
+        dir="rtl"
+        variant="outlined"
+        color="secondary"
+        onChange={handlePageChagne}
+        renderItem={(item) => (
+          <PaginationItem
+            {...item}
+            slots={{ previous: ChevronRight, next: ChevronLeft }}
+            page={convertToPersianNumber(item.page)}
+          />
+        )}
       />
     ),
     enableRowSelection: true,

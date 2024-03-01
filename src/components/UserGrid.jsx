@@ -2,7 +2,7 @@
 import { useMemo, useState, useEffect } from "react";
 
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useGetUserQuery } from "../slices/usersApiSlice";
 
 // helper imports
@@ -12,6 +12,8 @@ import { convertToPersianNumber } from "../helper.js";
 import CustomPagination from "./CustomPagination.jsx";
 
 // library imports
+import { PaginationItem, Pagination } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
 import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -21,12 +23,22 @@ import {
 } from "material-react-table";
 
 function UserGrid() {
-  const dispatch = useDispatch();
-
+  const [currentPage, setcurrentPage] = useState(1);
+  const [tableItems, setTableItems] = useState([]);
   const [userData, setUserData] = useState([]);
-  const { token } = useSelector((state) => state.auth);
 
+  const { token } = useSelector((state) => state.auth);
   const { data: users, isLoading, isSuccess } = useGetUserQuery(token);
+
+  const rowsPerPage = 5;
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex =
+    Math.min(startIndex + rowsPerPage, users?.itemList?.length) || 0;
+
+  const handlePageChagne = (event, page) => {
+    setcurrentPage(page);
+    setTableItems(userData.slice(startIndex, endIndex));
+  };
 
   useEffect(() => {
     // clear the list for refresh
@@ -44,8 +56,9 @@ function UserGrid() {
           },
         ]);
       });
+      setTableItems(userData.slice(startIndex, endIndex));
     }
-  }, [users, isSuccess, dispatch]);
+  }, [users, isSuccess, startIndex, endIndex, userData]);
 
   const columns = useMemo(
     () => [
@@ -126,23 +139,33 @@ function UserGrid() {
 
   const table = useMaterialReactTable({
     columns,
-    data: userData,
-    paginationDisplayMode: "pages",
+    data: tableItems.length === 5 ? tableItems : userData,
     localization: MRT_Localization_FA,
     columnResizeDirection: "rtl",
     enableFullScreenToggle: false,
     initialState: { pagination: { pageSize: 5 } },
     muiPaginationProps: {
-      color: "success",
+      color: "secondary",
       shape: "rounded",
-      rowsPerPageOptions: [5, 10, 20],
+      showRowsPerPage: false,
       variant: "outlined",
     },
     renderBottomToolbar: (
-      <CustomPagination
+      <Pagination
+        sx={{ paddingTop: 1.5, paddingBottom: 1.5, justifyContent: "right" }}
         count={Math.ceil(userData.length / 5)}
-        page={1}
-        onChange={(page) => console.log("Page changed to", page)}
+        page={currentPage}
+        dir="rtl"
+        variant="outlined"
+        color="secondary"
+        onChange={handlePageChagne}
+        renderItem={(item) => (
+          <PaginationItem
+            {...item}
+            slots={{ previous: ChevronRight, next: ChevronLeft }}
+            page={convertToPersianNumber(item.page)}
+          />
+        )}
       />
     ),
   });
