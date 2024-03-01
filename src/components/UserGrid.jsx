@@ -8,9 +8,6 @@ import { useGetUserQuery } from "../slices/usersApiSlice";
 // helper imports
 import { convertToPersianNumber } from "../helper.js";
 
-// componsnet imports
-import CustomPagination from "./CustomPagination.jsx";
-
 // library imports
 import { PaginationItem, Pagination } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
@@ -23,7 +20,7 @@ import {
 } from "material-react-table";
 
 function UserGrid() {
-  const [currentPage, setcurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [tableItems, setTableItems] = useState([]);
   const [userData, setUserData] = useState([]);
 
@@ -36,29 +33,28 @@ function UserGrid() {
     Math.min(startIndex + rowsPerPage, users?.itemList?.length) || 0;
 
   const handlePageChagne = (event, page) => {
-    setcurrentPage(page);
+    setCurrentPage(page);
     setTableItems(userData.slice(startIndex, endIndex));
   };
 
   useEffect(() => {
-    // clear the list for refresh
-    setUserData([]);
     if (isSuccess) {
-      users.itemList.map((user, i) => {
-        setUserData((prev) => [
-          ...prev,
-          {
-            isActive: user.isActive === true ? "فعال" : "غیر فعال",
-            lname: user.lastName,
-            fname: user.firstName,
-            username: user.username,
-            number: convertToPersianNumber(i + 1),
-          },
-        ]);
-      });
-      setTableItems(userData.slice(startIndex, endIndex));
+      const data = users.itemList.map((user, i) => ({
+        isActive: user.isActive === true ? "فعال" : "غیر فعال",
+        lname: user.lastName,
+        fname: user.firstName,
+        username: user.username,
+        number: convertToPersianNumber(i + 1),
+      }));
+
+      setUserData(data);
+      setTableItems(data.slice(startIndex, endIndex));
     }
-  }, [users, isSuccess, startIndex, endIndex, userData]);
+    return () => {
+      // clear the list for refresh
+      setUserData([]);
+    };
+  }, [users, isSuccess, startIndex, endIndex]);
 
   const columns = useMemo(
     () => [
@@ -139,7 +135,7 @@ function UserGrid() {
 
   const table = useMaterialReactTable({
     columns,
-    data: tableItems.length === 5 ? tableItems : userData,
+    data: tableItems,
     localization: MRT_Localization_FA,
     columnResizeDirection: "rtl",
     enableFullScreenToggle: false,

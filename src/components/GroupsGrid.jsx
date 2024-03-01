@@ -27,7 +27,7 @@ import {
 } from "material-react-table";
 
 function GroupsGrid() {
-  const [currentPage, setcurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [tableItems, setTableItems] = useState([]);
   const [groupsData, setGroupsData] = useState([]);
 
@@ -39,15 +39,15 @@ function GroupsGrid() {
 
   const dispatch = useDispatch();
 
-  const { data: groups, isLoading, isSuccess, error } = useGetGroupQuery(token);
+  const { data: groups, isLoading, isSuccess } = useGetGroupQuery(token);
 
   const rowsPerPage = 5;
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex =
-    Math.min(startIndex + rowsPerPage, groupsData?.itemList?.length) || 0;
+    Math.min(startIndex + rowsPerPage, groups?.itemList?.length) || 0;
 
   const handlePageChagne = (event, page) => {
-    setcurrentPage(page);
+    setCurrentPage(page);
     setTableItems(groupsData.slice(startIndex, endIndex));
   };
 
@@ -67,29 +67,21 @@ function GroupsGrid() {
   };
 
   useEffect(() => {
-    // clear the list for refresh
-    setGroupsData([]);
     if (isSuccess) {
-      groups.itemList.map((group, i) => {
-        setGroupsData((prev) => [
-          ...prev,
-          {
-            _id: group.id,
-            name: group.groupName,
-            number: convertToPersianNumber(i + 1),
-          },
-        ]);
-      });
-      setTableItems(groupsData.slice(startIndex, endIndex));
-    } else if (error && error.status === 401) {
-      toast.error("اطلاعات ورودی صحیح نیست", {
-        autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
-      });
+      const data = groups.itemList.map((group, i) => ({
+        _id: group.id,
+        name: group.groupName,
+        number: convertToPersianNumber(i + 1),
+      }));
+
+      setGroupsData(data);
+      setTableItems(data.slice(startIndex, endIndex));
     }
-  }, [groups, isSuccess, error, groupsData, startIndex, endIndex]);
+    return () => {
+      // clear the list for refresh
+      setGroupsData([]);
+    };
+  }, [groups, isSuccess, startIndex, endIndex]);
 
   useEffect(() => {
     console.log(Object.keys(rowSelection)[0]);
@@ -133,7 +125,7 @@ function GroupsGrid() {
 
   const table = useMaterialReactTable({
     columns,
-    data: tableItems.length === 5 ? tableItems : groupsData,
+    data: tableItems,
     localization: MRT_Localization_FA,
     columnResizeDirection: "rtl",
     enableFullScreenToggle: false,

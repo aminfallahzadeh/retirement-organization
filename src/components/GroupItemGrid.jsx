@@ -42,18 +42,16 @@ function GroupItemGrid() {
   };
 
   useEffect(() => {
-    // clear the list for refresh
-    setGroupItemsData([]);
     if (isSuccess) {
-      groupItems.itemList.map((item, i) => {
-        setGroupItemsData((prev) => [
-          ...prev,
-          { name: item.itemID, number: convertToPersianNumber(i + 1) },
-        ]);
-      });
-      setTableItems(groupItemsData.slice(startIndex, endIndex));
+      const data = groupItems.itemList.map((item, i) => ({
+        name: item.itemID,
+        number: convertToPersianNumber(i + 1),
+      }));
+
+      setGroupItemsData(data);
+      setTableItems(data.slice(startIndex, endIndex));
     }
-  }, [groupItems, isSuccess, groupItemsData, startIndex, endIndex]);
+  }, [groupItems, isSuccess, startIndex, endIndex]);
 
   const columns = useMemo(
     () => [

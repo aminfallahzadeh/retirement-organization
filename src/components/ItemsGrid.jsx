@@ -22,8 +22,8 @@ import {
 
 function ItemsGrid() {
   const [currentPage, setcurrentPage] = useState(1);
-  const [tableItems, setTableItems] = useState([]);
   const [itemsData, setItemsData] = useState([]);
+  const [tableItems, setTableItems] = useState([]);
 
   const { token } = useSelector((state) => state.auth);
   const { data: items, isLoading, isSuccess } = useGetItemsQuery(token);
@@ -39,22 +39,22 @@ function ItemsGrid() {
   };
 
   useEffect(() => {
-    // clear the list for refresh
-    setItemsData([]);
     if (isSuccess) {
-      items.itemList.map((item, i) => {
-        setItemsData((prev) => [
-          ...prev,
-          {
-            _id: item.id,
-            name: item.itemName,
-            number: convertToPersianNumber(i + 1),
-          },
-        ]);
-      });
-      setTableItems(itemsData.slice(startIndex, endIndex));
+      const data = items.itemList.map((item, i) => ({
+        _id: item.id,
+        name: item.itemName,
+        number: convertToPersianNumber(i + 1),
+      }));
+
+      setItemsData(data);
+      setTableItems(data.slice(startIndex, endIndex));
     }
-  }, [items, isSuccess, startIndex, itemsData, endIndex]);
+
+    return () => {
+      // Clear the list for refresh
+      setItemsData([]);
+    };
+  }, [items, isSuccess, startIndex, endIndex]);
 
   const columns = useMemo(
     () => [
