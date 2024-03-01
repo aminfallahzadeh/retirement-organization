@@ -3,8 +3,16 @@
         margin-right: 250px;
 
         &--topGrid {
-            width: 50%;
+            width: 750px;
             margin: 20px auto;
+        }
+
+        &--bottomGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 10px;
+            margin: 20px auto;
+            padding: 0 20px;
         }
     }
 }

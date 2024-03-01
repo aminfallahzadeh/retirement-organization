@@ -14,6 +14,7 @@ import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
+  getMRT_RowSelectionHandler,
   useMaterialReactTable,
 } from "material-react-table";
 
@@ -29,7 +30,11 @@ function ItemsGrid() {
       items.itemList.map((item, i) => {
         setItemsData((prev) => [
           ...prev,
-          { name: item.itemName, number: convertToPersianNumber(i + 1) },
+          {
+            _id: item.id,
+            name: item.itemName,
+            number: convertToPersianNumber(i + 1),
+          },
         ]);
       });
     }
@@ -84,6 +89,13 @@ function ItemsGrid() {
       rowsPerPageOptions: [5, 10, 20],
       variant: "outlined",
     },
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
+    muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
+      onClick: (event) =>
+        getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
+      sx: { cursor: "pointer" },
+    }),
   });
 
   return (

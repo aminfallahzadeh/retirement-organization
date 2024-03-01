@@ -46,8 +46,14 @@ function Dashboard() {
         <div className="dashboard__body--topGrid">
           {getGroupStatus ? <GroupsGrid /> : getUserStatus ? <UserGrid /> : ""}
         </div>
-        <div>{getItemsStatus && <ItemsGrid />}</div>
-        <GroupItemGrid />
+        <div className="dashboard__body--bottomGrid">
+          {getItemsStatus && (
+            <>
+              <GroupItemGrid />
+              <ItemsGrid />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

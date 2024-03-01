@@ -58,7 +58,11 @@ function GroupsGrid() {
       groups.itemList.map((group, i) => {
         setGroupsData((prev) => [
           ...prev,
-          { name: group.groupName, number: convertToPersianNumber(i + 1) },
+          {
+            _id: group.id,
+            name: group.groupName,
+            number: convertToPersianNumber(i + 1),
+          },
         ]);
       });
     }
