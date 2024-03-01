@@ -4,6 +4,9 @@ import { useMemo, useState, useEffect } from "react";
 // helpers
 import { convertToPersianNumber } from "../helper.js";
 
+// componsnet imports
+import CustomPagination from "./CustomPagination.jsx";
+
 // redux imports
 import { useSelector } from "react-redux";
 import { useGetGroupItemsQuery } from "../slices/usersApiSlice";
@@ -91,12 +94,13 @@ function GroupItemGrid() {
     paginationDisplayMode: "pages",
     enableFullScreenToggle: false,
     initialState: { pagination: { pageSize: 5 } },
-    muiPaginationProps: {
-      color: "success",
-      shape: "rounded",
-      rowsPerPageOptions: [5, 10, 20],
-      variant: "outlined",
-    },
+    renderBottomToolbar: (
+      <CustomPagination
+        count={Math.ceil(groupItemsData.length / 5)}
+        page={1}
+        onChange={(page) => console.log("Page changed to", page)}
+      />
+    ),
   });
 
   return (

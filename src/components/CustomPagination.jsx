@@ -16,7 +16,7 @@ const CustomPagination = ({ count, page, onChange }) => {
 
   return (
     <Pagination
-      sx={{ paddingTop: 1.5, justifyContent: "right" }}
+      sx={{ paddingTop: 1.5, paddingBottom: 1.5, justifyContent: "right" }}
       count={count}
       page={page}
       dir="rtl"

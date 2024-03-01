@@ -94,12 +94,6 @@ function ItemsGrid() {
     paginationDisplayMode: "pages",
     enableFullScreenToggle: false,
     initialState: { pagination: { pageSize: 5 } },
-    muiPaginationProps: {
-      color: "success",
-      shape: "rounded",
-      rowsPerPageOptions: [5, 10, 20],
-      variant: "outlined",
-    },
     renderBottomToolbar: (
       <CustomPagination
         count={Math.ceil(itemsData.length / 5)}

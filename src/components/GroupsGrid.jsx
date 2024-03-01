@@ -5,6 +5,9 @@ import useRefreshToken from "../hooks/useRefresh.js";
 // helpers
 import { convertToPersianNumber } from "../helper.js";
 
+// component imports
+import CustomPagination from "./CustomPagination.jsx";
+
 // bootstrap imports
 import { Button } from "react-bootstrap";
 
@@ -124,12 +127,13 @@ function GroupsGrid() {
     initialState: {
       pagination: { pageSize: 5 },
     },
-    muiPaginationProps: {
-      color: "success",
-      shape: "rounded",
-      rowsPerPageOptions: [5, 10, 20],
-      variant: "outlined",
-    },
+    renderBottomToolbar: (
+      <CustomPagination
+        count={Math.ceil(groupsData.length / 5)}
+        page={1}
+        onChange={(page) => console.log("Page changed to", page)}
+      />
+    ),
     enableRowSelection: true,
     enableMultiRowSelection: false,
     muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({

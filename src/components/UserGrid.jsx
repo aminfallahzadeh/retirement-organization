@@ -8,6 +8,9 @@ import { useGetUserQuery } from "../slices/usersApiSlice";
 // helper imports
 import { convertToPersianNumber } from "../helper.js";
 
+// componsnet imports
+import CustomPagination from "./CustomPagination.jsx";
+
 // library imports
 import Skeleton from "react-loading-skeleton";
 import { MRT_Localization_FA } from "material-react-table/locales/fa";
@@ -135,6 +138,13 @@ function UserGrid() {
       rowsPerPageOptions: [5, 10, 20],
       variant: "outlined",
     },
+    renderBottomToolbar: (
+      <CustomPagination
+        count={Math.ceil(userData.length / 5)}
+        page={1}
+        onChange={(page) => console.log("Page changed to", page)}
+      />
+    ),
   });
 
   return (
