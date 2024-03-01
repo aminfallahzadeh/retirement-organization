@@ -12,22 +12,25 @@ import { convertToPersianNumber } from "../helper.js";
 import Skeleton from "react-loading-skeleton";
 import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
-import { MaterialReactTable } from "material-react-table";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
 
 function UserGrid() {
   const dispatch = useDispatch();
 
-  const [gridData, setGridData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const { token } = useSelector((state) => state.auth);
 
   const { data: users, isLoading, isSuccess } = useGetUserQuery(token);
 
   useEffect(() => {
     // clear the list for refresh
-    setGridData([]);
+    setUserData([]);
     if (isSuccess) {
       users.itemList.map((user, i) => {
-        setGridData((prev) => [
+        setUserData((prev) => [
           ...prev,
           {
             isActive: user.isActive === true ? "فعال" : "غیر فعال",
@@ -102,6 +105,7 @@ function UserGrid() {
       {
         accessorKey: "number",
         header: "ردیف",
+        size: 100,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -117,6 +121,22 @@ function UserGrid() {
     []
   );
 
+  const table = useMaterialReactTable({
+    columns,
+    data: userData,
+    paginationDisplayMode: "pages",
+    localization: MRT_Localization_FA,
+    columnResizeDirection: "rtl",
+    enableFullScreenToggle: false,
+    initialState: { pagination: { pageSize: 5 } },
+    muiPaginationProps: {
+      color: "success",
+      shape: "rounded",
+      rowsPerPageOptions: [5, 10, 20],
+      variant: "outlined",
+    },
+  });
+
   return (
     <>
       {isLoading ? (
@@ -124,13 +144,7 @@ function UserGrid() {
           <Skeleton count={3} />
         </p>
       ) : (
-        <MaterialReactTable
-          columns={columns}
-          data={gridData}
-          enableColumnFilterModes
-          columnResizeDirection="rtl"
-          localization={MRT_Localization_FA}
-        />
+        <MaterialReactTable table={table} />
       )}
     </>
   );

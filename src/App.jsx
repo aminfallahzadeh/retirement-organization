@@ -55,7 +55,7 @@ function App() {
 
   return (
     <>
-      <main>
+      <main style={{ height: "100%" }}>
         <Outlet />
       </main>
       <ToastContainer />

@@ -1,14 +1,10 @@
-.dashboard-body {
-    font-family: sahel, sans-serif !important;
-    text-align: right !important;
-}
+.dashboard {
+    &__body {
+        margin-right: 250px;
 
-.dropdown-menu {
-    right: 0 !important;
-    left: auto !important;
-    text-align: center !important;
-}
-
-.devider {
-    background-color: $color-grey-3;
+        &--topGrid {
+            width: 50%;
+            margin: 20px auto;
+        }
+    }
 }

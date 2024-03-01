@@ -13,7 +13,11 @@ import {
 
 // redux imports
 import { useDispatch } from "react-redux";
-import { setGetGroupStatus, setGetUserStatus } from "../slices/userReqSlice";
+import {
+  setGetGroupStatus,
+  setGetUserStatus,
+  setGetItemsStatus,
+} from "../slices/userReqSlice";
 
 // react imports
 import useRefreshToken from "../hooks/useRefresh";
@@ -42,6 +46,7 @@ function SidebarNav() {
       await refreshTokenHandler();
       dispatch(setGetUserStatus(true));
       dispatch(setGetGroupStatus(false));
+      dispatch(setGetItemsStatus(false));
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,

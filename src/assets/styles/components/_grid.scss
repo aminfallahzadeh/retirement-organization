@@ -1,16 +1,11 @@
-// .MuiPaper-root {
-//     font-family: sahel !important;
-// }
+.MuiBox-root {
+    flex-direction: row-reverse !important;
+}
 
-// .grid__container {
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     margin-top: 50px;
-// }
+.MuiList-root > .MuiButtonBase-root {
+    justify-content: right !important;
+}
 
-.skeleton {
-    width: 50%;
-    margin: auto;
-    margin-top: 20px;
+.MuiListItemIcon-root {
+    margin-left: 10px !important;
 }

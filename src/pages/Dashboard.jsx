@@ -6,6 +6,8 @@ import GroupsGrid from "../components/GroupsGrid";
 import UserGrid from "../components/UserGrid";
 import SidebarNav from "../components/SidebarNav";
 import TopbarNav from "../components/TopbarNav";
+import ItemsGrid from "../components/ItemsGrid";
+import GroupItemGrid from "../components/GroupItemGrid";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -20,7 +22,7 @@ function Dashboard() {
   // get username from userInfo
   const [userName, setUserName] = useState("");
 
-  const { getGroupStatus, getUserStatus } = useSelector(
+  const { getGroupStatus, getUserStatus, getItemsStatus } = useSelector(
     (state) => state.userReq
   );
 
@@ -37,11 +39,17 @@ function Dashboard() {
   }, [userInfo, navigate]);
 
   return (
-    <main className="dashboard-body">
+    <div className="dashboard">
       <TopbarNav userName={userName} />
       <SidebarNav />
-      {getGroupStatus ? <GroupsGrid /> : getUserStatus ? <UserGrid /> : ""}
-    </main>
+      <div className="dashboard__body">
+        <div className="dashboard__body--topGrid">
+          {getGroupStatus ? <GroupsGrid /> : getUserStatus ? <UserGrid /> : ""}
+        </div>
+        <div>{getItemsStatus && <ItemsGrid />}</div>
+        <GroupItemGrid />
+      </div>
+    </div>
   );
 }
 

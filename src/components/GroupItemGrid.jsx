@@ -1,17 +1,12 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
-import useRefreshToken from "../hooks/useRefresh.js";
 
 // helpers
 import { convertToPersianNumber } from "../helper.js";
 
-// bootstrap imports
-import { Button } from "react-bootstrap";
-
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
-import { useGetGroupQuery } from "../slices/usersApiSlice";
-import { setGetItemsStatus } from "../slices/userReqSlice";
+import { useSelector } from "react-redux";
+import { useGetGroupItemsQuery } from "../slices/usersApiSlice";
 
 // library imports
 import { toast } from "react-toastify";
@@ -23,24 +18,21 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-function GroupsGrid() {
-  const [groupsData, setGroupsData] = useState([]);
+function GroupItemGrid() {
+  const [groupItemsData, setGroupItemsData] = useState([]);
   const { token } = useSelector((state) => state.auth);
+  const { data: groupItems, isLoading } = useGetGroupItemsQuery(token);
 
-  const refreshTokenHandler = useRefreshToken();
-
-  const dispatch = useDispatch();
-
-  const {
-    data: groups,
-    isLoading: isLoading,
-    isSuccess: isSuccess,
-  } = useGetGroupQuery(token);
-
-  const createNewHandler = async () => {
+  useEffect(() => {
+    // clear the list for refresh
+    setGroupItemsData([]);
     try {
-      await refreshTokenHandler();
-      dispatch(setGetItemsStatus(true));
+      groupItems.itemList.map((item, i) => {
+        setGroupItemsData((prev) => [
+          ...prev,
+          { name: item.itemID, number: convertToPersianNumber(i + 1) },
+        ]);
+      });
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
@@ -49,26 +41,21 @@ function GroupsGrid() {
         },
       });
     }
-  };
-
-  useEffect(() => {
-    // clear the list for refresh
-    setGroupsData([]);
-    if (isSuccess) {
-      groups.itemList.map((group, i) => {
-        setGroupsData((prev) => [
-          ...prev,
-          { name: group.groupName, number: convertToPersianNumber(i + 1) },
-        ]);
-      });
-    }
-  }, [groups, isSuccess]);
+    // if (isSuccess) {
+    //   groupItems.itemList.map((item, i) => {
+    //     setGroupItemsData((prev) => [
+    //       ...prev,
+    //       { name: item.itemID, number: convertToPersianNumber(i + 1) },
+    //     ]);
+    //   });
+    // }
+  }, [groupItems]);
 
   const columns = useMemo(
     () => [
       {
         accessorKey: "name",
-        header: "نام گروه",
+        header: "نام",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -83,8 +70,7 @@ function GroupsGrid() {
       {
         accessorKey: "number",
         header: "ردیف",
-        grow: false,
-        size: 10,
+        size: 100,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -102,7 +88,7 @@ function GroupsGrid() {
 
   const table = useMaterialReactTable({
     columns,
-    data: groupsData,
+    data: groupItemsData,
     localization: MRT_Localization_FA,
     columnResizeDirection: "rtl",
     paginationDisplayMode: "pages",
@@ -123,19 +109,10 @@ function GroupsGrid() {
           <Skeleton count={3} />
         </p>
       ) : (
-        <>
-          <MaterialReactTable table={table} />
-
-          <div className="double-buttons">
-            <Button variant="outline-success">ویرایش</Button>
-            <Button variant="outline-success" onClick={createNewHandler}>
-              ایجاد گروه
-            </Button>
-          </div>
-        </>
+        <MaterialReactTable table={table} />
       )}
     </>
   );
 }
 
-export default GroupsGrid;
+export default GroupItemGrid;

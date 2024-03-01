@@ -1,9 +1,16 @@
 .ps-sidebar-root {
-	float: right !important;
+	// float: right !important;
+	position: fixed !important;
+	right: 0 !important;
+	top: 0 !important;
+	padding-top: $top-nav-height !important;
+	overflow-x: hidden !important;
+	width: $side-nav-width !important;
+	z-index: 1000 !important;
+	height: 100% !important;
 }
 
 .ps-sidebar-container {
-	height: 100vh !important;
 	background-color: $color-dark-purple-1 !important;
 	color: $color-grey-2 !important;
 }

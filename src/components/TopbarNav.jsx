@@ -13,7 +13,7 @@ function TopbarNav({ userName }) {
       expand="lg"
       bg="dark"
       variant="dark"
-      className="px-5 py-2"
+      className="px-5 py-2 topnav"
       sticky="top"
     >
       <Container fluid>

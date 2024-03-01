@@ -17,7 +17,7 @@ const useLogout = () => {
   const { token, refreshToken, expDate } = useSelector((state) => state.auth);
   const logoutHandler = async () => {
     try {
-      refreshTokenHandler();
+      await refreshTokenHandler();
       const res = await logoutApiCall({
         data: {
           token: "<string>",
@@ -25,7 +25,7 @@ const useLogout = () => {
           error: "<string>",
           expiredate: expDate,
         },
-        token: token,
+        token,
       });
       console.log(res);
       dispatch(logout());
