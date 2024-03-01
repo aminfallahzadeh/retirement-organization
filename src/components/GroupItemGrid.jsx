@@ -94,6 +94,7 @@ function GroupItemGrid() {
     localization: MRT_Localization_FA,
     columnResizeDirection: "rtl",
     enableFullScreenToggle: false,
+    positionToolbarAlertBanner: "none",
     initialState: { pagination: { pageSize: 5 } },
     muiPaginationProps: {
       color: "secondary",
