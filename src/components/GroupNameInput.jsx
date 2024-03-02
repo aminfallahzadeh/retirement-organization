@@ -1,5 +1,5 @@
 // react imports
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // redux imports
 import { useSelector } from "react-redux";
@@ -11,6 +11,10 @@ function GroupNameInput() {
   const handleGroupNameChange = (e) => {
     setGroupName(e.target.value);
   };
+
+  useEffect(() => {
+    setGroupName(getGroupInfo?.name);
+  }, [getGroupInfo]);
 
   return (
     <div className="inputBox">
