@@ -11,7 +11,11 @@ import { Button } from "react-bootstrap";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
-import { setGetItemsStatus, setGetGroupStatus } from "../slices/userReqSlice";
+import {
+  setGetItemsStatus,
+  setGetGroupStatus,
+  setGetGroupId,
+} from "../slices/userReqSlice";
 
 // library imports
 import { toast } from "react-toastify";
@@ -55,7 +59,6 @@ function GroupsGrid() {
     try {
       await refreshTokenHandler();
       dispatch(setGetItemsStatus(true));
-      dispatch(setGetGroupStatus(false));
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
@@ -82,10 +85,6 @@ function GroupsGrid() {
       setGroupsData([]);
     };
   }, [groups, isSuccess, startIndex, endIndex]);
-
-  useEffect(() => {
-    console.log(Object.keys(rowSelection)[0]);
-  }, [rowSelection]);
 
   const columns = useMemo(
     () => [
@@ -168,6 +167,10 @@ function GroupsGrid() {
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
+
+  useEffect(() => {
+    dispatch(setGetGroupId(Object.keys(table.getState().rowSelection)[0]));
+  }, [dispatch, table, rowSelection]);
 
   return (
     <>

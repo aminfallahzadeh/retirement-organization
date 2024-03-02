@@ -4,6 +4,7 @@ const initialState = {
   getGroupStatus: false,
   getUserStatus: false,
   getItemsStatus: false,
+  getGroupId: "",
 };
 
 const userReqSlice = createSlice({
@@ -21,10 +22,18 @@ const userReqSlice = createSlice({
     setGetItemsStatus: (state, action) => {
       state.getItemsStatus = action.payload;
     },
+
+    setGetGroupId: (state, action) => {
+      state.getGroupId = action.payload;
+    },
   },
 });
 
-export const { setGetGroupStatus, setGetUserStatus, setGetItemsStatus } =
-  userReqSlice.actions;
+export const {
+  setGetGroupStatus,
+  setGetUserStatus,
+  setGetItemsStatus,
+  setGetGroupId,
+} = userReqSlice.actions;
 
 export default userReqSlice.reducer;

@@ -53,8 +53,8 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     getGroupItems: builder.query({
-      query: (token) => ({
-        url: `${USERS_URL_HTTPS}/GetGroupItem?groupID=647510A9-44E2-4A17-86D9-407EA4BC22FA`,
+      query: ({ token, groupId }) => ({
+        url: `${USERS_URL_HTTPS}/GetGroupItem?groupID=${groupId}`,
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,

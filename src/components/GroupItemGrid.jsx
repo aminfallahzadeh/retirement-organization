@@ -24,12 +24,14 @@ function GroupItemGrid() {
   const [tableItems, setTableItems] = useState([]);
   const [groupItemsData, setGroupItemsData] = useState([]);
 
+  const { getGroupId } = useSelector((state) => state.userReq);
+
   const { token } = useSelector((state) => state.auth);
   const {
     data: groupItems,
     isSuccess,
     isLoading,
-  } = useGetGroupItemsQuery(token);
+  } = useGetGroupItemsQuery({ token, groupId: getGroupId });
 
   const rowsPerPage = 5;
   const startIndex = (currentPage - 1) * rowsPerPage;
