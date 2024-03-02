@@ -1,5 +1,6 @@
 // library imports
 import { jwtDecode } from "jwt-decode";
+import { Button } from "react-bootstrap";
 
 // component imports
 import GroupsGrid from "../components/GroupsGrid";
@@ -9,6 +10,7 @@ import TopbarNav from "../components/TopbarNav";
 import ItemsGrid from "../components/ItemsGrid";
 import GroupItemGrid from "../components/GroupItemGrid";
 import GroupNameInput from "../components/GroupNameInput";
+import ArrowButtons from "../components/ArrowButtons";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -55,11 +57,15 @@ function Dashboard() {
           {getItemsStatus && (
             <>
               <div className="dashboard__body--input">
+                <Button variant="outline-success">ذخیره</Button>
                 <GroupNameInput />
               </div>
 
-              <div className="dashboard__body--bottomGrid">
+              <div className="dashboard__body--buttomGrid">
                 <GroupItemGrid />
+
+                <ArrowButtons />
+
                 <ItemsGrid />
               </div>
             </>

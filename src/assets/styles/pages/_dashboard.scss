@@ -7,17 +7,27 @@
             margin: 20px auto;
         }
 
-        &--bottomGrid {
+        &--buttomGrid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr auto 1fr;
             grid-gap: 10px;
             margin: 20px auto;
             padding: 0 20px;
+
+            &-arrows {
+                margin: auto;
+                padding: 0 10px;
+                display: flex;
+                flex-direction: column;
+                row-gap: 20px;
+            }
         }
 
         &--input {
-            margin: 50px auto;
-            width: 30%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            column-gap: 50px;
         }
     }
 }

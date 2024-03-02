@@ -99,13 +99,6 @@ function ItemsGrid() {
     enableFullScreenToggle: false,
     positionToolbarAlertBanner: "none",
     initialState: { pagination: { pageSize: 5 } },
-    muiPaginationProps: {
-      color: "secondary",
-      shape: "rounded",
-      showRowsPerPage: false,
-      variant: "outlined",
-    },
-
     renderBottomToolbar: (
       <Pagination
         sx={{ paddingTop: 1.5, paddingBottom: 1.5, justifyContent: "right" }}
@@ -113,7 +106,7 @@ function ItemsGrid() {
         page={currentPage}
         dir="rtl"
         variant="outlined"
-        color="secondary"
+        color="success"
         onChange={handlePageChagne}
         renderItem={(item) => (
           <PaginationItem
