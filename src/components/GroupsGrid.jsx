@@ -5,20 +5,12 @@ import useRefreshToken from "../hooks/useRefresh.js";
 // helpers
 import { convertToPersianNumber } from "../helper.js";
 
-// bootstrap imports
-import { Button } from "react-bootstrap";
-
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
-import {
-  setGetItemsStatus,
-  setGetGroupStatus,
-  setGetGroupId,
-} from "../slices/userReqSlice";
+import { setGetItemsStatus, setGetGroupInfo } from "../slices/userReqSlice";
 
 // library imports
-import { toast } from "react-toastify";
 import { PaginationItem, Pagination } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
@@ -34,6 +26,8 @@ function GroupsGrid() {
   const [currentPage, setCurrentPage] = useState(1);
   const [tableItems, setTableItems] = useState([]);
   const [groupsData, setGroupsData] = useState([]);
+
+  const { getGroupInfo } = useSelector((state) => state.userReq);
 
   const [rowSelection, setRowSelection] = useState({});
 
@@ -55,19 +49,9 @@ function GroupsGrid() {
     setTableItems(groupsData.slice(startIndex, endIndex));
   };
 
-  const createNewHandler = async () => {
-    try {
-      await refreshTokenHandler();
-      dispatch(setGetItemsStatus(true));
-    } catch (err) {
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
-      });
-    }
-  };
+  function findGroupById(data, id) {
+    return data.find((group) => group._id === id);
+  }
 
   useEffect(() => {
     if (isSuccess) {
@@ -169,8 +153,35 @@ function GroupsGrid() {
   });
 
   useEffect(() => {
-    dispatch(setGetGroupId(Object.keys(table.getState().rowSelection)[0]));
-  }, [dispatch, table, rowSelection]);
+    async function refresh() {
+      await refreshTokenHandler();
+    }
+    refresh();
+
+    const id = Object.keys(table.getState().rowSelection)[0];
+    const selectedGroupInfo = findGroupById(groupsData, id);
+
+    console.log(Object.keys(table.getState().rowSelection)[0]);
+
+    if (id) {
+      dispatch(setGetGroupInfo(selectedGroupInfo));
+    } else {
+      dispatch(setGetGroupInfo(null));
+    }
+
+    if (getGroupInfo) {
+      dispatch(setGetItemsStatus(true));
+    } else {
+      dispatch(setGetItemsStatus(false));
+    }
+  }, [
+    dispatch,
+    table,
+    rowSelection,
+    refreshTokenHandler,
+    getGroupInfo,
+    groupsData,
+  ]);
 
   return (
     <>
@@ -179,15 +190,7 @@ function GroupsGrid() {
           <Skeleton count={3} />
         </p>
       ) : (
-        <>
-          <MaterialReactTable table={table} />
-
-          <div className="double-buttons">
-            <Button variant="outline-success" onClick={createNewHandler}>
-              ویرایش
-            </Button>
-          </div>
-        </>
+        <MaterialReactTable table={table} />
       )}
     </>
   );

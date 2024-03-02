@@ -15,7 +15,6 @@ const useRefreshToken = () => {
   const tokenDate = new Date(expDate);
 
   const refreshTokenHnadler = async () => {
-    // console.log(tokenDate < Date.now());
     if (tokenDate - 3000 < Date.now()) {
       try {
         const res = await refreshApiCall({
@@ -24,7 +23,7 @@ const useRefreshToken = () => {
           error: "string",
           expiredate: expDate,
         }).unwrap();
-        // console.log(res);
+        console.log("Refresh Token Run!");
         dispatch(setNewCredentials({ ...res }));
       } catch (err) {
         toast.error(err?.data?.message || err.error, {

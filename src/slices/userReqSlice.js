@@ -4,7 +4,7 @@ const initialState = {
   getGroupStatus: false,
   getUserStatus: false,
   getItemsStatus: false,
-  getGroupId: "",
+  getGroupInfo: null,
 };
 
 const userReqSlice = createSlice({
@@ -23,8 +23,8 @@ const userReqSlice = createSlice({
       state.getItemsStatus = action.payload;
     },
 
-    setGetGroupId: (state, action) => {
-      state.getGroupId = action.payload;
+    setGetGroupInfo: (state, action) => {
+      state.getGroupInfo = action.payload;
     },
   },
 });
@@ -33,7 +33,7 @@ export const {
   setGetGroupStatus,
   setGetUserStatus,
   setGetItemsStatus,
-  setGetGroupId,
+  setGetGroupInfo,
 } = userReqSlice.actions;
 
 export default userReqSlice.reducer;

@@ -8,6 +8,7 @@ import SidebarNav from "../components/SidebarNav";
 import TopbarNav from "../components/TopbarNav";
 import ItemsGrid from "../components/ItemsGrid";
 import GroupItemGrid from "../components/GroupItemGrid";
+import GroupNameInput from "../components/GroupNameInput";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -50,11 +51,17 @@ function Dashboard() {
             <UserGrid />
           ) : null}
         </div>
-        <div className="dashboard__body--bottomGrid">
+        <div>
           {getItemsStatus && (
             <>
-              <GroupItemGrid />
-              <ItemsGrid />
+              <div className="dashboard__body--input">
+                <GroupNameInput />
+              </div>
+
+              <div className="dashboard__body--bottomGrid">
+                <GroupItemGrid />
+                <ItemsGrid />
+              </div>
             </>
           )}
         </div>
