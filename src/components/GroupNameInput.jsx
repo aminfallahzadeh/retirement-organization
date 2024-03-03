@@ -5,16 +5,16 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 function GroupNameInput() {
-  const { getGroupInfo } = useSelector((state) => state.userReq);
-  const [groupName, setGroupName] = useState(getGroupInfo?.name);
+  const { groupInfo } = useSelector((state) => state.userReq);
+  const [groupName, setGroupName] = useState(groupInfo?.name);
 
   const handleGroupNameChange = (e) => {
     setGroupName(e.target.value);
   };
 
   useEffect(() => {
-    setGroupName(getGroupInfo?.name);
-  }, [getGroupInfo]);
+    setGroupName(groupInfo?.name);
+  }, [groupInfo]);
 
   return (
     <div className="inputBox">

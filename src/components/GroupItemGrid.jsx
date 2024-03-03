@@ -2,11 +2,12 @@
 import { useMemo, useState, useEffect } from "react";
 
 // helpers
-import { convertToPersianNumber } from "../helper.js";
+import { convertToPersianNumber, findById } from "../helper.js";
 
 // redux imports
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupItemsQuery } from "../slices/usersApiSlice";
+import { setGroupItemInfo, setGroupItemsData } from "../slices/userReqSlice";
 
 // library imports
 import { PaginationItem, Pagination } from "@mui/material";
@@ -16,22 +17,29 @@ import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
+  getMRT_RowSelectionHandler,
   useMaterialReactTable,
 } from "material-react-table";
 
 function GroupItemGrid() {
   const [currentPage, setcurrentPage] = useState(1);
   const [tableItems, setTableItems] = useState([]);
-  const [groupItemsData, setGroupItemsData] = useState([]);
+  // const [groupItemsData, setGroupItemsData] = useState([]);
 
-  const { getGroupInfo } = useSelector((state) => state.userReq);
+  const dispatch = useDispatch();
+
+  const { groupInfo } = useSelector((state) => state.userReq);
+
+  const [rowSelection, setRowSelection] = useState({});
 
   const { token } = useSelector((state) => state.auth);
+  const { groupItemsData } = useSelector((state) => state.userReq);
+
   const {
     data: groupItems,
     isSuccess,
     isLoading,
-  } = useGetGroupItemsQuery({ token, groupId: getGroupInfo?._id });
+  } = useGetGroupItemsQuery({ token, groupId: groupInfo?._id });
 
   const rowsPerPage = 5;
   const startIndex = (currentPage - 1) * rowsPerPage;
@@ -46,14 +54,19 @@ function GroupItemGrid() {
   useEffect(() => {
     if (isSuccess) {
       const data = groupItems.itemList.map((item, i) => ({
+        _id: item.id,
         name: item.itemID,
         number: convertToPersianNumber(i + 1),
       }));
 
-      setGroupItemsData(data);
+      dispatch(setGroupItemsData(data));
       setTableItems(data.slice(startIndex, endIndex));
     }
-  }, [groupItems, isSuccess, startIndex, endIndex]);
+    return () => {
+      // Clear the list for refresh
+      dispatch(setGroupItemsData([]));
+    };
+  }, [groupItems, isSuccess, startIndex, endIndex, dispatch]);
 
   const columns = useMemo(
     () => [
@@ -116,7 +129,27 @@ function GroupItemGrid() {
         )}
       />
     ),
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
+    muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
+      onClick: (event) =>
+        getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
+      sx: { cursor: "pointer" },
+    }),
+    getRowId: (originalRow) => originalRow._id,
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
   });
+  useEffect(() => {
+    const id = Object.keys(table.getState().rowSelection)[0];
+    const selectedGroupItemInfo = findById(groupItemsData, id);
+
+    if (id) {
+      dispatch(setGroupItemInfo(selectedGroupItemInfo));
+    } else {
+      dispatch(setGroupItemInfo(null));
+    }
+  }, [dispatch, table, rowSelection, groupItemsData]);
 
   return (
     <>

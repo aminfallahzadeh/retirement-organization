@@ -4,7 +4,12 @@ const initialState = {
   getGroupStatus: false,
   getUserStatus: false,
   getItemsStatus: false,
-  getGroupInfo: null,
+  groupsData: [],
+  itemsData: [],
+  groupItemsData: [],
+  groupInfo: null,
+  itemInfo: null,
+  groupItemInfo: null,
 };
 
 const userReqSlice = createSlice({
@@ -23,8 +28,34 @@ const userReqSlice = createSlice({
       state.getItemsStatus = action.payload;
     },
 
-    setGetGroupInfo: (state, action) => {
-      state.getGroupInfo = action.payload;
+    setGroupsData: (state, action) => {
+      state.groupsData = action.payload;
+    },
+
+    setItemsData: (state, action) => {
+      state.itemsData = action.payload;
+    },
+
+    setGroupItemsData: (state, action) => {
+      state.groupItemsData = action.payload;
+    },
+
+    setGroupInfo: (state, action) => {
+      state.groupInfo = action.payload;
+    },
+
+    setItemInfo: (state, action) => {
+      state.itemInfo = action.payload;
+    },
+
+    setGroupItemInfo: (state, action) => {
+      state.groupItemInfo = action.payload;
+    },
+
+    removeItemsDataById: (state, action) => {
+      state.itemsData = state.itemsData.filter(
+        (item) => item._id !== action.payload
+      );
     },
   },
 });
@@ -33,7 +64,13 @@ export const {
   setGetGroupStatus,
   setGetUserStatus,
   setGetItemsStatus,
-  setGetGroupInfo,
+  setGroupsData,
+  setItemsData,
+  setGroupItemsData,
+  setGroupInfo,
+  setItemInfo,
+  setGroupItemInfo,
+  removeItemsDataById,
 } = userReqSlice.actions;
 
 export default userReqSlice.reducer;

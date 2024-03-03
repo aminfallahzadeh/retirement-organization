@@ -1,9 +1,3 @@
-// // convert english numbers to persian
-// export const convertToPersianNumber = (num) => {
-//   const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-//   return String(num).replace(/[0-9]/g, (digit) => persianDigits[digit]);
-// };
-
 // convert english numbers to persian
 export const convertToPersianNumber = (num) => {
   const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -13,4 +7,10 @@ export const convertToPersianNumber = (num) => {
     result += persianDigits.charAt(c);
   }
   return result;
+};
+
+// find item by id
+
+export const findById = (data, id) => {
+  return data.find((item) => item._id === id);
 };

@@ -3,12 +3,16 @@ import { useMemo, useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefresh.js";
 
 // helpers
-import { convertToPersianNumber } from "../helper.js";
+import { convertToPersianNumber, findById } from "../helper.js";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
-import { setGetItemsStatus, setGetGroupInfo } from "../slices/userReqSlice";
+import {
+  setGetItemsStatus,
+  setGroupInfo,
+  setGroupsData,
+} from "../slices/userReqSlice";
 
 // library imports
 import { PaginationItem, Pagination } from "@mui/material";
@@ -25,9 +29,9 @@ import {
 function GroupsGrid() {
   const [currentPage, setCurrentPage] = useState(1);
   const [tableItems, setTableItems] = useState([]);
-  const [groupsData, setGroupsData] = useState([]);
+  // const [groupsData, setGroupsData] = useState([]);
 
-  const { getGroupInfo } = useSelector((state) => state.userReq);
+  const { groupInfo, groupsData } = useSelector((state) => state.userReq);
 
   const [rowSelection, setRowSelection] = useState({});
 
@@ -49,10 +53,6 @@ function GroupsGrid() {
     setTableItems(groupsData.slice(startIndex, endIndex));
   };
 
-  function findGroupById(data, id) {
-    return data.find((group) => group._id === id);
-  }
-
   useEffect(() => {
     if (isSuccess) {
       const data = groups.itemList.map((group, i) => ({
@@ -61,14 +61,14 @@ function GroupsGrid() {
         number: convertToPersianNumber(i + 1),
       }));
 
-      setGroupsData(data);
+      dispatch(setGroupsData(data));
       setTableItems(data.slice(startIndex, endIndex));
     }
     return () => {
       // clear the list for refresh
-      setGroupsData([]);
+      dispatch(setGroupsData([]));
     };
-  }, [groups, isSuccess, startIndex, endIndex]);
+  }, [groups, isSuccess, startIndex, endIndex, dispatch]);
 
   const columns = useMemo(
     () => [
@@ -148,23 +148,16 @@ function GroupsGrid() {
   });
 
   useEffect(() => {
-    async function refresh() {
-      await refreshTokenHandler();
-    }
-    refresh();
-
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedGroupInfo = findGroupById(groupsData, id);
-
-    console.log(Object.keys(table.getState().rowSelection)[0]);
+    const selectedGroupInfo = findById(groupsData, id);
 
     if (id) {
-      dispatch(setGetGroupInfo(selectedGroupInfo));
+      dispatch(setGroupInfo(selectedGroupInfo));
     } else {
-      dispatch(setGetGroupInfo(null));
+      dispatch(setGroupInfo(null));
     }
 
-    if (getGroupInfo) {
+    if (groupInfo) {
       dispatch(setGetItemsStatus(true));
     } else {
       dispatch(setGetItemsStatus(false));
@@ -174,7 +167,7 @@ function GroupsGrid() {
     table,
     rowSelection,
     refreshTokenHandler,
-    getGroupInfo,
+    groupInfo,
     groupsData,
   ]);
 

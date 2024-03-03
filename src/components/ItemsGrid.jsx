@@ -2,11 +2,12 @@
 import { useMemo, useState, useEffect } from "react";
 
 // helpers
-import { convertToPersianNumber } from "../helper.js";
+import { convertToPersianNumber, findById } from "../helper.js";
 
 // redux imports
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useGetItemsQuery } from "../slices/usersApiSlice";
+import { setItemInfo, setItemsData } from "../slices/userReqSlice";
 
 // library imports
 import { PaginationItem, Pagination } from "@mui/material";
@@ -22,21 +23,29 @@ import {
 
 function ItemsGrid() {
   const [currentPage, setcurrentPage] = useState(1);
-  const [itemsData, setItemsData] = useState([]);
   const [tableItems, setTableItems] = useState([]);
 
   const { token } = useSelector((state) => state.auth);
-  const { data: items, isLoading, isSuccess } = useGetItemsQuery(token);
+  const { itemInfo, itemsData } = useSelector((state) => state.userReq);
+
+  const [rowSelection, setRowSelection] = useState({});
+
+  const dispatch = useDispatch();
 
   const rowsPerPage = 5;
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const endIndex =
-    Math.min(startIndex + rowsPerPage, items?.itemList?.length) || 0;
 
-  const handlePageChagne = (event, page) => {
+  const { data: items, isLoading, isSuccess } = useGetItemsQuery(token);
+
+  const handlePageChagne = (_, page) => {
     setcurrentPage(page);
-    setTableItems(itemsData.slice(startIndex, endIndex));
   };
+
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = Math.min(startIndex + rowsPerPage, itemsData.length);
+
+    setTableItems(itemsData.slice(startIndex, endIndex));
+  }, [currentPage, itemsData]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -46,15 +55,9 @@ function ItemsGrid() {
         number: convertToPersianNumber(i + 1),
       }));
 
-      setItemsData(data);
-      setTableItems(data.slice(startIndex, endIndex));
+      dispatch(setItemsData(data));
     }
-
-    return () => {
-      // Clear the list for refresh
-      setItemsData([]);
-    };
-  }, [items, isSuccess, startIndex, endIndex]);
+  }, [items, isSuccess, dispatch]);
 
   const columns = useMemo(
     () => [
@@ -124,7 +127,21 @@ function ItemsGrid() {
         getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
       sx: { cursor: "pointer" },
     }),
+    getRowId: (originalRow) => originalRow._id,
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
   });
+
+  useEffect(() => {
+    const id = Object.keys(table.getState().rowSelection)[0];
+    const selectedItemInfo = findById(itemsData, id);
+
+    if (id) {
+      dispatch(setItemInfo(selectedItemInfo));
+    } else {
+      dispatch(setItemInfo(null));
+    }
+  }, [dispatch, table, rowSelection, itemInfo, itemsData]);
 
   return (
     <>
