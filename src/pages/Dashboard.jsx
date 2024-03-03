@@ -11,6 +11,7 @@ import ItemsGrid from "../components/ItemsGrid";
 import GroupItemGrid from "../components/GroupItemGrid";
 import GroupNameInput from "../components/GroupNameInput";
 import ArrowButtons from "../components/ArrowButtons";
+import GridTemplate from "../components/GridTemplate";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";

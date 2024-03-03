@@ -12,6 +12,8 @@ import {
   setGetGroupStatus,
   setGetItemsStatus,
   setGetUserStatus,
+  setGroupItemsData,
+  setItemsData,
 } from "../slices/userReqSlice";
 
 const useLogout = () => {
@@ -35,6 +37,8 @@ const useLogout = () => {
       dispatch(setGetGroupStatus(false));
       dispatch(setGetItemsStatus(false));
       dispatch(setGetUserStatus(false));
+      dispatch(setGroupItemsData([]));
+      dispatch(setItemsData([]));
       toast.success(res.data.message, {
         autoClose: 2000,
         style: {

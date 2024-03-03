@@ -52,6 +52,10 @@ const userReqSlice = createSlice({
       state.groupItemInfo = action.payload;
     },
 
+    addGroupItemsDataById: (state, action) => {
+      state.groupItemsData = [action.payload, ...state.groupItemsData];
+    },
+
     removeItemsDataById: (state, action) => {
       state.itemsData = state.itemsData.filter(
         (item) => item._id !== action.payload
@@ -70,6 +74,7 @@ export const {
   setGroupInfo,
   setItemInfo,
   setGroupItemInfo,
+  addGroupItemsDataById,
   removeItemsDataById,
 } = userReqSlice.actions;
 

@@ -7,7 +7,10 @@ import { Button } from "react-bootstrap";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { removeItemsDataById } from "../slices/userReqSlice";
+import {
+  removeItemsDataById,
+  addGroupItemsDataById,
+} from "../slices/userReqSlice";
 
 function ArrowButtons() {
   const { itemInfo } = useSelector((state) => state.userReq);
@@ -15,6 +18,7 @@ function ArrowButtons() {
 
   const removeHandler = async (id) => {
     dispatch(removeItemsDataById(id));
+    dispatch(addGroupItemsDataById(itemInfo));
   };
 
   return (

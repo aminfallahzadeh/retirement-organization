@@ -41,13 +41,6 @@ function ItemsGrid() {
   };
 
   useEffect(() => {
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const endIndex = Math.min(startIndex + rowsPerPage, itemsData.length);
-
-    setTableItems(itemsData.slice(startIndex, endIndex));
-  }, [currentPage, itemsData]);
-
-  useEffect(() => {
     if (isSuccess) {
       const data = items.itemList.map((item, i) => ({
         _id: item.id,
@@ -58,6 +51,13 @@ function ItemsGrid() {
       dispatch(setItemsData(data));
     }
   }, [items, isSuccess, dispatch]);
+
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = Math.min(startIndex + rowsPerPage, itemsData.length);
+
+    setTableItems(itemsData.slice(startIndex, endIndex));
+  }, [currentPage, itemsData]);
 
   const columns = useMemo(
     () => [
@@ -141,7 +141,8 @@ function ItemsGrid() {
     } else {
       dispatch(setItemInfo(null));
     }
-  }, [dispatch, table, rowSelection, itemInfo, itemsData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, table, rowSelection, itemInfo]);
 
   return (
     <>
