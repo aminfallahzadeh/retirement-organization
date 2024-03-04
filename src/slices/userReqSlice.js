@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  getPensionersAffairsStatus: false,
   getGroupStatus: false,
   getUserStatus: false,
   getItemsStatus: false,
@@ -17,6 +18,10 @@ const userReqSlice = createSlice({
   name: "userReq",
   initialState,
   reducers: {
+    setGetPensionersAffairsStatus: (state, action) => {
+      state.getPensionersAffairsStatus = action.payload;
+    },
+
     setGetGroupStatus: (state, action) => {
       state.getGroupStatus = action.payload;
     },
@@ -70,6 +75,7 @@ const userReqSlice = createSlice({
 });
 
 export const {
+  setGetPensionersAffairsStatus,
   setGetGroupStatus,
   setGetUserStatus,
   setGetItemsStatus,

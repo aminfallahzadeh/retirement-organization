@@ -10,7 +10,7 @@ export const defaultTableOptions = {
   columnResizeDirection: "rtl",
   enableFullScreenToggle: false,
   positionToolbarAlertBanner: "none",
-  initialState: { pagination: { pageSize: 5 } },
+  // initialState: { pagination: { pageSize: 5 } },
   enableRowSelection: true,
   enableMultiRowSelection: false,
   muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({

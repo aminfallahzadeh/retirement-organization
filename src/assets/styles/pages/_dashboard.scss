@@ -1,6 +1,6 @@
 .dashboard {
     &__body {
-        margin-right: 250px;
+        margin-right: $side-nav-width;
 
         &--topGrid {
             width: 750px;
@@ -28,6 +28,13 @@
             justify-content: center;
             align-items: center;
             column-gap: 50px;
+        }
+
+        &--pensioners {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
         }
     }
 }

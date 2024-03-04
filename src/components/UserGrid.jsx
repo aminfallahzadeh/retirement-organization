@@ -1,16 +1,16 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
-// redux imports
-import { useSelector, useDispatch } from "react-redux";
-import { useGetUserQuery } from "../slices/usersApiSlice";
-import { setUserData } from "../slices/userReqSlice.js";
-
 // helper imports
 import { convertToPersianNumber } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
+
+// redux imports
+import { useSelector, useDispatch } from "react-redux";
+import { useGetUserQuery } from "../slices/usersApiSlice";
+import { setUserData } from "../slices/userReqSlice.js";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -29,9 +29,10 @@ import {
 
 function UserGrid() {
   const [rowSelection, setRowSelection] = useState({});
-  const dispatch = useDispatch();
 
   const { token } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
 
   // access the data from redux store
   const { userData } = useSelector((state) => state.userReq);

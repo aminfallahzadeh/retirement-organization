@@ -1,0 +1,17 @@
+.pensionersAffairs {
+    &__item {
+        cursor: pointer;
+        background-color: $color-grey-2;
+        border-radius: 2px;
+        padding: 10px 10px 10px 500px;
+
+        &:not(:first-child) {
+            margin-top: 20px;
+        }
+
+        h4 {
+            text-align: right;
+            margin-bottom: 0 !important;
+        }
+    }
+}

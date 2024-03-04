@@ -11,7 +11,7 @@ import ItemsGrid from "../components/ItemsGrid";
 import GroupItemGrid from "../components/GroupItemGrid";
 import GroupNameInput from "../components/GroupNameInput";
 import ArrowButtons from "../components/ArrowButtons";
-import GridTemplate from "../components/GridTemplate";
+import PensionersAffairs from "../components/PensionersAffairs";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -26,9 +26,12 @@ function Dashboard() {
   // get username from userInfo
   const [userName, setUserName] = useState("");
 
-  const { getGroupStatus, getUserStatus, getItemsStatus } = useSelector(
-    (state) => state.userReq
-  );
+  const {
+    getPensionersAffairsStatus,
+    getGroupStatus,
+    getUserStatus,
+    getItemsStatus,
+  } = useSelector((state) => state.userReq);
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -47,12 +50,18 @@ function Dashboard() {
       <TopbarNav userName={userName} />
       <SidebarNav />
       <div className="dashboard__body">
+        <div className="dashboard__body--pensioners">
+          {getPensionersAffairsStatus && <PensionersAffairs />}
+        </div>
+
         <div className="dashboard__body--topGrid">
-          {getGroupStatus ? (
+          {getGroupStatus && <GroupsGrid />}
+          {getUserStatus && <UserGrid />}
+          {/* {getGroupStatus ? (
             <GroupsGrid />
           ) : getUserStatus ? (
             <UserGrid />
-          ) : null}
+          ) : null} */}
         </div>
         <div>
           {getItemsStatus && (

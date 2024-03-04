@@ -14,6 +14,7 @@ import {
 // redux imports
 import { useDispatch } from "react-redux";
 import {
+  setGetPensionersAffairsStatus,
   setGetGroupStatus,
   setGetUserStatus,
   setGetItemsStatus,
@@ -32,6 +33,7 @@ function SidebarNav() {
       dispatch(setGetGroupStatus(true));
       dispatch(setGetUserStatus(false));
       dispatch(setGetItemsStatus(false));
+      dispatch(setGetPensionersAffairsStatus(false));
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
@@ -45,8 +47,26 @@ function SidebarNav() {
   const getUserHandler = async () => {
     try {
       await refreshTokenHandler();
-      dispatch(setGetUserStatus(true));
       dispatch(setGetGroupStatus(false));
+      dispatch(setGetUserStatus(true));
+      dispatch(setGetItemsStatus(false));
+      dispatch(setGetPensionersAffairsStatus(false));
+    } catch (err) {
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
+    }
+  };
+
+  const getPensionersAffairsHandler = async () => {
+    try {
+      await refreshTokenHandler();
+      dispatch(setGetPensionersAffairsStatus(true));
+      dispatch(setGetGroupStatus(false));
+      dispatch(setGetUserStatus(false));
       dispatch(setGetItemsStatus(false));
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
@@ -62,6 +82,7 @@ function SidebarNav() {
     <Sidebar rtl={true}>
       <Menu>
         <SubMenu
+          onClick={getPensionersAffairsHandler}
           label={
             <>
               <UserIcon width={20} color="#00863e" />

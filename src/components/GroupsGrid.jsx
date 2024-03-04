@@ -1,6 +1,5 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
-import useRefreshToken from "../hooks/useRefresh.js";
 
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
@@ -33,15 +32,13 @@ import {
 } from "material-react-table";
 
 function GroupsGrid() {
-  const { groupInfo, groupsData } = useSelector((state) => state.userReq);
-
   const [rowSelection, setRowSelection] = useState({});
-
   const { token } = useSelector((state) => state.auth);
 
-  const refreshTokenHandler = useRefreshToken();
-
   const dispatch = useDispatch();
+
+  // access the data from redux store
+  const { groupInfo, groupsData } = useSelector((state) => state.userReq);
 
   const { data: groups, isLoading, isSuccess } = useGetGroupQuery(token);
 
@@ -50,9 +47,8 @@ function GroupsGrid() {
       const data = groups.itemList.map((group, i) => ({
         _id: group.id,
         name: group.groupName,
-        number: convertToPersianNumber(i + 1),
+        number: i + 1,
       }));
-
       dispatch(setGroupsData(data));
     }
   }, [groups, isSuccess, dispatch]);
@@ -86,7 +82,9 @@ function GroupsGrid() {
           sx: { fontFamily: "sahel" },
           align: "right",
         },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
+        Cell: ({ renderedCellValue }) => (
+          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
+        ),
         align: "right",
       },
     ],
@@ -117,7 +115,7 @@ function GroupsGrid() {
     },
     getRowId: (originalRow) => originalRow._id,
     onRowSelectionChange: setRowSelection,
-    state: { rowSelection },
+    state: { rowSelection, pageSize: 5 },
   });
 
   useEffect(() => {
@@ -135,14 +133,7 @@ function GroupsGrid() {
     } else {
       dispatch(setGetItemsStatus(false));
     }
-  }, [
-    dispatch,
-    table,
-    rowSelection,
-    refreshTokenHandler,
-    groupInfo,
-    groupsData,
-  ]);
+  }, [dispatch, table, rowSelection, groupInfo, groupsData]);
 
   return (
     <>
