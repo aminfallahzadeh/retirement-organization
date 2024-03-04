@@ -4,41 +4,38 @@ import { useMemo, useState, useEffect } from "react";
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
 
+// utils imports
+import { defaultTableOptions } from "../utils.js";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetItemsQuery } from "../slices/usersApiSlice";
 import { setItemInfo, setItemsData } from "../slices/userReqSlice";
 
 // library imports
-import { PaginationItem, Pagination } from "@mui/material";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { PaginationItem } from "@mui/material";
+import {
+  ChevronLeft,
+  ChevronRight,
+  FirstPage,
+  LastPage,
+} from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
-import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
-  getMRT_RowSelectionHandler,
   useMaterialReactTable,
 } from "material-react-table";
 
 function ItemsGrid() {
-  const [currentPage, setcurrentPage] = useState(1);
-  const [tableItems, setTableItems] = useState([]);
-
   const { token } = useSelector((state) => state.auth);
-  const { itemInfo, itemsData } = useSelector((state) => state.userReq);
+  const { itemsData } = useSelector((state) => state.userReq);
 
   const [rowSelection, setRowSelection] = useState({});
 
   const dispatch = useDispatch();
 
-  const rowsPerPage = 5;
-
   const { data: items, isLoading, isSuccess } = useGetItemsQuery(token);
-
-  const handlePageChagne = (_, page) => {
-    setcurrentPage(page);
-  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -51,13 +48,6 @@ function ItemsGrid() {
       dispatch(setItemsData(data));
     }
   }, [items, isSuccess, dispatch]);
-
-  useEffect(() => {
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const endIndex = Math.min(startIndex + rowsPerPage, itemsData.length);
-
-    setTableItems(itemsData.slice(startIndex, endIndex));
-  }, [currentPage, itemsData]);
 
   const columns = useMemo(
     () => [
@@ -95,38 +85,27 @@ function ItemsGrid() {
   );
 
   const table = useMaterialReactTable({
+    ...defaultTableOptions,
     columns,
-    data: tableItems,
-    localization: MRT_Localization_FA,
-    columnResizeDirection: "rtl",
-    enableFullScreenToggle: false,
-    positionToolbarAlertBanner: "none",
-    initialState: { pagination: { pageSize: 5 } },
-    renderBottomToolbar: (
-      <Pagination
-        sx={{ paddingTop: 1.5, paddingBottom: 1.5, justifyContent: "right" }}
-        count={Math.ceil(itemsData.length / 5)}
-        page={currentPage}
-        dir="rtl"
-        variant="outlined"
-        color="success"
-        onChange={handlePageChagne}
-        renderItem={(item) => (
-          <PaginationItem
-            {...item}
-            slots={{ previous: ChevronRight, next: ChevronLeft }}
-            page={convertToPersianNumber(item.page)}
-          />
-        )}
-      />
-    ),
-    enableRowSelection: true,
-    enableMultiRowSelection: false,
-    muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
-      onClick: (event) =>
-        getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
-      sx: { cursor: "pointer" },
-    }),
+    data: itemsData,
+    muiPaginationProps: {
+      color: "secondary",
+      variant: "outlined",
+      showRowsPerPage: false,
+      dir: "rtl",
+      renderItem: (item) => (
+        <PaginationItem
+          {...item}
+          page={convertToPersianNumber(item.page)}
+          slots={{
+            previous: ChevronRight,
+            next: ChevronLeft,
+            first: LastPage,
+            last: FirstPage,
+          }}
+        />
+      ),
+    },
     getRowId: (originalRow) => originalRow._id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
@@ -141,8 +120,7 @@ function ItemsGrid() {
     } else {
       dispatch(setItemInfo(null));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, table, rowSelection, itemInfo]);
+  }, [dispatch, table, rowSelection, itemsData]);
 
   return (
     <>

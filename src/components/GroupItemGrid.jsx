@@ -4,11 +4,13 @@ import { useMemo, useState, useEffect } from "react";
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
 
+// utils imports
+import { defaultTableOptions } from "../utils.js";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupItemsQuery } from "../slices/usersApiSlice";
 import { setGroupItemInfo, setGroupItemsData } from "../slices/userReqSlice";
-// import GridTemplate from "./GridTemplate.jsx";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -19,11 +21,9 @@ import {
   LastPage,
 } from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
-import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
-  getMRT_RowSelectionHandler,
   useMaterialReactTable,
 } from "material-react-table";
 
@@ -57,8 +57,6 @@ function GroupItemGrid() {
       dispatch(setGroupItemsData(data));
     }
   }, [groupItems, isSuccess, dispatch]);
-
-  // const cols = [{ accessorKey: "name", header: "نام" }];
 
   const columns = useMemo(
     () => [
@@ -98,9 +96,9 @@ function GroupItemGrid() {
   );
 
   const table = useMaterialReactTable({
+    ...defaultTableOptions,
     columns,
     data: groupItemsData,
-    localization: MRT_Localization_FA,
     muiPaginationProps: {
       color: "secondary",
       variant: "outlined",
@@ -119,19 +117,6 @@ function GroupItemGrid() {
         />
       ),
     },
-    enablePagination: true,
-    paginationDisplayMode: "pages",
-    columnResizeDirection: "rtl",
-    enableFullScreenToggle: false,
-    positionToolbarAlertBanner: "none",
-    initialState: { pagination: { pageSize: 5 } },
-    enableRowSelection: true,
-    enableMultiRowSelection: false,
-    muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
-      onClick: (event) =>
-        getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
-      sx: { cursor: "pointer" },
-    }),
     getRowId: (originalRow) => originalRow._id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
@@ -156,7 +141,6 @@ function GroupItemGrid() {
         </p>
       ) : (
         <MaterialReactTable table={table} />
-        // <GridTemplate data={groupItemsData} cols={cols} />
       )}
     </>
   );

@@ -5,6 +5,9 @@ import useRefreshToken from "../hooks/useRefresh.js";
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
 
+// utils imports
+import { defaultTableOptions } from "../utils.js";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
@@ -15,22 +18,21 @@ import {
 } from "../slices/userReqSlice";
 
 // library imports
-import { PaginationItem, Pagination } from "@mui/material";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { PaginationItem } from "@mui/material";
+import {
+  ChevronLeft,
+  ChevronRight,
+  LastPage,
+  FirstPage,
+} from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
-import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
-  getMRT_RowSelectionHandler,
   useMaterialReactTable,
 } from "material-react-table";
 
 function GroupsGrid() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [tableItems, setTableItems] = useState([]);
-  // const [groupsData, setGroupsData] = useState([]);
-
   const { groupInfo, groupsData } = useSelector((state) => state.userReq);
 
   const [rowSelection, setRowSelection] = useState({});
@@ -43,16 +45,6 @@ function GroupsGrid() {
 
   const { data: groups, isLoading, isSuccess } = useGetGroupQuery(token);
 
-  const rowsPerPage = 5;
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const endIndex =
-    Math.min(startIndex + rowsPerPage, groups?.itemList?.length) || 0;
-
-  const handlePageChagne = (event, page) => {
-    setCurrentPage(page);
-    setTableItems(groupsData.slice(startIndex, endIndex));
-  };
-
   useEffect(() => {
     if (isSuccess) {
       const data = groups.itemList.map((group, i) => ({
@@ -62,13 +54,8 @@ function GroupsGrid() {
       }));
 
       dispatch(setGroupsData(data));
-      setTableItems(data.slice(startIndex, endIndex));
     }
-    return () => {
-      // clear the list for refresh
-      dispatch(setGroupsData([]));
-    };
-  }, [groups, isSuccess, startIndex, endIndex, dispatch]);
+  }, [groups, isSuccess, dispatch]);
 
   const columns = useMemo(
     () => [
@@ -107,41 +94,27 @@ function GroupsGrid() {
   );
 
   const table = useMaterialReactTable({
+    ...defaultTableOptions,
     columns,
-    data: tableItems,
-    localization: MRT_Localization_FA,
-    columnResizeDirection: "rtl",
-    enableFullScreenToggle: false,
-    positionToolbarAlertBanner: "none",
-    initialState: {
-      pagination: { pageSize: 5 },
+    data: groupsData,
+    muiPaginationProps: {
+      color: "secondary",
+      variant: "outlined",
+      showRowsPerPage: false,
+      dir: "rtl",
+      renderItem: (item) => (
+        <PaginationItem
+          {...item}
+          page={convertToPersianNumber(item.page)}
+          slots={{
+            previous: ChevronRight,
+            next: ChevronLeft,
+            first: LastPage,
+            last: FirstPage,
+          }}
+        />
+      ),
     },
-
-    renderBottomToolbar: (
-      <Pagination
-        sx={{ paddingTop: 1.5, paddingBottom: 1.5, justifyContent: "right" }}
-        count={Math.ceil(groupsData.length / 5)}
-        page={currentPage}
-        dir="rtl"
-        variant="outlined"
-        color="success"
-        onChange={handlePageChagne}
-        renderItem={(item) => (
-          <PaginationItem
-            {...item}
-            slots={{ previous: ChevronRight, next: ChevronLeft }}
-            page={convertToPersianNumber(item.page)}
-          />
-        )}
-      />
-    ),
-    enableRowSelection: true,
-    enableMultiRowSelection: false,
-    muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
-      onClick: (event) =>
-        getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
-      sx: { cursor: "pointer" },
-    }),
     getRowId: (originalRow) => originalRow._id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },

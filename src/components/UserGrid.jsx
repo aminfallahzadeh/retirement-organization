@@ -2,17 +2,25 @@
 import { useMemo, useState, useEffect } from "react";
 
 // redux imports
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useGetUserQuery } from "../slices/usersApiSlice";
+import { setUserData } from "../slices/userReqSlice.js";
 
 // helper imports
 import { convertToPersianNumber } from "../helper.js";
 
+// utils imports
+import { defaultTableOptions } from "../utils.js";
+
 // library imports
-import { PaginationItem, Pagination } from "@mui/material";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { PaginationItem } from "@mui/material";
+import {
+  ChevronLeft,
+  ChevronRight,
+  FirstPage,
+  LastPage,
+} from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
-import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
@@ -20,22 +28,15 @@ import {
 } from "material-react-table";
 
 function UserGrid() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [tableItems, setTableItems] = useState([]);
-  const [userData, setUserData] = useState([]);
+  const [rowSelection, setRowSelection] = useState({});
+  const dispatch = useDispatch();
 
   const { token } = useSelector((state) => state.auth);
+
+  // access the data from redux store
+  const { userData } = useSelector((state) => state.userReq);
+
   const { data: users, isLoading, isSuccess } = useGetUserQuery(token);
-
-  const rowsPerPage = 5;
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const endIndex =
-    Math.min(startIndex + rowsPerPage, users?.itemList?.length) || 0;
-
-  const handlePageChagne = (event, page) => {
-    setCurrentPage(page);
-    setTableItems(userData.slice(startIndex, endIndex));
-  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -47,14 +48,9 @@ function UserGrid() {
         number: convertToPersianNumber(i + 1),
       }));
 
-      setUserData(data);
-      setTableItems(data.slice(startIndex, endIndex));
+      dispatch(setUserData(data));
     }
-    return () => {
-      // clear the list for refresh
-      setUserData([]);
-    };
-  }, [users, isSuccess, startIndex, endIndex]);
+  }, [users, isSuccess, dispatch]);
 
   const columns = useMemo(
     () => [
@@ -134,31 +130,30 @@ function UserGrid() {
   );
 
   const table = useMaterialReactTable({
+    ...defaultTableOptions,
     columns,
-    data: tableItems,
-    localization: MRT_Localization_FA,
-    columnResizeDirection: "rtl",
-    enableFullScreenToggle: false,
-    positionToolbarAlertBanner: "none",
-    initialState: { pagination: { pageSize: 5 } },
-    renderBottomToolbar: (
-      <Pagination
-        sx={{ paddingTop: 1.5, paddingBottom: 1.5, justifyContent: "right" }}
-        count={Math.ceil(userData.length / 5)}
-        page={currentPage}
-        dir="rtl"
-        variant="outlined"
-        color="success"
-        onChange={handlePageChagne}
-        renderItem={(item) => (
-          <PaginationItem
-            {...item}
-            slots={{ previous: ChevronRight, next: ChevronLeft }}
-            page={convertToPersianNumber(item.page)}
-          />
-        )}
-      />
-    ),
+    data: userData,
+    muiPaginationProps: {
+      color: "secondary",
+      variant: "outlined",
+      showRowsPerPage: false,
+      dir: "rtl",
+      renderItem: (item) => (
+        <PaginationItem
+          {...item}
+          page={convertToPersianNumber(item.page)}
+          slots={{
+            previous: ChevronRight,
+            next: ChevronLeft,
+            first: LastPage,
+            last: FirstPage,
+          }}
+        />
+      ),
+    },
+    getRowId: (originalRow) => originalRow._id,
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
   });
 
   return (

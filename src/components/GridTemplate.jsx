@@ -18,49 +18,50 @@ import {
 import { convertToPersianNumber } from "../helper.js";
 
 // react imports
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
-function GridTemplate({ data, cols }) {
+function GridTemplate({ columns, data }) {
   const [rowSelection, setRowSelection] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  const columns = useMemo(() => {
-    // the static "number" column
-    const numberColumn = {
-      accessorKey: "number",
-      header: "ردیف",
-      size: 100,
-      muiTableHeadCellProps: {
-        sx: { color: "green", fontFamily: "sahel" },
-        align: "right",
-      },
-      muiTableBodyCellProps: {
-        sx: { fontFamily: "sahel" },
-        align: "right",
-      },
-      Cell: ({ renderedCellValue }) => (
-        <strong>{convertToPersianNumber(renderedCellValue)}</strong>
-      ),
-      align: "right",
-    };
+  //   const columns = useMemo(() => {
+  //     // the static "number" column
+  //     const numberColumn = {
+  //       accessorKey: "number",
+  //       header: "ردیف",
+  //       size: 100,
+  //       muiTableHeadCellProps: {
+  //         sx: { color: "green", fontFamily: "sahel" },
+  //         align: "right",
+  //       },
+  //       muiTableBodyCellProps: {
+  //         sx: { fontFamily: "sahel" },
+  //         align: "right",
+  //       },
+  //       Cell: ({ renderedCellValue }) => (
+  //         <strong>{convertToPersianNumber(renderedCellValue)}</strong>
+  //       ),
+  //       align: "right",
+  //     };
 
-    const dynamicColumns = cols.map((col) => ({
-      accessorKey: col.accessorKey,
-      header: col.header,
-      size: col.size || 100,
-      muiTableHeadCellProps: {
-        sx: { color: "green", fontFamily: "sahel" },
-        align: "right",
-      },
-      muiTableBodyCellProps: {
-        sx: { fontFamily: "sahel" },
-        align: "right",
-      },
-      Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-      align: "right",
-    }));
+  //     const dynamicColumns = cols.map((col) => ({
+  //       accessorKey: col.accessorKey,
+  //       header: col.header,
+  //       size: col.size || 100,
+  //       muiTableHeadCellProps: {
+  //         sx: { color: "green", fontFamily: "sahel" },
+  //         align: "right",
+  //       },
+  //       muiTableBodyCellProps: {
+  //         sx: { fontFamily: "sahel" },
+  //         align: "right",
+  //       },
+  //       Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
+  //       align: "right",
+  //     }));
 
-    return [...dynamicColumns, numberColumn];
-  }, [cols]);
+  //     return [...dynamicColumns, numberColumn];
+  //   }, [cols]);
 
   const table = useMaterialReactTable({
     columns,
@@ -102,7 +103,20 @@ function GridTemplate({ data, cols }) {
     state: { rowSelection },
   });
 
-  return <MaterialReactTable table={table} />;
+  console.log("columns", columns);
+  //   console.log("cols", cols);
+  console.log("data", data);
+
+  useEffect(() => {
+    // Simulate data fetching delay
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000); // Adjust the delay as needed
+  }, []);
+
+  //   console.log(table.getRowModel().rows);
+
+  return isLoading ? <h1>Loading</h1> : <MaterialReactTable table={table} />;
 }
 
 export default GridTemplate;
