@@ -74,22 +74,22 @@ function BankInfoForm() {
       <div className="inputBox BankInfoForm__large">
         <input
           type="text"
-          id="office"
+          id="exp"
           className="input field input--dark"
           required
         />
-        <label htmlFor="office" className="label label--light ">
+        <label htmlFor="exp" className="label label--light ">
           توضیح
         </label>
       </div>
       <div className="inputBox">
         <input
           type="text"
-          id="office"
+          id="cityBank"
           className="input field input--dark"
           required
         />
-        <label htmlFor="office" className="label label--light">
+        <label htmlFor="cityBank" className="label label--light">
           شماره حساب بانک شهر
         </label>
       </div>
