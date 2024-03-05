@@ -14,7 +14,7 @@
 
     &__box {
         display: flex;
-        column-gap: 10px;
+        column-gap: 2px;
         align-items: center;
         justify-content: center;
         border: 2px solid $color-grey-2;
@@ -22,13 +22,18 @@
 
         &--item {
             background-color: $color-grey-2;
-            padding: 5px 15px;
+            margin: 0 5px;
+            padding: 3px 5px;
             border-radius: $border-radius-primary;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         &--label {
             color: $color-grey-3;
             margin-right: 5px;
+            font-size: 12px;
         }
     }
 
