@@ -29,6 +29,10 @@
 	transition: 0.2s;
 	font-size: 16px;
 	cursor: text;
+
+	&--light {
+		color: $color-grey-3 !important;
+	}
 }
 
 .field:focus ~ .label,

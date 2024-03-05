@@ -1,3 +1,5 @@
+import BankinfoForm from "../components/BankinfoForm";
+
 function PensionersAffairs() {
   return (
     <section className="pensionersAffairs">
@@ -12,6 +14,8 @@ function PensionersAffairs() {
       <div className="pensionersAffairs__item">
         <h4>اطلاعات شماره حساب بانکی بازنشسته</h4>
       </div>
+
+      <BankinfoForm />
     </section>
   );
 }

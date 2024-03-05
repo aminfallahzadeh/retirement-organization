@@ -1,0 +1,9 @@
+.BankInfoForm {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+
+    &__large {
+        grid-column: span 2;
+    }
+}
