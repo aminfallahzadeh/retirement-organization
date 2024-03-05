@@ -1,6 +1,6 @@
-function PersonelinfoForm() {
+function StaffInfoForm() {
   return (
-    <form method="POST" className="PersonelInfoForm">
+    <form method="POST" className="StaffInfoForm">
       <div className="inputBox">
         <input
           type="text"
@@ -96,8 +96,8 @@ function PersonelinfoForm() {
         </label>
       </div>
 
-      <div className="PersonelInfoForm__flex">
-        <div className="inputBox PersonelInfoForm__flex--item">
+      <div className="StaffInfoForm__flex">
+        <div className="inputBox StaffInfoForm__flex--item">
           <input
             type="text"
             id="condition"
@@ -109,7 +109,7 @@ function PersonelinfoForm() {
           </label>
         </div>
 
-        <div className="inputBox PersonelInfoForm__flex--item">
+        <div className="inputBox StaffInfoForm__flex--item">
           <input
             type="text"
             id="manager"
@@ -134,20 +134,17 @@ function PersonelinfoForm() {
         </label>
       </div>
 
-      <div className="PersonelInfoForm__box">
-        <div className="PersonelInfoForm__box--item">
+      <div className="StaffInfoForm__box">
+        <div className="StaffInfoForm__box--item">
           <input type="checkbox" id="marriageRight" />
-          <label
-            htmlFor="marriageRight"
-            className="PersonelInfoForm__box--label"
-          >
+          <label htmlFor="marriageRight" className="StaffInfoForm__box--label">
             حق تاهل
           </label>
         </div>
 
-        <div className="PersonelInfoForm__box--item">
+        <div className="StaffInfoForm__box--item">
           <input type="checkbox" id="childRight" />
-          <label htmlFor="childRight" className="PersonelInfoForm__box--label">
+          <label htmlFor="childRight" className="StaffInfoForm__box--label">
             حق اولاد
           </label>
         </div>
@@ -156,4 +153,4 @@ function PersonelinfoForm() {
   );
 }
 
-export default PersonelinfoForm;
+export default StaffInfoForm;

@@ -1,39 +1,46 @@
 // component imports
-import BankinfoForm from "../components/BankinfoForm";
-import PersonelinfoForm from "./PersonelinfoForm";
+import BankInfoForm from "./BankInfoForm";
+import StaffInfoForm from "./StaffInfoForm";
+import PersonalInfoForm from "./PersonalInfoForm";
 
 // react imports
 import { useState } from "react";
 
 function PensionersAffairs() {
   const [showBankForm, setShowBankForm] = useState(false);
-  const [showPersonelForm, setShowPersonelForm] = useState(false);
+  const [showStaffForm, setShowStaffForm] = useState(false);
+  const [showPersonalForm, setShowPersonalForm] = useState(false);
+
+  const handleShowPersonalForm = () => {
+    setShowPersonalForm(!showPersonalForm);
+  };
+
+  const handleShowStaffForm = () => {
+    setShowStaffForm(!showStaffForm);
+  };
 
   const handleShowBankForm = () => {
     setShowBankForm(!showBankForm);
   };
 
-  const handleShowPersonelForm = () => {
-    setShowPersonelForm(!showPersonelForm);
-  };
-
   return (
     <section className="pensionersAffairs">
-      <div className="pensionersAffairs__item">
+      <div className="pensionersAffairs__item" onClick={handleShowPersonalForm}>
         <h4>اطلاعات فردی بازنشسته</h4>
       </div>
+      {showPersonalForm && <PersonalInfoForm />}
 
-      <div className="pensionersAffairs__item" onClick={handleShowPersonelForm}>
+      <div className="pensionersAffairs__item" onClick={handleShowStaffForm}>
         <h4>اطلاعات پرسنلی</h4>
       </div>
 
-      {showPersonelForm && <PersonelinfoForm />}
+      {showStaffForm && <StaffInfoForm />}
 
       <div className="pensionersAffairs__item" onClick={handleShowBankForm}>
         <h4>اطلاعات شماره حساب بانکی بازنشسته</h4>
       </div>
 
-      {showBankForm && <BankinfoForm />}
+      {showBankForm && <BankInfoForm />}
     </section>
   );
 }
