@@ -2,15 +2,17 @@
 import { useState, useRef, useEffect } from "react";
 
 // redux imports
-import { useDispatch } from "react-redux";
-import { setCaptcha } from "../slices/captchaSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setCaptcha, setCaptchaInput } from "../slices/captchaSlice";
 
 // library imports
-import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/solid";
+import { Button } from "react-bootstrap";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
 
 function Captcha() {
   const [captchaText, setCaptchaText] = useState(generateCaptcha(6));
-  const [userInput, setUserInput] = useState("");
+  const { userInput } = useSelector((state) => state.captcha);
 
   const canvasRef = useRef(null);
 
@@ -27,12 +29,6 @@ function Captcha() {
     }
     return result;
   }
-
-  const style = {
-    position: "absolute",
-    top: "15px",
-    left: "25px",
-  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -68,17 +64,17 @@ function Captcha() {
     }
   }, [captchaText]);
 
-  function regenCaptcha(e) {
+  function refreshCaptcha(e) {
     e.preventDefault();
     setCaptchaText(generateCaptcha(6));
-    setUserInput("");
+    dispatch(setCaptchaInput(""));
     dispatch(setCaptcha(false));
     // CapthaHandler(false);
   }
 
   function handleInputChange(e) {
     const input = e.target.value;
-    setUserInput(input);
+    dispatch(setCaptchaInput(input));
 
     if (input.toLowerCase() === captchaText.toLowerCase()) {
       /* CapthaHandler(true); */
@@ -88,6 +84,12 @@ function Captcha() {
       dispatch(setCaptcha(false));
     }
   }
+
+  const style = {
+    position: "absolute",
+    top: "18px",
+    left: "25px",
+  };
 
   return (
     <div className="captchaContainer">
@@ -103,15 +105,16 @@ function Captcha() {
         <label htmlFor="captcha" className="label">
           کد را وارد کنید
         </label>
-        <ArrowPathRoundedSquareIcon style={style} width={25} />
+        <VpnKeyIcon style={style} />
       </div>
       <div className="captchaContainer__text">
         <canvas ref={canvasRef} width="200" height="40">
           {captchaText}
         </canvas>
-        <button onClick={regenCaptcha} className="btn--login">
-          تلاش مجدد
-        </button>
+
+        <Button onClick={refreshCaptcha} variant="outline-light">
+          <AutorenewIcon />
+        </Button>
       </div>
     </div>
   );

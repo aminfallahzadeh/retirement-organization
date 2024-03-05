@@ -8,6 +8,7 @@ import Captcha from "../components/Captcha";
 import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
+import { setCaptchaInput } from "../slices/captchaSlice";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -15,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 // library imports
 import { toast } from "react-toastify";
 import { LockClosedIcon, UserIcon } from "@heroicons/react/24/solid";
+import { Button } from "react-bootstrap";
 
 function Login() {
   const { captcha } = useSelector((state) => state.captcha);
@@ -45,6 +47,7 @@ function Login() {
           },
         });
       } else if (!captcha) {
+        dispatch(setCaptchaInput(""));
         toast.error("! کد امنیتی اشتباه است", {
           autoClose: 2000,
           style: {
@@ -129,9 +132,14 @@ function Login() {
             <Captcha />
           </div>
           <div className="loginContainer__box--register">
-            <button type="submit" className="btn--login" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="btn--login"
+              disabled={isLoading}
+              variant="outline-light"
+            >
               {isLoading ? "...لطفا منتظر بمانید" : "ورود"}
-            </button>
+            </Button>
           </div>
           <div className="loginContainer__box--rememberForgot">
             <div className="loginContainer__box--rememberForgot--forgot">
