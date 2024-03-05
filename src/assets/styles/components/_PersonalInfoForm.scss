@@ -32,3 +32,17 @@
         }
     }
 }
+
+.PersonalInfoContainer {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+
+    &__gridForm {
+        flex-grow: 1;
+    }
+
+    &__gridImage {
+        padding-top: 30px;
+    }
+}
