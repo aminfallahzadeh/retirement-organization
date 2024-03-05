@@ -1,7 +1,12 @@
+// library imports
+import { UserIcon } from "@heroicons/react/24/outline";
+
 function PersonalInfoForm() {
   return (
     <form method="POST" className="PersonalInfoContainer">
-      <div className="PersonalInfoContainer__gridImage">AX</div>
+      <div className="PersonalInfoContainer__gridImage">
+        <UserIcon width={50} />
+      </div>
       <div className="PersonalInfoContainer__gridForm">
         <div className="PersonalInfoForm">
           <div className="inputBox">
