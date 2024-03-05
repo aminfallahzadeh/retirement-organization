@@ -1,7 +1,7 @@
 // component imports
 import AffairsBankInfoForm from "./AffairsBankInfoForm";
-import StaffInfoForm from "./StaffInfoForm";
-import PersonalInfoForm from "./PersonalInfoForm";
+import AffairsStaffInfoForm from "./AffairsStaffInfoForm";
+import AffairPersonalInfoForm from "./AffairPersonalInfoForm";
 
 // react imports
 import { useState } from "react";
@@ -28,13 +28,13 @@ function PensionersAffairs() {
       <div className="pensionersAffairs__item" onClick={handleShowPersonalForm}>
         <h4>اطلاعات فردی بازنشسته</h4>
       </div>
-      {showPersonalForm && <PersonalInfoForm />}
+      {showPersonalForm && <AffairPersonalInfoForm />}
 
       <div className="pensionersAffairs__item" onClick={handleShowStaffForm}>
         <h4>اطلاعات پرسنلی</h4>
       </div>
 
-      {showStaffForm && <StaffInfoForm />}
+      {showStaffForm && <AffairsStaffInfoForm />}
 
       <div className="pensionersAffairs__item" onClick={handleShowBankForm}>
         <h4>اطلاعات شماره حساب بانکی بازنشسته</h4>

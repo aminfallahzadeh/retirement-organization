@@ -1,7 +1,7 @@
 // library imports
 import { UserIcon } from "@heroicons/react/24/outline";
 
-function PersonalInfoForm() {
+function AffairPersonalInfoForm() {
   return (
     <form method="POST" className="PersonalInfoContainer">
       <div className="PersonalInfoContainer__gridImage">
@@ -326,4 +326,4 @@ function PersonalInfoForm() {
   );
 }
 
-export default PersonalInfoForm;
+export default AffairPersonalInfoForm;

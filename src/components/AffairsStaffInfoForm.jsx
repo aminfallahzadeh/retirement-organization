@@ -1,4 +1,4 @@
-function StaffInfoForm() {
+function AffairsStaffInfoForm() {
   return (
     <form method="POST" className="StaffInfoForm">
       <div className="inputBox">
@@ -153,4 +153,4 @@ function StaffInfoForm() {
   );
 }
 
-export default StaffInfoForm;
+export default AffairsStaffInfoForm;
