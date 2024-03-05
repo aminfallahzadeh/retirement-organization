@@ -1,5 +1,5 @@
 // component imports
-import BankInfoForm from "./BankInfoForm";
+import AffairsBankInfoForm from "./AffairsBankInfoForm";
 import StaffInfoForm from "./StaffInfoForm";
 import PersonalInfoForm from "./PersonalInfoForm";
 
@@ -40,7 +40,7 @@ function PensionersAffairs() {
         <h4>اطلاعات شماره حساب بانکی بازنشسته</h4>
       </div>
 
-      {showBankForm && <BankInfoForm />}
+      {showBankForm && <AffairsBankInfoForm />}
     </section>
   );
 }
