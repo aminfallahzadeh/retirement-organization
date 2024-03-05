@@ -112,7 +112,11 @@ function Captcha() {
           {captchaText}
         </canvas>
 
-        <Button onClick={refreshCaptcha} variant="outline-light">
+        <Button
+          onClick={refreshCaptcha}
+          variant="outline-light"
+          style={{ marginRight: "30px" }}
+        >
           <AutorenewIcon />
         </Button>
       </div>
