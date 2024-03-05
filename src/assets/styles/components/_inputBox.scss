@@ -32,6 +32,10 @@
 
 	&--light {
 		color: $color-grey-3 !important;
+
+		span {
+			color: #ff808e;
+		}
 	}
 }
 
