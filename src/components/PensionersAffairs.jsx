@@ -1,7 +1,7 @@
 // component imports
-import BankInfoForm from "../components/BankInfoForm";
-import StaffInfoForm from "../components/StaffInfoForm";
-import PersonalInfoForm from "../components/PersonalInfoForm";
+import BankInfoForm from "./BankInfoForm";
+import StaffInfoForm from "./StaffInfoForm";
+import PersonalInfoForm from "./PersonalInfoForm";
 
 // react imports
 import { useState } from "react";
