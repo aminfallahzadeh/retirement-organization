@@ -1,9 +1,16 @@
 // react imports
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
+
+// helpers
+import { generateCaptcha } from "../helper.js";
 
 // redux imports
 import { useDispatch, useSelector } from "react-redux";
-import { setCaptcha, setCaptchaInput } from "../slices/captchaSlice";
+import {
+  setCaptcha,
+  setCaptchaInput,
+  setCaptchaText,
+} from "../slices/captchaSlice";
 
 // library imports
 import { Button } from "react-bootstrap";
@@ -11,24 +18,12 @@ import AutorenewIcon from "@mui/icons-material/Autorenew";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 
 function Captcha() {
-  const [captchaText, setCaptchaText] = useState(generateCaptcha(6));
-  const { userInput } = useSelector((state) => state.captcha);
+  // const [captchaText, setCaptchaText] = useState(generateCaptcha(6));
+  const { userInput, captchaText } = useSelector((state) => state.captcha);
 
   const canvasRef = useRef(null);
 
   const dispatch = useDispatch();
-
-  function generateCaptcha(length) {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(
-        Math.floor(Math.random() * characters.length)
-      );
-    }
-    return result;
-  }
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -64,12 +59,17 @@ function Captcha() {
     }
   }, [captchaText]);
 
-  function refreshCaptcha(e) {
-    e.preventDefault();
-    setCaptchaText(generateCaptcha(6));
+  useEffect(() => {
+    dispatch(setCaptchaText(generateCaptcha(6)));
     dispatch(setCaptchaInput(""));
     dispatch(setCaptcha(false));
-    // CapthaHandler(false);
+  }, [dispatch]);
+
+  function refreshCaptcha(e) {
+    e.preventDefault();
+    dispatch(setCaptchaText(generateCaptcha(6)));
+    dispatch(setCaptchaInput(""));
+    dispatch(setCaptcha(false));
   }
 
   function handleInputChange(e) {

@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   captcha: false,
+  captchaText: "",
   userInput: "",
 };
 
@@ -14,12 +15,17 @@ const captchaSlice = createSlice({
       state.captcha = action.payload;
     },
 
+    setCaptchaText: (state, action) => {
+      state.captchaText = action.payload;
+    },
+
     setCaptchaInput: (state, action) => {
       state.userInput = action.payload;
     },
   },
 });
 
-export const { setCaptcha, setCaptchaInput } = captchaSlice.actions;
+export const { setCaptcha, setCaptchaInput, setCaptchaText } =
+  captchaSlice.actions;
 
 export default captchaSlice.reducer;

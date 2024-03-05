@@ -1,3 +1,20 @@
+Authentication:
+  [ ] implement refresh token handler globally
+
 Captcha: 
   [ ] reset captcha on invalid input submit
   
+Login:
+  [ ] complete the responsive and full design
+
+Forms:
+  [ ] bring the forms in retirement sidebar button
+  [ ] add search form on top of the other forms
+  [ ] complete the options based forms
+  [ ] implement the text areas
+  [ ] work on respnsiveness for demonstration
+
+Grids:
+  [ ] implement the user page grids
+  [ ] fix the row number issue
+  [ ] complete the move functionality in groups grids page

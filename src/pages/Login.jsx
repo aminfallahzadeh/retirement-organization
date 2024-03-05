@@ -4,11 +4,18 @@ import { useEffect, useState } from "react";
 // component imports
 import Captcha from "../components/Captcha";
 
+// helpers
+import { generateCaptcha } from "../helper.js";
+
 // redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
-import { setCaptchaInput } from "../slices/captchaSlice";
+import {
+  setCaptchaInput,
+  setCaptcha,
+  setCaptchaText,
+} from "../slices/captchaSlice";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -47,7 +54,9 @@ function Login() {
           },
         });
       } else if (!captcha) {
+        dispatch(setCaptchaText(generateCaptcha(6)));
         dispatch(setCaptchaInput(""));
+        dispatch(setCaptcha(false));
         toast.error("! کد امنیتی اشتباه است", {
           autoClose: 2000,
           style: {
