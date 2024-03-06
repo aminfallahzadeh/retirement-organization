@@ -1,12 +1,12 @@
 // component imports
 import AffairsBankInfoForm from "./AffairsBankInfoForm";
 import AffairsStaffInfoForm from "./AffairsStaffInfoForm";
-import AffairPersonalInfoForm from "./AffairPersonalInfoForm";
+import AffairsPersonalInfoForm from "./AffairsPersonalInfoForm";
 
 // react imports
 import { useState } from "react";
 
-function PensionersAffairs() {
+function PensionerSection() {
   const [showBankForm, setShowBankForm] = useState(false);
   const [showStaffForm, setShowStaffForm] = useState(false);
   const [showPersonalForm, setShowPersonalForm] = useState(false);
@@ -23,12 +23,12 @@ function PensionersAffairs() {
     setShowBankForm(!showBankForm);
   };
 
-  return (
+  const content = (
     <section className="pensionersAffairs">
       <div className="pensionersAffairs__item" onClick={handleShowPersonalForm}>
         <h4>اطلاعات فردی بازنشسته</h4>
       </div>
-      {showPersonalForm && <AffairPersonalInfoForm />}
+      {showPersonalForm && <AffairsPersonalInfoForm />}
 
       <div className="pensionersAffairs__item" onClick={handleShowStaffForm}>
         <h4>اطلاعات پرسنلی</h4>
@@ -43,6 +43,8 @@ function PensionersAffairs() {
       {showBankForm && <AffairsBankInfoForm />}
     </section>
   );
+
+  return content;
 }
 
-export default PensionersAffairs;
+export default PensionerSection;

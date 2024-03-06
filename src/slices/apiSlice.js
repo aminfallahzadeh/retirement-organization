@@ -9,5 +9,5 @@ const baseQuery = fetchBaseQuery({ BASE_URL });
 // parent slice
 export const apiSlice = createApi({
   baseQuery,
-  endpoints: (builder) => ({}),
+  endpoints: () => ({}),
 });

@@ -51,7 +51,7 @@ function Captcha() {
 
     for (let i = 0; i < captchaText.length; i++) {
       ctx.save();
-      // Addjust startX for each char
+      // adjust startX for each char
       ctx.translate(startX + i * 20, 30);
       ctx.rotate((Math.random() - 0.5) * 0.4);
       ctx.fillText(captchaText[i], 0, 0);

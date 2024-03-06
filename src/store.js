@@ -4,6 +4,7 @@ import { apiSlice } from "./slices/apiSlice";
 import authSliceReducer from "./slices/authSlice";
 import captchaSliceReducer from "./slices/captchaSlice";
 import userReqSliceReducer from "./slices/userReqSlice";
+import pensionerSectionSliceReducer from "./slices/pensionerSectionSlice";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     auth: authSliceReducer,
     captcha: captchaSliceReducer,
     userReq: userReqSliceReducer,
+    pensionerSection: pensionerSectionSliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

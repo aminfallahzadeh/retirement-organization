@@ -54,6 +54,7 @@ function Login() {
           },
         });
       } else if (!captcha) {
+        // reset captcha after invalid input
         dispatch(setCaptchaText(generateCaptcha(6)));
         dispatch(setCaptchaInput(""));
         dispatch(setCaptcha(false));
@@ -100,7 +101,12 @@ function Login() {
       <video autoPlay loop className="bg" muted>
         <source src="./images/winter.webm" type="video/webm" />
       </video>
-      <form className="loginContainer" onSubmit={handleSubmit} method="POST">
+      <form
+        className="loginContainer"
+        onSubmit={handleSubmit}
+        method="POST"
+        noValidate
+      >
         <div className="loginContainer__box" id="form">
           <div className="loginContainer__box--header">
             <span>ورود به صفحه کاربری</span>

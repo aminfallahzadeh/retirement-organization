@@ -17,6 +17,7 @@ import {
 } from "../slices/userReqSlice";
 
 // library imports
+import { toast } from "react-toastify";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -40,7 +41,7 @@ function GroupsGrid() {
   // access the data from redux store
   const { groupInfo, groupsData } = useSelector((state) => state.userReq);
 
-  const { data: groups, isLoading, isSuccess } = useGetGroupQuery(token);
+  const { data: groups, isLoading, isSuccess, error } = useGetGroupQuery(token);
 
   useEffect(() => {
     if (isSuccess) {
@@ -50,8 +51,15 @@ function GroupsGrid() {
         number: i + 1,
       }));
       dispatch(setGroupsData(data));
+    } else if (error) {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     }
-  }, [groups, isSuccess, dispatch]);
+  }, [groups, isSuccess, dispatch, error]);
 
   const columns = useMemo(
     () => [

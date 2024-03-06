@@ -11,7 +11,8 @@ import ItemsGrid from "../components/ItemsGrid";
 import GroupItemGrid from "../components/GroupItemGrid";
 import GroupNameInput from "../components/GroupNameInput";
 import ArrowButtons from "../components/ArrowButtons";
-import PensionersAffairs from "../components/PensionersAffairs";
+import PensionerSection from "../components/PensionerSection";
+import AffairsSearchPensionerForm from "../components/AffairsSearchPensionerForm";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -26,12 +27,13 @@ function Dashboard() {
   // get username from userInfo
   const [userName, setUserName] = useState("");
 
-  const {
-    getPensionersAffairsStatus,
-    getGroupStatus,
-    getUserStatus,
-    getItemsStatus,
-  } = useSelector((state) => state.userReq);
+  const { getGroupStatus, getUserStatus, getItemsStatus } = useSelector(
+    (state) => state.userReq
+  );
+
+  const { getPensionerSectionStatus } = useSelector(
+    (state) => state.pensionerSection
+  );
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -51,17 +53,16 @@ function Dashboard() {
       <SidebarNav />
       <div className="dashboard__body">
         <div className="dashboard__body--pensioners">
-          {getPensionersAffairsStatus && <PensionersAffairs />}
+          {getPensionerSectionStatus && (
+            <>
+              <AffairsSearchPensionerForm /> <PensionerSection />
+            </>
+          )}
         </div>
 
         <div className="dashboard__body--topGrid">
           {getGroupStatus && <GroupsGrid />}
           {getUserStatus && <UserGrid />}
-          {/* {getGroupStatus ? (
-            <GroupsGrid />
-          ) : getUserStatus ? (
-            <UserGrid />
-          ) : null} */}
         </div>
         <div>
           {getItemsStatus && (

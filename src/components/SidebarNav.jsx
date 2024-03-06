@@ -14,11 +14,11 @@ import {
 // redux imports
 import { useDispatch } from "react-redux";
 import {
-  setGetPensionersAffairsStatus,
   setGetGroupStatus,
   setGetUserStatus,
   setGetItemsStatus,
 } from "../slices/userReqSlice";
+import { setGetPensionerSectionStatus } from "../slices/pensionerSectionSlice";
 
 // react imports
 import useRefreshToken from "../hooks/useRefresh";
@@ -33,7 +33,7 @@ function SidebarNav() {
       dispatch(setGetGroupStatus(true));
       dispatch(setGetUserStatus(false));
       dispatch(setGetItemsStatus(false));
-      dispatch(setGetPensionersAffairsStatus(false));
+      dispatch(setGetPensionerSectionStatus(false));
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
@@ -45,26 +45,17 @@ function SidebarNav() {
   };
 
   const getUserHandler = async () => {
-    try {
-      await refreshTokenHandler();
-      dispatch(setGetGroupStatus(false));
-      dispatch(setGetUserStatus(true));
-      dispatch(setGetItemsStatus(false));
-      dispatch(setGetPensionersAffairsStatus(false));
-    } catch (err) {
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
-      });
-    }
+    await refreshTokenHandler();
+    dispatch(setGetGroupStatus(false));
+    dispatch(setGetUserStatus(true));
+    dispatch(setGetItemsStatus(false));
+    dispatch(setGetPensionerSectionStatus(false));
   };
 
-  const getPensionersAffairsHandler = async () => {
+  const getPensionerSectionHandler = async () => {
     try {
       await refreshTokenHandler();
-      dispatch(setGetPensionersAffairsStatus(true));
+      dispatch(setGetPensionerSectionStatus(true));
       dispatch(setGetGroupStatus(false));
       dispatch(setGetUserStatus(false));
       dispatch(setGetItemsStatus(false));
@@ -82,7 +73,6 @@ function SidebarNav() {
     <Sidebar rtl={true}>
       <Menu>
         <SubMenu
-          onClick={getPensionersAffairsHandler}
           label={
             <>
               <UserIcon width={20} color="#00863e" />
@@ -91,7 +81,7 @@ function SidebarNav() {
             </>
           }
         >
-          <MenuItem> بازنشسته</MenuItem>
+          <MenuItem onClick={getPensionerSectionHandler}> بازنشسته</MenuItem>
           <MenuItem> احکام گروهی </MenuItem>
           <MenuItem> رویت تعرفه کارمندی </MenuItem>
           <MenuItem> رویت احکام کارمندی </MenuItem>

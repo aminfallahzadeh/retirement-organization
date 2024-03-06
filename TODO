@@ -2,10 +2,12 @@ Authentication:
   [ ] implement refresh token handler globally
 
 Captcha: 
-  [ ] reset captcha on invalid input submit
+  [+] reset captcha on invalid input submit @done(24-03-05 22:59)
   
 Login:
   [ ] complete the responsive and full design
+  [ ] add enter key functionality to submit the form
+  [ ] add validation check with proper messages
 
 Forms:
   [ ] bring the forms in retirement sidebar button
@@ -13,6 +15,7 @@ Forms:
   [ ] complete the options based forms
   [ ] implement the text areas
   [ ] work on respnsiveness for demonstration
+  [ ] add starts for required fields
 
 Grids:
   [ ] implement the user page grids

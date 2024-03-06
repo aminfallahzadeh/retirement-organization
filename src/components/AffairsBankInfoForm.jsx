@@ -1,6 +1,6 @@
 function AffairsBankInfoForm() {
   return (
-    <form method="POST" className="BankInfoForm">
+    <form method="POST" className="BankInfoForm" noValidate>
       <div className="inputBox">
         <input
           type="text"

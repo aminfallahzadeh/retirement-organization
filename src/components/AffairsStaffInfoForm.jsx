@@ -1,6 +1,6 @@
 function AffairsStaffInfoForm() {
-  return (
-    <form method="POST" className="StaffInfoForm">
+  const content = (
+    <form method="POST" className="StaffInfoForm" noValidate>
       <div className="inputBox">
         <input
           type="text"
@@ -9,7 +9,7 @@ function AffairsStaffInfoForm() {
           required
         />
         <label htmlFor="personalCode" className="label label--light">
-          کد ملی (<span>اجباری</span>)
+          <span>*</span> کد ملی
         </label>
       </div>
 
@@ -21,7 +21,7 @@ function AffairsStaffInfoForm() {
           required
         />
         <label htmlFor="group" className="label label--light">
-          گروه (<span>اجباری</span>)
+          <span>*</span> گروه
         </label>
       </div>
 
@@ -33,7 +33,7 @@ function AffairsStaffInfoForm() {
           required
         />
         <label htmlFor="military" className="label label--light">
-          آخرین محل خدمت (<span>اجباری</span>)
+          <span>*</span> آخرین محل خدمت
         </label>
       </div>
 
@@ -45,7 +45,7 @@ function AffairsStaffInfoForm() {
           required
         />
         <label htmlFor="position" className="label label--light">
-          سمت (<span>اجباری</span>)
+          <span>*</span> سمت
         </label>
       </div>
       <div className="inputBox">
@@ -56,7 +56,7 @@ function AffairsStaffInfoForm() {
           required
         />
         <label htmlFor="type" className="label label--light">
-          نوع استخدام (<span>اجباری</span>)
+          <span>*</span> نوع استخدام
         </label>
       </div>
 
@@ -68,7 +68,7 @@ function AffairsStaffInfoForm() {
           required
         />
         <label htmlFor="docs" className="label label--light">
-          مستند بازنشستگی (<span>اجباری</span>)
+          <span>*</span> مستند بازنشستگی
         </label>
       </div>
 
@@ -80,7 +80,7 @@ function AffairsStaffInfoForm() {
           required
         />
         <label htmlFor="retireDate" className="label label--light">
-          تاریخ بازنشستگی (<span>اجباری</span>)
+          <span>*</span> تاریخ بازنشستگی
         </label>
       </div>
 
@@ -130,7 +130,7 @@ function AffairsStaffInfoForm() {
           required
         />
         <label htmlFor="marrage" className="label label--light">
-          وضعیت تاهل (<span>اجباری</span>)
+          <span>*</span> وضعیت تاهل
         </label>
       </div>
 
@@ -151,6 +151,7 @@ function AffairsStaffInfoForm() {
       </div>
     </form>
   );
+  return content;
 }
 
 export default AffairsStaffInfoForm;

@@ -1,9 +1,9 @@
 // library imports
 import { UserIcon } from "@heroicons/react/24/outline";
 
-function AffairPersonalInfoForm() {
-  return (
-    <form method="POST" className="PersonalInfoContainer">
+function AffairsPersonalInfoForm() {
+  const content = (
+    <form method="POST" className="PersonalInfoContainer" noValidate>
       <div className="PersonalInfoContainer__gridImage">
         <UserIcon width={50} />
       </div>
@@ -17,7 +17,7 @@ function AffairPersonalInfoForm() {
               required
             />
             <label htmlFor="melliCode" className="label label--light">
-              کد ملی (<span>اجباری</span>)
+              <span>*</span> کد ملی
             </label>
           </div>
 
@@ -29,7 +29,7 @@ function AffairPersonalInfoForm() {
               required
             />
             <label htmlFor="name" className="label label--light">
-              نام (<span>اجباری</span>)
+              <span>*</span> نام
             </label>
           </div>
 
@@ -41,7 +41,7 @@ function AffairPersonalInfoForm() {
               required
             />
             <label htmlFor="surname" className="label label--light">
-              نام خانوادگی (<span>اجباری</span>)
+              <span>*</span> نام خانوادگی
             </label>
           </div>
 
@@ -53,7 +53,7 @@ function AffairPersonalInfoForm() {
               required
             />
             <label htmlFor="shCode" className="label label--light">
-              شماره شناسنامه (<span>اجباری</span>)
+              <span>*</span> شماره شناسنامه
             </label>
           </div>
 
@@ -77,7 +77,7 @@ function AffairPersonalInfoForm() {
               required
             />
             <label htmlFor="gender" className="label label--light">
-              جنسیت (<span>اجباری</span>)
+              <span>*</span> جنسیت
             </label>
           </div>
 
@@ -89,7 +89,7 @@ function AffairPersonalInfoForm() {
               required
             />
             <label htmlFor="birthDate" className="label label--light">
-              تاریخ تولد (<span>اجباری</span>)
+              <span>*</span> تاریخ تولد
             </label>
           </div>
 
@@ -101,7 +101,7 @@ function AffairPersonalInfoForm() {
               required
             />
             <label htmlFor="birthPlace" className="label label--light">
-              محل تولد (<span>اجباری</span>)
+              <span>*</span> محل تولد
             </label>
           </div>
 
@@ -209,7 +209,7 @@ function AffairPersonalInfoForm() {
               required
             />
             <label htmlFor="degree" className="label label--light">
-              مدرک تحصیلی (<span>اجباری</span>)
+              <span>*</span> مدرک تحصیلی
             </label>
           </div>
 
@@ -221,7 +221,7 @@ function AffairPersonalInfoForm() {
               required
             />
             <label htmlFor="country" className="label label--light">
-              کشور (<span>اجباری</span>)
+              <span>*</span> کشور
             </label>
           </div>
 
@@ -269,7 +269,7 @@ function AffairPersonalInfoForm() {
               required
             />
             <label htmlFor="area" className="label label--light">
-              منطقه سکونت (<span>اجباری</span>)
+              <span>*</span> منطقه سکونت
             </label>
           </div>
 
@@ -324,6 +324,7 @@ function AffairPersonalInfoForm() {
       </div>
     </form>
   );
+  return content;
 }
 
-export default AffairPersonalInfoForm;
+export default AffairsPersonalInfoForm;
