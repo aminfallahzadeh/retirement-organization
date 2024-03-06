@@ -6,7 +6,7 @@ import AffairsPersonalInfoForm from "./AffairsPersonalInfoForm";
 // react imports
 import { useState } from "react";
 
-function PensionerSection() {
+function RetiredSection() {
   const [showBankForm, setShowBankForm] = useState(false);
   const [showStaffForm, setShowStaffForm] = useState(false);
   const [showPersonalForm, setShowPersonalForm] = useState(false);
@@ -47,4 +47,4 @@ function PensionerSection() {
   return content;
 }
 
-export default PensionerSection;
+export default RetiredSection;

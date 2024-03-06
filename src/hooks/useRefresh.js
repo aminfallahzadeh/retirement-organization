@@ -10,9 +10,9 @@ const useRefreshToken = () => {
   const dispatch = useDispatch();
 
   const [refreshApiCall] = useRefreshMutation();
-  const { refreshToken, expDate } = useSelector((state) => state.auth);
+  const { refreshToken, expiredate } = useSelector((state) => state.auth);
 
-  const tokenDate = new Date(expDate);
+  const tokenDate = new Date(expiredate);
 
   const refreshTokenHnadler = async () => {
     if (tokenDate - 3000 < Date.now()) {
@@ -21,7 +21,7 @@ const useRefreshToken = () => {
           token: "string",
           refreshToken,
           error: "string",
-          expiredate: expDate,
+          expiredate: expiredate,
         }).unwrap();
         console.log("Refresh Token Run!");
         dispatch(setNewCredentials({ ...res }));

@@ -18,7 +18,7 @@ function App() {
   const [isActive, setIsActive] = useState(true);
   const [remaining, setRemaining] = useState(0);
 
-  const { userInfo } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
 
   const logoutHandler = useLogout();
 
@@ -38,7 +38,7 @@ function App() {
   });
 
   useEffect(() => {
-    if (userInfo) {
+    if (token) {
       const interval = setInterval(() => {
         setRemaining(Math.ceil(getRemainingTime() / 1000));
       }, 500);
@@ -51,7 +51,7 @@ function App() {
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getRemainingTime, isActive, remaining, userInfo]);
+  }, [getRemainingTime, isActive, remaining, token]);
 
   return (
     <>

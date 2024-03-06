@@ -11,7 +11,7 @@ import ItemsGrid from "../components/ItemsGrid";
 import GroupItemGrid from "../components/GroupItemGrid";
 import GroupNameInput from "../components/GroupNameInput";
 import ArrowButtons from "../components/ArrowButtons";
-import PensionerSection from "../components/PensionerSection";
+import RetiredSection from "../components/RetiredSection";
 import AffairsSearchPensionerForm from "../components/AffairsSearchPensionerForm";
 
 // rrd imports
@@ -35,17 +35,17 @@ function Dashboard() {
     (state) => state.pensionerSection
   );
 
-  const { userInfo } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!userInfo) {
+    if (!token) {
       navigate("/retirement-organization/");
     } else {
-      setUserName(jwtDecode(userInfo.itemList[0].token).name);
+      setUserName(jwtDecode(token).name);
     }
-  }, [userInfo, navigate]);
+  }, [token, navigate]);
 
   return (
     <div className="dashboard">
@@ -55,7 +55,7 @@ function Dashboard() {
         <div className="dashboard__body--pensioners">
           {getPensionerSectionStatus && (
             <>
-              <AffairsSearchPensionerForm /> <PensionerSection />
+              <AffairsSearchPensionerForm /> <RetiredSection />
             </>
           )}
         </div>

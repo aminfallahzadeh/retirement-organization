@@ -1,5 +1,5 @@
 Authentication:
-  [ ] implement refresh token handler globally
+  [-] implement refresh token handler globally @cancelled(24-03-06 20:31)
 
 Captcha: 
   [+] reset captcha on invalid input submit @done(24-03-05 22:59)
@@ -8,6 +8,7 @@ Login:
   [ ] complete the responsive and full design
   [ ] add enter key functionality to submit the form
   [ ] add validation check with proper messages
+  [ ] disbale button when any field is empty
 
 Forms:
   [ ] bring the forms in retirement sidebar button

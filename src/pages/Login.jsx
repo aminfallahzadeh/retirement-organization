@@ -42,6 +42,8 @@ function Login() {
     try {
       const res = await login({ username, password }).unwrap();
       dispatch(setCredentials({ ...res }));
+      setUsername("");
+      setPassword("");
       console.log(res);
 
       if (captcha) {
