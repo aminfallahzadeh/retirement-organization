@@ -1,12 +1,61 @@
 .topnav {
     height: $top-nav-height;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1500;
+    background-color: $color-dark-purple-1;
+
+    &__container {
+        display: flex;
+        column-gap: 50px;
+        margin-right: 60px;
+        margin-top: 10px;
+
+        &--logo {
+            img {
+                width: 100%;
+            }
+        }
+
+        &--links {
+            color: $color-grey-2;
+            margin-bottom: 0 !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            column-gap: 30px;
+
+            &-list {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 0 !important;
+                column-gap: 20px;
+            }
+
+            li {
+                list-style: none;
+            }
+        }
+
+        &--banner {
+            width: 280px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
 }
 
-.dropdown-menu {
-    right: 0 !important;
-    left: auto !important;
-    text-align: center !important;
-}
+// .dropdown-menu {
+//     right: 0 !important;
+//     left: auto !important;
+//     text-align: center !important;
+// }
 
 .devider {
     background-color: $color-grey-3;

@@ -42,7 +42,7 @@ function ItemsGrid() {
       const data = items.itemList.map((item, i) => ({
         _id: item.id,
         name: item.itemName,
-        number: convertToPersianNumber(i + 1),
+        number: i + 1,
       }));
 
       dispatch(setItemsData(data));
@@ -78,7 +78,9 @@ function ItemsGrid() {
           sx: { fontFamily: "sahel" },
           align: "right",
         },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
+        Cell: ({ renderedCellValue }) => (
+          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
+        ),
         align: "right",
       },
     ],
@@ -91,7 +93,7 @@ function ItemsGrid() {
     data: itemsData,
     enableRowNumbers: true,
     muiPaginationProps: {
-      color: "secondary",
+      color: "success",
       variant: "outlined",
       showRowsPerPage: false,
       dir: "rtl",
@@ -112,6 +114,8 @@ function ItemsGrid() {
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
+
+  console.log(table.getRowModel().rows);
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];

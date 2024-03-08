@@ -91,7 +91,7 @@ function Captcha() {
     left: "25px",
   };
 
-  return (
+  const content = (
     <div className="captchaContainer">
       <div className="inputBox">
         <input
@@ -108,10 +108,6 @@ function Captcha() {
         <VpnKeyIcon style={style} />
       </div>
       <div className="captchaContainer__text">
-        <canvas ref={canvasRef} width="200" height="40">
-          {captchaText}
-        </canvas>
-
         <Button
           onClick={refreshCaptcha}
           variant="outline-light"
@@ -119,9 +115,14 @@ function Captcha() {
         >
           <AutorenewIcon />
         </Button>
+        <canvas ref={canvasRef} width="200" height="40">
+          {captchaText}
+        </canvas>
       </div>
     </div>
   );
+
+  return content;
 }
 
 export default Captcha;

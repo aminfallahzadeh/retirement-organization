@@ -1,4 +1,4 @@
-// library imnports
+// library imports
 import { getMRT_RowSelectionHandler } from "material-react-table";
 
 // table default options
