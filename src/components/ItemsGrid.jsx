@@ -54,6 +54,7 @@ function ItemsGrid() {
       {
         accessorKey: "name",
         header: "نام گروه",
+        size: 350,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -88,6 +89,7 @@ function ItemsGrid() {
     ...defaultTableOptions,
     columns,
     data: itemsData,
+    enableRowNumbers: true,
     muiPaginationProps: {
       color: "secondary",
       variant: "outlined",
@@ -129,7 +131,9 @@ function ItemsGrid() {
           <Skeleton count={3} />
         </p>
       ) : (
-        <MaterialReactTable table={table} />
+        <div style={{ direction: "rtl" }}>
+          <MaterialReactTable table={table} />
+        </div>
       )}
     </>
   );

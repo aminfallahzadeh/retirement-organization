@@ -17,7 +17,7 @@ function GroupNameInput() {
   }, [groupInfo]);
 
   return (
-    <div className="inputBox">
+    <form className="inputBox" method="POST">
       <input
         type="text"
         className="input field input--dark"
@@ -29,7 +29,7 @@ function GroupNameInput() {
       <label className="label" htmlFor="groupName">
         ویرایش نام گروه
       </label>
-    </div>
+    </form>
   );
 }
 

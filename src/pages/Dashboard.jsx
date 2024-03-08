@@ -13,6 +13,7 @@ import GroupNameInput from "../components/GroupNameInput";
 import ArrowButtons from "../components/ArrowButtons";
 import RetiredSection from "../components/RetiredSection";
 import AffairsSearchPensionerForm from "../components/AffairsSearchPensionerForm";
+import UserEditForm from "../components/UserEditForm";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -73,11 +74,31 @@ function Dashboard() {
               </div>
 
               <div className="dashboard__body--buttomGrid">
+                <ItemsGrid />
+
+                <ArrowButtons />
+
                 <GroupItemGrid />
+              </div>
+            </>
+          )}
+
+          {getUserStatus && (
+            <>
+              <div className="dashboard__body--input">
+                <UserEditForm />
+              </div>
+
+              <div className="dashboard__body--buttomGrid">
+                <GroupsGrid />
 
                 <ArrowButtons />
 
                 <ItemsGrid />
+              </div>
+
+              <div className="dashboard__body--userEditButton">
+                <Button variant="outline-success">ذخیره</Button>
               </div>
             </>
           )}
