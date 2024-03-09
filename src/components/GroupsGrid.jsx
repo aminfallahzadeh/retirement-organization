@@ -47,8 +47,8 @@ function GroupsGrid() {
     if (isSuccess) {
       const data = groups.itemList.map((group, i) => ({
         _id: group.id,
-        name: group.groupName,
         number: i + 1,
+        name: group.groupName,
       }));
       dispatch(setGroupsData(data));
     } else if (error) {
@@ -64,8 +64,26 @@ function GroupsGrid() {
   const columns = useMemo(
     () => [
       {
+        accessorKey: "number",
+        header: "ردیف",
+        size: 50,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+          align: "right",
+        },
+        muiTableBodyCellProps: {
+          sx: { fontFamily: "sahel" },
+          align: "center",
+        },
+        Cell: ({ renderedCellValue }) => (
+          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
+        ),
+        align: "right",
+      },
+      {
         accessorKey: "name",
         header: "نام گروه",
+        size: 350,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -77,24 +95,6 @@ function GroupsGrid() {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
       },
-      {
-        accessorKey: "number",
-        header: "ردیف",
-        grow: false,
-        size: 10,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "right",
-        },
-        Cell: ({ renderedCellValue }) => (
-          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
-        ),
-        align: "right",
-      },
     ],
     []
   );
@@ -104,7 +104,7 @@ function GroupsGrid() {
     columns,
     data: groupsData,
     muiPaginationProps: {
-      color: "secondary",
+      color: "success",
       variant: "outlined",
       showRowsPerPage: false,
       dir: "rtl",

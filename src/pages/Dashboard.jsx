@@ -14,6 +14,7 @@ import ArrowButtons from "../components/ArrowButtons";
 import RetiredSection from "../components/RetiredSection";
 import AffairsSearchPensionerForm from "../components/AffairsSearchPensionerForm";
 import UserEditForm from "../components/UserEditForm";
+import GetUserGroupsGrid from "../components/GetUserGroupsGrid";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -76,7 +77,9 @@ function Dashboard() {
               <div className="dashboard__body--buttomGrid">
                 <ItemsGrid />
 
-                <ArrowButtons />
+                <div></div>
+
+                {/* <ArrowButtons /> */}
 
                 <GroupItemGrid />
               </div>
@@ -92,9 +95,11 @@ function Dashboard() {
               <div className="dashboard__body--buttomGrid">
                 <GroupsGrid />
 
-                <ArrowButtons />
+                <div></div>
 
-                <ItemsGrid />
+                {/* <ArrowButtons /> */}
+
+                <GetUserGroupsGrid />
               </div>
 
               <div className="dashboard__body--userEditButton">

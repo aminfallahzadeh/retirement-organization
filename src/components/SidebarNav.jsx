@@ -28,20 +28,11 @@ function SidebarNav() {
   const refreshTokenHandler = useRefreshToken();
 
   const getGroupHandler = async () => {
-    try {
-      await refreshTokenHandler();
-      dispatch(setGetGroupStatus(true));
-      dispatch(setGetUserStatus(false));
-      dispatch(setGetItemsStatus(false));
-      dispatch(setGetPensionerSectionStatus(false));
-    } catch (err) {
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
-      });
-    }
+    await refreshTokenHandler();
+    dispatch(setGetGroupStatus(true));
+    dispatch(setGetUserStatus(false));
+    dispatch(setGetItemsStatus(false));
+    dispatch(setGetPensionerSectionStatus(false));
   };
 
   const getUserHandler = async () => {

@@ -1,7 +1,7 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
-// helper imports
+// helpers
 import { convertToPersianNumber } from "../helper.js";
 
 // utils imports
@@ -9,8 +9,8 @@ import { defaultTableOptions } from "../utils.js";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { useGetUserQuery } from "../slices/usersApiSlice";
-import { setUserData } from "../slices/userReqSlice.js";
+import { useGetUserGroupsQuery } from "../slices/usersApiSlice";
+import { setUserGroupsData } from "../slices/userReqSlice.js";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -27,38 +27,41 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-function UserGrid() {
+function GetUserGroupsGrid() {
   const [rowSelection, setRowSelection] = useState({});
+  const dispatch = useDispatch();
 
   const { token } = useSelector((state) => state.auth);
 
-  const dispatch = useDispatch();
-
   // access the data from redux store
-  const { userData } = useSelector((state) => state.userReq);
+  const { userGroupsData } = useSelector((state) => state.userReq);
 
-  const { data: users, isLoading, isSuccess } = useGetUserQuery(token);
+  // fetch data from the API
+  const {
+    data: groupItems,
+    isSuccess,
+    isLoading,
+  } = useGetUserGroupsQuery(token);
 
+  // trigger the fetch
   useEffect(() => {
     if (isSuccess) {
-      const data = users.itemList.map((user, i) => ({
+      const data = groupItems.itemList.map((item, i) => ({
+        _id: item.id,
         number: i + 1,
-        isActive: user.isActive === true ? "فعال" : "غیر فعال",
-        lname: user.lastName,
-        fname: user.firstName,
-        username: user.username,
+        name: item.itemID,
       }));
 
-      dispatch(setUserData(data));
+      dispatch(setUserGroupsData(data));
     }
-  }, [users, isSuccess, dispatch]);
+  }, [groupItems, isSuccess, dispatch]);
 
   const columns = useMemo(
     () => [
       {
         accessorKey: "number",
         header: "ردیف",
-        size: 100,
+        size: 50,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -70,63 +73,19 @@ function UserGrid() {
         Cell: ({ renderedCellValue }) => (
           <strong>{convertToPersianNumber(renderedCellValue)}</strong>
         ),
-        align: "right",
       },
       {
-        accessorKey: "username",
-        header: "نام کاربری",
+        accessorKey: "name",
+        header: "نام گروه",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "center",
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-        align: "right",
-      },
-      {
-        accessorKey: "fname",
-        header: "نام",
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
           align: "right",
         },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "center",
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-        align: "right",
-      },
-      {
-        accessorKey: "lname",
-        header: "نام خانوادگی",
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "center",
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-        align: "right",
-      },
-      {
-        accessorKey: "isActive",
-        header: "وضعیت",
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "center",
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-        align: "right",
       },
     ],
     []
@@ -135,7 +94,7 @@ function UserGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: userData,
+    data: userGroupsData,
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
@@ -172,4 +131,4 @@ function UserGrid() {
   );
 }
 
-export default UserGrid;
+export default GetUserGroupsGrid;

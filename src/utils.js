@@ -85,7 +85,7 @@ export const defaultTableOptions = {
     resetColumnSize: "تنظیم مجدد اندازه ستون",
     resetOrder: "بازنشانی سفارش",
     rowActions: "اقدامات ردیف",
-    rowNumber: "ردیف",
+    rowNumber: "#",
     rowNumbers: "اعداد ردیف",
     rowsPerPage: "تعداد ردیف در هر صفحه",
     save: "ذخیره کردن",

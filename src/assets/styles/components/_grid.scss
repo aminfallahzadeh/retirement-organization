@@ -1,22 +1,4 @@
-.MuiBox-root {
-    flex-direction: row-reverse !important;
-}
-
-.MuiList-root > .MuiButtonBase-root {
-    justify-content: right !important;
-}
-
-.MuiListItemIcon-root {
-    margin-left: 10px !important;
-}
-
-.MuiTableCell-root {
-    text-align: right !important;
-}
-
+// avoid column headers to go left side
 .Mui-TableHeadCell-Content {
     justify-content: flex-end !important;
-}
-
-.Mui-TableHeadCell-Content-Labels {
 }

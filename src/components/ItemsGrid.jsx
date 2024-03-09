@@ -41,8 +41,8 @@ function ItemsGrid() {
     if (isSuccess) {
       const data = items.itemList.map((item, i) => ({
         _id: item.id,
-        name: item.itemName,
         number: i + 1,
+        name: item.itemName,
       }));
 
       dispatch(setItemsData(data));
@@ -51,6 +51,23 @@ function ItemsGrid() {
 
   const columns = useMemo(
     () => [
+      {
+        accessorKey: "number",
+        header: "ردیف",
+        size: 50,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+          align: "right",
+        },
+        muiTableBodyCellProps: {
+          sx: { fontFamily: "sahel" },
+          align: "center",
+        },
+        Cell: ({ renderedCellValue }) => (
+          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
+        ),
+        align: "right",
+      },
       {
         accessorKey: "name",
         header: "نام گروه",
@@ -66,23 +83,6 @@ function ItemsGrid() {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
       },
-      {
-        accessorKey: "number",
-        header: "ردیف",
-        size: 100,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "right",
-        },
-        Cell: ({ renderedCellValue }) => (
-          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
-        ),
-        align: "right",
-      },
     ],
     []
   );
@@ -91,12 +91,10 @@ function ItemsGrid() {
     ...defaultTableOptions,
     columns,
     data: itemsData,
-    enableRowNumbers: true,
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
       showRowsPerPage: false,
-      dir: "rtl",
       renderItem: (item) => (
         <PaginationItem
           {...item}
@@ -114,8 +112,6 @@ function ItemsGrid() {
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
-
-  console.log(table.getRowModel().rows);
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
@@ -135,9 +131,7 @@ function ItemsGrid() {
           <Skeleton count={3} />
         </p>
       ) : (
-        <div style={{ direction: "rtl" }}>
-          <MaterialReactTable table={table} />
-        </div>
+        <MaterialReactTable table={table} />
       )}
     </>
   );

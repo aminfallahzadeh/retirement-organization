@@ -1,5 +1,5 @@
 HTML:
-  [ ] set rtl align globally
+  [+] set rtl align globally @done(24-03-09 15:36)
 
 Authentication:
   [-] implement refresh token handler globally @cancelled(24-03-06 20:31)
@@ -25,3 +25,7 @@ Grids:
   [ ] implement the user page grids
   [ ] fix the row number issue
   [ ] complete the move functionality in groups grids page
+
+Queries:
+  [ ] split queries in relavant files
+  [ ] add token header too all queries globally

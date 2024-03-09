@@ -50,8 +50,8 @@ function GroupItemGrid() {
     if (isSuccess) {
       const data = groupItems.itemList.map((item, i) => ({
         _id: item.id,
-        name: item.itemID,
         number: i + 1,
+        name: item.itemID,
       }));
 
       dispatch(setGroupItemsData(data));
@@ -60,6 +60,22 @@ function GroupItemGrid() {
 
   const columns = useMemo(
     () => [
+      {
+        accessorKey: "number",
+        header: "ردیف",
+        size: 50,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+          align: "right",
+        },
+        muiTableBodyCellProps: {
+          sx: { fontFamily: "sahel" },
+          align: "center",
+        },
+        Cell: ({ renderedCellValue }) => (
+          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
+        ),
+      },
       {
         accessorKey: "name",
         header: "نام",
@@ -72,24 +88,6 @@ function GroupItemGrid() {
           align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-        align: "right",
-      },
-      {
-        accessorKey: "number",
-        header: "ردیف",
-        size: 100,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "right",
-        },
-        Cell: ({ renderedCellValue }) => (
-          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
-        ),
-        align: "right",
       },
     ],
     []
@@ -100,7 +98,7 @@ function GroupItemGrid() {
     columns,
     data: groupItemsData,
     muiPaginationProps: {
-      color: "secondary",
+      color: "success",
       variant: "outlined",
       showRowsPerPage: false,
       dir: "rtl",
