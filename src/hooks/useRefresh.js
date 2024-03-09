@@ -1,6 +1,3 @@
-// library imports
-import { toast } from "react-toastify";
-
 // redux imports
 import { useRefreshMutation } from "../slices/usersApiSlice";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,24 +12,19 @@ const useRefreshToken = () => {
   const tokenDate = new Date(expiredate);
 
   const refreshTokenHnadler = async () => {
-    console.log(tokenDate - 3000 < Date.now());
     if (tokenDate - 3000 < Date.now()) {
       console.log("Refresh Token Run!");
       try {
         const res = await refreshApiCall({
-          token: "string",
+          token: "<string>",
           refreshToken,
-          error: "string",
-          expiredate: expiredate,
+          error: "<string>",
+          expiredate,
         }).unwrap();
+        console.log(res);
         dispatch(setNewCredentials({ ...res }));
       } catch (err) {
-        toast.error(err?.data?.message || err.error, {
-          autoClose: 2000,
-          style: {
-            fontSize: "18px",
-          },
-        });
+        console.error(err);
       }
     } else {
       return;

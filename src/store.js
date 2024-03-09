@@ -4,6 +4,7 @@ import { apiSlice } from "./slices/apiSlice";
 import authSliceReducer from "./slices/authSlice";
 import captchaSliceReducer from "./slices/captchaSlice";
 import userReqSliceReducer from "./slices/userReqSlice";
+import statusSliceReducer from "./slices/statusSlice";
 import pensionerSectionSliceReducer from "./slices/pensionerSectionSlice";
 
 const store = configureStore({
@@ -11,6 +12,7 @@ const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authSliceReducer,
     captcha: captchaSliceReducer,
+    status: statusSliceReducer,
     userReq: userReqSliceReducer,
     pensionerSection: pensionerSectionSliceReducer,
   },

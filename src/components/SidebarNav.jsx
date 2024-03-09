@@ -1,5 +1,4 @@
 // library imports
-import { toast } from "react-toastify";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import {
   UserIcon,
@@ -17,7 +16,7 @@ import {
   setGetGroupStatus,
   setGetUserStatus,
   setGetItemsStatus,
-} from "../slices/userReqSlice";
+} from "../slices/statusSlice";
 import { setGetPensionerSectionStatus } from "../slices/pensionerSectionSlice";
 
 // react imports

@@ -1,5 +1,6 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
+import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
@@ -10,11 +11,8 @@ import { defaultTableOptions } from "../utils.js";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
-import {
-  setGetItemsStatus,
-  setGroupInfo,
-  setGroupsData,
-} from "../slices/userReqSlice";
+import { setGetItemsStatus } from "../slices/statusSlice";
+import { setGroupInfo, setGroupsData } from "../slices/userReqSlice";
 
 // library imports
 import { toast } from "react-toastify";
@@ -35,6 +33,8 @@ import {
 function GroupsGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
+
+  const refreshTokenHandler = useRefreshToken();
 
   const dispatch = useDispatch();
 
@@ -137,11 +137,19 @@ function GroupsGrid() {
     }
 
     if (groupInfo) {
+      refreshTokenHandler();
       dispatch(setGetItemsStatus(true));
     } else {
       dispatch(setGetItemsStatus(false));
     }
-  }, [dispatch, table, rowSelection, groupInfo, groupsData]);
+  }, [
+    dispatch,
+    table,
+    rowSelection,
+    groupInfo,
+    groupsData,
+    refreshTokenHandler,
+  ]);
 
   return (
     <>

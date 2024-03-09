@@ -49,20 +49,7 @@
 
         &--banner {
             width: 280px;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            margin-right: auto;
         }
     }
-}
-
-// .dropdown-menu {
-//     right: 0 !important;
-//     left: auto !important;
-//     text-align: center !important;
-// }
-
-.devider {
-    background-color: $color-grey-3;
 }

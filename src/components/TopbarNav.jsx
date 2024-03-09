@@ -63,12 +63,12 @@ function TopbarNav({ userName }) {
             <li>اعلانات</li>
           </ul>
         </div>
-
+        {/* 
         <img
           src="./images/banner.png"
           className="topnav__container--banner"
           alt="banner"
-        />
+        /> */}
       </div>
       {dropdown && <NavDropdown ref={dropdownRef} />}
     </nav>

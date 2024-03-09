@@ -30,7 +30,7 @@ function Dashboard() {
   const [userName, setUserName] = useState("");
 
   const { getGroupStatus, getUserStatus, getItemsStatus } = useSelector(
-    (state) => state.userReq
+    (state) => state.status
   );
 
   const { getPensionerSectionStatus } = useSelector(
