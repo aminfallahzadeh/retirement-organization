@@ -1,0 +1,24 @@
+.ProfilePicture {
+    padding: 10px;
+    border-radius: 50%;
+    background-color: $color-grey-3;
+    cursor: pointer;
+    transition: all 0.25s;
+
+    a {
+        text-decoration: none;
+        list-style: none;
+    }
+
+    a > * {
+        transition: all 0.25s;
+    }
+
+    &:hover {
+        background-color: $color-grey-1;
+    }
+
+    &:hover a > * {
+        color: $color-grey-3;
+    }
+}

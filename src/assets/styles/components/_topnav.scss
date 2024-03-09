@@ -38,6 +38,12 @@
 
             li {
                 list-style: none;
+                cursor: pointer;
+                transition: all 0.25s;
+
+                &:hover {
+                    color: $color-grey-3;
+                }
             }
         }
 

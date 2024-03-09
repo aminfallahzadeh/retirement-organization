@@ -1,12 +1,44 @@
 // library imports
-import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
+// component imports
+import NavDropdown from "./NavDropdown";
+import ProfilePicure from "./ProfilePicture";
 
 // react imports
-import useLogout from "../hooks/useLogout";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 function TopbarNav({ userName }) {
-  const logoutHandler = useLogout();
+  const [dropdown, setDropdown] = useState(false);
+
+  const dropdownRef = useRef(null);
+  const dropdownTogglerRef = useRef(null);
+
+  const toggleDropdown = () => {
+    setDropdown(!dropdown);
+  };
+
+  const closeDropdown = useCallback(
+    (e) => {
+      if (
+        dropdownRef.current &&
+        dropdown &&
+        !dropdownRef.current.contains(e.target) &&
+        !dropdownTogglerRef.current.contains(e.target)
+      ) {
+        setDropdown(false);
+      }
+    },
+    [dropdown]
+  );
+
+  useEffect(() => {
+    document.addEventListener("mousedown", closeDropdown);
+    return () => {
+      document.removeEventListener("mousedown", closeDropdown);
+    };
+  }, [closeDropdown]);
 
   const content = (
     <nav className="topnav">
@@ -21,14 +53,12 @@ function TopbarNav({ userName }) {
           />
         </a>
         <div className="topnav__container--links">
-          <div>
-            <Button variant="outline-danger" onClick={logoutHandler}>
-              خروج
-            </Button>
-          </div>
+          <ProfilePicure />
 
           <ul className="topnav__container--links-list">
-            <li>{userName}</li>
+            <li onClick={toggleDropdown} ref={dropdownTogglerRef}>
+              <ArrowDropDownIcon /> {userName}
+            </li>
             <li>خانه</li>
             <li>اعلانات</li>
           </ul>
@@ -40,6 +70,7 @@ function TopbarNav({ userName }) {
           alt="banner"
         />
       </div>
+      {dropdown && <NavDropdown ref={dropdownRef} />}
     </nav>
   );
 

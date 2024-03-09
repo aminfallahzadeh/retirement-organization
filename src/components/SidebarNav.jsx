@@ -44,20 +44,11 @@ function SidebarNav() {
   };
 
   const getPensionerSectionHandler = async () => {
-    try {
-      await refreshTokenHandler();
-      dispatch(setGetPensionerSectionStatus(true));
-      dispatch(setGetGroupStatus(false));
-      dispatch(setGetUserStatus(false));
-      dispatch(setGetItemsStatus(false));
-    } catch (err) {
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
-      });
-    }
+    await refreshTokenHandler();
+    dispatch(setGetPensionerSectionStatus(true));
+    dispatch(setGetGroupStatus(false));
+    dispatch(setGetUserStatus(false));
+    dispatch(setGetItemsStatus(false));
   };
 
   return (
