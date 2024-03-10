@@ -127,6 +127,7 @@ function CartableGrid() {
 
   const content = (
     <section className="CartableGrid">
+      <h4 className="CartableGrid__title">کارتابل</h4>
       <MaterialReactTable table={table} />
     </section>
   );

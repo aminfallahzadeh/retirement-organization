@@ -9,11 +9,22 @@ import ProfilePicure from "./ProfilePicture";
 // react imports
 import { useState, useRef, useEffect, useCallback } from "react";
 
+// redux imports
+import { useSelector, useDispatch } from "react-redux";
+import { setGetCartableStatus } from "../slices/statusSlice";
+
 function TopbarNav({ userName }) {
   const [dropdown, setDropdown] = useState(false);
+  const { getCartableStatus } = useSelector((state) => state.status);
 
   const dropdownRef = useRef(null);
   const dropdownTogglerRef = useRef(null);
+
+  const dispatch = useDispatch();
+
+  const toggleCartable = () => {
+    dispatch(setGetCartableStatus(!getCartableStatus));
+  };
 
   const toggleDropdown = () => {
     setDropdown(!dropdown);
@@ -59,7 +70,7 @@ function TopbarNav({ userName }) {
             <li onClick={toggleDropdown} ref={dropdownTogglerRef}>
               <ArrowDropDownIcon /> {userName}
             </li>
-            <li>خانه</li>
+            <li onClick={toggleCartable}>کارتابل</li>
             <li>اعلانات</li>
           </ul>
         </div>
