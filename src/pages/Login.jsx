@@ -68,7 +68,7 @@ function Login() {
         });
       }
     } catch (err) {
-      toast.error(err?.message || err.error, {
+      toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
         style: {
           fontSize: "18px",
