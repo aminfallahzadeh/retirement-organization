@@ -1,5 +1,6 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
+import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
@@ -30,6 +31,7 @@ import {
 function ItemsGrid() {
   const { token } = useSelector((state) => state.auth);
   const { itemsData } = useSelector((state) => state.userReq);
+  const refreshTokenHandler = useRefreshToken();
 
   const [rowSelection, setRowSelection] = useState({});
 
@@ -39,9 +41,8 @@ function ItemsGrid() {
 
   useEffect(() => {
     if (isSuccess) {
-      const data = items.itemList.map((item, i) => ({
+      const data = items.itemList.map((item) => ({
         _id: item.id,
-        number: i + 1,
         name: item.itemName,
       }));
 
@@ -52,29 +53,12 @@ function ItemsGrid() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "number",
-        header: "ردیف",
-        size: 50,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "center",
-        },
-        Cell: ({ renderedCellValue }) => (
-          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
-        ),
-        align: "right",
-      },
-      {
         accessorKey: "name",
         header: "نام گروه",
         size: 350,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
-          align: "center",
+          align: "right",
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
@@ -123,6 +107,12 @@ function ItemsGrid() {
       dispatch(setItemInfo(null));
     }
   }, [dispatch, table, rowSelection, itemsData]);
+
+  // check if token is expired on compoennt mount
+  useEffect(() => {
+    refreshTokenHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

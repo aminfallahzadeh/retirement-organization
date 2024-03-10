@@ -27,10 +27,12 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-function GetUserGroupsGrid() {
+function UserGroupsGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const dispatch = useDispatch();
 
+  // access selected row info
+  const { userInfo } = useSelector((state) => state.userReq);
   const { token } = useSelector((state) => state.auth);
 
   // access the data from redux store
@@ -38,42 +40,26 @@ function GetUserGroupsGrid() {
 
   // fetch data from the API
   const {
-    data: groupItems,
+    data: userGroups,
     isSuccess,
     isLoading,
-  } = useGetUserGroupsQuery(token);
+  } = useGetUserGroupsQuery({ token, userId: userInfo?._id });
 
   // trigger the fetch
   useEffect(() => {
     if (isSuccess) {
-      const data = groupItems.itemList.map((item, i) => ({
+      const data = userGroups.itemList.map((item) => ({
         _id: item.id,
-        number: i + 1,
-        name: item.itemID,
+        name: item.groupName,
       }));
 
+      console.log(data);
       dispatch(setUserGroupsData(data));
     }
-  }, [groupItems, isSuccess, dispatch]);
+  }, [userGroups, isSuccess, dispatch]);
 
   const columns = useMemo(
     () => [
-      {
-        accessorKey: "number",
-        header: "ردیف",
-        size: 50,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "center",
-        },
-        Cell: ({ renderedCellValue }) => (
-          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
-        ),
-      },
       {
         accessorKey: "name",
         header: "نام گروه",
@@ -131,4 +117,4 @@ function GetUserGroupsGrid() {
   );
 }
 
-export default GetUserGroupsGrid;
+export default UserGroupsGrid;

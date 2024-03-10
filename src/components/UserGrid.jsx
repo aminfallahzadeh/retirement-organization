@@ -1,8 +1,9 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
+import useRefreshToken from "../hooks/useRefresh";
 
 // helper imports
-import { convertToPersianNumber } from "../helper.js";
+import { convertToPersianNumber, findById } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -10,7 +11,8 @@ import { defaultTableOptions } from "../utils.js";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetUserQuery } from "../slices/usersApiSlice";
-import { setUserData } from "../slices/userReqSlice.js";
+import { setUserInfo, setUserData } from "../slices/userReqSlice.js";
+import { setGetUserGroupsStatus } from "../slices/statusSlice.js";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -30,18 +32,19 @@ import {
 function UserGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
+  const refreshTokenHandler = useRefreshToken();
 
   const dispatch = useDispatch();
 
   // access the data from redux store
-  const { userData } = useSelector((state) => state.userReq);
+  const { userInfo, userData } = useSelector((state) => state.userReq);
 
   const { data: users, isLoading, isSuccess } = useGetUserQuery(token);
 
   useEffect(() => {
     if (isSuccess) {
-      const data = users.itemList.map((user, i) => ({
-        number: i + 1,
+      const data = users.itemList.map((user) => ({
+        _id: user.id,
         isActive: user.isActive === true ? "فعال" : "غیر فعال",
         lname: user.lastName,
         fname: user.firstName,
@@ -54,23 +57,6 @@ function UserGrid() {
 
   const columns = useMemo(
     () => [
-      {
-        accessorKey: "number",
-        header: "ردیف",
-        size: 100,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "center",
-        },
-        Cell: ({ renderedCellValue }) => (
-          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
-        ),
-        align: "right",
-      },
       {
         accessorKey: "username",
         header: "نام کاربری",
@@ -157,6 +143,35 @@ function UserGrid() {
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
+
+  useEffect(() => {
+    const id = Object.keys(table.getState().rowSelection)[0];
+    const selectedUserInfo = findById(userData, id);
+    console.log(selectedUserInfo);
+
+    if (id) {
+      dispatch(setUserInfo(selectedUserInfo));
+    } else {
+      dispatch(setUserInfo(null));
+    }
+
+    if (userInfo) {
+      dispatch(setGetUserGroupsStatus(true));
+    } else {
+      dispatch(setGetUserGroupsStatus(false));
+    }
+    return () => {
+      // Cleanup function to clear userInfo
+      dispatch(setUserInfo(null));
+      dispatch(setGetUserGroupsStatus(false));
+    };
+  }, [dispatch, table, rowSelection, userInfo, userData]);
+
+  // check if token is expired on compoennt mount
+  useEffect(() => {
+    refreshTokenHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

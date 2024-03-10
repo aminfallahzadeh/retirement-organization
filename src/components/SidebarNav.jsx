@@ -16,26 +16,22 @@ import {
   setGetGroupStatus,
   setGetUserStatus,
   setGetItemsStatus,
+  setGetUserGroupsStatus,
 } from "../slices/statusSlice";
 import { setGetPensionerSectionStatus } from "../slices/pensionerSectionSlice";
 
-// react imports
-import useRefreshToken from "../hooks/useRefresh";
-
 function SidebarNav() {
   const dispatch = useDispatch();
-  const refreshTokenHandler = useRefreshToken();
 
-  const getGroupHandler = async () => {
-    await refreshTokenHandler();
+  const getGroupHandler = () => {
     dispatch(setGetGroupStatus(true));
     dispatch(setGetUserStatus(false));
     dispatch(setGetItemsStatus(false));
     dispatch(setGetPensionerSectionStatus(false));
+    dispatch(setGetUserGroupsStatus(false));
   };
 
-  const getUserHandler = async () => {
-    await refreshTokenHandler();
+  const getUserHandler = () => {
     dispatch(setGetGroupStatus(false));
     dispatch(setGetUserStatus(true));
     dispatch(setGetItemsStatus(false));
@@ -47,6 +43,7 @@ function SidebarNav() {
     dispatch(setGetGroupStatus(false));
     dispatch(setGetUserStatus(false));
     dispatch(setGetItemsStatus(false));
+    dispatch(setGetUserGroupsStatus(false));
   };
 
   return (

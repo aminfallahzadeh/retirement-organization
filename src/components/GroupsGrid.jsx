@@ -1,5 +1,6 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
+import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
@@ -32,6 +33,7 @@ import {
 function GroupsGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
+  const refreshTokenHandler = useRefreshToken();
 
   const dispatch = useDispatch();
 
@@ -42,9 +44,8 @@ function GroupsGrid() {
 
   useEffect(() => {
     if (isSuccess) {
-      const data = groups.itemList.map((group, i) => ({
+      const data = groups.itemList.map((group) => ({
         _id: group.id,
-        number: i + 1,
         name: group.groupName,
       }));
       dispatch(setGroupsData(data));
@@ -60,23 +61,6 @@ function GroupsGrid() {
 
   const columns = useMemo(
     () => [
-      {
-        accessorKey: "number",
-        header: "ردیف",
-        size: 50,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "center",
-        },
-        Cell: ({ renderedCellValue }) => (
-          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
-        ),
-        align: "right",
-      },
       {
         accessorKey: "name",
         header: "نام گروه",
@@ -138,7 +122,18 @@ function GroupsGrid() {
     } else {
       dispatch(setGetItemsStatus(false));
     }
+
+    return () => {
+      dispatch(setGroupInfo(null));
+      dispatch(setGetItemsStatus(false));
+    };
   }, [dispatch, table, rowSelection, groupInfo, groupsData]);
+
+  // check if token is expired on compoennt mount
+  useEffect(() => {
+    refreshTokenHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

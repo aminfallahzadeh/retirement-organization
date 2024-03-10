@@ -1,5 +1,6 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
+import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
@@ -30,6 +31,7 @@ import {
 function GroupItemGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const dispatch = useDispatch();
+  const refreshTokenHandler = useRefreshToken();
 
   // access selected row info
   const { groupInfo } = useSelector((state) => state.userReq);
@@ -48,10 +50,9 @@ function GroupItemGrid() {
   // trigger the fetch
   useEffect(() => {
     if (isSuccess) {
-      const data = groupItems.itemList.map((item, i) => ({
+      const data = groupItems.itemList.map((item) => ({
         _id: item.id,
-        number: i + 1,
-        name: item.itemID,
+        name: item.itemName,
       }));
 
       dispatch(setGroupItemsData(data));
@@ -60,22 +61,6 @@ function GroupItemGrid() {
 
   const columns = useMemo(
     () => [
-      {
-        accessorKey: "number",
-        header: "ردیف",
-        size: 50,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "center",
-        },
-        Cell: ({ renderedCellValue }) => (
-          <strong>{convertToPersianNumber(renderedCellValue)}</strong>
-        ),
-      },
       {
         accessorKey: "name",
         header: "نام",
@@ -130,6 +115,11 @@ function GroupItemGrid() {
       dispatch(setGroupItemInfo(null));
     }
   }, [dispatch, table, rowSelection, groupItemsData]);
+
+  // check if token is expired on compoennt mount
+  useEffect(() => {
+    refreshTokenHandler();
+  }, [refreshTokenHandler]);
 
   return (
     <>

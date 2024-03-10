@@ -14,7 +14,7 @@ import ArrowButtons from "../components/ArrowButtons";
 import RetiredSection from "../components/RetiredSection";
 import AffairsSearchPensionerForm from "../components/AffairsSearchPensionerForm";
 import UserEditForm from "../components/UserEditForm";
-import GetUserGroupsGrid from "../components/GetUserGroupsGrid";
+import UserGroupsGrid from "../components/UserGroupsGrid";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -29,9 +29,8 @@ function Dashboard() {
   // get username from userInfo
   const [userName, setUserName] = useState("");
 
-  const { getGroupStatus, getUserStatus, getItemsStatus } = useSelector(
-    (state) => state.status
-  );
+  const { getGroupStatus, getUserStatus, getItemsStatus, getUserGroupsStatus } =
+    useSelector((state) => state.status);
 
   const { getPensionerSectionStatus } = useSelector(
     (state) => state.pensionerSection
@@ -86,7 +85,7 @@ function Dashboard() {
             </>
           )}
 
-          {getUserStatus && (
+          {getUserGroupsStatus && (
             <>
               <div className="dashboard__body--input">
                 <UserEditForm />
@@ -99,7 +98,7 @@ function Dashboard() {
 
                 {/* <ArrowButtons /> */}
 
-                <GetUserGroupsGrid />
+                <UserGroupsGrid />
               </div>
 
               <div className="dashboard__body--userEditButton">

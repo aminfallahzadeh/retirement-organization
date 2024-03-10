@@ -16,8 +16,8 @@ function GroupNameInput() {
     setGroupName(groupInfo?.name);
   }, [groupInfo]);
 
-  return (
-    <form className="inputBox" method="POST">
+  const content = (
+    <form method="POST" className="inputBox">
       <input
         type="text"
         className="input field input--dark"
@@ -31,6 +31,8 @@ function GroupNameInput() {
       </label>
     </form>
   );
+
+  return content;
 }
 
 export default GroupNameInput;
