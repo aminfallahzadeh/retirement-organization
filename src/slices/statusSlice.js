@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  getCartableStatus: false,
   getGroupStatus: false,
   getUserStatus: false,
   getUserGroupsStatus: false,
@@ -12,6 +13,9 @@ const statusSlice = createSlice({
   name: "status",
   initialState,
   reducers: {
+    setGetCartableStatus: (state, action) => {
+      state.getCartableStatus = action.payload;
+    },
     setGetGroupStatus: (state, action) => {
       state.getGroupStatus = action.payload;
     },
@@ -31,6 +35,7 @@ const statusSlice = createSlice({
 });
 
 export const {
+  setGetCartableStatus,
   setGetGroupStatus,
   setGetUserStatus,
   setGetItemsStatus,

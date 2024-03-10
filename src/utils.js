@@ -10,8 +10,6 @@ export const defaultTableOptions = {
   enableFullScreenToggle: false,
   positionToolbarAlertBanner: "none",
   // initialState: { pagination: { pageSize: 5 } },
-  enableRowSelection: true,
-  enableMultiRowSelection: false,
   muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
     onClick: (event) =>
       getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),

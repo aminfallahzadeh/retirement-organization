@@ -82,6 +82,8 @@ function GroupItemGrid() {
     ...defaultTableOptions,
     columns,
     data: groupItemsData,
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
     muiPaginationProps: {
       color: "success",
       variant: "outlined",

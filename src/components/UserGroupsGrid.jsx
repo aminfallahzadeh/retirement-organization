@@ -81,6 +81,8 @@ function UserGroupsGrid() {
     ...defaultTableOptions,
     columns,
     data: userGroupsData,
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
     muiPaginationProps: {
       color: "success",
       variant: "outlined",

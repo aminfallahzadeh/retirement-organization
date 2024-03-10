@@ -84,6 +84,8 @@ function GroupsGrid() {
     ...defaultTableOptions,
     columns,
     data: groupsData,
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
     muiPaginationProps: {
       color: "success",
       variant: "outlined",

@@ -121,6 +121,8 @@ function UserGrid() {
     ...defaultTableOptions,
     columns,
     data: userData,
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
     muiPaginationProps: {
       color: "success",
       variant: "outlined",

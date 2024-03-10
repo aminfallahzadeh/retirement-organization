@@ -13,6 +13,7 @@ import {
 // redux imports
 import { useDispatch } from "react-redux";
 import {
+  setGetCartableStatus,
   setGetGroupStatus,
   setGetUserStatus,
   setGetItemsStatus,
@@ -29,6 +30,7 @@ function SidebarNav() {
     dispatch(setGetItemsStatus(false));
     dispatch(setGetPensionerSectionStatus(false));
     dispatch(setGetUserGroupsStatus(false));
+    dispatch(setGetCartableStatus(false));
   };
 
   const getUserHandler = () => {
@@ -36,6 +38,7 @@ function SidebarNav() {
     dispatch(setGetUserStatus(true));
     dispatch(setGetItemsStatus(false));
     dispatch(setGetPensionerSectionStatus(false));
+    dispatch(setGetCartableStatus(false));
   };
 
   const getPensionerSectionHandler = () => {
@@ -44,6 +47,7 @@ function SidebarNav() {
     dispatch(setGetUserStatus(false));
     dispatch(setGetItemsStatus(false));
     dispatch(setGetUserGroupsStatus(false));
+    dispatch(setGetCartableStatus(false));
   };
 
   return (

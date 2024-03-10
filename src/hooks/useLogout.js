@@ -10,6 +10,7 @@ import { useLogoutMutation } from "../slices/usersApiSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { setGroupItemsData, setItemsData } from "../slices/userReqSlice";
 import {
+  setGetCartableStatus,
   setGetGroupStatus,
   setGetItemsStatus,
   setGetUserStatus,
@@ -40,6 +41,7 @@ const useLogout = () => {
       dispatch(setGetUserStatus(false));
       dispatch(setGetUserGroupsStatus(false));
       dispatch(setGetPensionerSectionStatus(false));
+      dispatch(setGetCartableStatus(false));
       dispatch(setGroupItemsData([]));
       dispatch(setItemsData([]));
       toast.success(res.data.message, {

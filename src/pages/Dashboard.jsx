@@ -15,21 +15,24 @@ import RetiredSection from "../components/RetiredSection";
 import AffairsSearchPensionerForm from "../components/AffairsSearchPensionerForm";
 import UserEditForm from "../components/UserEditForm";
 import UserGroupsGrid from "../components/UserGroupsGrid";
+import CartableGrid from "../components/CartableGrid";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
 
 // redux imports
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 // react imports
 import { useEffect, useState } from "react";
+import { setGetCartableStatus } from "../slices/statusSlice";
 
 function Dashboard() {
   // get username from userInfo
   const [userName, setUserName] = useState("");
 
   const {
+    getCartableStatus,
     getGroupStatus,
     getUserStatus,
     getItemsStatus,
@@ -40,6 +43,7 @@ function Dashboard() {
   const { token } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!token) {
@@ -49,15 +53,22 @@ function Dashboard() {
     }
   }, [token, navigate]);
 
+  useEffect(() => {
+    dispatch(setGetCartableStatus(true));
+  }, [dispatch]);
+
   return (
     <div className="dashboard">
       <TopbarNav userName={userName} />
       <SidebarNav />
       <div className="dashboard__body">
         <div className="dashboard__body--pensioners">
+          {getCartableStatus && <CartableGrid />}
+
           {getPensionerSectionStatus && (
             <>
-              <AffairsSearchPensionerForm /> <RetiredSection />
+              <AffairsSearchPensionerForm />
+              <RetiredSection />
             </>
           )}
         </div>

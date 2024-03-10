@@ -75,6 +75,8 @@ function ItemsGrid() {
     ...defaultTableOptions,
     columns,
     data: itemsData,
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
