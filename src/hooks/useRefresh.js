@@ -12,6 +12,7 @@ const useRefreshToken = () => {
   const tokenDate = new Date(expiredate);
 
   const refreshTokenHnadler = async () => {
+    console.log(tokenDate - 3000 < Date.now());
     if (tokenDate - 3000 < Date.now()) {
       console.log("Refresh Token Run!");
       try {

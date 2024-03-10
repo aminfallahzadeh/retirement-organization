@@ -14,7 +14,7 @@ Login:
   [ ] disbale button when any field is empty
 
 Forms:
-  [ ] bring the forms in retirement sidebar button
+  [+] bring the forms in retirement sidebar button @done(24-03-09 22:49)
   [ ] add search form on top of the other forms
   [ ] complete the options based forms
   [ ] implement the text areas

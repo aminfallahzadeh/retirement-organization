@@ -42,8 +42,7 @@ function SidebarNav() {
     dispatch(setGetPensionerSectionStatus(false));
   };
 
-  const getPensionerSectionHandler = async () => {
-    await refreshTokenHandler();
+  const getPensionerSectionHandler = () => {
     dispatch(setGetPensionerSectionStatus(true));
     dispatch(setGetGroupStatus(false));
     dispatch(setGetUserStatus(false));

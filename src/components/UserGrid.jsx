@@ -30,14 +30,12 @@ import {
 function UserGrid() {
   const [rowSelection, setRowSelection] = useState({});
 
-  const { token } = useSelector((state) => state.auth);
-
   const dispatch = useDispatch();
 
   // access the data from redux store
   const { userData } = useSelector((state) => state.userReq);
 
-  const { data: users, isLoading, isSuccess } = useGetUserQuery(token);
+  const { data: users, isLoading, isSuccess } = useGetUserQuery();
 
   useEffect(() => {
     if (isSuccess) {

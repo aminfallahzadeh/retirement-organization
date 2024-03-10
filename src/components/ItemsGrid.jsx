@@ -74,7 +74,7 @@ function ItemsGrid() {
         size: 350,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
+          align: "center",
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },

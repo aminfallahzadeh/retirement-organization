@@ -8,13 +8,12 @@ import useRefreshToken from "../hooks/useRefresh";
 import { logout } from "../slices/authSlice";
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { setGroupItemsData, setItemsData } from "../slices/userReqSlice";
 import {
   setGetGroupStatus,
   setGetItemsStatus,
   setGetUserStatus,
-  setGroupItemsData,
-  setItemsData,
-} from "../slices/userReqSlice";
+} from "../slices/statusSlice";
 
 const useLogout = () => {
   const refreshTokenHandler = useRefreshToken();

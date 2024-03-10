@@ -1,6 +1,5 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
-import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
@@ -33,8 +32,6 @@ import {
 function GroupsGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
-
-  const refreshTokenHandler = useRefreshToken();
 
   const dispatch = useDispatch();
 
@@ -137,19 +134,11 @@ function GroupsGrid() {
     }
 
     if (groupInfo) {
-      refreshTokenHandler();
       dispatch(setGetItemsStatus(true));
     } else {
       dispatch(setGetItemsStatus(false));
     }
-  }, [
-    dispatch,
-    table,
-    rowSelection,
-    groupInfo,
-    groupsData,
-    refreshTokenHandler,
-  ]);
+  }, [dispatch, table, rowSelection, groupInfo, groupsData]);
 
   return (
     <>
