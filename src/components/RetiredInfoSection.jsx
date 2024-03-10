@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 
 // component imports
 import RetiredInfoGrid from "./RetiredInfoGrid";
+import RetiredHokmInfoModal from "./RetiredHokmInfoModal";
 
 function RetiredInfoSection() {
   return (
@@ -33,6 +34,10 @@ function RetiredInfoSection() {
 
       <div className="RetiredInfoSection__grid">
         <RetiredInfoGrid />
+      </div>
+
+      <div>
+        <RetiredHokmInfoModal />
       </div>
     </section>
   );
