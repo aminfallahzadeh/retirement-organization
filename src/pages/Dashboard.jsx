@@ -16,6 +16,7 @@ import AffairsSearchPensionerForm from "../components/AffairsSearchPensionerForm
 import UserEditForm from "../components/UserEditForm";
 import UserGroupsGrid from "../components/UserGroupsGrid";
 import CartableGrid from "../components/CartableGrid";
+import RetiredInfoSection from "../components/RetiredInfoSection";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -69,6 +70,7 @@ function Dashboard() {
             <>
               <AffairsSearchPensionerForm />
               <RetiredSection />
+              <RetiredInfoSection />
             </>
           )}
         </div>
