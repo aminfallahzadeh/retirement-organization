@@ -29,12 +29,13 @@ function Dashboard() {
   // get username from userInfo
   const [userName, setUserName] = useState("");
 
-  const { getGroupStatus, getUserStatus, getItemsStatus, getUserGroupsStatus } =
-    useSelector((state) => state.status);
-
-  const { getPensionerSectionStatus } = useSelector(
-    (state) => state.pensionerSection
-  );
+  const {
+    getGroupStatus,
+    getUserStatus,
+    getItemsStatus,
+    getUserGroupsStatus,
+    getPensionerSectionStatus,
+  } = useSelector((state) => state.status);
 
   const { token } = useSelector((state) => state.auth);
 

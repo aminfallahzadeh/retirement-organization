@@ -12,6 +12,7 @@ Login:
   [ ] add enter key functionality to submit the form
   [ ] add validation check with proper messages
   [ ] disbale button when any field is empty
+  [ ] reset everything on wrong password
 
 Forms:
   [+] bring the forms in retirement sidebar button @done(24-03-09 22:49)
@@ -25,7 +26,18 @@ Grids:
   [ ] implement the user page grids
   [ ] fix the row number issue
   [ ] complete the move functionality in groups grids page
+  [ ] remove circle selections on top grids
+  [ ] add multiselection on bottom grids
 
 Queries:
   [ ] split queries in relavant files
   [ ] add token header too all queries globally
+
+Navbar:
+  [ ] date time on the left side
+  [ ] banner on the mid
+
+NewForms:
+  [ ] kartabl top of the page on dashboard open
+  [ ] eleteatbazneshaste under the 3 forms
+  [ ] on virayesh burron add modal form vabaste

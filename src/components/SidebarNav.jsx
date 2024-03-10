@@ -17,8 +17,8 @@ import {
   setGetUserStatus,
   setGetItemsStatus,
   setGetUserGroupsStatus,
+  setGetPensionerSectionStatus,
 } from "../slices/statusSlice";
-import { setGetPensionerSectionStatus } from "../slices/pensionerSectionSlice";
 
 function SidebarNav() {
   const dispatch = useDispatch();

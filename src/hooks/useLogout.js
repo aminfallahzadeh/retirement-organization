@@ -13,6 +13,8 @@ import {
   setGetGroupStatus,
   setGetItemsStatus,
   setGetUserStatus,
+  setGetUserGroupsStatus,
+  setGetPensionerSectionStatus,
 } from "../slices/statusSlice";
 
 const useLogout = () => {
@@ -36,6 +38,8 @@ const useLogout = () => {
       dispatch(setGetGroupStatus(false));
       dispatch(setGetItemsStatus(false));
       dispatch(setGetUserStatus(false));
+      dispatch(setGetUserGroupsStatus(false));
+      dispatch(setGetPensionerSectionStatus(false));
       dispatch(setGroupItemsData([]));
       dispatch(setItemsData([]));
       toast.success(res.data.message, {
