@@ -2,8 +2,16 @@
 import { useMemo, useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefresh";
 
+// mui imports
+import { Box, IconButton } from "@mui/material";
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
+
+// components
+import Modal from "./Modal";
+import GroupNameInput from "./GroupNameInput";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -34,6 +42,8 @@ function GroupsGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
   const refreshTokenHandler = useRefreshToken();
+
+  const [shoModal, setShowModal] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -76,6 +86,25 @@ function GroupsGrid() {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
       },
+      {
+        accessorKey: "actions",
+        header: "حذف / ویرایش نام",
+        enableSorting: false,
+        enableColumnActions: false,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        Cell: () => (
+          <Box sx={{ display: "flex", gap: "8px" }}>
+            <IconButton color="success" onClick={() => setShowModal(true)}>
+              <EditIcon />
+            </IconButton>
+            <IconButton color="error">
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        ),
+      },
     ],
     []
   );
@@ -84,13 +113,21 @@ function GroupsGrid() {
     ...defaultTableOptions,
     columns,
     data: groupsData,
-    enableRowSelection: true,
-    enableMultiRowSelection: false,
+    muiTableBodyRowProps: ({ row }) => ({
+      //implement row selection click events manually
+      onClick: () =>
+        setRowSelection(() => ({
+          [row.id]: true,
+        })),
+      selected: rowSelection[row.id],
+      sx: {
+        cursor: "pointer",
+      },
+    }),
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
       showRowsPerPage: false,
-      dir: "rtl",
       renderItem: (item) => (
         <PaginationItem
           {...item}
@@ -106,7 +143,7 @@ function GroupsGrid() {
     },
     getRowId: (originalRow) => originalRow._id,
     onRowSelectionChange: setRowSelection,
-    state: { rowSelection, pageSize: 5 },
+    state: { rowSelection },
   });
 
   useEffect(() => {
@@ -144,7 +181,16 @@ function GroupsGrid() {
           <Skeleton count={3} />
         </p>
       ) : (
-        <MaterialReactTable table={table} />
+        <>
+          <Modal
+            title={"ویرایش نام گروه"}
+            showModal={shoModal}
+            closeModal={() => setShowModal(false)}
+          >
+            <GroupNameInput />
+          </Modal>
+          <MaterialReactTable table={table} />
+        </>
       )}
     </>
   );

@@ -26,6 +26,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
   useMaterialReactTable,
+  getMRT_RowSelectionHandler,
 } from "material-react-table";
 
 function GroupItemGrid() {
@@ -88,6 +89,11 @@ function GroupItemGrid() {
     data: groupItemsData,
     enableRowSelection: true,
     enableMultiRowSelection: false,
+    muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
+      onClick: (event) =>
+        getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
+      sx: { cursor: "pointer" },
+    }),
     muiPaginationProps: {
       color: "success",
       variant: "outlined",

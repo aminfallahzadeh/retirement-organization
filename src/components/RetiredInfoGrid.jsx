@@ -7,14 +7,11 @@ import { convertToPersianNumber } from "../helper.js";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-// library imports
+// mui imports
 import { Box, IconButton } from "@mui/material";
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Email as EmailIcon,
-} from "@mui/icons-material";
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
+// library imports
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -109,9 +106,6 @@ function RetiredInfoGrid() {
         header: "عملیات",
         Cell: () => (
           <Box sx={{ display: "flex", gap: "8px" }}>
-            <IconButton>
-              <EmailIcon />
-            </IconButton>
             <IconButton color="secondary">
               <EditIcon />
             </IconButton>
@@ -129,21 +123,6 @@ function RetiredInfoGrid() {
     ...defaultTableOptions,
     columns,
     data,
-    // enableRowActions: true,
-    // renderRowActions: () => (
-    //   <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "8px" }}>
-    //     <IconButton color="primary">
-    //       <EmailIcon />
-    //     </IconButton>
-    //     <IconButton color="secondary">
-    //       <EditIcon />
-    //     </IconButton>
-    //     <IconButton color="error">
-    //       <DeleteIcon />
-    //     </IconButton>
-    //   </Box>
-    // ),
-
     muiPaginationProps: {
       color: "success",
       variant: "outlined",

@@ -82,11 +82,6 @@ function Dashboard() {
         <div>
           {getItemsStatus && (
             <>
-              <div className="dashboard__body--input">
-                <Button variant="outline-success">ذخیره</Button>
-                <GroupNameInput />
-              </div>
-
               <div className="dashboard__body--buttomGrid">
                 <ItemsGrid />
 
