@@ -53,7 +53,7 @@ const userReqSlice = createSlice({
     },
 
     addGroupItemsDataById: (state, action) => {
-      state.groupItemsData = [action.payload, ...state.groupItemsData];
+      state.groupItemsData = [...state.groupItemsData, action.payload];
     },
 
     removeGroupItemsDataById: (state, action) => {
@@ -63,7 +63,7 @@ const userReqSlice = createSlice({
     },
 
     addItemsDataById: (state, action) => {
-      state.itemsData = [action.payload, ...state.itemsData];
+      state.itemsData = [...state.itemsData, action.payload];
     },
 
     removeItemsDataById: (state, action) => {

@@ -19,13 +19,13 @@ function ArrowButtons() {
   const dispatch = useDispatch();
 
   const rightToLeftHandler = async (id) => {
-    dispatch(removeItemsDataById(id));
     dispatch(addGroupItemsDataById(itemInfo));
+    dispatch(removeItemsDataById(id));
   };
 
   const leftToRighthandler = async (id) => {
-    dispatch(removeGroupItemsDataById(id));
     dispatch(addItemsDataById(groupItemInfo));
+    dispatch(removeGroupItemsDataById(id));
   };
 
   return (

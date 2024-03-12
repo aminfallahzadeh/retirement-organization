@@ -3,8 +3,12 @@ import { useMemo, useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefresh";
 
 // mui imports
-import { Box, IconButton } from "@mui/material";
-import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  ChecklistRtl as ChecklistRtlIcon,
+} from "@mui/icons-material";
 
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
@@ -12,13 +16,17 @@ import { convertToPersianNumber, findById } from "../helper.js";
 // components
 import Modal from "./Modal";
 import GroupNameInput from "./GroupNameInput";
+import UserButton from "./UserButton";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { useGetGroupQuery } from "../slices/usersApiSlice";
+import {
+  useGetGroupQuery,
+  useDeleteGroupMutation,
+} from "../slices/usersApiSlice";
 import { setGetItemsStatus } from "../slices/statusSlice";
 import { setGroupInfo, setGroupsData } from "../slices/userReqSlice";
 
@@ -43,7 +51,10 @@ function GroupsGrid() {
   const { token } = useSelector((state) => state.auth);
   const refreshTokenHandler = useRefreshToken();
 
-  const [shoModal, setShowModal] = useState(false);
+  const [showEditNameModal, setShowEditNameModal] = useState(false);
+  const [showDeleteGroupModal, setShowDeleteGroupModal] = useState(false);
+
+  const [deleteGroup, { isLoading: isDeleting }] = useDeleteGroupMutation();
 
   const dispatch = useDispatch();
 
@@ -51,6 +62,40 @@ function GroupsGrid() {
   const { groupInfo, groupsData } = useSelector((state) => state.userReq);
 
   const { data: groups, isLoading, isSuccess, error } = useGetGroupQuery(token);
+
+  const handleShowEditNameModal = () => {
+    setShowEditNameModal(true);
+  };
+
+  const handlShowDeleteGroupModal = () => {
+    setShowDeleteGroupModal(true);
+  };
+
+  const deleteGroupHandler = async () => {
+    try {
+      const res = await deleteGroup({
+        token,
+        data: {
+          "id": groupInfo?._id,
+          "groupName": groupInfo?.name,
+          "isdeleted": true,
+        },
+      }).unwrap();
+      toast.success(res.message, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
+    } catch (err) {
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
+    }
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -74,7 +119,7 @@ function GroupsGrid() {
       {
         accessorKey: "name",
         header: "نام گروه",
-        size: 350,
+        size: 450,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -87,22 +132,48 @@ function GroupsGrid() {
         align: "right",
       },
       {
-        accessorKey: "actions",
-        header: "حذف / ویرایش نام",
+        accessorKey: "editNameAction",
+        header: "ویرایش نام",
         enableSorting: false,
         enableColumnActions: false,
+        size: 20,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
         },
         Cell: () => (
-          <Box sx={{ display: "flex", gap: "8px" }}>
-            <IconButton color="success" onClick={() => setShowModal(true)}>
-              <EditIcon />
-            </IconButton>
-            <IconButton color="error">
-              <DeleteIcon />
-            </IconButton>
-          </Box>
+          <IconButton color="success" onClick={handleShowEditNameModal}>
+            <EditIcon />
+          </IconButton>
+        ),
+      },
+      {
+        accessorKey: "editItemsAction",
+        header: "ویرایش آیتم ها",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        Cell: () => (
+          <IconButton color="primary">
+            <ChecklistRtlIcon />
+          </IconButton>
+        ),
+      },
+      {
+        accessorKey: "deleteAction",
+        header: "حذف گروه",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        Cell: () => (
+          <IconButton color="error" onClick={handlShowDeleteGroupModal}>
+            <DeleteIcon />
+          </IconButton>
         ),
       },
     ],
@@ -184,10 +255,35 @@ function GroupsGrid() {
         <>
           <Modal
             title={"ویرایش نام گروه"}
-            showModal={shoModal}
-            closeModal={() => setShowModal(false)}
+            showModal={showEditNameModal}
+            closeModal={() => setShowEditNameModal(false)}
           >
             <GroupNameInput />
+          </Modal>
+          <Modal
+            title={"حذف گروه"}
+            showModal={showDeleteGroupModal}
+            closeModal={() => setShowDeleteGroupModal(false)}
+          >
+            <p className="GroupsGrid__modal--paragraph">
+              آیا از حذف این گروه اطمینان دارید؟
+            </p>
+            <div className="GroupsGrid__modal--buttons">
+              <UserButton
+                variant={"success"}
+                isLoading={isDeleting}
+                onClickFn={deleteGroupHandler}
+              >
+                بله
+              </UserButton>
+              <UserButton
+                variant={"danger"}
+                icon={"close"}
+                onClickFn={() => setShowDeleteGroupModal(false)}
+              >
+                خیر
+              </UserButton>
+            </div>
           </Modal>
           <MaterialReactTable table={table} />
         </>

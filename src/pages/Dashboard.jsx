@@ -1,8 +1,8 @@
 // library imports
 import { jwtDecode } from "jwt-decode";
-import { Button } from "react-bootstrap";
 
 // component imports
+import UserButton from "../components/UserButton";
 import GroupsGrid from "../components/GroupsGrid";
 import UserGrid from "../components/UserGrid";
 import SidebarNav from "../components/SidebarNav";
@@ -89,6 +89,7 @@ function Dashboard() {
 
                 <GroupItemGrid />
               </div>
+              <UserButton variant={"success"}>ذخیره</UserButton>
             </>
           )}
 
@@ -106,10 +107,6 @@ function Dashboard() {
                 {/* <ArrowButtons /> */}
 
                 <UserGroupsGrid />
-              </div>
-
-              <div className="dashboard__body--userEditButton">
-                <Button variant="outline-success">ذخیره</Button>
               </div>
             </>
           )}

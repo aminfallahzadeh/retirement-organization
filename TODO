@@ -28,6 +28,7 @@ Grids:
   [ ] complete the move functionality in groups grids page
   [ ] remove circle selections on top grids
   [ ] add multiselection on bottom grids
+  [ ] implement multi selection for sub grids
 
 Queries:
   [ ] split queries in relavant files

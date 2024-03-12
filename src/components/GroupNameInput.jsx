@@ -1,16 +1,15 @@
 // react imports
 import { useState, useEffect } from "react";
 
+// library imports
+import { toast } from "react-toastify";
+
 // redux imports
 import { useSelector } from "react-redux";
 import { useUpdateGroupMutation } from "../slices/usersApiSlice";
 
-// bootstrap imports
-import { Button } from "react-bootstrap";
-import Spinner from "react-bootstrap/Spinner";
-
-// mui imports
-import { Done as DonIcon } from "@mui/icons-material";
+// components import
+import UserButton from "./UserButton";
 
 function GroupNameInput() {
   const { groupInfo } = useSelector((state) => state.userReq);
@@ -32,9 +31,19 @@ function GroupNameInput() {
           "groupName": groupName,
         },
       }).unwrap();
-      console.log(res);
+      toast.success(res.message, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     } catch (err) {
-      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     }
   };
 
@@ -58,23 +67,13 @@ function GroupNameInput() {
         </label>
       </form>
 
-      {isLoading ? (
-        <Button variant="outline-success" disabled>
-          <Spinner
-            as="span"
-            animation="border"
-            size="sm"
-            role="status"
-            aria-hidden="true"
-          />
-          <span className="visually-hidden">Loading...</span>
-        </Button>
-      ) : (
-        <Button variant="outline-success" onClick={updateGroupHandler}>
-          <DonIcon />
-          &nbsp; ذخیره
-        </Button>
-      )}
+      <UserButton
+        isLoading={isLoading}
+        onClickFn={updateGroupHandler}
+        variant={"success"}
+      >
+        ذخیره
+      </UserButton>
     </section>
   );
 
