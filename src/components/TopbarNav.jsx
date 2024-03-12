@@ -12,7 +12,14 @@ import { useState, useRef, useEffect, useCallback } from "react";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { setGetCartableStatus } from "../slices/statusSlice";
+import {
+  setGetCartableStatus,
+  setGetGroupStatus,
+  setGetUserStatus,
+  setGetUserGroupsStatus,
+  setGetItemsStatus,
+  setGetPensionerSectionStatus,
+} from "../slices/statusSlice";
 
 function TopbarNav({ userName }) {
   const [dropdown, setDropdown] = useState(false);
@@ -25,6 +32,11 @@ function TopbarNav({ userName }) {
 
   const toggleCartable = () => {
     dispatch(setGetCartableStatus(!getCartableStatus));
+    dispatch(setGetGroupStatus(false));
+    dispatch(setGetUserStatus(false));
+    dispatch(setGetItemsStatus(false));
+    dispatch(setGetPensionerSectionStatus(false));
+    dispatch(setGetUserGroupsStatus(false));
   };
 
   const toggleDropdown = () => {

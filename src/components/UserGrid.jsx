@@ -270,7 +270,7 @@ function UserGrid() {
             </Modal>
           ) : showDeleteGroupModal ? (
             <Modal
-              title={"حذف گروه"}
+              title={"حذف کاربر"}
               closeModal={() => setShowDeleteGroupModal(false)}
             >
               <p className="GroupsGrid__modal--paragraph">
