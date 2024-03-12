@@ -90,9 +90,7 @@ function Dashboard() {
               <div className="dashboard__body--buttomGrid">
                 <ItemsGrid />
 
-                <div></div>
-
-                {/* <ArrowButtons /> */}
+                <ArrowButtons />
 
                 <GroupItemGrid />
               </div>

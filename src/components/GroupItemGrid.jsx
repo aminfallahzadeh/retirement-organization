@@ -34,7 +34,7 @@ function GroupItemGrid() {
   const refreshTokenHandler = useRefreshToken();
 
   // access selected row info
-  const { groupInfo } = useSelector((state) => state.userReq);
+  const { groupInfo, itemsData } = useSelector((state) => state.userReq);
   const { token } = useSelector((state) => state.auth);
 
   // access the data from redux store
@@ -55,9 +55,13 @@ function GroupItemGrid() {
         name: item.itemName,
       }));
 
-      dispatch(setGroupItemsData(data));
+      const filteredData = data.filter(
+        (a) => !itemsData.map((b) => b.name).includes(a.name)
+      );
+
+      dispatch(setGroupItemsData(filteredData));
     }
-  }, [groupItems, isSuccess, dispatch]);
+  }, [groupItems, isSuccess, dispatch, itemsData]);
 
   const columns = useMemo(
     () => [

@@ -56,6 +56,16 @@ const userReqSlice = createSlice({
       state.groupItemsData = [action.payload, ...state.groupItemsData];
     },
 
+    removeGroupItemsDataById: (state, action) => {
+      state.groupItemsData = state.groupItemsData.filter(
+        (item) => item._id !== action.payload
+      );
+    },
+
+    addItemsDataById: (state, action) => {
+      state.itemsData = [action.payload, ...state.itemsData];
+    },
+
     removeItemsDataById: (state, action) => {
       state.itemsData = state.itemsData.filter(
         (item) => item._id !== action.payload
@@ -79,6 +89,8 @@ export const {
   setItemInfo,
   setGroupItemInfo,
   addGroupItemsDataById,
+  removeGroupItemsDataById,
+  addItemsDataById,
   removeItemsDataById,
 } = userReqSlice.actions;
 
