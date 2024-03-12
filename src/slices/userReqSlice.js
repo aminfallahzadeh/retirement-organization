@@ -7,6 +7,7 @@ const initialState = {
   itemsData: [],
   groupItemsData: [],
   groupInfo: null,
+  groupInfoUser: null,
   userInfo: null,
   itemInfo: null,
   groupItemInfo: null,
@@ -38,6 +39,10 @@ const userReqSlice = createSlice({
 
     setGroupInfo: (state, action) => {
       state.groupInfo = action.payload;
+    },
+
+    setGroupInfoUser: (state, action) => {
+      state.groupInfoUser = action.payload;
     },
 
     setItemInfo: (state, action) => {
@@ -85,6 +90,7 @@ export const {
   setGroupItemsData,
   setGetUserGroupsStatus,
   setGroupInfo,
+  setGroupInfoUser,
   setUserInfo,
   setItemInfo,
   setGroupItemInfo,

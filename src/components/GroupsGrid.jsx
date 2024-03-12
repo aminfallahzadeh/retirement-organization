@@ -15,7 +15,7 @@ import { convertToPersianNumber, findById } from "../helper.js";
 
 // components
 import Modal from "./Modal";
-import GroupNameInput from "./GroupNameInput";
+import GroupEditForm from "./GroupEditForm";
 import UserButton from "./UserButton";
 
 // utils imports
@@ -253,38 +253,40 @@ function GroupsGrid() {
         </p>
       ) : (
         <>
-          <Modal
-            title={"ویرایش نام گروه"}
-            showModal={showEditNameModal}
-            closeModal={() => setShowEditNameModal(false)}
-          >
-            <GroupNameInput />
-          </Modal>
-          <Modal
-            title={"حذف گروه"}
-            showModal={showDeleteGroupModal}
-            closeModal={() => setShowDeleteGroupModal(false)}
-          >
-            <p className="GroupsGrid__modal--paragraph">
-              آیا از حذف این گروه اطمینان دارید؟
-            </p>
-            <div className="GroupsGrid__modal--buttons">
-              <UserButton
-                variant={"success"}
-                isLoading={isDeleting}
-                onClickFn={deleteGroupHandler}
-              >
-                بله
-              </UserButton>
-              <UserButton
-                variant={"danger"}
-                icon={"close"}
-                onClickFn={() => setShowDeleteGroupModal(false)}
-              >
-                خیر
-              </UserButton>
-            </div>
-          </Modal>
+          {showEditNameModal ? (
+            <Modal
+              title={"ویرایش نام گروه"}
+              closeModal={() => setShowEditNameModal(false)}
+            >
+              <GroupEditForm />
+            </Modal>
+          ) : showDeleteGroupModal ? (
+            <Modal
+              title={"حذف گروه"}
+              closeModal={() => setShowDeleteGroupModal(false)}
+            >
+              <p className="GroupsGrid__modal--paragraph">
+                آیا از حذف این گروه اطمینان دارید؟
+              </p>
+              <div className="GroupsGrid__modal--buttons">
+                <UserButton
+                  variant={"success"}
+                  isLoading={isDeleting}
+                  onClickFn={deleteGroupHandler}
+                >
+                  بله
+                </UserButton>
+                <UserButton
+                  variant={"danger"}
+                  icon={"close"}
+                  onClickFn={() => setShowDeleteGroupModal(false)}
+                >
+                  خیر
+                </UserButton>
+              </div>
+            </Modal>
+          ) : null}
+
           <MaterialReactTable table={table} />
         </>
       )}

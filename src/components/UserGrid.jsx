@@ -14,6 +14,19 @@ import { useGetUserQuery } from "../slices/usersApiSlice";
 import { setUserInfo, setUserData } from "../slices/userReqSlice.js";
 import { setGetUserGroupsStatus } from "../slices/statusSlice.js";
 
+// mui imports
+import { IconButton } from "@mui/material";
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  ChecklistRtl as ChecklistRtlIcon,
+} from "@mui/icons-material";
+
+// components
+import Modal from "./Modal";
+import UserEditForm from "./UserEditForm";
+import UserButton from "./UserButton";
+
 // library imports
 import { PaginationItem } from "@mui/material";
 import {
@@ -34,12 +47,23 @@ function UserGrid() {
   const { token } = useSelector((state) => state.auth);
   const refreshTokenHandler = useRefreshToken();
 
+  const [showEditNameModal, setShowEditNameModal] = useState(false);
+  const [showDeleteGroupModal, setShowDeleteGroupModal] = useState(false);
+
   const dispatch = useDispatch();
 
   // access the data from redux store
   const { userInfo, userData } = useSelector((state) => state.userReq);
 
   const { data: users, isLoading, isSuccess } = useGetUserQuery(token);
+
+  const handleShowEditNameModal = () => {
+    setShowEditNameModal(true);
+  };
+
+  const handlShowDeleteGroupModal = () => {
+    setShowDeleteGroupModal(true);
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -113,6 +137,51 @@ function UserGrid() {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
       },
+      {
+        accessorKey: "editNameAction",
+        header: "ویرایش نام",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        Cell: () => (
+          <IconButton color="success" onClick={handleShowEditNameModal}>
+            <EditIcon />
+          </IconButton>
+        ),
+      },
+      {
+        accessorKey: "editItemsAction",
+        header: "ویرایش آیتم ها",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        Cell: () => (
+          <IconButton color="primary">
+            <ChecklistRtlIcon />
+          </IconButton>
+        ),
+      },
+      {
+        accessorKey: "deleteAction",
+        header: "حذف گروه",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        Cell: () => (
+          <IconButton color="error" onClick={handlShowDeleteGroupModal}>
+            <DeleteIcon />
+          </IconButton>
+        ),
+      },
     ],
     []
   );
@@ -121,8 +190,17 @@ function UserGrid() {
     ...defaultTableOptions,
     columns,
     data: userData,
-    enableRowSelection: true,
-    enableMultiRowSelection: false,
+    muiTableBodyRowProps: ({ row }) => ({
+      //implement row selection click events manually
+      onClick: () =>
+        setRowSelection(() => ({
+          [row.id]: true,
+        })),
+      selected: rowSelection[row.id],
+      sx: {
+        cursor: "pointer",
+      },
+    }),
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
@@ -182,7 +260,37 @@ function UserGrid() {
           <Skeleton count={3} />
         </p>
       ) : (
-        <MaterialReactTable table={table} />
+        <>
+          {showEditNameModal ? (
+            <Modal
+              title={"ویرایش اطلاعات کاربر"}
+              closeModal={() => setShowEditNameModal(false)}
+            >
+              <UserEditForm />
+            </Modal>
+          ) : showDeleteGroupModal ? (
+            <Modal
+              title={"حذف گروه"}
+              closeModal={() => setShowDeleteGroupModal(false)}
+            >
+              <p className="GroupsGrid__modal--paragraph">
+                آیا از حذف این کاربر اطمینان دارید؟
+              </p>
+              <div className="GroupsGrid__modal--buttons">
+                <UserButton variant={"success"}>بله</UserButton>
+                <UserButton
+                  variant={"danger"}
+                  icon={"close"}
+                  onClickFn={() => setShowDeleteGroupModal(false)}
+                >
+                  خیر
+                </UserButton>
+              </div>
+            </Modal>
+          ) : null}
+
+          <MaterialReactTable table={table} />
+        </>
       )}
     </>
   );

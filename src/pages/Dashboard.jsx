@@ -1,19 +1,17 @@
 // library imports
 import { jwtDecode } from "jwt-decode";
-
 // component imports
 import UserButton from "../components/UserButton";
 import GroupsGrid from "../components/GroupsGrid";
+import GroupsGridUserScreen from "../components/GroupsGridUserScreen";
 import UserGrid from "../components/UserGrid";
 import SidebarNav from "../components/SidebarNav";
 import TopbarNav from "../components/TopbarNav";
 import ItemsGrid from "../components/ItemsGrid";
 import GroupItemGrid from "../components/GroupItemGrid";
-import GroupNameInput from "../components/GroupNameInput";
 import ArrowButtons from "../components/ArrowButtons";
 import RetiredSection from "../components/RetiredSection";
 import AffairsSearchPensionerForm from "../components/AffairsSearchPensionerForm";
-import UserEditForm from "../components/UserEditForm";
 import UserGroupsGrid from "../components/UserGroupsGrid";
 import CartableGrid from "../components/CartableGrid";
 import RetiredInfoSection from "../components/RetiredInfoSection";
@@ -95,19 +93,15 @@ function Dashboard() {
 
           {getUserGroupsStatus && (
             <>
-              <div className="dashboard__body--input">
-                <UserEditForm />
-              </div>
-
               <div className="dashboard__body--buttomGrid">
-                <GroupsGrid />
+                <GroupsGridUserScreen />
 
                 <div></div>
-
                 {/* <ArrowButtons /> */}
 
                 <UserGroupsGrid />
               </div>
+              <UserButton variant={"success"}>ذخیره</UserButton>
             </>
           )}
         </div>
