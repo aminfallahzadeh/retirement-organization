@@ -49,7 +49,10 @@
 
         &--banner {
             width: 280px;
-            margin-right: auto;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
     }
 }

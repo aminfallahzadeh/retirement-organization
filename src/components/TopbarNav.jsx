@@ -5,6 +5,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 // component imports
 import NavDropdown from "./NavDropdown";
 import ProfilePicure from "./ProfilePicture";
+import PersianDate from "./PersianDate";
 
 // react imports
 import { useState, useRef, useEffect, useCallback } from "react";
@@ -74,12 +75,14 @@ function TopbarNav({ userName }) {
             <li>اعلانات</li>
           </ul>
         </div>
-        {/* 
+
         <img
           src="./images/banner.png"
           className="topnav__container--banner"
           alt="banner"
-        /> */}
+        />
+
+        <PersianDate />
       </div>
       {dropdown && <NavDropdown ref={dropdownRef} />}
     </nav>
