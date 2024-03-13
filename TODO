@@ -42,3 +42,6 @@ NewForms:
   [ ] kartabl top of the page on dashboard open
   [ ] eleteatbazneshaste under the 3 forms
   [ ] on virayesh burron add modal form vabaste
+
+Routing: 
+  [ ] refactor and fix routing system

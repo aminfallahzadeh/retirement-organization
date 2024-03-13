@@ -1,3 +1,6 @@
+// rrd imports
+import { Link } from "react-router-dom";
+
 // library imports
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import {
@@ -10,46 +13,7 @@ import {
   ClipboardDocumentListIcon,
 } from "@heroicons/react/24/outline";
 
-// redux imports
-import { useDispatch } from "react-redux";
-import {
-  setGetCartableStatus,
-  setGetGroupStatus,
-  setGetUserStatus,
-  setGetItemsStatus,
-  setGetUserGroupsStatus,
-  setGetPensionerSectionStatus,
-} from "../slices/statusSlice";
-
 function SidebarNav() {
-  const dispatch = useDispatch();
-
-  const getGroupHandler = () => {
-    dispatch(setGetGroupStatus(true));
-    dispatch(setGetUserStatus(false));
-    dispatch(setGetItemsStatus(false));
-    dispatch(setGetPensionerSectionStatus(false));
-    dispatch(setGetUserGroupsStatus(false));
-    dispatch(setGetCartableStatus(false));
-  };
-
-  const getUserHandler = () => {
-    dispatch(setGetGroupStatus(false));
-    dispatch(setGetUserStatus(true));
-    dispatch(setGetItemsStatus(false));
-    dispatch(setGetPensionerSectionStatus(false));
-    dispatch(setGetCartableStatus(false));
-  };
-
-  const getPensionerSectionHandler = () => {
-    dispatch(setGetPensionerSectionStatus(true));
-    dispatch(setGetGroupStatus(false));
-    dispatch(setGetUserStatus(false));
-    dispatch(setGetItemsStatus(false));
-    dispatch(setGetUserGroupsStatus(false));
-    dispatch(setGetCartableStatus(false));
-  };
-
   return (
     <Sidebar rtl={true}>
       <Menu>
@@ -62,7 +26,11 @@ function SidebarNav() {
             </>
           }
         >
-          <MenuItem onClick={getPensionerSectionHandler}> بازنشسته</MenuItem>
+          <MenuItem component={<Link to="/retirement-organization/affairs" />}>
+            {" "}
+            بازنشسته
+          </MenuItem>
+
           <MenuItem> احکام گروهی </MenuItem>
           <MenuItem> رویت تعرفه کارمندی </MenuItem>
           <MenuItem> رویت احکام کارمندی </MenuItem>
@@ -94,8 +62,12 @@ function SidebarNav() {
             </>
           }
         >
-          <MenuItem onClick={getGroupHandler}>گروه ها</MenuItem>
-          <MenuItem onClick={getUserHandler}>کاربران</MenuItem>
+          <MenuItem component={<Link to="/retirement-organization/groups" />}>
+            گروه ها
+          </MenuItem>
+          <MenuItem component={<Link to="/retirement-organization/users" />}>
+            کاربران
+          </MenuItem>
         </SubMenu>
 
         <MenuItem>

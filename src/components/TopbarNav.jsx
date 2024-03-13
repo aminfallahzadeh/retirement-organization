@@ -11,7 +11,7 @@ import PersianDate from "./PersianDate";
 import { useState, useRef, useEffect, useCallback } from "react";
 
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setGetCartableStatus,
   setGetGroupStatus,
@@ -23,7 +23,6 @@ import {
 
 function TopbarNav({ userName }) {
   const [dropdown, setDropdown] = useState(false);
-  const { getCartableStatus } = useSelector((state) => state.status);
 
   const dropdownRef = useRef(null);
   const dropdownTogglerRef = useRef(null);
@@ -31,7 +30,7 @@ function TopbarNav({ userName }) {
   const dispatch = useDispatch();
 
   const toggleCartable = () => {
-    dispatch(setGetCartableStatus(!getCartableStatus));
+    dispatch(setGetCartableStatus(true));
     dispatch(setGetGroupStatus(false));
     dispatch(setGetUserStatus(false));
     dispatch(setGetItemsStatus(false));

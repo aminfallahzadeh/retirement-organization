@@ -30,7 +30,18 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           "Authorization": `Bearer ${token}`,
         },
       }),
-      keepUnusedDataFor: 5,
+      // keepUnusedDataFor: 5,
+    }),
+    insertGroup: builder.mutation({
+      query: ({ token, data }) => ({
+        url: `${USERS_URL_HTTPS}/InsertGroup`,
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
     }),
     deleteGroup: builder.mutation({
       query: ({ token, data }) => ({
@@ -62,7 +73,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           "Authorization": `Bearer ${token}`,
         },
       }),
-      keepUnusedDataFor: 5,
+      // keepUnusedDataFor: 5,
     }),
     getUserGroups: builder.query({
       query: ({ token, userId }) => ({
@@ -112,6 +123,7 @@ export const {
   useRefreshMutation,
   useLogoutMutation,
   useGetGroupQuery,
+  useInsertGroupMutation,
   useDeleteGroupMutation,
   useUpdateGroupMutation,
   useGetUserQuery,

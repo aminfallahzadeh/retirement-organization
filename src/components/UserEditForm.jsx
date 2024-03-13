@@ -99,7 +99,7 @@ function UserEditForm() {
         </div>
       </form>
 
-      <UserButton variant={"success"}>ذخیره</UserButton>
+      <UserButton variant={"outline-success"}>ذخیره</UserButton>
     </section>
   );
 

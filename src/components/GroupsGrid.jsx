@@ -2,8 +2,11 @@
 import { useMemo, useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefresh";
 
+// rrd imports
+import { Link } from "react-router-dom";
+
 // mui imports
-import { IconButton } from "@mui/material";
+import { IconButton, Box } from "@mui/material";
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -61,7 +64,14 @@ function GroupsGrid() {
   // access the data from redux store
   const { groupInfo, groupsData } = useSelector((state) => state.userReq);
 
-  const { data: groups, isLoading, isSuccess, error } = useGetGroupQuery(token);
+  const {
+    data: groups,
+    isLoading,
+    isFetching,
+    isSuccess,
+    error,
+    refetch,
+  } = useGetGroupQuery(token);
 
   const handleShowEditNameModal = () => {
     setShowEditNameModal(true);
@@ -69,6 +79,10 @@ function GroupsGrid() {
 
   const handlShowDeleteGroupModal = () => {
     setShowDeleteGroupModal(true);
+  };
+
+  const handleRefresh = () => {
+    refetch();
   };
 
   const deleteGroupHandler = async () => {
@@ -98,6 +112,7 @@ function GroupsGrid() {
   };
 
   useEffect(() => {
+    refetch();
     if (isSuccess) {
       const data = groups.itemList.map((group) => ({
         _id: group.id,
@@ -112,7 +127,11 @@ function GroupsGrid() {
         },
       });
     }
-  }, [groups, isSuccess, dispatch, error]);
+
+    return () => {
+      dispatch(setGroupsData([]));
+    };
+  }, [groups, isSuccess, dispatch, error, refetch]);
 
   const columns = useMemo(
     () => [
@@ -195,6 +214,24 @@ function GroupsGrid() {
         cursor: "pointer",
       },
     }),
+    renderTopToolbarCustomActions: () => (
+      <Box sx={{ display: "flex", gap: "1rem", p: "4px" }}>
+        <Link to={"/retirement-organization/create-group"}>
+          <UserButton variant="outline-primary" icon={"add"}>
+            ایجاد گروه
+          </UserButton>
+        </Link>
+
+        <UserButton
+          variant="outline-success"
+          onClickFn={handleRefresh}
+          icon={"refresh"}
+          isLoading={isFetching}
+        >
+          بارگزاری مجدد
+        </UserButton>
+      </Box>
+    ),
     muiPaginationProps: {
       color: "success",
       variant: "outlined",

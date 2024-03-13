@@ -9,6 +9,8 @@ export const defaultTableOptions = {
   columnResizeDirection: "rtl",
   enableFullScreenToggle: false,
   positionToolbarAlertBanner: "none",
+  enableStickyHeader: true,
+  enableStickyFooter: true,
 
   // localization: {
   //   actions: "عملیات",

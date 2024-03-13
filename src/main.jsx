@@ -1,6 +1,6 @@
 // react imports
 import ReactDOM from "react-dom/client";
-// import React from "react";
+import React from "react";
 
 // rrd imports
 import {
@@ -21,6 +21,10 @@ import store from "./store";
 import App from "./App.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Login from "./pages/Login.jsx";
+import CreategroupScreen from "./screens/CreategroupScreen";
+import RetirementAffairsScreen from "./screens/RetirementAffairsScreen.jsx";
+import GroupsScreen from "./screens/GroupsScreen";
+import UsersScreen from "./screens/UsersScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,18 +34,36 @@ const router = createBrowserRouter(
         path="/retirement-organization/"
         element={<Login />}
       />
+
       <Route
         path="/retirement-organization/dashboard"
         element={<Dashboard />}
+      />
+
+      <Route
+        path="/retirement-organization/affairs"
+        element={<RetirementAffairsScreen />}
+      />
+
+      <Route
+        path="/retirement-organization/groups"
+        element={<GroupsScreen />}
+      />
+
+      <Route path="/retirement-organization/users" element={<UsersScreen />} />
+
+      <Route
+        path="/retirement-organization/create-group"
+        element={<CreategroupScreen />}
       />
     </Route>
   )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  // <React.StrictMode>
-  <Provider store={store}>
-    <RouterProvider router={router} />
-  </Provider>
-  // </React.StrictMode>,
+  <React.StrictMode>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </React.StrictMode>
 );

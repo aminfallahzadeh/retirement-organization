@@ -3,7 +3,12 @@ import { Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 
 // mui imports
-import { Done as DonIcon, Close as CloseIcon } from "@mui/icons-material";
+import {
+  Done as DonIcon,
+  Close as CloseIcon,
+  Refresh as RefreshIcon,
+  Add as AddIcon,
+} from "@mui/icons-material";
 
 function SaveButton({ isLoading, onClickFn, variant, icon, children }) {
   return (
@@ -20,8 +25,16 @@ function SaveButton({ isLoading, onClickFn, variant, icon, children }) {
           <span className="visually-hidden">Loading...</span>
         </Button>
       ) : (
-        <Button variant={`outline-${variant}`} onClick={onClickFn}>
-          {icon === "close" ? <CloseIcon /> : <DonIcon />}
+        <Button variant={variant} onClick={onClickFn}>
+          {icon === "close" ? (
+            <CloseIcon />
+          ) : icon === "refresh" ? (
+            <RefreshIcon />
+          ) : icon === "add" ? (
+            <AddIcon />
+          ) : (
+            <DonIcon />
+          )}
           &nbsp; {children}
         </Button>
       )}

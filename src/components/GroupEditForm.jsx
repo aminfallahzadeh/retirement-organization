@@ -52,7 +52,7 @@ function GroupNameInput() {
   }, [groupInfo]);
 
   const content = (
-    <section className="GroupNameInput">
+    <section className="GroupEditForm">
       <form className="inputBox">
         <input
           type="text"
@@ -70,7 +70,7 @@ function GroupNameInput() {
       <UserButton
         isLoading={isLoading}
         onClickFn={updateGroupHandler}
-        variant={"success"}
+        variant={"outline-success"}
       >
         ذخیره
       </UserButton>
