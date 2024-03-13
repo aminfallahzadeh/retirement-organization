@@ -21,7 +21,7 @@ import store from "./store";
 import App from "./App.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Login from "./pages/Login.jsx";
-import CreategroupScreen from "./screens/CreategroupScreen";
+import CreateGroupScreen from "./screens/CreateGroupScreen";
 import RetirementAffairsScreen from "./screens/RetirementAffairsScreen.jsx";
 import GroupsScreen from "./screens/GroupsScreen";
 import UsersScreen from "./screens/UsersScreen";
@@ -54,7 +54,7 @@ const router = createBrowserRouter(
 
       <Route
         path="/retirement-organization/create-group"
-        element={<CreategroupScreen />}
+        element={<CreateGroupScreen />}
       />
     </Route>
   )
