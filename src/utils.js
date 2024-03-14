@@ -6,11 +6,11 @@ export const defaultTableOptions = {
   localization: MRT_Localization_FA,
   enablePagination: true,
   paginationDisplayMode: "pages",
-  columnResizeDirection: "rtl",
   enableFullScreenToggle: false,
   positionToolbarAlertBanner: "none",
   enableStickyHeader: true,
   enableStickyFooter: true,
+  enableDensityToggle: false,
 
   // localization: {
   //   actions: "عملیات",

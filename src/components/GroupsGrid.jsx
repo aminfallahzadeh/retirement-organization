@@ -22,7 +22,6 @@ import GroupEditForm from "./GroupEditForm";
 import UserButton from "./UserButton";
 import ItemsGrid from "./ItemsGrid";
 import GroupItemGrid from "./GroupItemGrid";
-import ArrowButtons from "./ArrowButtons";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -141,7 +140,16 @@ function GroupsGrid() {
     return () => {
       dispatch(setGroupsData([]));
     };
-  }, [groups, isSuccess, dispatch, error, refetch]);
+  }, [
+    groups,
+    isSuccess,
+    dispatch,
+    error,
+    refetch,
+    showDeleteGroupModal,
+    showEditNameModal,
+    showEditItemsModal,
+  ]);
 
   const columns = useMemo(
     () => [
@@ -213,6 +221,9 @@ function GroupsGrid() {
     ...defaultTableOptions,
     columns,
     data: groupsData,
+    initialState: {
+      density: "compact",
+    },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -333,7 +344,6 @@ function GroupsGrid() {
             >
               <div className="EditGroupItemsModal">
                 <ItemsGrid />
-                <ArrowButtons />
                 <GroupItemGrid />
               </div>
             </Modal>

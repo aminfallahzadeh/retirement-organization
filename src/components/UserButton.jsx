@@ -10,7 +10,14 @@ import {
   Add as AddIcon,
 } from "@mui/icons-material";
 
-function SaveButton({ isLoading, onClickFn, variant, icon, children }) {
+function SaveButton({
+  isLoading,
+  onClickFn,
+  variant,
+  disabled,
+  icon,
+  children,
+}) {
   return (
     <>
       {isLoading ? (
@@ -25,7 +32,7 @@ function SaveButton({ isLoading, onClickFn, variant, icon, children }) {
           <span className="visually-hidden">Loading...</span>
         </Button>
       ) : (
-        <Button variant={variant} onClick={onClickFn}>
+        <Button variant={variant} onClick={onClickFn} disabled={disabled}>
           {icon === "close" ? (
             <CloseIcon />
           ) : icon === "refresh" ? (

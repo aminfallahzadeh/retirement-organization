@@ -90,12 +90,21 @@ function GroupItemGrid() {
     ...defaultTableOptions,
     columns,
     data: groupItemsData,
-    enableRowSelection: true,
-    enableMultiRowSelection: false,
-    muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
-      onClick: (event) =>
-        getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
-      sx: { cursor: "pointer" },
+    positionGlobalFilter: "left",
+    initialState: {
+      ...defaultTableOptions.initialState,
+      showGlobalFilter: true,
+    },
+    muiTableBodyRowProps: ({ row }) => ({
+      //implement row selection click events manually
+      onClick: () =>
+        setRowSelection(() => ({
+          [row.id]: true,
+        })),
+      selected: rowSelection[row.id],
+      sx: {
+        cursor: "pointer",
+      },
     }),
     muiPaginationProps: {
       color: "success",

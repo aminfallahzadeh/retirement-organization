@@ -75,6 +75,7 @@ function CreateGroupScreen() {
             variant={"outline-success"}
             isLoading={isLoading}
             onClickFn={insertGroupHandler}
+            disabled={!groupName}
           >
             ذخیره
           </UserButton>

@@ -13,6 +13,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { useGetItemsQuery } from "../slices/usersApiSlice";
 import { setItemInfo, setItemsData } from "../slices/userReqSlice";
 
+// mui imports
+import { IconButton } from "@mui/material";
+import { Add as AddIcon } from "@mui/icons-material";
+
 // library imports
 import { PaginationItem } from "@mui/material";
 import {
@@ -26,7 +30,6 @@ import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
   useMaterialReactTable,
-  getMRT_RowSelectionHandler,
 } from "material-react-table";
 
 function ItemsGrid() {
@@ -55,7 +58,7 @@ function ItemsGrid() {
     () => [
       {
         accessorKey: "name",
-        header: "نام گروه",
+        header: "نام آیتم",
         size: 350,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
@@ -68,6 +71,21 @@ function ItemsGrid() {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
       },
+      {
+        accessorKey: "deleteAction",
+        header: "اضافه کردن",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        Cell: () => (
+          <IconButton color="success">
+            <AddIcon />
+          </IconButton>
+        ),
+      },
     ],
     []
   );
@@ -76,12 +94,21 @@ function ItemsGrid() {
     ...defaultTableOptions,
     columns,
     data: itemsData,
-    enableRowSelection: true,
-    enableMultiRowSelection: false,
-    muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
-      onClick: (event) =>
-        getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
-      sx: { cursor: "pointer" },
+    positionGlobalFilter: "left",
+    initialState: {
+      density: "compact",
+      showGlobalFilter: true,
+    },
+    muiTableBodyRowProps: ({ row }) => ({
+      //implement row selection click events manually
+      onClick: () =>
+        setRowSelection(() => ({
+          [row.id]: true,
+        })),
+      selected: rowSelection[row.id],
+      sx: {
+        cursor: "pointer",
+      },
     }),
     muiPaginationProps: {
       color: "success",

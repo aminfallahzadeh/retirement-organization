@@ -168,6 +168,9 @@ function UserGrid() {
     ...defaultTableOptions,
     columns,
     data: userData,
+    initialState: {
+      density: "compact",
+    },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
