@@ -2,6 +2,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
+// rrd imports
+import { Link } from "react-router-dom";
+
 // component imports
 import NavDropdown from "./NavDropdown";
 import ProfilePicure from "./ProfilePicture";
@@ -10,33 +13,11 @@ import PersianDate from "./PersianDate";
 // react imports
 import { useState, useRef, useEffect, useCallback } from "react";
 
-// redux imports
-import { useDispatch } from "react-redux";
-import {
-  setGetCartableStatus,
-  setGetGroupStatus,
-  setGetUserStatus,
-  setGetUserGroupsStatus,
-  setGetItemsStatus,
-  setGetPensionerSectionStatus,
-} from "../slices/statusSlice";
-
 function TopbarNav({ userName }) {
   const [dropdown, setDropdown] = useState(false);
 
   const dropdownRef = useRef(null);
   const dropdownTogglerRef = useRef(null);
-
-  const dispatch = useDispatch();
-
-  const toggleCartable = () => {
-    dispatch(setGetCartableStatus(true));
-    dispatch(setGetGroupStatus(false));
-    dispatch(setGetUserStatus(false));
-    dispatch(setGetItemsStatus(false));
-    dispatch(setGetPensionerSectionStatus(false));
-    dispatch(setGetUserGroupsStatus(false));
-  };
 
   const toggleDropdown = () => {
     setDropdown(!dropdown);
@@ -82,7 +63,9 @@ function TopbarNav({ userName }) {
             <li onClick={toggleDropdown} ref={dropdownTogglerRef}>
               <ArrowDropDownIcon /> {userName}
             </li>
-            <li onClick={toggleCartable}>کارتابل</li>
+            <li>
+              <Link to={"/retirement-organization/dashboard"}>کارتابل</Link>
+            </li>
             <li>اعلانات</li>
           </ul>
         </div>

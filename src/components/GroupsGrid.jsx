@@ -20,6 +20,9 @@ import { convertToPersianNumber, findById } from "../helper.js";
 import Modal from "./Modal";
 import GroupEditForm from "./GroupEditForm";
 import UserButton from "./UserButton";
+import ItemsGrid from "./ItemsGrid";
+import GroupItemGrid from "./GroupItemGrid";
+import ArrowButtons from "./ArrowButtons";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -235,7 +238,7 @@ function GroupsGrid() {
           icon={"refresh"}
           isLoading={isFetching}
         >
-          بارگزاری مجدد
+          بروز رسانی
         </UserButton>
       </Box>
     ),
@@ -328,7 +331,11 @@ function GroupsGrid() {
               title={"ویرایش آیتم ها"}
               closeModal={() => setShowEditItemsModal(false)}
             >
-              ویرایش آیتم ها
+              <div className="EditGroupItemsModal">
+                <ItemsGrid />
+                <ArrowButtons />
+                <GroupItemGrid />
+              </div>
             </Modal>
           ) : null}
 

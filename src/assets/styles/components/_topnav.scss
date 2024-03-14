@@ -37,9 +37,14 @@
             }
 
             li {
+                text-decoration: none;
                 list-style: none;
                 cursor: pointer;
                 transition: all 0.25s;
+
+                & > * {
+                    text-decoration: none;
+                }
 
                 &:hover {
                     color: $color-grey-3;

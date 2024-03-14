@@ -32,7 +32,7 @@ function CreateGroupScreen() {
           "groupName": groupName,
         },
       }).unwrap();
-      navigate(-1);
+      navigate(`/retirement-organization/groups`);
       toast.success(res.message, {
         autoClose: 2000,
         style: {

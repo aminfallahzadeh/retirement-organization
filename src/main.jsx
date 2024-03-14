@@ -19,7 +19,7 @@ import store from "./store";
 
 // component imports
 import App from "./App.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
+import DashboardScreen from "./screens/DashboardScreen.jsx";
 import Login from "./pages/Login.jsx";
 import CreateGroupScreen from "./screens/CreateGroupScreen";
 import RetirementAffairsScreen from "./screens/RetirementAffairsScreen.jsx";
@@ -37,7 +37,7 @@ const router = createBrowserRouter(
 
       <Route
         path="/retirement-organization/dashboard"
-        element={<Dashboard />}
+        element={<DashboardScreen />}
       />
 
       <Route
