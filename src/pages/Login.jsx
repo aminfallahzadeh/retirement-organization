@@ -155,7 +155,7 @@ function Login() {
               disabled={isLoading}
               variant="outline-light"
             >
-              {isLoading ? "...لطفا منتظر بمانید" : "ورود"}
+              {isLoading ? "لطفا صبر کنید " : "ورود"}
             </Button>
           </div>
           <div className="loginContainer__box--rememberForgot">

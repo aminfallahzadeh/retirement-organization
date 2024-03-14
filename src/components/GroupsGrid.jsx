@@ -55,6 +55,7 @@ function GroupsGrid() {
   const refreshTokenHandler = useRefreshToken();
 
   const [showEditNameModal, setShowEditNameModal] = useState(false);
+  const [showEditItemsModal, setShowEditItemsModal] = useState(false);
   const [showDeleteGroupModal, setShowDeleteGroupModal] = useState(false);
 
   const [deleteGroup, { isLoading: isDeleting }] = useDeleteGroupMutation();
@@ -81,6 +82,10 @@ function GroupsGrid() {
     setShowDeleteGroupModal(true);
   };
 
+  const handleShowEditItemsModal = () => {
+    setShowEditItemsModal(true);
+  };
+
   const handleRefresh = () => {
     refetch();
   };
@@ -95,6 +100,8 @@ function GroupsGrid() {
           "isdeleted": true,
         },
       }).unwrap();
+      setShowDeleteGroupModal(false);
+      refetch();
       toast.success(res.message, {
         autoClose: 2000,
         style: {
@@ -175,7 +182,7 @@ function GroupsGrid() {
           sx: { color: "green", fontFamily: "sahel" },
         },
         Cell: () => (
-          <IconButton color="primary">
+          <IconButton color="primary" onClick={handleShowEditItemsModal}>
             <ChecklistRtlIcon />
           </IconButton>
         ),
@@ -264,12 +271,6 @@ function GroupsGrid() {
       dispatch(setGroupInfo(null));
     }
 
-    if (groupInfo) {
-      dispatch(setGetItemsStatus(true));
-    } else {
-      dispatch(setGetItemsStatus(false));
-    }
-
     return () => {
       dispatch(setGroupInfo(null));
       dispatch(setGetItemsStatus(false));
@@ -295,7 +296,7 @@ function GroupsGrid() {
               title={"ویرایش نام گروه"}
               closeModal={() => setShowEditNameModal(false)}
             >
-              <GroupEditForm />
+              <GroupEditForm setShowEditModal={setShowEditNameModal} />
             </Modal>
           ) : showDeleteGroupModal ? (
             <Modal
@@ -321,6 +322,13 @@ function GroupsGrid() {
                   خیر
                 </UserButton>
               </div>
+            </Modal>
+          ) : showEditItemsModal ? (
+            <Modal
+              title={"ویرایش آیتم ها"}
+              closeModal={() => setShowEditItemsModal(false)}
+            >
+              ویرایش آیتم ها
             </Modal>
           ) : null}
 

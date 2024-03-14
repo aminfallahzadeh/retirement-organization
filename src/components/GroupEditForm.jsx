@@ -11,7 +11,7 @@ import { useUpdateGroupMutation } from "../slices/usersApiSlice";
 // components import
 import UserButton from "./UserButton";
 
-function GroupNameInput() {
+function GroupNameInput({ setShowEditModal }) {
   const { groupInfo } = useSelector((state) => state.userReq);
   const [groupName, setGroupName] = useState(groupInfo?.name || "");
 
@@ -31,6 +31,7 @@ function GroupNameInput() {
           "groupName": groupName,
         },
       }).unwrap();
+      setShowEditModal(false);
       toast.success(res.message, {
         autoClose: 2000,
         style: {

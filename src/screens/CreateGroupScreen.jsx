@@ -1,8 +1,54 @@
+// react imports
+import { useState } from "react";
+
+// rrd imports
+import { useNavigate } from "react-router-dom";
+
+// library imports
+import { toast } from "react-toastify";
+
 // components
 import ItemsGrid from "../components/ItemsGrid";
 import UserButton from "../components/UserButton";
 
+// redux imports
+import { useSelector } from "react-redux";
+import { useInsertGroupMutation } from "../slices/usersApiSlice";
+
 function CreateGroupScreen() {
+  const [groupName, setGroupName] = useState("");
+  const { token } = useSelector((state) => state.auth);
+
+  const navigate = useNavigate();
+
+  const [insertGroup, { isLoading }] = useInsertGroupMutation();
+
+  const insertGroupHandler = async () => {
+    try {
+      const res = await insertGroup({
+        token,
+        data: {
+          "id": "",
+          "groupName": groupName,
+        },
+      }).unwrap();
+      navigate(-1);
+      toast.success(res.message, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
+    } catch (err) {
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
+    }
+  };
+
   return (
     <section className="main">
       <div className="main--title">
@@ -16,6 +62,8 @@ function CreateGroupScreen() {
             type="text"
             className="input field input--dark"
             required
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
             id="groupName"
           />
           <label className="label" htmlFor="groupName">
@@ -23,7 +71,13 @@ function CreateGroupScreen() {
           </label>
         </form>
         <div>
-          <UserButton variant={"outline-success"}>ذخیره</UserButton>
+          <UserButton
+            variant={"outline-success"}
+            isLoading={isLoading}
+            onClickFn={insertGroupHandler}
+          >
+            ذخیره
+          </UserButton>
         </div>
       </div>
 

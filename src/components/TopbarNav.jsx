@@ -69,7 +69,7 @@ function TopbarNav({ userName }) {
         <a className="topnav__container--logo">
           <img
             alt="logo"
-            src="./images/logo.png"
+            src="./logo.png"
             width="80"
             height="80"
             className="d-inline-block align-top"
@@ -88,7 +88,7 @@ function TopbarNav({ userName }) {
         </div>
 
         <img
-          src="./images/banner.png"
+          src="./banner.png"
           className="topnav__container--banner"
           alt="banner"
         />
