@@ -14,18 +14,10 @@ function PersianDate() {
   const persianDate = convertToPersianNumber(currentDate);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        position: "absolute",
-        top: "10px",
-        left: "10px",
-      }}
-    >
+    <div className="PersianDateTime">
+      <PersianClock />
+
       <div style={{ color: "white" }}>{persianDate}</div>
-      <div>
-        <PersianClock />
-      </div>
     </div>
   );
 }

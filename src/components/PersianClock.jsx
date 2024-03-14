@@ -13,11 +13,7 @@ function PersianClock() {
     };
   }, []);
 
-  return (
-    <div>
-      <Clock value={value} size={75} />
-    </div>
-  );
+  return <Clock value={value} size={65} />;
 }
 
 export default PersianClock;

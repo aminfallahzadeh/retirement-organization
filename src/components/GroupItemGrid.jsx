@@ -26,7 +26,6 @@ import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
   useMaterialReactTable,
-  getMRT_RowSelectionHandler,
 } from "material-react-table";
 
 function GroupItemGrid() {
