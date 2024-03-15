@@ -47,7 +47,7 @@ function Captcha() {
     ctx.font = "28px Arial";
 
     const textWidth = ctx.measureText(captchaText).width;
-    const startX = (canvas.width - textWidth) / 3;
+    const startX = (canvas.width - textWidth) / 2;
 
     for (let i = 0; i < captchaText.length; i++) {
       ctx.save();
@@ -93,16 +93,16 @@ function Captcha() {
 
   const content = (
     <div className="captchaContainer">
-      <div className="inputBox">
+      <div className="inputBox__login inputBox__login-margin">
         <input
           type="text"
           id="captcha"
-          className="input field"
+          className="inputBox__login--input"
           value={userInput}
           onChange={handleInputChange}
           required
         />
-        <label htmlFor="captcha" className="label">
+        <label htmlFor="captcha" className="inputBox__login--label">
           کد را وارد کنید
         </label>
         <VpnKeyIcon style={style} />

@@ -11,10 +11,6 @@
         padding: 30px 0;
         gap: 10px;
 
-        & > * {
-            margin: 0 !important;
-        }
-
         &--colSpan4 {
             grid-column: span 4;
             height: 55px;

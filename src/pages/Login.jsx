@@ -68,6 +68,7 @@ function Login() {
         });
       }
     } catch (err) {
+      console.log(err);
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
         style: {
@@ -114,33 +115,33 @@ function Login() {
             <span>ورود به صفحه کاربری</span>
           </div>
 
-          <div className="inputBox">
+          <div className="inputBox__login ">
             <input
               type="text"
               id="user"
-              className="input field"
+              className="inputBox__login--input"
               value={username}
               required
               onChange={(e) => setUsername(e.target.value)}
               disabled={isLoading}
             />
-            <label htmlFor="user" className="label">
+            <label htmlFor="user" className="inputBox__login--label">
               نام کاربری
             </label>
             <UserIcon style={style} width={20} />
           </div>
 
-          <div className="inputBox">
+          <div className="inputBox__login">
             <input
               type="password"
               id="pass"
-              className="input field"
+              className="inputBox__login--input"
               value={password}
               required
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
             />
-            <label htmlFor="pass" className="label">
+            <label htmlFor="pass" className="inputBox__login--label">
               کلمه عبور
             </label>
             <LockClosedIcon style={style} width={20} />

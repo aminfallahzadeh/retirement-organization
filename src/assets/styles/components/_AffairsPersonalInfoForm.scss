@@ -6,10 +6,6 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 50px);
 
-    & > * {
-        margin: 0 !important;
-    }
-
     &__colSpan2 {
         grid-column: span 2;
     }
@@ -24,11 +20,9 @@
     }
 
     &__explanation {
+        margin-top: 10px;
         input {
             height: ($inputBox-height * 3) !important;
-        }
-        & > * {
-            margin: 0 !important;
         }
     }
 }

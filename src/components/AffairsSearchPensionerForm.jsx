@@ -8,50 +8,50 @@ function AffairsSearchPensionerForm() {
   const content = (
     <div className="SearchPensioner">
       <form method="POST" noValidate className="SearchPensioner__form">
-        <div className="inputBox">
+        <div className="inputBox__form">
           <input
             type="text"
             id="codeMeli"
-            className="input field input--dark"
+            className="inputBox__form--input inputBox__form--field"
             required
           />
-          <label htmlFor="codeMeli" className="label label--light">
+          <label htmlFor="codeMeli" className="inputBox__form--label">
             کد ملی
           </label>
         </div>
 
-        <div className="inputBox">
+        <div className="inputBox__form">
           <input
             type="text"
             id="pensNum"
-            className="input field input--dark"
+            className="inputBox__form--input inputBox__form--field"
             required
           />
-          <label htmlFor="pensNum" className="label label--light">
+          <label htmlFor="pensNum" className="inputBox__form--label">
             شماره بازنشسته
           </label>
         </div>
 
-        <div className="inputBox">
+        <div className="inputBox__form">
           <input
             type="text"
             id="Name"
-            className="input field input--dark"
+            className="inputBox__form--input inputBox__form--field"
             required
           />
-          <label htmlFor="Name" className="label label--light">
+          <label htmlFor="Name" className="inputBox__form--label">
             نام
           </label>
         </div>
 
-        <div className="inputBox">
+        <div className="inputBox__form">
           <input
             type="text"
             id="SurName"
-            className="input field input--dark"
+            className="inputBox__form--input inputBox__form--field"
             required
           />
-          <label htmlFor="SurName" className="label label--light">
+          <label htmlFor="SurName" className="inputBox__form--label">
             نام خانوادگی
           </label>
         </div>
