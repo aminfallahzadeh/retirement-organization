@@ -297,6 +297,28 @@ function AffairsPersonalInfoForm() {
           وضعیت مسکن
         </label>
       </div>
+      <div className="inputBox__form">
+        <input
+          type="text"
+          id="marrageCond"
+          className="inputBox__form--input"
+          required
+        />
+        <label htmlFor="marrageCond" className="inputBox__form--label">
+          وضعیت تاهل
+        </label>
+      </div>
+      <div className="inputBox__form">
+        <input
+          type="text"
+          id="deathDate"
+          className="inputBox__form--input"
+          required
+        />
+        <label htmlFor="deathDate" className="inputBox__form--label">
+          تاریخ فوت
+        </label>
+      </div>
       <div className="inputBox__form col-span-3">
         <textarea
           type="text"

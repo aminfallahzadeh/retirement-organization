@@ -1,96 +1,74 @@
 function AffairsBankInfoForm() {
   return (
-    <form method="POST" className="BankInfoForm" noValidate>
-      <div className="inputBox">
+    <form method="POST" className="grid grid--col-3 formContainer " noValidate>
+      <div className="inputBox__form">
         <input
           type="text"
           id="bank"
-          className="input field input--dark"
+          className="inputBox__form--input"
           required
         />
-        <label htmlFor="bank" className="label label--light">
+        <label htmlFor="bank" className="inputBox__form--label">
           بانک
         </label>
       </div>
 
-      <div className="inputBox">
+      <div className="inputBox__form">
         <input
           type="text"
           id="branch"
-          className="input field input--dark"
+          className="inputBox__form--input"
           required
         />
-        <label htmlFor="branch" className="label label--light">
+        <label htmlFor="branch" className="inputBox__form--label">
           شعبه
         </label>
       </div>
-      <div className="inputBox">
+      <div className="inputBox__form">
         <input
           type="text"
           id="account"
-          className="input field input--dark"
+          className="inputBox__form--input"
           required
         />
-        <label htmlFor="account" className="label label--light">
+        <label htmlFor="account" className="inputBox__form--label">
           حساب
         </label>
       </div>
 
-      <div className="inputBox">
+      <div className="inputBox__form">
         <input
           type="text"
           id="office"
-          className="input field input--dark"
+          className="inputBox__form--input"
           required
         />
-        <label htmlFor="office" className="label label--light">
+        <label htmlFor="office" className="inputBox__form--label">
           دفتر کل
         </label>
       </div>
 
-      <div className="inputBox">
+      <div className="inputBox__form">
         <input
           type="text"
           id="insurance1"
-          className="input field input--dark"
+          className="inputBox__form--input"
           required
         />
-        <label htmlFor="insurance1" className="label label--light">
+        <label htmlFor="insurance1" className="inputBox__form--label">
           ضریب بیمه
         </label>
       </div>
 
-      <div className="inputBox">
+      <div className="inputBox__form">
         <input
           type="text"
           id="insurance2"
-          className="input field input--dark"
+          className="inputBox__form--input"
           required
         />
-        <label htmlFor="insurance2" className="label label--light">
+        <label htmlFor="insurance2" className="inputBox__form--label">
           بیمه تبعی
-        </label>
-      </div>
-      <div className="inputBox BankInfoForm__large">
-        <input
-          type="text"
-          id="exp"
-          className="input field input--dark"
-          required
-        />
-        <label htmlFor="exp" className="label label--light ">
-          توضیح
-        </label>
-      </div>
-      <div className="inputBox">
-        <input
-          type="text"
-          id="cityBank"
-          className="input field input--dark"
-          required
-        />
-        <label htmlFor="cityBank" className="label label--light">
-          شماره حساب بانک شهر
         </label>
       </div>
     </form>

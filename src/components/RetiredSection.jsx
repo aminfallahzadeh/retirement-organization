@@ -37,7 +37,7 @@ function RetiredSection() {
       {showStaffForm && <AffairsStaffInfoForm />}
 
       <div className="pensionersAffairs__item" onClick={handleShowBankForm}>
-        <h4>اطلاعات شماره حساب بانکی بازنشسته</h4>
+        <h4>اطلاعات تکمیلی</h4>
       </div>
 
       {showBankForm && <AffairsBankInfoForm />}
