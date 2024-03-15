@@ -22,7 +22,7 @@ function SaveButton({
   return (
     <>
       {isLoading ? (
-        <Button variant="outline-success" disabled style={{ width: "100%" }}>
+        <Button variant={variant} disabled style={{ width: "100%" }}>
           <Spinner
             as="span"
             animation="border"

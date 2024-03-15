@@ -1,7 +1,25 @@
+// react imports
+import { useState, useEffect } from "react";
+
 // library imports
 import { UserIcon } from "@heroicons/react/24/outline";
 
-function AffairsPersonalInfoForm() {
+function AffairsPersonalInfoForm({ retiredData }) {
+  const [personObject, setPersonObject] = useState(retiredData);
+
+  useEffect(() => {
+    setPersonObject(retiredData);
+  }, [retiredData]);
+
+  useEffect(() => {
+    console.log(personObject);
+  }, [personObject]);
+
+  const handlePersonObjectChange = (e) => {
+    const { name, value } = e.target;
+    setPersonObject({ ...personObject, [name]: value });
+  };
+
   const content = (
     <form method="POST" className="grid grid--col-3 formContainer" noValidate>
       <div className="row-span-2 flex-col-2 flex-col-2--grow-second">
@@ -13,8 +31,11 @@ function AffairsPersonalInfoForm() {
           <div className="inputBox__form">
             <input
               type="text"
+              name="personFirstName"
               id="name"
               className="inputBox__form--input"
+              value={personObject?.personFirstName || ""}
+              onChange={handlePersonObjectChange}
               required
             />
             <label htmlFor="name" className="inputBox__form--label">
@@ -24,8 +45,11 @@ function AffairsPersonalInfoForm() {
           <div className="inputBox__form">
             <input
               type="text"
+              name="personLastName"
               id="surname"
               className="inputBox__form--input"
+              value={personObject?.personLastName || ""}
+              onChange={handlePersonObjectChange}
               required
             />
             <label htmlFor="surname" className="inputBox__form--label">
@@ -38,8 +62,11 @@ function AffairsPersonalInfoForm() {
       <div className="inputBox__form">
         <input
           type="text"
+          name="personNationalCode"
           id="melliCode"
           className="inputBox__form--input"
+          value={personObject?.personNationalCode || ""}
+          onChange={handlePersonObjectChange}
           required
         />
         <label htmlFor="melliCode" className="inputBox__form--label">
@@ -50,8 +77,11 @@ function AffairsPersonalInfoForm() {
       <div className="inputBox__form">
         <input
           type="text"
+          name="personCertificatetNo"
           id="shCode"
           className="inputBox__form--input"
+          value={personObject?.personCertificatetNo || ""}
+          onChange={handlePersonObjectChange}
           required
         />
         <label htmlFor="shCode" className="inputBox__form--label">
@@ -63,7 +93,10 @@ function AffairsPersonalInfoForm() {
         <input
           type="text"
           id="fatherName"
+          name="personFatherName"
           className="inputBox__form--input"
+          value={personObject?.personFatherName || ""}
+          onChange={handlePersonObjectChange}
           required
         />
         <label htmlFor="fatherName" className="inputBox__form--label">
@@ -72,12 +105,18 @@ function AffairsPersonalInfoForm() {
       </div>
 
       <div className="inputBox__form">
-        <input
+        <select
           type="text"
+          name="genderID"
           id="gender"
           className="inputBox__form--input"
+          value={personObject?.genderID || 0}
+          onChange={handlePersonObjectChange}
           required
-        />
+        >
+          <option value="0">مرد</option>
+          <option value="1">زن</option>
+        </select>
         <label htmlFor="gender" className="inputBox__form--label">
           <span>*</span> جنسیت
         </label>
@@ -98,8 +137,11 @@ function AffairsPersonalInfoForm() {
       <div className="inputBox__form">
         <input
           type="text"
+          name="personBirthPlace"
           id="birthPlace"
           className="inputBox__form--input"
+          value={personObject?.personBirthPlace || ""}
+          onChange={handlePersonObjectChange}
           required
         />
         <label htmlFor="birthPlace" className="inputBox__form--label">
@@ -111,7 +153,10 @@ function AffairsPersonalInfoForm() {
         <input
           type="text"
           id="otherName"
+          name="personPreviousName"
           className="inputBox__form--input"
+          value={personObject?.personPreviousName || ""}
+          onChange={handlePersonObjectChange}
           required
         />
         <label htmlFor="otherName" className="inputBox__form--label">
@@ -123,7 +168,10 @@ function AffairsPersonalInfoForm() {
         <input
           type="text"
           id="retireNum"
+          name="pensionaryid"
           className="inputBox__form--input"
+          value={personObject?.pensionaryid || ""}
+          onChange={handlePersonObjectChange}
           required
         />
         <label htmlFor="retireNum" className="inputBox__form--label">
@@ -135,7 +183,10 @@ function AffairsPersonalInfoForm() {
         <input
           type="text"
           id="staticPhone"
+          name="personPhone"
           className="inputBox__form--input"
+          value={personObject?.personPhone || ""}
+          onChange={handlePersonObjectChange}
           required
         />
         <label htmlFor="staticPhone" className="inputBox__form--label">
@@ -147,7 +198,10 @@ function AffairsPersonalInfoForm() {
         <input
           type="text"
           id="cellPhone"
+          name="personCellPhone"
           className="inputBox__form--input"
+          value={personObject?.personCellPhone || ""}
+          onChange={handlePersonObjectChange}
           required
         />
         <label htmlFor="cellPhone" className="inputBox__form--label">
@@ -159,7 +213,10 @@ function AffairsPersonalInfoForm() {
         <input
           type="text"
           id="childNum"
+          name="personCellPhone2"
           className="inputBox__form--input"
+          value={personObject?.personCellPhone2 || ""}
+          onChange={handlePersonObjectChange}
           required
         />
         <label htmlFor="childNum" className="inputBox__form--label">

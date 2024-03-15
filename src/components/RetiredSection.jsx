@@ -3,8 +3,8 @@ import AffairsBankInfoForm from "./AffairsBankInfoForm";
 import AffairsStaffInfoForm from "./AffairsStaffInfoForm";
 import AffairsPersonalInfoForm from "./AffairsPersonalInfoForm";
 
-// react imports
-import { useState } from "react";
+// redux imports
+import { useSelector } from "react-redux";
 
 // mui imports
 import Accordion from "@mui/material/Accordion";
@@ -13,21 +13,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 function RetiredSection() {
-  const [showBankForm, setShowBankForm] = useState(false);
-  const [showStaffForm, setShowStaffForm] = useState(false);
-  const [showPersonalForm, setShowPersonalForm] = useState(false);
-
-  const handleShowPersonalForm = () => {
-    setShowPersonalForm(!showPersonalForm);
-  };
-
-  const handleShowStaffForm = () => {
-    setShowStaffForm(!showStaffForm);
-  };
-
-  const handleShowBankForm = () => {
-    setShowBankForm(!showBankForm);
-  };
+  const { retiredData } = useSelector((state) => state.retiredState);
 
   const content = (
     <section className="pensionersAffairs">
@@ -40,7 +26,7 @@ function RetiredSection() {
           اطلاعات فردی بازنشسته
         </AccordionSummary>
         <AccordionDetails>
-          <AffairsPersonalInfoForm />
+          <AffairsPersonalInfoForm retiredData={retiredData} />
         </AccordionDetails>
       </Accordion>
 
