@@ -72,6 +72,7 @@ function GroupNameInput({ setShowEditModal }) {
         isLoading={isLoading}
         onClickFn={updateGroupHandler}
         variant={"outline-success"}
+        icon={"done"}
         disabled={groupName === groupInfo?.name || !groupName}
       >
         ذخیره

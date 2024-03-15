@@ -1,13 +1,10 @@
-// bootstrap imports
-import { Button } from "react-bootstrap";
-
-// library imports
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+// component
+import UserButton from "./UserButton";
 
 function AffairsSearchPensionerForm() {
   const content = (
-    <div className="SearchPensioner">
-      <form method="POST" noValidate className="SearchPensioner__form">
+    <div className="formContainer">
+      <form method="POST" noValidate className="grid grid--col-4">
         <div className="inputBox__form">
           <input
             type="text"
@@ -56,17 +53,11 @@ function AffairsSearchPensionerForm() {
           </label>
         </div>
 
-        <Button variant="primary" className="SearchPensioner__form--colSpan4">
-          جست و جو
-        </Button>
-
-        <Button variant="warning" className="SearchPensioner__form--colSpan3">
-          درخواست دسترسی پرونده ها
-        </Button>
-
-        <Button variant="success" className="SearchPensioner__form--btn">
-          ایجاد پرونده جدید <AddCircleIcon />
-        </Button>
+        <div className="col-span-4">
+          <UserButton variant={"outline-primary"} icon={"search"}>
+            جست و جو
+          </UserButton>
+        </div>
       </form>
     </div>
   );

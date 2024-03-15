@@ -1,0 +1,12 @@
+// avoid column headers to go left side
+.Mui-TableHeadCell-Content {
+    flex-direction: row !important;
+}
+
+.Mui-TableHeadCell-Content-Labels {
+    flex-direction: row !important;
+}
+
+.MuiTableCell-root {
+    text-align: right !important;
+}

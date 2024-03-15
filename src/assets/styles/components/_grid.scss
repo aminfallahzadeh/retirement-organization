@@ -1,12 +1,66 @@
-// avoid column headers to go left side
-.Mui-TableHeadCell-Content {
-    flex-direction: row !important;
+.grid {
+    display: grid;
+    grid-auto-rows: 40px;
+    gap: 15px;
+
+    &--col-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    &--col-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
-.Mui-TableHeadCell-Content-Labels {
-    flex-direction: row !important;
+.col-span-2 {
+    grid-column: span 2;
 }
 
-.MuiTableCell-root {
-    text-align: right !important;
+.col-span-3 {
+    grid-column: span 3;
+}
+
+.col-span-4 {
+    grid-column: span 4;
+}
+
+.row-span-2 {
+    grid-row: span 2;
+}
+
+.row-col-span-2 {
+    grid-row: span 2;
+    grid-column: span 2;
+}
+
+.row-col-span-3 {
+    grid-row: span 3;
+    grid-column: span 3;
+}
+
+.flex-col-2 {
+    display: flex;
+    column-gap: 15px;
+
+    &--grow-second > :last-child {
+        flex-grow: 1;
+    }
+}
+
+.flex-row-2 {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+
+    &--grow {
+        & > * {
+            flex-grow: 1;
+            width: 100%;
+        }
+    }
+}
+
+.flex-center {
+    justify-content: center;
+    align-items: center;
 }

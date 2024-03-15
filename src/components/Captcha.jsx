@@ -103,7 +103,7 @@ function Captcha() {
           required
         />
         <label htmlFor="captcha" className="inputBox__login--label">
-          کد را وارد کنید
+          کد امنیتی
         </label>
         <VpnKeyIcon style={style} />
       </div>

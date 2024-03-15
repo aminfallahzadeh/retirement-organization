@@ -236,7 +236,9 @@ function GroupsGrid() {
       },
     }),
     renderTopToolbarCustomActions: () => (
-      <Box sx={{ display: "flex", gap: "1rem", p: "4px" }}>
+      <Box
+        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
+      >
         <Link to={"/retirement-organization/create-group"}>
           <UserButton variant="outline-primary" icon={"add"}>
             ایجاد گروه
@@ -322,9 +324,10 @@ function GroupsGrid() {
               </p>
               <div className="GroupsGrid__modal--buttons">
                 <UserButton
-                  variant={"success"}
+                  variant={"outline-success"}
                   isLoading={isDeleting}
                   onClickFn={deleteGroupHandler}
+                  icon={"done"}
                 >
                   بله
                 </UserButton>

@@ -4,10 +4,11 @@ import Spinner from "react-bootstrap/Spinner";
 
 // mui imports
 import {
-  Done as DonIcon,
+  Done as DoneIcon,
   Close as CloseIcon,
   Refresh as RefreshIcon,
   Add as AddIcon,
+  Search as SearchIcon,
 } from "@mui/icons-material";
 
 function SaveButton({
@@ -21,7 +22,7 @@ function SaveButton({
   return (
     <>
       {isLoading ? (
-        <Button variant="outline-success" disabled>
+        <Button variant="outline-success" disabled style={{ width: "100%" }}>
           <Spinner
             as="span"
             animation="border"
@@ -32,17 +33,39 @@ function SaveButton({
           <span className="visually-hidden">Loading...</span>
         </Button>
       ) : (
-        <Button variant={variant} onClick={onClickFn} disabled={disabled}>
+        <Button
+          variant={variant}
+          onClick={onClickFn}
+          disabled={disabled}
+          style={{ width: "100%" }}
+        >
           {icon === "close" ? (
-            <CloseIcon />
+            <>
+              <CloseIcon />
+              &nbsp;
+            </>
           ) : icon === "refresh" ? (
-            <RefreshIcon />
+            <>
+              <RefreshIcon />
+              &nbsp;
+            </>
           ) : icon === "add" ? (
-            <AddIcon />
-          ) : (
-            <DonIcon />
-          )}
-          &nbsp; {children}
+            <>
+              <AddIcon />
+              &nbsp;
+            </>
+          ) : icon === "done" ? (
+            <>
+              <DoneIcon />
+              &nbsp;
+            </>
+          ) : icon === "search" ? (
+            <>
+              <SearchIcon />
+              &nbsp;
+            </>
+          ) : null}
+          {children}
         </Button>
       )}
     </>

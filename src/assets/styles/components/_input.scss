@@ -50,7 +50,8 @@
 
 	&--input {
 		width: 100%;
-		height: $inputBox-height;
+		height: 100%;
+		// height: $inputBox-height;
 		font-size: 16px;
 		background: transparent;
 		color: $color-grey-4;
@@ -66,7 +67,7 @@
 			position: absolute;
 			top: -10px;
 			right: 20px;
-			font-size: 14px;
+			font-size: 12px;
 			background-color: $color-grey-2;
 			color: $color-grey-5;
 			border-radius: $border-radius-secondary;
@@ -77,10 +78,10 @@
 
 	&--label {
 		position: absolute;
-		top: 15px;
+		top: 10px;
 		right: 20px;
 		transition: 0.2s;
-		font-size: 14px;
+		font-size: 12px;
 		cursor: text;
 		color: $color-grey-3;
 

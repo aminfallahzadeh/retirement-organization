@@ -1,50 +1,5 @@
-.PersonalInfoForm {
-    direction: rtl;
-    padding-top: 30px;
-    display: grid;
-    gap: 10px;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 50px);
-
-    &__colSpan2 {
-        grid-column: span 2;
-    }
-
-    &__rowColSpan2 {
-        grid-row: span 2;
-        grid-column: span 2;
-
-        input {
-            height: 100% !important;
-        }
-    }
-
-    &__explanation {
-        margin-top: 10px;
-        input {
-            height: ($inputBox-height * 3) !important;
-        }
-    }
-}
-
 .PersonalInfoContainer {
-    display: flex;
-    flex-direction: row;
-    column-gap: 10px;
-
     &__gridForm {
         flex-grow: 1;
-    }
-
-    &__gridImage {
-        margin-top: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: cetner;
-        border: 2px solid $color-grey-2;
-        border-radius: $border-radius-secondary;
-        height: 100px;
-        width: 100px;
-        cursor: pointer;
     }
 }
