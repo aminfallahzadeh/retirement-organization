@@ -6,6 +6,12 @@ import AffairsPersonalInfoForm from "./AffairsPersonalInfoForm";
 // react imports
 import { useState } from "react";
 
+// mui imports
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
 function RetiredSection() {
   const [showBankForm, setShowBankForm] = useState(false);
   const [showStaffForm, setShowStaffForm] = useState(false);
@@ -25,22 +31,44 @@ function RetiredSection() {
 
   const content = (
     <section className="pensionersAffairs">
-      <div className="pensionersAffairs__item" onClick={handleShowPersonalForm}>
-        <h4>اطلاعات فردی بازنشسته</h4>
-      </div>
-      {showPersonalForm && <AffairsPersonalInfoForm />}
+      <Accordion sx={{ backgroundColor: "#d6d6d6" }}>
+        <AccordionSummary
+          id="panel-header"
+          aria-controls="panel-content"
+          expandIcon={<ArrowDropDownIcon />}
+        >
+          اطلاعات فردی بازنشسته
+        </AccordionSummary>
+        <AccordionDetails>
+          <AffairsPersonalInfoForm />
+        </AccordionDetails>
+      </Accordion>
 
-      <div className="pensionersAffairs__item" onClick={handleShowStaffForm}>
-        <h4>اطلاعات پرسنلی</h4>
-      </div>
+      <Accordion sx={{ backgroundColor: "#d6d6d6" }}>
+        <AccordionSummary
+          id="panel-header"
+          aria-controls="panel-content"
+          expandIcon={<ArrowDropDownIcon />}
+        >
+          اطلاعات پرسنلی
+        </AccordionSummary>
+        <AccordionDetails>
+          <AffairsStaffInfoForm />
+        </AccordionDetails>
+      </Accordion>
 
-      {showStaffForm && <AffairsStaffInfoForm />}
-
-      <div className="pensionersAffairs__item" onClick={handleShowBankForm}>
-        <h4>اطلاعات تکمیلی</h4>
-      </div>
-
-      {showBankForm && <AffairsBankInfoForm />}
+      <Accordion sx={{ backgroundColor: "#d6d6d6" }}>
+        <AccordionSummary
+          id="panel-header"
+          aria-controls="panel-content"
+          expandIcon={<ArrowDropDownIcon />}
+        >
+          اطلاعات تکمیلی
+        </AccordionSummary>
+        <AccordionDetails>
+          <AffairsBankInfoForm />
+        </AccordionDetails>
+      </Accordion>
     </section>
   );
 
