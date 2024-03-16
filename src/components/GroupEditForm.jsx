@@ -53,30 +53,32 @@ function GroupNameInput({ setShowEditModal }) {
   }, [groupInfo]);
 
   const content = (
-    <section className="GroupEditForm">
-      <form className="inputBox">
+    <section className="formContainer flex-col flex-center">
+      <form className="inputBox__form">
         <input
           type="text"
-          className="input field input--dark"
+          className="inputBox__form--input inputBox__form--input-height-40"
           required
           id="groupName"
           value={groupName}
           onChange={handleGroupNameChange}
         />
-        <label className="label" htmlFor="groupName">
+        <label className="inputBox__form--label" htmlFor="groupName">
           نام گروه
         </label>
       </form>
 
-      <UserButton
-        isLoading={isLoading}
-        onClickFn={updateGroupHandler}
-        variant={"outline-success"}
-        icon={"done"}
-        disabled={groupName === groupInfo?.name || !groupName}
-      >
-        ذخیره
-      </UserButton>
+      <div>
+        <UserButton
+          isLoading={isLoading}
+          onClickFn={updateGroupHandler}
+          variant={"outline-success"}
+          icon={"done"}
+          disabled={groupName === groupInfo?.name || !groupName}
+        >
+          ذخیره
+        </UserButton>
+      </div>
     </section>
   );
 

@@ -22,12 +22,12 @@ function AffairsPersonalInfoForm({ retiredData }) {
 
   const content = (
     <form method="POST" className="grid grid--col-3 formContainer" noValidate>
-      <div className="row-span-2 flex-col-2 flex-col-2--grow-second">
+      <div className="row-span-2 flex-row flex-row--grow-second">
         <div className="formPic">
           <UserIcon width={40} />
         </div>
 
-        <div className="flex-row-2 flex-center flex-row-2--grow">
+        <div className="flex-col flex-center flex-col--grow">
           <div className="inputBox__form">
             <input
               type="text"

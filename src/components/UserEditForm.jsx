@@ -14,10 +14,6 @@ function UserEditForm() {
   const [lname, setLname] = useState(userInfo?.lname);
   const [isActive, setIsActive] = useState(userInfo?.isActive);
 
-  const handleUserNameChange = (e) => {
-    setUserName(e.target.value);
-  };
-
   const handleFnameChange = (e) => {
     setFname(e.target.value);
   };
@@ -38,53 +34,63 @@ function UserEditForm() {
   }, [userInfo]);
 
   const content = (
-    <section className="UserEditForm">
-      <form method="POST">
-        <div className="inputBox">
+    <section className="formContainer flex-col flex-center">
+      <form method="POST" className="grid grid--col-3">
+        <div className="inputBox__form">
+          <div
+            className="inputBox__form--input"
+            style={{ backgroundColor: "#a0a0a0" }}
+          >
+            <div className="inputBox__form--readOnly-label">نام کاربری</div>
+            <div className="inputBox__form--readOnly-content">{userName}</div>
+          </div>
+        </div>
+
+        <div className="inputBox__form">
           <input
             type="text"
-            className="input field input--dark"
+            className="inputBox__form--input"
             required
-            id="userName"
-            value={userName}
-            onChange={handleUserNameChange}
+            id="psw"
+            value={fname}
+            onChange={handleFnameChange}
           />
-          <label className="label" htmlFor="userName">
-            نام کاربری
+          <label className="inputBox__form--label" htmlFor="psw">
+            رمز عبور
           </label>
         </div>
 
-        <div className="inputBox">
+        <div className="inputBox__form">
           <input
             type="text"
-            className="input field input--dark"
+            className="inputBox__form--input"
             required
             id="fname"
             value={fname}
             onChange={handleFnameChange}
           />
-          <label className="label" htmlFor="fname">
+          <label className="inputBox__form--label" htmlFor="fname">
             نام
           </label>
         </div>
 
-        <div className="inputBox">
+        <div className="inputBox__form">
           <input
             type="text"
-            className="input field input--dark"
+            className="inputBox__form--input"
             required
-            id="lname"
+            id="family"
             value={lname}
             onChange={handleLnameChange}
           />
-          <label className="label" htmlFor="lname">
+          <label className="inputBox__form--label" htmlFor="familly">
             نام خانوادگی
           </label>
         </div>
 
-        <div className="inputBox">
+        <div className="inputBox__form">
           <select
-            className="input field input--dark"
+            className="inputBox__form--input"
             id="isActive"
             style={{ cursor: "pointer" }}
             value={isActive}
@@ -93,13 +99,75 @@ function UserEditForm() {
             <option value="true">فعال</option>
             <option value="false">غیر فعال</option>
           </select>
-          <label className="label" htmlFor="isActive">
+          <label className="inputBox__form--label" htmlFor="isActive">
+            وضعیت
+          </label>
+        </div>
+
+        <div className="inputBox__form">
+          <input
+            type="text"
+            className="inputBox__form--input"
+            required
+            id="mail"
+            value={lname}
+            onChange={handleLnameChange}
+          />
+          <label className="inputBox__form--label" htmlFor="mail">
+            پست الکترونیکی
+          </label>
+        </div>
+
+        <div className="inputBox__form">
+          <input
+            type="text"
+            className="inputBox__form--input"
+            required
+            id="tel"
+            value={lname}
+            onChange={handleLnameChange}
+          />
+          <label className="inputBox__form--label" htmlFor="tel">
+            تلفن ثابت
+          </label>
+        </div>
+
+        <div className="inputBox__form">
+          <input
+            type="text"
+            className="inputBox__form--input"
+            required
+            id="cell"
+            value={lname}
+            onChange={handleLnameChange}
+          />
+          <label className="inputBox__form--label" htmlFor="cell">
+            تلفن همراه
+          </label>
+        </div>
+
+        <div className="inputBox__form">
+          <select
+            className="inputBox__form--input"
+            id="isActive"
+            style={{ cursor: "pointer" }}
+            value={isActive}
+            onChange={handleIsActiveChange}
+          >
+            <option value="0">زن</option>
+            <option value="1">مرد</option>
+          </select>
+          <label className="inputBox__form--label" htmlFor="isActive">
             وضعیت
           </label>
         </div>
       </form>
 
-      <UserButton variant={"outline-success"}>ذخیره</UserButton>
+      <div>
+        <UserButton variant={"outline-success"} icon={"done"}>
+          ذخیره
+        </UserButton>
+      </div>
     </section>
   );
 
