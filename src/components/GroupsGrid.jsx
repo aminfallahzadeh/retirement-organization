@@ -32,8 +32,10 @@ import {
   useGetGroupQuery,
   useDeleteGroupMutation,
 } from "../slices/usersApiSlice";
-import { setGetItemsStatus } from "../slices/statusSlice";
-import { setGroupInfo, setGroupsData } from "../slices/userReqSlice";
+import {
+  setGroupsTableData,
+  setSelectedGroupData,
+} from "../slices/groupsDataSlice";
 
 // library imports
 import { toast } from "react-toastify";
@@ -65,7 +67,9 @@ function GroupsGrid() {
   const dispatch = useDispatch();
 
   // access the data from redux store
-  const { groupInfo, groupsData } = useSelector((state) => state.userReq);
+  const { groupsTableData, selectedGroupData } = useSelector(
+    (state) => state.groupsData
+  );
 
   const {
     data: groups,
@@ -97,8 +101,8 @@ function GroupsGrid() {
       const res = await deleteGroup({
         token,
         data: {
-          "id": groupInfo?._id,
-          "groupName": groupInfo?.name,
+          "id": selectedGroupData?.id,
+          "groupName": selectedGroupData?.name,
           "isdeleted": true,
         },
       }).unwrap();
@@ -124,10 +128,10 @@ function GroupsGrid() {
     refetch();
     if (isSuccess) {
       const data = groups.itemList.map((group) => ({
-        _id: group.id,
+        id: group.id,
         name: group.groupName,
       }));
-      dispatch(setGroupsData(data));
+      dispatch(setGroupsTableData(data));
     } else if (error) {
       toast.error(error?.data?.message || error.error, {
         autoClose: 2000,
@@ -138,7 +142,7 @@ function GroupsGrid() {
     }
 
     return () => {
-      dispatch(setGroupsData([]));
+      dispatch(setGroupsTableData([]));
     };
   }, [
     groups,
@@ -220,7 +224,7 @@ function GroupsGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: groupsData,
+    data: groupsTableData,
     initialState: {
       density: "compact",
     },
@@ -272,26 +276,25 @@ function GroupsGrid() {
         />
       ),
     },
-    getRowId: (originalRow) => originalRow._id,
+    getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedGroupInfo = findById(groupsData, id);
+    const selectedGroup = findById(groupsTableData, id);
 
     if (id) {
-      dispatch(setGroupInfo(selectedGroupInfo));
+      dispatch(setSelectedGroupData(selectedGroup));
     } else {
-      dispatch(setGroupInfo(null));
+      dispatch(setSelectedGroupData([]));
     }
 
     return () => {
-      dispatch(setGroupInfo(null));
-      dispatch(setGetItemsStatus(false));
+      dispatch(setSelectedGroupData([]));
     };
-  }, [dispatch, table, rowSelection, groupInfo, groupsData]);
+  }, [dispatch, table, rowSelection, groupsTableData]);
 
   // check if token is expired on compoennt mount
   useEffect(() => {

@@ -6,6 +6,9 @@ import captchaSliceReducer from "./slices/captchaSlice";
 import userReqSliceReducer from "./slices/userReqSlice";
 import statusSliceReducer from "./slices/statusSlice";
 import retiredStateSliceReducer from "./slices/retiredStateSlice";
+import groupsDataSliceReducer from "./slices/groupsDataSlice";
+import itemsDataSliceReducer from "./slices/itemsDataSlice";
+import groupItemsDataSliceReducer from "./slices/groupItemsDataSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +18,9 @@ const store = configureStore({
     status: statusSliceReducer,
     userReq: userReqSliceReducer,
     retiredState: retiredStateSliceReducer,
+    groupsData: groupsDataSliceReducer,
+    itemsData: itemsDataSliceReducer,
+    groupItemsData: groupItemsDataSliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

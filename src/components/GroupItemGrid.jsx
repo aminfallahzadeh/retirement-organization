@@ -11,7 +11,14 @@ import { defaultTableOptions } from "../utils.js";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupItemsQuery } from "../slices/usersApiSlice";
-import { setGroupItemInfo, setGroupItemsData } from "../slices/userReqSlice";
+import {
+  setGroupItemsTableData,
+  setSelectedGroupItemData,
+} from "../slices/groupItemsDataSlice";
+
+// mui imports
+import { IconButton } from "@mui/material";
+import { Remove as RemoveIcon } from "@mui/icons-material";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -34,42 +41,42 @@ function GroupItemGrid() {
   const refreshTokenHandler = useRefreshToken();
 
   // access selected row info
-  const { groupInfo, itemsData } = useSelector((state) => state.userReq);
+  const { selectedGroupData } = useSelector((state) => state.groupsData);
   const { token } = useSelector((state) => state.auth);
 
   // access the data from redux store
-  const { groupItemsData } = useSelector((state) => state.userReq);
+  const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
 
   // fetch data from the API
   const {
     data: groupItems,
     isSuccess,
     isLoading,
-  } = useGetGroupItemsQuery({ token, groupId: groupInfo?._id });
+  } = useGetGroupItemsQuery({ token, groupId: selectedGroupData?.id });
 
   // trigger the fetch
   useEffect(() => {
     if (isSuccess) {
       const data = groupItems.itemList.map((item) => ({
-        _id: item.id,
+        id: item.id,
         name: item.itemName,
       }));
 
-      console.log(data);
+      // console.log(data);
 
-      const filteredData = data.filter(
-        (a) => !itemsData.map((b) => b.name).includes(a.name)
-      );
+      // const filteredData = data.filter(
+      //   (a) => !itemsData.map((b) => b.name).includes(a.name)
+      // );
 
-      dispatch(setGroupItemsData(filteredData));
+      dispatch(setGroupItemsTableData(data));
     }
-  }, [groupItems, isSuccess, dispatch, itemsData]);
+  }, [groupItems, isSuccess, dispatch]);
 
   const columns = useMemo(
     () => [
       {
         accessorKey: "name",
-        header: "نام",
+        header: "نام آیتم",
         size: 350,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
@@ -81,6 +88,21 @@ function GroupItemGrid() {
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
+      {
+        accessorKey: "removeItem",
+        header: "کم کردن",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        muiTableHeadCellProps: {
+          sx: { color: "red", fontFamily: "sahel" },
+        },
+        Cell: () => (
+          <IconButton color="error">
+            <RemoveIcon />
+          </IconButton>
+        ),
+      },
     ],
     []
   );
@@ -88,10 +110,10 @@ function GroupItemGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: groupItemsData,
+    data: groupItemsTableData,
     positionGlobalFilter: "left",
     initialState: {
-      ...defaultTableOptions.initialState,
+      density: "compact",
       showGlobalFilter: true,
     },
     muiTableBodyRowProps: ({ row }) => ({
@@ -130,14 +152,14 @@ function GroupItemGrid() {
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedGroupItemInfo = findById(groupItemsData, id);
+    const selectedGroupItemInfo = findById(groupItemsTableData, id);
 
     if (id) {
-      dispatch(setGroupItemInfo(selectedGroupItemInfo));
+      dispatch(setSelectedGroupItemData(selectedGroupItemInfo));
     } else {
-      dispatch(setGroupItemInfo(null));
+      dispatch(setSelectedGroupItemData([]));
     }
-  }, [dispatch, table, rowSelection, groupItemsData]);
+  }, [dispatch, table, rowSelection, groupItemsTableData]);
 
   // check if token is expired on compoennt mount
   useEffect(() => {

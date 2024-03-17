@@ -45,6 +45,10 @@
     &--grow-second > :last-child {
         flex-grow: 1;
     }
+
+    &--grow-first > :first-child {
+        flex-grow: 1;
+    }
 }
 
 .flex-col {

@@ -6,11 +6,9 @@ import RetiredInfoSection from "../components/RetiredInfoSection";
 function RetirementAffairsScreen() {
   return (
     <div className="main">
-      <div className="dashboard__body--pensioners">
-        <AffairsSearchPensionerForm />
-        <RetiredSection />
-        <RetiredInfoSection />
-      </div>
+      <AffairsSearchPensionerForm />
+      <RetiredSection />
+      <RetiredInfoSection />
     </div>
   );
 }

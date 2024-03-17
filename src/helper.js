@@ -6,7 +6,7 @@ export const convertToPersianNumber = (num) => {
 
 // find item by id
 export const findById = (data, id) => {
-  return data.find((item) => item._id === id);
+  return data.find((item) => item.id === id);
 };
 
 // generate captcha

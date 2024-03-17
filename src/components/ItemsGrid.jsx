@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
@@ -10,8 +10,15 @@ import { defaultTableOptions } from "../utils.js";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { useGetItemsQuery } from "../slices/usersApiSlice";
-import { setItemInfo, setItemsData } from "../slices/userReqSlice";
+import {
+  useGetItemsQuery,
+  useInsertGroupItemMutation,
+} from "../slices/usersApiSlice";
+import {
+  setSelectedItemData,
+  setItemsTableData,
+} from "../slices/itemsDataSlice";
+import { addGroupItems } from "../slices/groupItemsDataSlice";
 
 // mui imports
 import { IconButton } from "@mui/material";
@@ -34,25 +41,55 @@ import {
 
 function ItemsGrid() {
   const { token } = useSelector((state) => state.auth);
-  const { itemsData } = useSelector((state) => state.userReq);
+  const { itemsTableData, selectedItemData } = useSelector(
+    (state) => state.itemsData
+  );
+
   const refreshTokenHandler = useRefreshToken();
 
   const [rowSelection, setRowSelection] = useState({});
+
+  const [inserGroupItem] = useInsertGroupItemMutation();
 
   const dispatch = useDispatch();
 
   const { data: items, isLoading, isSuccess } = useGetItemsQuery(token);
 
+  const handleAddGroupItem = useCallback(() => {
+    dispatch(addGroupItems(selectedItemData));
+  }, [dispatch, selectedItemData]);
+
   useEffect(() => {
     if (isSuccess) {
       const data = items.itemList.map((item) => ({
-        _id: item.id,
+        id: item.id,
         name: item.itemName,
       }));
 
-      dispatch(setItemsData(data));
+      dispatch(setItemsTableData(data));
     }
   }, [items, isSuccess, dispatch]);
+
+  // const insertGroupItemHandler = async () => {
+  //   try {
+  //     const itemID = itemInfo?._id;
+  //     const groupID = groupInfo._id;
+  //     const res = await inserGroupItem({
+  //       token,
+  //       data: [
+  //         {
+  //           "id": "",
+  //           itemID,
+  //           "itemName": "",
+  //           groupID,
+  //         },
+  //       ],
+  //     });
+  //     console.log(res);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const columns = useMemo(
     () => [
@@ -72,7 +109,7 @@ function ItemsGrid() {
         align: "right",
       },
       {
-        accessorKey: "deleteAction",
+        accessorKey: "addItem",
         header: "اضافه کردن",
         enableSorting: false,
         enableColumnActions: false,
@@ -81,19 +118,19 @@ function ItemsGrid() {
           sx: { color: "green", fontFamily: "sahel" },
         },
         Cell: () => (
-          <IconButton color="success">
+          <IconButton color="success" onClick={handleAddGroupItem}>
             <AddIcon />
           </IconButton>
         ),
       },
     ],
-    []
+    [handleAddGroupItem]
   );
 
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: itemsData,
+    data: itemsTableData,
     positionGlobalFilter: "left",
     initialState: {
       density: "compact",
@@ -127,21 +164,21 @@ function ItemsGrid() {
         />
       ),
     },
-    getRowId: (originalRow) => originalRow._id,
+    getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedItemInfo = findById(itemsData, id);
+    const selectedItem = findById(itemsTableData, id);
 
     if (id) {
-      dispatch(setItemInfo(selectedItemInfo));
+      dispatch(setSelectedItemData(selectedItem));
     } else {
-      dispatch(setItemInfo(null));
+      dispatch(setSelectedItemData([]));
     }
-  }, [dispatch, table, rowSelection, itemsData]);
+  }, [dispatch, table, rowSelection, itemsTableData]);
 
   // check if token is expired on compoennt mount
   useEffect(() => {
