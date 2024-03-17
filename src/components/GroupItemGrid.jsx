@@ -73,7 +73,7 @@ function GroupItemGrid() {
       {
         accessorKey: "name",
         header: "نام آیتم",
-        size: 350,
+        size: 300,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
