@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
@@ -17,13 +17,7 @@ import {
 import {
   setSelectedItemData,
   setItemsTableData,
-  removeItemsFromTable,
 } from "../slices/itemsDataSlice";
-import { addGroupItems } from "../slices/groupItemsDataSlice";
-
-// mui imports
-import { IconButton } from "@mui/material";
-import { Add as AddIcon } from "@mui/icons-material";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -42,9 +36,7 @@ import {
 
 function ItemsGrid() {
   const { token } = useSelector((state) => state.auth);
-  const { itemsTableData, selectedItemData } = useSelector(
-    (state) => state.itemsData
-  );
+  const { itemsTableData } = useSelector((state) => state.itemsData);
 
   const refreshTokenHandler = useRefreshToken();
 
@@ -55,11 +47,6 @@ function ItemsGrid() {
   const dispatch = useDispatch();
 
   const { data: items, isLoading, isSuccess } = useGetItemsQuery(token);
-
-  const handleAddGroupItem = useCallback(() => {
-    dispatch(addGroupItems(selectedItemData));
-    dispatch(removeItemsFromTable(selectedItemData.id));
-  }, [dispatch, selectedItemData]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -110,27 +97,8 @@ function ItemsGrid() {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
       },
-      {
-        accessorKey: "addItem",
-        header: "اضافه کردن",
-        enableSorting: false,
-        enableColumnActions: false,
-        size: 20,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-        },
-        Cell: () => (
-          <IconButton
-            color="success"
-            onClick={handleAddGroupItem}
-            disabled={selectedItemData ? false : true}
-          >
-            <AddIcon />
-          </IconButton>
-        ),
-      },
     ],
-    [handleAddGroupItem, selectedItemData]
+    []
   );
 
   const table = useMaterialReactTable({

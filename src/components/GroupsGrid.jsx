@@ -22,6 +22,7 @@ import GroupEditForm from "./GroupEditForm";
 import UserButton from "./UserButton";
 import ItemsGrid from "./ItemsGrid";
 import GroupItemGrid from "./GroupItemGrid";
+import ArrowButtons from "./ArrowButtons";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -350,6 +351,7 @@ function GroupsGrid() {
             >
               <div className="EditGroupItemsModal">
                 <ItemsGrid />
+                <ArrowButtons />
                 <GroupItemGrid />
               </div>
             </Modal>

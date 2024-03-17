@@ -7,38 +7,50 @@ import { Button } from "react-bootstrap";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
+
 import {
-  addItemsDataById,
-  removeItemsDataById,
-  addGroupItemsDataById,
-  removeGroupItemsDataById,
-} from "../slices/userReqSlice";
+  removeItemsFromTable,
+  addItemsToTable,
+} from "../slices/itemsDataSlice";
+import { addGroupItems, removeGroupItems } from "../slices/groupItemsDataSlice";
 
 function ArrowButtons() {
-  const { itemInfo, groupItemInfo } = useSelector((state) => state.userReq);
   const dispatch = useDispatch();
 
-  const rightToLeftHandler = async (id) => {
-    dispatch(addGroupItemsDataById(itemInfo));
-    dispatch(removeItemsDataById(id));
+  const { selectedItemData } = useSelector((state) => state.itemsData);
+  const { selectedGroupItemData } = useSelector(
+    (state) => state.groupItemsData
+  );
+
+  const handleAddGroupItem = (id) => {
+    dispatch(addGroupItems(selectedItemData));
+    dispatch(removeItemsFromTable(id));
   };
 
-  const leftToRighthandler = async (id) => {
-    dispatch(addItemsDataById(groupItemInfo));
-    dispatch(removeGroupItemsDataById(id));
+  const handleRemoveGroupItem = (id) => {
+    dispatch(addItemsToTable(selectedGroupItemData));
+    dispatch(removeGroupItems(id));
   };
 
   return (
-    <div className="dashboard__body--buttomGrid-arrows">
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        rowGap: "10px",
+      }}
+    >
       <Button
         variant="outline-primary"
-        onClick={() => rightToLeftHandler(itemInfo._id)}
+        onClick={() => handleAddGroupItem(selectedItemData.id)}
       >
         <KeyboardDoubleArrowLeft />
       </Button>
       <Button
         variant="outline-primary"
-        onClick={() => leftToRighthandler(groupItemInfo._id)}
+        onClick={() => handleRemoveGroupItem(selectedGroupItemData.id)}
       >
         <KeyboardDoubleArrowRight />
       </Button>

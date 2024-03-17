@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
@@ -14,12 +14,7 @@ import { useGetGroupItemsQuery } from "../slices/usersApiSlice";
 import {
   setGroupItemsTableData,
   setSelectedGroupItemData,
-  removeGroupItems,
 } from "../slices/groupItemsDataSlice";
-import { addItemsToTable } from "../slices/itemsDataSlice";
-// mui imports
-import { IconButton } from "@mui/material";
-import { Remove as RemoveIcon } from "@mui/icons-material";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -47,9 +42,6 @@ function GroupItemGrid() {
 
   // access the data from redux store
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
-  const { selectedGroupItemData } = useSelector(
-    (state) => state.groupItemsData
-  );
 
   // fetch data from the API
   const {
@@ -57,11 +49,6 @@ function GroupItemGrid() {
     isSuccess,
     isLoading,
   } = useGetGroupItemsQuery({ token, groupId: selectedGroupData?.id });
-
-  const handleRemoveGroupItem = useCallback(() => {
-    dispatch(addItemsToTable(selectedGroupItemData));
-    dispatch(removeGroupItems(selectedGroupItemData.id));
-  }, [dispatch, selectedGroupItemData]);
 
   // trigger the fetch
   useEffect(() => {
@@ -97,27 +84,8 @@ function GroupItemGrid() {
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
-      {
-        accessorKey: "removeItem",
-        header: "کم کردن",
-        enableSorting: false,
-        enableColumnActions: false,
-        size: 20,
-        muiTableHeadCellProps: {
-          sx: { color: "red", fontFamily: "sahel" },
-        },
-        Cell: () => (
-          <IconButton
-            color="error"
-            onClick={handleRemoveGroupItem}
-            disabled={selectedGroupItemData ? false : true}
-          >
-            <RemoveIcon />
-          </IconButton>
-        ),
-      },
     ],
-    [handleRemoveGroupItem, selectedGroupItemData]
+    []
   );
 
   const table = useMaterialReactTable({
