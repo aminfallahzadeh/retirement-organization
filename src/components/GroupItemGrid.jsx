@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
@@ -14,8 +14,9 @@ import { useGetGroupItemsQuery } from "../slices/usersApiSlice";
 import {
   setGroupItemsTableData,
   setSelectedGroupItemData,
+  removeGroupItems,
 } from "../slices/groupItemsDataSlice";
-
+import { addItemsToTable } from "../slices/itemsDataSlice";
 // mui imports
 import { IconButton } from "@mui/material";
 import { Remove as RemoveIcon } from "@mui/icons-material";
@@ -46,6 +47,9 @@ function GroupItemGrid() {
 
   // access the data from redux store
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
+  const { selectedGroupItemData } = useSelector(
+    (state) => state.groupItemsData
+  );
 
   // fetch data from the API
   const {
@@ -53,6 +57,11 @@ function GroupItemGrid() {
     isSuccess,
     isLoading,
   } = useGetGroupItemsQuery({ token, groupId: selectedGroupData?.id });
+
+  const handleRemoveGroupItem = useCallback(() => {
+    dispatch(addItemsToTable(selectedGroupItemData));
+    dispatch(removeGroupItems(selectedGroupItemData.id));
+  }, [dispatch, selectedGroupItemData]);
 
   // trigger the fetch
   useEffect(() => {
@@ -98,13 +107,17 @@ function GroupItemGrid() {
           sx: { color: "red", fontFamily: "sahel" },
         },
         Cell: () => (
-          <IconButton color="error">
+          <IconButton
+            color="error"
+            onClick={handleRemoveGroupItem}
+            disabled={selectedGroupItemData ? false : true}
+          >
             <RemoveIcon />
           </IconButton>
         ),
       },
     ],
-    []
+    [handleRemoveGroupItem, selectedGroupItemData]
   );
 
   const table = useMaterialReactTable({
@@ -145,19 +158,19 @@ function GroupItemGrid() {
         />
       ),
     },
-    getRowId: (originalRow) => originalRow._id,
+    getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedGroupItemInfo = findById(groupItemsTableData, id);
+    const selectedGroupItem = findById(groupItemsTableData, id);
 
-    if (id) {
-      dispatch(setSelectedGroupItemData(selectedGroupItemInfo));
+    if (id && selectedGroupItem) {
+      dispatch(setSelectedGroupItemData(selectedGroupItem));
     } else {
-      dispatch(setSelectedGroupItemData([]));
+      dispatch(setSelectedGroupItemData(null));
     }
   }, [dispatch, table, rowSelection, groupItemsTableData]);
 

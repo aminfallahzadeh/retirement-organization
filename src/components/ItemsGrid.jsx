@@ -17,6 +17,7 @@ import {
 import {
   setSelectedItemData,
   setItemsTableData,
+  removeItemsFromTable,
 } from "../slices/itemsDataSlice";
 import { addGroupItems } from "../slices/groupItemsDataSlice";
 
@@ -57,6 +58,7 @@ function ItemsGrid() {
 
   const handleAddGroupItem = useCallback(() => {
     dispatch(addGroupItems(selectedItemData));
+    dispatch(removeItemsFromTable(selectedItemData.id));
   }, [dispatch, selectedItemData]);
 
   useEffect(() => {
@@ -118,13 +120,17 @@ function ItemsGrid() {
           sx: { color: "green", fontFamily: "sahel" },
         },
         Cell: () => (
-          <IconButton color="success" onClick={handleAddGroupItem}>
+          <IconButton
+            color="success"
+            onClick={handleAddGroupItem}
+            disabled={selectedItemData ? false : true}
+          >
             <AddIcon />
           </IconButton>
         ),
       },
     ],
-    [handleAddGroupItem]
+    [handleAddGroupItem, selectedItemData]
   );
 
   const table = useMaterialReactTable({
@@ -173,12 +179,12 @@ function ItemsGrid() {
     const id = Object.keys(table.getState().rowSelection)[0];
     const selectedItem = findById(itemsTableData, id);
 
-    if (id) {
+    if (id && selectedItem) {
       dispatch(setSelectedItemData(selectedItem));
     } else {
-      dispatch(setSelectedItemData([]));
+      dispatch(setSelectedItemData(null));
     }
-  }, [dispatch, table, rowSelection, itemsTableData]);
+  }, [dispatch, table, itemsTableData, rowSelection]);
 
   // check if token is expired on compoennt mount
   useEffect(() => {

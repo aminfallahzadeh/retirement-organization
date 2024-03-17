@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   groupItemsTableData: [],
-  selectedGroupItemData: [],
+  selectedGroupItemData: null,
 };
 
 const groupItemsDataSlice = createSlice({
@@ -17,9 +17,14 @@ const groupItemsDataSlice = createSlice({
     },
     addGroupItems: (state, action) => {
       state.groupItemsTableData = [
-        ...state.groupItemsTableData,
         action.payload,
+        ...state.groupItemsTableData,
       ];
+    },
+    removeGroupItems: (state, action) => {
+      state.groupItemsTableData = state.groupItemsTableData.filter(
+        (item) => item.id !== action.payload
+      );
     },
   },
 });
@@ -28,6 +33,7 @@ export const {
   setGroupItemsTableData,
   setSelectedGroupItemData,
   addGroupItems,
+  removeGroupItems,
 } = groupItemsDataSlice.actions;
 
 export default groupItemsDataSlice.reducer;
