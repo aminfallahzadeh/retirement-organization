@@ -12,8 +12,8 @@ import { useUpdateGroupMutation } from "../slices/usersApiSlice";
 import UserButton from "./UserButton";
 
 function GroupNameInput({ setShowEditModal }) {
-  const { groupInfo } = useSelector((state) => state.userReq);
-  const [groupName, setGroupName] = useState(groupInfo?.name || "");
+  const { selectedGroupData } = useSelector((state) => state.groupsData);
+  const [groupName, setGroupName] = useState(selectedGroupData?.name || "");
 
   const [updateGroup, { isLoading }] = useUpdateGroupMutation();
   const { token } = useSelector((state) => state.auth);
@@ -27,7 +27,7 @@ function GroupNameInput({ setShowEditModal }) {
       const res = await updateGroup({
         token,
         data: {
-          "id": groupInfo?._id,
+          "id": selectedGroupData?.id,
           "groupName": groupName,
         },
       }).unwrap();
@@ -49,8 +49,8 @@ function GroupNameInput({ setShowEditModal }) {
   };
 
   useEffect(() => {
-    setGroupName(groupInfo?.name);
-  }, [groupInfo]);
+    setGroupName(selectedGroupData.name);
+  }, [selectedGroupData]);
 
   const content = (
     <section className="formContainer flex-col flex-center">
@@ -74,7 +74,7 @@ function GroupNameInput({ setShowEditModal }) {
           onClickFn={updateGroupHandler}
           variant={"outline-success"}
           icon={"done"}
-          disabled={groupName === groupInfo?.name || !groupName}
+          disabled={groupName === selectedGroupData?.name || !groupName}
         >
           ذخیره
         </UserButton>
