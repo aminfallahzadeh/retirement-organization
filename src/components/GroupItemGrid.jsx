@@ -48,10 +48,13 @@ function GroupItemGrid() {
     data: groupItems,
     isSuccess,
     isLoading,
+    isFetching,
+    refetch,
   } = useGetGroupItemsQuery({ token, groupId: selectedGroupData?.id });
 
   // trigger the fetch
   useEffect(() => {
+    refetch();
     if (isSuccess) {
       const data = groupItems.itemList.map((item) => ({
         id: item.id,
@@ -60,7 +63,7 @@ function GroupItemGrid() {
 
       dispatch(setGroupItemsTableData(data));
     }
-  }, [groupItems, isSuccess, dispatch]);
+  }, [groupItems, isSuccess, dispatch, refetch]);
 
   const columns = useMemo(
     () => [
@@ -145,9 +148,9 @@ function GroupItemGrid() {
 
   const content = (
     <>
-      {isLoading ? (
+      {isLoading || isFetching ? (
         <p className="skeleton">
-          <Skeleton count={3} />
+          <Skeleton count={5} />
         </p>
       ) : (
         <MaterialReactTable table={table} />

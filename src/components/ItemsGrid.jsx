@@ -44,9 +44,16 @@ function ItemsGrid() {
 
   const dispatch = useDispatch();
 
-  const { data: items, isLoading, isSuccess } = useGetItemsQuery(token);
+  const {
+    data: items,
+    isLoading,
+    isFetching,
+    isSuccess,
+    refetch,
+  } = useGetItemsQuery(token);
 
   useEffect(() => {
+    refetch();
     if (isSuccess) {
       const data = items.itemList.map((item) => ({
         id: item.id,
@@ -59,7 +66,7 @@ function ItemsGrid() {
 
       dispatch(setItemsTableData(filteredData));
     }
-  }, [items, isSuccess, dispatch, groupItemsTableData]);
+  }, [items, isSuccess, dispatch, groupItemsTableData, refetch]);
 
   const columns = useMemo(
     () => [
@@ -143,9 +150,9 @@ function ItemsGrid() {
 
   return (
     <>
-      {isLoading ? (
+      {isLoading || isFetching ? (
         <p className="skeleton">
-          <Skeleton count={3} />
+          <Skeleton count={5} />
         </p>
       ) : (
         <MaterialReactTable table={table} />
