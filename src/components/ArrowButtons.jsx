@@ -41,11 +41,18 @@ function ArrowButtons() {
   const saveChangesHandler = async () => {
     try {
       const groupID = selectedGroupData?.id;
+      console.log(groupID);
       const deleteRes = await deleteGroupItems({
         token,
         groupID,
       }).unwrap();
       console.log(deleteRes);
+      toast.success(deleteRes.message, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
       try {
         const data = groupItemsTableData.map((item) => ({
           "id": "",
@@ -76,6 +83,12 @@ function ArrowButtons() {
       }
     } catch (err) {
       console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     }
   };
 

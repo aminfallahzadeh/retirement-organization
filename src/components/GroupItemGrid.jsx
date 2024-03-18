@@ -58,12 +58,6 @@ function GroupItemGrid() {
         name: item.itemName,
       }));
 
-      // console.log(data);
-
-      // const filteredData = data.filter(
-      //   (a) => !itemsData.map((b) => b.name).includes(a.name)
-      // );
-
       dispatch(setGroupItemsTableData(data));
     }
   }, [groupItems, isSuccess, dispatch]);
