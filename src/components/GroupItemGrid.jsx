@@ -57,7 +57,7 @@ function GroupItemGrid() {
     refetch();
     if (isSuccess) {
       const data = groupItems.itemList.map((item) => ({
-        id: item.id,
+        id: item.itemID,
         name: item.itemName,
       }));
 

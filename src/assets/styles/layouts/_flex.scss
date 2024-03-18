@@ -2,6 +2,13 @@
     display: flex;
     column-gap: 15px;
 
+    &--grow {
+        & > * {
+            flex-grow: 1;
+            width: 100%;
+        }
+    }
+
     &--grow-second > :last-child {
         flex-grow: 1;
     }
@@ -36,4 +43,8 @@
 .flex-right {
     justify-content: right;
     align-items: center;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
 }

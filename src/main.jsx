@@ -19,8 +19,13 @@ import store from "./store";
 
 // component imports
 import App from "./App.jsx";
+
+// pages
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login.jsx";
+import Error from "./pages/Error";
+
+// screens
 import CreateGroupScreen from "./screens/CreateGroupScreen";
 import RetirementAffairsScreen from "./screens/RetirementAffairsScreen.jsx";
 import GroupsScreen from "./screens/GroupsScreen";
@@ -28,35 +33,41 @@ import UsersScreen from "./screens/UsersScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/retirement-organization/" element={<App />}>
-      <Route
-        index={true}
-        path="/retirement-organization/"
-        element={<Login />}
-      />
+    <>
+      <Route path="/retirement-organization/" element={<App />}>
+        <Route
+          index={true}
+          path="/retirement-organization/"
+          element={<Login />}
+        />
 
-      <Route
-        path="/retirement-organization/dashboard"
-        element={<Dashboard />}
-      />
+        <Route
+          path="/retirement-organization/dashboard"
+          element={<Dashboard />}
+        />
 
-      <Route
-        path="/retirement-organization/affairs"
-        element={<RetirementAffairsScreen />}
-      />
+        <Route
+          path="/retirement-organization/affairs"
+          element={<RetirementAffairsScreen />}
+        />
 
-      <Route
-        path="/retirement-organization/groups"
-        element={<GroupsScreen />}
-      />
+        <Route
+          path="/retirement-organization/groups"
+          element={<GroupsScreen />}
+        />
 
-      <Route path="/retirement-organization/users" element={<UsersScreen />} />
+        <Route
+          path="/retirement-organization/users"
+          element={<UsersScreen />}
+        />
 
-      <Route
-        path="/retirement-organization/create-group"
-        element={<CreateGroupScreen />}
-      />
-    </Route>
+        <Route
+          path="/retirement-organization/create-group"
+          element={<CreateGroupScreen />}
+        />
+      </Route>
+      <Route path="*" element={<Error />} />
+    </>
   )
 );
 

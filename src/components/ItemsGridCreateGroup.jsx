@@ -2,21 +2,30 @@
 import { useMemo, useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefresh";
 
+// rrd imports
+import { useNavigate } from "react-router-dom";
+
 // helpers
-import { convertToPersianNumber, findById } from "../helper.js";
+import { convertToPersianNumber } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
+// components
+import UserButton from "./UserButton";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { useGetItemsQuery } from "../slices/usersApiSlice";
 import {
-  setSelectedItemData,
-  setItemsTableData,
-} from "../slices/itemsDataSlice";
+  useGetItemsQuery,
+  useInsertGroupMutation,
+  useDeleteGroupItemsMutation,
+  useInsertGroupItemMutation,
+} from "../slices/usersApiSlice";
+import { setItemsTableData } from "../slices/itemsDataSlice";
 
 // library imports
+import { toast } from "react-toastify";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -31,12 +40,21 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-function ItemsGrid() {
+function ItemsGridCreateGroup({ groupName }) {
+  const [addedItems, setAddedItems] = useState([]);
   const { token } = useSelector((state) => state.auth);
+
+  const navigate = useNavigate();
+
+  const [insertGroup, { isLoading: isCreating }] = useInsertGroupMutation();
+  const [deleteGroupItems, { isLoading: isDeleting }] =
+    useDeleteGroupItemsMutation();
+  const [insertGroupItem, { isLoading: isInserting }] =
+    useInsertGroupItemMutation();
 
   // access the data from redux store
   const { itemsTableData } = useSelector((state) => state.itemsData);
-  const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
+  //   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
 
   const refreshTokenHandler = useRefreshToken();
 
@@ -52,6 +70,61 @@ function ItemsGrid() {
     refetch,
   } = useGetItemsQuery(token);
 
+  const handleAddItem = async () => {
+    try {
+      const createGroupRes = await insertGroup({
+        token,
+        data: {
+          "id": "",
+          groupName,
+          "isdeleted": false,
+        },
+      }).unwrap();
+      console.log(createGroupRes);
+
+      try {
+        const groupID = createGroupRes.itemList[0].id;
+        console.log(groupID);
+        const deleteRes = await deleteGroupItems({
+          token,
+          groupID,
+        }).unwrap();
+        console.log(deleteRes);
+        try {
+          console.log(groupID);
+          const data = addedItems.map((item) => ({
+            "id": "",
+            "itemID": item.id,
+            "itemName": "",
+            groupID,
+          }));
+          console.log(data);
+          const insertRes = await insertGroupItem({
+            token,
+            data,
+          }).unwrap();
+          console.log(insertRes);
+          toast.success(insertRes.message, {
+            autoClose: 2000,
+          });
+          navigate("/retirement-organization/groups");
+        } catch (err) {
+          console.log(err);
+          toast.error(err?.data?.message || err.error, {
+            autoClose: 2000,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     refetch();
     if (isSuccess) {
@@ -60,11 +133,7 @@ function ItemsGrid() {
         name: item.itemName,
       }));
 
-      const filteredData = data.filter(
-        (a) => !groupItemsTableData.map((b) => b.name).includes(a.name)
-      );
-
-      dispatch(setItemsTableData(filteredData));
+      dispatch(setItemsTableData(data));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, isSuccess, dispatch, refetch]);
@@ -92,22 +161,24 @@ function ItemsGrid() {
     columns,
     data: itemsTableData,
     positionGlobalFilter: "left",
+    enableRowSelection: true,
     initialState: {
       density: "compact",
       showGlobalFilter: true,
       pagination: { pageIndex: 0, pageSize: 7 },
     },
-    muiTableBodyRowProps: ({ row }) => ({
-      //implement row selection click events manually
-      onClick: () =>
-        setRowSelection(() => ({
-          [row.id]: true,
-        })),
-      selected: rowSelection[row.id],
-      sx: {
-        cursor: "pointer",
-      },
-    }),
+    renderTopToolbarCustomActions: () => (
+      <div>
+        <UserButton
+          variant="outline-success"
+          icon={"done"}
+          onClickFn={handleAddItem}
+          isLoading={isCreating || isDeleting || isInserting}
+        >
+          &nbsp; ذخیره
+        </UserButton>
+      </div>
+    ),
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
@@ -133,15 +204,13 @@ function ItemsGrid() {
   });
 
   useEffect(() => {
-    const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedItem = findById(itemsTableData, id);
+    const selectedRows = table.getSelectedRowModel().rows;
+    setAddedItems(selectedRows.map((row) => row.original));
+  }, [table, rowSelection]);
 
-    if (id && selectedItem) {
-      dispatch(setSelectedItemData(selectedItem));
-    } else {
-      dispatch(setSelectedItemData(null));
-    }
-  }, [dispatch, table, rowSelection, itemsTableData]);
+  useEffect(() => {
+    console.log(addedItems);
+  }, [addedItems]);
 
   // check if token is expired on compoennt mount
   useEffect(() => {
@@ -162,4 +231,4 @@ function ItemsGrid() {
   );
 }
 
-export default ItemsGrid;
+export default ItemsGridCreateGroup;

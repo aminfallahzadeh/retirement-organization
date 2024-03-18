@@ -6,12 +6,11 @@
 @import "base/typography";
 @import "base/utilities";
 
+@import "pages/dashboard";
 @import "pages/error";
 @import "pages/login";
 
 @import "components/captcha";
-@import "components/main";
-@import "components/btn";
 @import "components/input";
 @import "components/topnav";
 @import "components/sidebar";
@@ -23,15 +22,13 @@
 @import "layouts/flex";
 
 @import "components/skeleton";
-
-@import "components/pensionersAffairs";
+@import "components/title";
 
 @import "components/NavDropdown";
 @import "components/ProfilePicture";
-@import "components/CartableGrid";
 @import "components/RetiredInfoSection";
 @import "components/RetiredHokmInfoModal";
 @import "components/RetiredHokmInfoModalFormA";
-@import "components/Modal";
+@import "components/modal";
 @import "components/PersianClock";
 @import "components/PersianDateTime";

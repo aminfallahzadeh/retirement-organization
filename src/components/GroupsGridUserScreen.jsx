@@ -65,7 +65,8 @@ function GroupsGridUserScreen() {
         },
       });
     }
-  }, [groups, isSuccess, dispatch, error, userGroupsTableData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groups, isSuccess, dispatch, error]);
 
   const columns = useMemo(
     () => [

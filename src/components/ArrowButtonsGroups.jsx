@@ -34,9 +34,9 @@ function ArrowButtonsGroups() {
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
   const { token } = useSelector((state) => state.auth);
 
-  const [insertGroupItem] = useInsertGroupItemMutation();
   const [deleteGroupItems, { isLoading: isDeleting }] =
     useDeleteGroupItemsMutation();
+  const [insertGroupItem] = useInsertGroupItemMutation();
 
   const saveChangesHandler = async () => {
     try {
@@ -47,12 +47,6 @@ function ArrowButtonsGroups() {
         groupID,
       }).unwrap();
       console.log(deleteRes);
-      toast.success(deleteRes.message, {
-        autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
-      });
       try {
         const data = groupItemsTableData.map((item) => ({
           "id": "",
@@ -68,26 +62,17 @@ function ArrowButtonsGroups() {
         console.log(insertRes);
         toast.success(insertRes.message, {
           autoClose: 2000,
-          style: {
-            fontSize: "18px",
-          },
         });
       } catch (err) {
         console.log(err);
         toast.error(err?.data?.message || err.error, {
           autoClose: 2000,
-          style: {
-            fontSize: "18px",
-          },
         });
       }
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
       });
     }
   };

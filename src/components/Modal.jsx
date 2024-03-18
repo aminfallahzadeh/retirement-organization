@@ -19,7 +19,7 @@ function Modal({ title, closeModal, children }) {
 
         <div className="Modal__body">{children}</div>
       </section>
-      <div className="Overlay"></div>
+      <div className="overlay"></div>
     </>
   );
 
