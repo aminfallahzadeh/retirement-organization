@@ -96,7 +96,7 @@ function GroupItemGrid() {
     initialState: {
       density: "compact",
       showGlobalFilter: true,
-      pagination: { pageIndex: 0, pageSize: 8 },
+      pagination: { pageIndex: 0, pageSize: 7 },
     },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
@@ -113,7 +113,8 @@ function GroupItemGrid() {
       color: "success",
       variant: "outlined",
       showRowsPerPage: false,
-      dir: "rtl",
+      siblingCount: 0,
+      size: "small",
       renderItem: (item) => (
         <PaginationItem
           {...item}

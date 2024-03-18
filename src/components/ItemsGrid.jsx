@@ -10,10 +10,7 @@ import { defaultTableOptions } from "../utils.js";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import {
-  useGetItemsQuery,
-  useInsertGroupItemMutation,
-} from "../slices/usersApiSlice";
+import { useGetItemsQuery } from "../slices/usersApiSlice";
 import {
   setSelectedItemData,
   setItemsTableData,
@@ -42,8 +39,6 @@ function ItemsGrid() {
 
   const [rowSelection, setRowSelection] = useState({});
 
-  const [inserGroupItem] = useInsertGroupItemMutation();
-
   const dispatch = useDispatch();
 
   const { data: items, isLoading, isSuccess } = useGetItemsQuery(token);
@@ -58,27 +53,6 @@ function ItemsGrid() {
       dispatch(setItemsTableData(data));
     }
   }, [items, isSuccess, dispatch]);
-
-  // const insertGroupItemHandler = async () => {
-  //   try {
-  //     const itemID = itemInfo?._id;
-  //     const groupID = groupInfo._id;
-  //     const res = await inserGroupItem({
-  //       token,
-  //       data: [
-  //         {
-  //           "id": "",
-  //           itemID,
-  //           "itemName": "",
-  //           groupID,
-  //         },
-  //       ],
-  //     });
-  //     console.log(res);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   const columns = useMemo(
     () => [
@@ -109,7 +83,7 @@ function ItemsGrid() {
     initialState: {
       density: "compact",
       showGlobalFilter: true,
-      pagination: { pageIndex: 0, pageSize: 8 },
+      pagination: { pageIndex: 0, pageSize: 7 },
     },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
@@ -126,6 +100,8 @@ function ItemsGrid() {
       color: "success",
       variant: "outlined",
       showRowsPerPage: false,
+      siblingCount: 0,
+      size: "small",
       renderItem: (item) => (
         <PaginationItem
           {...item}
