@@ -15,10 +15,25 @@ const groupsUserDataSlice = createSlice({
     setSelectedGroupUserData: (state, action) => {
       state.selectedGroupUserData = action.payload;
     },
+    addGroupsToTable: (state, action) => {
+      state.groupsUserTableData = [
+        action.payload,
+        ...state.groupsUserTableData,
+      ];
+    },
+    removeGroupsFromTable: (state, action) => {
+      state.groupsUserTableData = state.groupsUserTableData.filter(
+        (item) => item.id !== action.payload
+      );
+    },
   },
 });
 
-export const { setGroupsUserTableData, setSelectedGroupUserData } =
-  groupsUserDataSlice.actions;
+export const {
+  setGroupsUserTableData,
+  setSelectedGroupUserData,
+  addGroupsToTable,
+  removeGroupsFromTable,
+} = groupsUserDataSlice.actions;
 
 export default groupsUserDataSlice.reducer;

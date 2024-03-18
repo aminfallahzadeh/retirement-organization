@@ -143,7 +143,7 @@ function GroupItemGrid() {
     refreshTokenHandler();
   }, [refreshTokenHandler]);
 
-  return (
+  const content = (
     <>
       {isLoading ? (
         <p className="skeleton">
@@ -154,6 +154,8 @@ function GroupItemGrid() {
       )}
     </>
   );
+
+  return content;
 }
 
 export default GroupItemGrid;

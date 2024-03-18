@@ -3,8 +3,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "./slices/apiSlice";
 import authSliceReducer from "./slices/authSlice";
 import captchaSliceReducer from "./slices/captchaSlice";
-import userReqSliceReducer from "./slices/userReqSlice";
-import statusSliceReducer from "./slices/statusSlice";
 import retiredStateSliceReducer from "./slices/retiredStateSlice";
 import groupsDataSliceReducer from "./slices/groupsDataSlice";
 import itemsDataSliceReducer from "./slices/itemsDataSlice";
@@ -18,8 +16,6 @@ const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authSliceReducer,
     captcha: captchaSliceReducer,
-    status: statusSliceReducer,
-    userReq: userReqSliceReducer,
     retiredState: retiredStateSliceReducer,
     groupsData: groupsDataSliceReducer,
     itemsData: itemsDataSliceReducer,

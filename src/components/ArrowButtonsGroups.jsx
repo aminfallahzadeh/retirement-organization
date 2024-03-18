@@ -22,7 +22,7 @@ import {
 } from "../slices/itemsDataSlice";
 import { addGroupItems, removeGroupItems } from "../slices/groupItemsDataSlice";
 
-function ArrowButtons() {
+function ArrowButtonsGroups() {
   const dispatch = useDispatch();
 
   const { selectedItemData } = useSelector((state) => state.itemsData);
@@ -102,7 +102,7 @@ function ArrowButtons() {
     dispatch(removeGroupItems(id));
   };
 
-  return (
+  const content = (
     <div
       style={{
         display: "flex",
@@ -137,6 +137,8 @@ function ArrowButtons() {
       </div>
     </div>
   );
+
+  return content;
 }
 
-export default ArrowButtons;
+export default ArrowButtonsGroups;

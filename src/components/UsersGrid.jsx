@@ -30,6 +30,7 @@ import UserEditForm from "./UserEditForm";
 import UserButton from "./UserButton";
 import GroupsGridUserScreen from "./GroupsGridUserScreen";
 import UserGroupsGrid from "./UserGroupsGrid";
+import ArrowButtonsUsers from "./ArrowButtonsUsers";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -47,7 +48,7 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-function UserGrid() {
+function UsersGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
   const refreshTokenHandler = useRefreshToken();
@@ -58,7 +59,6 @@ function UserGrid() {
   const dispatch = useDispatch();
 
   // access the data from redux store
-  // const { userInfo, userData } = useSelector((state) => state.userReq);
   const { usersTableData } = useSelector((state) => state.usersData);
 
   const {
@@ -286,7 +286,7 @@ function UserGrid() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
+  const content = (
     <>
       {isLoading ? (
         <p className="skeleton">
@@ -308,6 +308,7 @@ function UserGrid() {
             >
               <div className="flex-row">
                 <GroupsGridUserScreen />
+                <ArrowButtonsUsers />
                 <UserGroupsGrid />
               </div>
             </Modal>
@@ -318,6 +319,8 @@ function UserGrid() {
       )}
     </>
   );
+
+  return content;
 }
 
-export default UserGrid;
+export default UsersGrid;

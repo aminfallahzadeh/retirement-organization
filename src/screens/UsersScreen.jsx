@@ -1,11 +1,11 @@
 // components
-import UserGrid from "../components/UserGrid";
+import UsersGrid from "../components/UsersGrid";
 
 function UsersScreen() {
   return (
     <div className="main">
       <div className="dashboard__body--topGrid">
-        <UserGrid />
+        <UsersGrid />
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 import { useMemo, useState, useEffect } from "react";
 
 // helpers
-import { convertToPersianNumber } from "../helper.js";
+import { convertToPersianNumber, findById } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -10,8 +10,10 @@ import { defaultTableOptions } from "../utils.js";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetUserGroupsQuery } from "../slices/usersApiSlice";
-// import { setUserGroupsData } from "../slices/userReqSlice.js";
-import { setUserGroupsTableData } from "../slices/userGroupsDataSlice.js";
+import {
+  setUserGroupsTableData,
+  setSelectedUserGroupData,
+} from "../slices/userGroupsDataSlice.js";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -120,7 +122,18 @@ function UserGroupsGrid() {
     state: { rowSelection },
   });
 
-  return (
+  useEffect(() => {
+    const id = Object.keys(table.getState().rowSelection)[0];
+    const selectedGroup = findById(userGroupsTableData, id);
+
+    if (id && selectedGroup) {
+      dispatch(setSelectedUserGroupData(selectedGroup));
+    } else {
+      dispatch(setSelectedUserGroupData(null));
+    }
+  }, [dispatch, table, rowSelection, userGroupsTableData]);
+
+  const content = (
     <>
       {isLoading ? (
         <p className="skeleton">
@@ -131,6 +144,8 @@ function UserGroupsGrid() {
       )}
     </>
   );
+
+  return content;
 }
 
 export default UserGroupsGrid;

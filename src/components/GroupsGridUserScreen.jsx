@@ -11,7 +11,6 @@ import { defaultTableOptions } from "../utils.js";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
-// import { setGroupInfoUser, setGroupsData } from "../slices/userReqSlice";
 import {
   setGroupsUserTableData,
   setSelectedGroupUserData,

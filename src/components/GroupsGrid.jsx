@@ -22,7 +22,7 @@ import GroupEditForm from "./GroupEditForm";
 import UserButton from "./UserButton";
 import ItemsGrid from "./ItemsGrid";
 import GroupItemGrid from "./GroupItemGrid";
-import ArrowButtons from "./ArrowButtons";
+import ArrowButtonsGroups from "./ArrowButtonsGroups";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -304,7 +304,7 @@ function GroupsGrid() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
+  const content = (
     <>
       {isLoading ? (
         <p className="skeleton">
@@ -350,9 +350,9 @@ function GroupsGrid() {
               title={"ویرایش آیتم ها"}
               closeModal={() => setShowEditItemsModal(false)}
             >
-              <div className="EditGroupItemsModal">
+              <div className="flex-row">
                 <ItemsGrid />
-                <ArrowButtons />
+                <ArrowButtonsGroups />
                 <GroupItemGrid />
               </div>
             </Modal>
@@ -363,6 +363,8 @@ function GroupsGrid() {
       )}
     </>
   );
+
+  return content;
 }
 
 export default GroupsGrid;

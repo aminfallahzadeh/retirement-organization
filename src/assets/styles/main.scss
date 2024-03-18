@@ -18,9 +18,10 @@
 @import "components/topnav";
 @import "components/sidebar";
 @import "components/table";
-@import "components/grid";
 @import "components/formContainer";
 @import "components/formPic";
+
+@import "layouts/grid";
 
 @import "components/skeleton";
 
@@ -35,5 +36,4 @@
 @import "components/Modal";
 @import "components/GroupsGrid";
 @import "components/PersianClock";
-@import "components/EditGroupItemsModal";
 @import "components/PersianDateTime";

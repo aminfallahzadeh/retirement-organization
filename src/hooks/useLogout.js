@@ -8,15 +8,6 @@ import useRefreshToken from "../hooks/useRefresh";
 import { logout } from "../slices/authSlice";
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { setGroupItemsData, setItemsData } from "../slices/userReqSlice";
-import {
-  setGetCartableStatus,
-  setGetGroupStatus,
-  setGetItemsStatus,
-  setGetUserStatus,
-  setGetUserGroupsStatus,
-  setGetPensionerSectionStatus,
-} from "../slices/statusSlice";
 
 const useLogout = () => {
   const refreshTokenHandler = useRefreshToken();
@@ -36,14 +27,6 @@ const useLogout = () => {
         token,
       });
       dispatch(logout());
-      dispatch(setGetGroupStatus(false));
-      dispatch(setGetItemsStatus(false));
-      dispatch(setGetUserStatus(false));
-      dispatch(setGetUserGroupsStatus(false));
-      dispatch(setGetPensionerSectionStatus(false));
-      dispatch(setGetCartableStatus(false));
-      dispatch(setGroupItemsData([]));
-      dispatch(setItemsData([]));
       toast.success(res.data.message, {
         autoClose: 2000,
         style: {
