@@ -34,6 +34,7 @@ import {
 function ItemsGrid() {
   const { token } = useSelector((state) => state.auth);
   const { itemsTableData } = useSelector((state) => state.itemsData);
+  const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
 
   const refreshTokenHandler = useRefreshToken();
 
@@ -50,9 +51,13 @@ function ItemsGrid() {
         name: item.itemName,
       }));
 
-      dispatch(setItemsTableData(data));
+      const filteredData = data.filter(
+        (a) => !groupItemsTableData.map((b) => b.name).includes(a.name)
+      );
+
+      dispatch(setItemsTableData(filteredData));
     }
-  }, [items, isSuccess, dispatch]);
+  }, [items, isSuccess, dispatch, groupItemsTableData]);
 
   const columns = useMemo(
     () => [

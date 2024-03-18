@@ -56,17 +56,17 @@ function CreateGroupScreen() {
         <hr />
       </div>
 
-      <div className="main--rflex">
-        <form className="inputBox ">
+      <div className="formContainer flex-row flex-right">
+        <form className="inputBox__form">
           <input
             type="text"
-            className="input field input--dark"
+            className="inputBox__form--input inputBox__form--input-height-40"
             required
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
             id="groupName"
           />
-          <label className="label" htmlFor="groupName">
+          <label className="inputBox__form--label" htmlFor="groupName">
             نام گروه
           </label>
         </form>
