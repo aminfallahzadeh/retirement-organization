@@ -11,8 +11,11 @@ import { defaultTableOptions } from "../utils.js";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetUserQuery } from "../slices/usersApiSlice";
-import { setUserInfo, setUserData } from "../slices/userReqSlice.js";
-import { setGetUserGroupsStatus } from "../slices/statusSlice.js";
+
+import {
+  setUsersTableData,
+  setSelectedUserData,
+} from "../slices/usersDataSlice.js";
 
 // mui imports
 import { IconButton } from "@mui/material";
@@ -24,9 +27,13 @@ import {
 // components
 import Modal from "./Modal";
 import UserEditForm from "./UserEditForm";
+import UserButton from "./UserButton";
+import GroupsGridUserScreen from "./GroupsGridUserScreen";
+import UserGroupsGrid from "./UserGroupsGrid";
 
 // library imports
 import { PaginationItem } from "@mui/material";
+import { toast } from "react-toastify";
 import {
   ChevronLeft,
   ChevronRight,
@@ -45,38 +52,75 @@ function UserGrid() {
   const { token } = useSelector((state) => state.auth);
   const refreshTokenHandler = useRefreshToken();
 
-  const [showEditNameModal, setShowEditNameModal] = useState(false);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
+  const [showEditUserGroupsModal, setShowEditUserGroupsModal] = useState(false);
 
   const dispatch = useDispatch();
 
   // access the data from redux store
-  const { userInfo, userData } = useSelector((state) => state.userReq);
+  // const { userInfo, userData } = useSelector((state) => state.userReq);
+  const { usersTableData } = useSelector((state) => state.usersData);
 
-  const { data: users, isLoading, isSuccess } = useGetUserQuery(token);
+  const {
+    data: users,
+    isLoading,
+    isFetching,
+    isSuccess,
+    error,
+    refetch,
+  } = useGetUserQuery(token);
 
   const handleShowEditNameModal = () => {
-    setShowEditNameModal(true);
+    setShowEditUserModal(true);
+  };
+
+  const handleShowEditUserGroupsModal = () => {
+    setShowEditUserGroupsModal(true);
+  };
+
+  const handleRefresh = () => {
+    refetch();
   };
 
   useEffect(() => {
+    refetch();
     if (isSuccess) {
       const data = users.itemList.map((user) => ({
-        _id: user.id,
+        id: user.id,
         isActive: user.isActive === true ? "فعال" : "غیر فعال",
         lname: user.lastName,
         fname: user.firstName,
         username: user.username,
       }));
-
-      dispatch(setUserData(data));
+      dispatch(setUsersTableData(data));
+    } else if (error) {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     }
-  }, [users, isSuccess, dispatch]);
+
+    return () => {
+      dispatch(setUsersTableData([]));
+    };
+  }, [
+    users,
+    isSuccess,
+    dispatch,
+    error,
+    refetch,
+    showEditUserModal,
+    showEditUserGroupsModal,
+  ]);
 
   const columns = useMemo(
     () => [
       {
         accessorKey: "username",
         header: "نام کاربری",
+        size: 50,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -91,6 +135,7 @@ function UserGrid() {
       {
         accessorKey: "fname",
         header: "نام",
+        size: 50,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -105,6 +150,7 @@ function UserGrid() {
       {
         accessorKey: "lname",
         header: "نام خانوادگی",
+        size: 50,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -119,6 +165,7 @@ function UserGrid() {
       {
         accessorKey: "isActive",
         header: "وضعیت",
+        size: 50,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -155,7 +202,7 @@ function UserGrid() {
           sx: { color: "green", fontFamily: "sahel" },
         },
         Cell: () => (
-          <IconButton color="primary">
+          <IconButton color="primary" onClick={handleShowEditUserGroupsModal}>
             <ChecklistRtlIcon />
           </IconButton>
         ),
@@ -167,7 +214,7 @@ function UserGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: userData,
+    data: usersTableData,
     initialState: {
       density: "compact",
     },
@@ -182,12 +229,22 @@ function UserGrid() {
         cursor: "pointer",
       },
     }),
-
+    renderTopToolbarCustomActions: () => (
+      <div>
+        <UserButton
+          variant="outline-success"
+          icon={"refresh"}
+          onClickFn={handleRefresh}
+          isLoading={isFetching}
+        >
+          بروز رسانی
+        </UserButton>
+      </div>
+    ),
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
       showRowsPerPage: false,
-      dir: "rtl",
       renderItem: (item) => (
         <PaginationItem
           {...item}
@@ -201,33 +258,27 @@ function UserGrid() {
         />
       ),
     },
-    getRowId: (originalRow) => originalRow._id,
+    getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedUserInfo = findById(userData, id);
+    const selectedUserInfo = findById(usersTableData, id);
     console.log(selectedUserInfo);
 
     if (id) {
-      dispatch(setUserInfo(selectedUserInfo));
+      dispatch(setSelectedUserData(selectedUserInfo));
     } else {
-      dispatch(setUserInfo(null));
+      dispatch(setSelectedUserData([]));
     }
 
-    if (userInfo) {
-      dispatch(setGetUserGroupsStatus(true));
-    } else {
-      dispatch(setGetUserGroupsStatus(false));
-    }
     return () => {
-      // Cleanup function to clear userInfo
-      dispatch(setUserInfo(null));
-      dispatch(setGetUserGroupsStatus(false));
+      // Cleanup function to clear selected user
+      dispatch(setSelectedUserData([]));
     };
-  }, [dispatch, table, rowSelection, userInfo, userData]);
+  }, [dispatch, table, rowSelection, usersTableData]);
 
   // check if token is expired on compoennt mount
   useEffect(() => {
@@ -243,14 +294,24 @@ function UserGrid() {
         </p>
       ) : (
         <>
-          {showEditNameModal && (
+          {showEditUserModal ? (
             <Modal
               title={"ویرایش اطلاعات کاربر"}
-              closeModal={() => setShowEditNameModal(false)}
+              closeModal={() => setShowEditUserModal(false)}
             >
               <UserEditForm />
             </Modal>
-          )}
+          ) : showEditUserGroupsModal ? (
+            <Modal
+              title={"ویرایش گروه های کاربر"}
+              closeModal={() => setShowEditUserGroupsModal(false)}
+            >
+              <div className="flex-row">
+                <GroupsGridUserScreen />
+                <UserGroupsGrid />
+              </div>
+            </Modal>
+          ) : null}
 
           <MaterialReactTable table={table} />
         </>

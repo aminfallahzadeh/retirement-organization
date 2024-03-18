@@ -10,7 +10,8 @@ import { defaultTableOptions } from "../utils.js";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetUserGroupsQuery } from "../slices/usersApiSlice";
-import { setUserGroupsData } from "../slices/userReqSlice.js";
+// import { setUserGroupsData } from "../slices/userReqSlice.js";
+import { setUserGroupsTableData } from "../slices/userGroupsDataSlice.js";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -32,29 +33,27 @@ function UserGroupsGrid() {
   const dispatch = useDispatch();
 
   // access selected row info
-  const { userInfo } = useSelector((state) => state.userReq);
   const { token } = useSelector((state) => state.auth);
+  const { selectedUserData } = useSelector((state) => state.usersData);
 
   // access the data from redux store
-  const { userGroupsData } = useSelector((state) => state.userReq);
+  const { userGroupsTableData } = useSelector((state) => state.userGroupsData);
 
   // fetch data from the API
   const {
     data: userGroups,
     isSuccess,
     isLoading,
-  } = useGetUserGroupsQuery({ token, userId: userInfo?._id });
+  } = useGetUserGroupsQuery({ token, userId: selectedUserData?.id });
 
   // trigger the fetch
   useEffect(() => {
     if (isSuccess) {
       const data = userGroups.itemList.map((item) => ({
-        _id: item.id,
+        id: item.id,
         name: item.groupName,
       }));
-
-      console.log(data);
-      dispatch(setUserGroupsData(data));
+      dispatch(setUserGroupsTableData(data));
     }
   }, [userGroups, isSuccess, dispatch]);
 
@@ -63,13 +62,12 @@ function UserGroupsGrid() {
       {
         accessorKey: "name",
         header: "نام گروه",
+        size: 300,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
@@ -80,14 +78,30 @@ function UserGroupsGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: userGroupsData,
-    enableRowSelection: true,
-    enableMultiRowSelection: false,
+    data: userGroupsTableData,
+    positionGlobalFilter: "left",
+    initialState: {
+      density: "compact",
+      showGlobalFilter: true,
+      pagination: { pageIndex: 0, pageSize: 7 },
+    },
+    muiTableBodyRowProps: ({ row }) => ({
+      //implement row selection click events manually
+      onClick: () =>
+        setRowSelection(() => ({
+          [row.id]: true,
+        })),
+      selected: rowSelection[row.id],
+      sx: {
+        cursor: "pointer",
+      },
+    }),
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
       showRowsPerPage: false,
-      dir: "rtl",
+      siblingCount: 0,
+      size: "small",
       renderItem: (item) => (
         <PaginationItem
           {...item}
@@ -101,7 +115,7 @@ function UserGroupsGrid() {
         />
       ),
     },
-    getRowId: (originalRow) => originalRow._id,
+    getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });

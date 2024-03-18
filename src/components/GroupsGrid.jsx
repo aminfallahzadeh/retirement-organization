@@ -293,6 +293,7 @@ function GroupsGrid() {
     }
 
     return () => {
+      // Cleanup function to clear selected group
       dispatch(setSelectedGroupData([]));
     };
   }, [dispatch, table, rowSelection, groupsTableData]);

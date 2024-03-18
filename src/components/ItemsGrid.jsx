@@ -33,6 +33,8 @@ import {
 
 function ItemsGrid() {
   const { token } = useSelector((state) => state.auth);
+
+  // access the data from redux store
   const { itemsTableData } = useSelector((state) => state.itemsData);
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
 
@@ -67,14 +69,11 @@ function ItemsGrid() {
         size: 300,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-        align: "right",
       },
     ],
     []
@@ -134,7 +133,7 @@ function ItemsGrid() {
     } else {
       dispatch(setSelectedItemData(null));
     }
-  }, [dispatch, table, itemsTableData, rowSelection]);
+  }, [dispatch, table, rowSelection, itemsTableData]);
 
   // check if token is expired on compoennt mount
   useEffect(() => {

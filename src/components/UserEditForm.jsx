@@ -8,11 +8,12 @@ import { useSelector } from "react-redux";
 import UserButton from "./UserButton";
 
 function UserEditForm() {
-  const { userInfo } = useSelector((state) => state.userReq);
-  const [userName, setUserName] = useState(userInfo?.username);
-  const [fname, setFname] = useState(userInfo?.fname);
-  const [lname, setLname] = useState(userInfo?.lname);
-  const [isActive, setIsActive] = useState(userInfo?.isActive);
+  const { selectedUserData } = useSelector((state) => state.usersData);
+
+  const [userName, setUserName] = useState(selectedUserData?.username);
+  const [fname, setFname] = useState(selectedUserData?.fname);
+  const [lname, setLname] = useState(selectedUserData?.lname);
+  const [isActive, setIsActive] = useState(selectedUserData?.isActive);
 
   const handleFnameChange = (e) => {
     setFname(e.target.value);
@@ -27,11 +28,11 @@ function UserEditForm() {
   };
 
   useEffect(() => {
-    setUserName(userInfo?.username);
-    setFname(userInfo?.fname);
-    setLname(userInfo?.lname);
-    setIsActive(userInfo?.isActive);
-  }, [userInfo]);
+    setUserName(selectedUserData?.username);
+    setFname(selectedUserData?.fname);
+    setLname(selectedUserData?.lname);
+    setIsActive(selectedUserData?.isActive);
+  }, [selectedUserData]);
 
   const content = (
     <section className="formContainer flex-col flex-center">
