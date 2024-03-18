@@ -41,39 +41,3 @@
     grid-row: span 3;
     grid-column: span 3;
 }
-
-.flex-row {
-    display: flex;
-    column-gap: 15px;
-
-    &--grow-second > :last-child {
-        flex-grow: 1;
-    }
-
-    &--grow-first > :first-child {
-        flex-grow: 1;
-    }
-}
-
-.flex-col {
-    display: flex;
-    flex-direction: column;
-    row-gap: 15px;
-
-    &--grow {
-        & > * {
-            flex-grow: 1;
-            width: 100%;
-        }
-    }
-}
-
-.flex-center {
-    justify-content: center;
-    align-items: center;
-}
-
-.flex-right {
-    justify-content: right;
-    align-items: center;
-}

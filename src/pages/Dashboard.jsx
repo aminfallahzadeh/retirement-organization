@@ -1,7 +1,7 @@
 // component imports
 import CartableGrid from "../components/CartableGrid";
 
-function DashboardScreen() {
+function Dashboard() {
   return (
     <div className="main">
       <CartableGrid />
@@ -9,4 +9,4 @@ function DashboardScreen() {
   );
 }
 
-export default DashboardScreen;
+export default Dashboard;

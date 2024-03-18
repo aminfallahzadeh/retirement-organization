@@ -79,8 +79,6 @@
 		&--register {
 			text-align: center;
 			font-size: 20px;
-			display: flex;
-			flex-direction: row;
 
 			a {
 				font-weight: 500;
@@ -89,10 +87,6 @@
 				&:hover {
 					color: $color-accent-dark;
 				}
-			}
-
-			span {
-				width: 100%;
 			}
 		}
 	}

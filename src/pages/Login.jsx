@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 // component imports
 import Captcha from "../components/Captcha";
+import UserButton from "../components/UserButton";
 
 // helpers
 import { generateCaptcha } from "../helper.js";
@@ -22,8 +23,12 @@ import { useNavigate } from "react-router-dom";
 
 // library imports
 import { toast } from "react-toastify";
-import { LockClosedIcon, UserIcon } from "@heroicons/react/24/solid";
-import { Button } from "react-bootstrap";
+
+// mui imports
+import {
+  LockOutlined as LockOutlinIcon,
+  PersonOutlined as PersonOutlinedIcon,
+} from "@mui/icons-material";
 
 function Login() {
   const { captcha } = useSelector((state) => state.captcha);
@@ -51,9 +56,6 @@ function Login() {
         /* console.log(res); */
         toast.success(res.message, {
           autoClose: 2000,
-          style: {
-            fontSize: "18px",
-          },
         });
       } else if (!captcha) {
         // reset captcha after invalid input
@@ -62,26 +64,23 @@ function Login() {
         dispatch(setCaptcha(false));
         toast.error("! کد امنیتی اشتباه است", {
           autoClose: 2000,
-          style: {
-            fontSize: "18px",
-          },
         });
       }
     } catch (err) {
-      console.log(err);
+      setUsername("");
+      setPassword("");
+      dispatch(setCaptchaText(generateCaptcha(6)));
+      dispatch(setCaptchaInput(""));
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
       });
     }
   };
 
   const style = {
     position: "absolute",
-    top: "18px",
-    left: "25px",
+    top: "15px",
+    left: "20px",
   };
 
   useEffect(() => {
@@ -98,7 +97,7 @@ function Login() {
     });
   }, []);
 
-  return (
+  const content = (
     <>
       {" "}
       <video autoPlay loop className="bg" muted>
@@ -128,7 +127,7 @@ function Login() {
             <label htmlFor="user" className="inputBox__login--label">
               نام کاربری
             </label>
-            <UserIcon style={style} width={20} />
+            <PersonOutlinedIcon style={style} />
           </div>
 
           <div className="inputBox__login">
@@ -144,20 +143,22 @@ function Login() {
             <label htmlFor="pass" className="inputBox__login--label">
               کلمه عبور
             </label>
-            <LockClosedIcon style={style} width={20} />
+            <LockOutlinIcon style={style} />
           </div>
           <div className="loginContainer__box--inputBox">
             <Captcha />
           </div>
           <div className="loginContainer__box--register">
-            <Button
-              type="submit"
-              className="btn--login"
-              disabled={isLoading}
+            <UserButton
               variant="outline-light"
+              isLoading={isLoading}
+              onClickFn={handleSubmit}
+              icon={"login"}
+              size="lg"
+              fullWidth={true}
             >
-              {isLoading ? "لطفا صبر کنید " : "ورود"}
-            </Button>
+              &nbsp; ورود
+            </UserButton>
           </div>
           <div className="loginContainer__box--rememberForgot">
             <div className="loginContainer__box--rememberForgot--forgot">
@@ -168,6 +169,8 @@ function Login() {
       </form>
     </>
   );
+
+  return content;
 }
 
 export default Login;

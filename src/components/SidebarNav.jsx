@@ -3,15 +3,17 @@ import { Link } from "react-router-dom";
 
 // library imports
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+
+// mui imports
 import {
-  UserIcon,
-  UserGroupIcon,
-  CreditCardIcon,
-  BuildingStorefrontIcon,
-  AdjustmentsVerticalIcon,
-  Bars3BottomRightIcon,
-  ClipboardDocumentListIcon,
-} from "@heroicons/react/24/outline";
+  PersonOutlined as PersonOutlinedIcon,
+  GroupOutlined as GroupOutlinedIcon,
+  PaymentOutlined as PaymentOutlinedIcon,
+  HomeOutlined as HomeOutlinedIcon,
+  EqualizerOutlined as EqualizerOutlinedIcon,
+  LightbulbOutlined as LightbulbOutlinedIcon,
+  AssignmentTurnedInOutlined as AssignmentTurnedInOutlinedIcon,
+} from "@mui/icons-material";
 
 function SidebarNav() {
   return (
@@ -20,7 +22,7 @@ function SidebarNav() {
         <SubMenu
           label={
             <>
-              <UserIcon width={20} color="#00863e" />
+              <PersonOutlinedIcon sx={{ color: "#00863e" }} />
               &nbsp; &nbsp;
               <span>امور بازنشستان</span>
             </>
@@ -37,26 +39,26 @@ function SidebarNav() {
           <MenuItem> گزارشات </MenuItem>
         </SubMenu>
         <MenuItem>
-          <UserGroupIcon width={20} color="#00863e" />
+          <GroupOutlinedIcon sx={{ color: "#00863e" }} />
           &nbsp; &nbsp; امورمشتریان
         </MenuItem>
         <MenuItem>
-          <CreditCardIcon width={20} color="#00863e" />
+          <PaymentOutlinedIcon sx={{ color: "#00863e" }} />
           &nbsp; &nbsp; حقوق و دستمزد{" "}
         </MenuItem>
         <MenuItem>
-          <BuildingStorefrontIcon width={20} color="#00863e" />
+          <HomeOutlinedIcon sx={{ color: "#00863e" }} />
           &nbsp; &nbsp; اجتماعی و رفاهی
         </MenuItem>
         <MenuItem>
-          <AdjustmentsVerticalIcon width={20} color="#00863e" />
+          <EqualizerOutlinedIcon sx={{ color: "#00863e" }} />
           &nbsp; &nbsp; مدیریت سیستم{" "}
         </MenuItem>
 
         <SubMenu
           label={
             <>
-              <Bars3BottomRightIcon width={20} color="#00863e" />
+              <LightbulbOutlinedIcon sx={{ color: "#00863e" }} />
               &nbsp; &nbsp;
               <span>اطلاعات پایه</span>
             </>
@@ -71,7 +73,7 @@ function SidebarNav() {
         </SubMenu>
 
         <MenuItem>
-          <ClipboardDocumentListIcon width={20} color="#00863e" />
+          <AssignmentTurnedInOutlinedIcon sx={{ color: "#00863e" }} />
           &nbsp; &nbsp; گزارشات{" "}
         </MenuItem>
       </Menu>

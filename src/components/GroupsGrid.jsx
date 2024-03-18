@@ -324,10 +324,8 @@ function GroupsGrid() {
               title={"حذف گروه"}
               closeModal={() => setShowDeleteGroupModal(false)}
             >
-              <p className="GroupsGrid__modal--paragraph">
-                آیا از حذف این گروه اطمینان دارید؟
-              </p>
-              <div className="GroupsGrid__modal--buttons">
+              <p>آیا از حذف این گروه اطمینان دارید؟</p>
+              <div className="flex-row flex-center">
                 <UserButton
                   variant={"outline-success"}
                   isLoading={isDeleting}

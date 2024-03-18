@@ -1,8 +1,8 @@
 // react imports
 import { useState, useEffect } from "react";
 
-// library imports
-import { UserIcon } from "@heroicons/react/24/outline";
+// mui imports
+import { PersonOutlined as PersonOutlinedIcon } from "@mui/icons-material";
 
 function AffairsPersonalInfoForm({ retiredData }) {
   const [personObject, setPersonObject] = useState(retiredData);
@@ -24,7 +24,7 @@ function AffairsPersonalInfoForm({ retiredData }) {
     <form method="POST" className="grid grid--col-3 formContainer" noValidate>
       <div className="row-span-2 flex-row flex-row--grow-second">
         <div className="formPic">
-          <UserIcon width={40} />
+          <PersonOutlinedIcon />
         </div>
 
         <div className="flex-col flex-center flex-col--grow">

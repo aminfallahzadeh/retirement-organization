@@ -12,13 +12,13 @@ import {
   setCaptchaText,
 } from "../slices/captchaSlice";
 
-// library imports
-import { Button } from "react-bootstrap";
-import AutorenewIcon from "@mui/icons-material/Autorenew";
-import VpnKeyIcon from "@mui/icons-material/VpnKey";
+// conponents
+import UserButton from "./UserButton";
+
+// mui imports
+import { VpnKeyOutlined as VpnKeyOutlinedIcon } from "@mui/icons-material";
 
 function Captcha() {
-  // const [captchaText, setCaptchaText] = useState(generateCaptcha(6));
   const { userInput, captchaText } = useSelector((state) => state.captcha);
 
   const canvasRef = useRef(null);
@@ -87,13 +87,13 @@ function Captcha() {
 
   const style = {
     position: "absolute",
-    top: "18px",
-    left: "25px",
+    top: "15px",
+    left: "20px",
   };
 
   const content = (
-    <div className="captchaContainer">
-      <div className="inputBox__login inputBox__login-margin">
+    <div>
+      <div className="inputBox__login">
         <input
           type="text"
           id="captcha"
@@ -105,17 +105,21 @@ function Captcha() {
         <label htmlFor="captcha" className="inputBox__login--label">
           کد امنیتی
         </label>
-        <VpnKeyIcon style={style} />
+        <VpnKeyOutlinedIcon style={style} />
       </div>
-      <div className="captchaContainer__text">
-        <Button
-          onClick={refreshCaptcha}
-          variant="outline-light"
-          style={{ marginRight: "30px" }}
+      <div className="flex-row flex-space-between u-margin-bottom-medium">
+        <UserButton
+          variant={"outline-light"}
+          icon={"refresh"}
+          onClickFn={refreshCaptcha}
+        ></UserButton>
+
+        <canvas
+          ref={canvasRef}
+          width="200"
+          height="40"
+          className="captcha-canvas"
         >
-          <AutorenewIcon />
-        </Button>
-        <canvas ref={canvasRef} width="200" height="40">
           {captchaText}
         </canvas>
       </div>

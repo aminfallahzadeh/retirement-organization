@@ -9,6 +9,7 @@ import {
   Refresh as RefreshIcon,
   Add as AddIcon,
   Search as SearchIcon,
+  Login as LoginIcon,
 } from "@mui/icons-material";
 
 function SaveButton({
@@ -16,13 +17,20 @@ function SaveButton({
   onClickFn,
   variant,
   disabled,
+  fullWidth,
   icon,
+  size,
   children,
 }) {
   return (
     <>
       {isLoading ? (
-        <Button variant={variant} disabled style={{ width: "100%" }}>
+        <Button
+          variant={variant}
+          disabled
+          style={fullWidth ? { width: "100%" } : {}}
+          size={size}
+        >
           <Spinner
             as="span"
             animation="border"
@@ -37,32 +45,32 @@ function SaveButton({
           variant={variant}
           onClick={onClickFn}
           disabled={disabled}
-          style={{ width: "100%" }}
+          style={fullWidth ? { width: "100%" } : {}}
+          size={size}
         >
           {icon === "close" ? (
             <>
               <CloseIcon />
-              &nbsp;
             </>
           ) : icon === "refresh" ? (
             <>
               <RefreshIcon />
-              &nbsp;
             </>
           ) : icon === "add" ? (
             <>
               <AddIcon />
-              &nbsp;
             </>
           ) : icon === "done" ? (
             <>
               <DoneIcon />
-              &nbsp;
             </>
           ) : icon === "search" ? (
             <>
               <SearchIcon />
-              &nbsp;
+            </>
+          ) : icon === "login" ? (
+            <>
+              <LoginIcon />
             </>
           ) : null}
           {children}
