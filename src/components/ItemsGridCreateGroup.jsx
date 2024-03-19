@@ -98,7 +98,6 @@ function ItemsGridCreateGroup({ groupName }) {
             "itemName": "",
             groupID,
           }));
-          console.log(data);
           const insertRes = await insertGroupItem({
             token,
             data,
@@ -180,6 +179,7 @@ function ItemsGridCreateGroup({ groupName }) {
           variant="outline-success"
           icon={"done"}
           onClickFn={handleAddItem}
+          disabled={!groupName}
           isLoading={isCreating || isDeleting || isInserting}
         >
           &nbsp; ذخیره
@@ -189,7 +189,7 @@ function ItemsGridCreateGroup({ groupName }) {
           variant="outline-primary"
           icon={"arrow-back"}
           onClickFn={() => navigate("/retirement-organization/groups")}
-          isLoading={isCreating || isDeleting || isInserting}
+          disabled={isCreating || isDeleting || isInserting}
         >
           &nbsp; بازگشت
         </UserButton>
