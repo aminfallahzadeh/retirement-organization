@@ -62,7 +62,7 @@ function App() {
       if (!isActive) {
         logoutHandler();
       }
-      console.log(isActive, remaining);
+      // console.log(isActive, remaining);
       return () => {
         clearInterval(interval);
       };

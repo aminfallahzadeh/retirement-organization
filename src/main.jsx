@@ -27,6 +27,7 @@ import Error from "./pages/Error";
 
 // screens
 import CreateGroupScreen from "./screens/CreateGroupScreen";
+import CreateUserScreen from "./screens/CreateUserScreen";
 import RetirementAffairsScreen from "./screens/RetirementAffairsScreen.jsx";
 import GroupsScreen from "./screens/GroupsScreen";
 import UsersScreen from "./screens/UsersScreen";
@@ -64,6 +65,11 @@ const router = createBrowserRouter(
         <Route
           path="/retirement-organization/create-group"
           element={<CreateGroupScreen />}
+        />
+
+        <Route
+          path="/retirement-organization/create-user"
+          element={<CreateUserScreen />}
         />
       </Route>
       <Route path="*" element={<Error />} />

@@ -34,16 +34,10 @@ function GroupNameInput({ setShowEditModal }) {
       setShowEditModal(false);
       toast.success(res.message, {
         autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
       });
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
       });
     }
   };

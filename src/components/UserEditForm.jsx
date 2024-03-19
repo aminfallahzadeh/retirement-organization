@@ -3,35 +3,72 @@ import { useState, useEffect } from "react";
 
 // redux imports
 import { useSelector } from "react-redux";
+import { useUpdateUserMutation } from "../slices/usersApiSlice";
 
 // components import
 import UserButton from "./UserButton";
 
-function UserEditForm() {
+// library imports
+import { toast } from "react-toastify";
+
+function UserEditForm({ setShowEditUserModal }) {
   const { selectedUserData } = useSelector((state) => state.usersData);
 
-  const [userName, setUserName] = useState(selectedUserData?.username);
-  const [fname, setFname] = useState(selectedUserData?.fname);
-  const [lname, setLname] = useState(selectedUserData?.lname);
-  const [isActive, setIsActive] = useState(selectedUserData?.isActive);
+  const [userObject, setUserObject] = useState({
+    username: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    isActive: "",
+    email: "",
+    tel: "",
+    mobile: "",
+    sex: "0",
+  });
 
-  const handleFnameChange = (e) => {
-    setFname(e.target.value);
-  };
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
+  const { token } = useSelector((state) => state.auth);
 
-  const handleLnameChange = (e) => {
-    setLname(e.target.value);
-  };
-
-  const handleIsActiveChange = (e) => {
-    setIsActive(e.target.checked);
+  const handleUserObjectChange = (e) => {
+    const { name, value } = e.target;
+    setUserObject({ ...userObject, [name]: value });
   };
 
   useEffect(() => {
-    setUserName(selectedUserData?.username);
-    setFname(selectedUserData?.fname);
-    setLname(selectedUserData?.lname);
-    setIsActive(selectedUserData?.isActive);
+    console.log(userObject);
+  }, [userObject]);
+
+  const updateUserHandler = async () => {
+    try {
+      const res = await updateUser({
+        token,
+        data: {
+          ...userObject,
+          "sex":
+            userObject.sex === "1" || userObject.sex === true ? true : false,
+          "isActive": userObject.isActive === "فعال" ? true : false,
+          "editDate": "string",
+          "editUser": "string",
+          "refreshToken": "string",
+          "createDate": "string",
+          "createUser": "string",
+          "isDelete": 0,
+        },
+      }).unwrap();
+      setShowEditUserModal(false);
+      toast.success(res.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
+  useEffect(() => {
+    setUserObject(selectedUserData);
   }, [selectedUserData]);
 
   const content = (
@@ -43,18 +80,21 @@ function UserEditForm() {
             style={{ backgroundColor: "#a0a0a0" }}
           >
             <div className="inputBox__form--readOnly-label">نام کاربری</div>
-            <div className="inputBox__form--readOnly-content">{userName}</div>
+            <div className="inputBox__form--readOnly-content">
+              {userObject.username}
+            </div>
           </div>
         </div>
 
         <div className="inputBox__form">
           <input
             type="text"
+            name="password"
             className="inputBox__form--input"
             required
             id="psw"
-            value={fname}
-            onChange={handleFnameChange}
+            value={userObject.password || ""}
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="psw">
             رمز عبور
@@ -67,8 +107,9 @@ function UserEditForm() {
             className="inputBox__form--input"
             required
             id="fname"
-            value={fname}
-            onChange={handleFnameChange}
+            name="firstName"
+            value={userObject.firstName}
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="fname">
             نام
@@ -81,8 +122,9 @@ function UserEditForm() {
             className="inputBox__form--input"
             required
             id="family"
-            value={lname}
-            onChange={handleLnameChange}
+            name="lastName"
+            value={userObject.lastName}
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="familly">
             نام خانوادگی
@@ -94,8 +136,9 @@ function UserEditForm() {
             className="inputBox__form--input"
             id="isActive"
             style={{ cursor: "pointer" }}
-            value={isActive}
-            onChange={handleIsActiveChange}
+            name="isActive"
+            value={userObject.isActive}
+            onChange={handleUserObjectChange}
           >
             <option value="true">فعال</option>
             <option value="false">غیر فعال</option>
@@ -111,8 +154,9 @@ function UserEditForm() {
             className="inputBox__form--input"
             required
             id="mail"
-            value={lname}
-            onChange={handleLnameChange}
+            value={userObject.email}
+            name="email"
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="mail">
             پست الکترونیکی
@@ -125,8 +169,9 @@ function UserEditForm() {
             className="inputBox__form--input"
             required
             id="tel"
-            value={lname}
-            onChange={handleLnameChange}
+            name="tel"
+            value={userObject.tel}
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="tel">
             تلفن ثابت
@@ -139,8 +184,9 @@ function UserEditForm() {
             className="inputBox__form--input"
             required
             id="cell"
-            value={lname}
-            onChange={handleLnameChange}
+            value={userObject.mobile}
+            name="mobile"
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="cell">
             تلفن همراه
@@ -150,22 +196,28 @@ function UserEditForm() {
         <div className="inputBox__form">
           <select
             className="inputBox__form--input"
-            id="isActive"
+            id="sex"
             style={{ cursor: "pointer" }}
-            value={isActive}
-            onChange={handleIsActiveChange}
+            value={userObject.sex}
+            name="sex"
+            onChange={handleUserObjectChange}
           >
             <option value="0">زن</option>
             <option value="1">مرد</option>
           </select>
-          <label className="inputBox__form--label" htmlFor="isActive">
-            وضعیت
+          <label className="inputBox__form--label" htmlFor="sex">
+            جنسیت
           </label>
         </div>
       </form>
 
       <div>
-        <UserButton variant={"outline-success"} icon={"done"}>
+        <UserButton
+          variant={"outline-success"}
+          icon={"done"}
+          onClickFn={updateUserHandler}
+          isLoading={isLoading}
+        >
           ذخیره
         </UserButton>
       </div>

@@ -8,6 +8,9 @@ import { convertToPersianNumber, findById } from "../helper.js";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
+// rrd imports
+import { Link } from "react-router-dom";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetUserQuery } from "../slices/usersApiSlice";
@@ -18,7 +21,7 @@ import {
 } from "../slices/usersDataSlice.js";
 
 // mui imports
-import { IconButton } from "@mui/material";
+import { IconButton, Box } from "@mui/material";
 import {
   Edit as EditIcon,
   ChecklistRtl as ChecklistRtlIcon,
@@ -88,9 +91,14 @@ function UsersGrid() {
       const data = users.itemList.map((user) => ({
         id: user.id,
         isActive: user.isActive === true ? "فعال" : "غیر فعال",
-        lname: user.lastName,
-        fname: user.firstName,
+        lastName: user.lastName,
+        firstName: user.firstName,
         username: user.username,
+        password: user.password,
+        email: user.email,
+        sex: user.sex,
+        tel: user.tel,
+        mobile: user.mobile,
       }));
       dispatch(setUsersTableData(data));
     } else if (error) {
@@ -230,7 +238,15 @@ function UsersGrid() {
       },
     }),
     renderTopToolbarCustomActions: () => (
-      <div>
+      <Box
+        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
+      >
+        <Link to={"/retirement-organization/create-user"}>
+          <UserButton variant="outline-primary" icon={"add"}>
+            ایجاد کاربر
+          </UserButton>
+        </Link>
+
         <UserButton
           variant="outline-success"
           icon={"refresh"}
@@ -239,7 +255,7 @@ function UsersGrid() {
         >
           بروز رسانی
         </UserButton>
-      </div>
+      </Box>
     ),
     muiPaginationProps: {
       color: "success",
@@ -266,7 +282,6 @@ function UsersGrid() {
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
     const selectedUserInfo = findById(usersTableData, id);
-    console.log(selectedUserInfo);
 
     if (id) {
       dispatch(setSelectedUserData(selectedUserInfo));
@@ -299,7 +314,7 @@ function UsersGrid() {
               title={"ویرایش اطلاعات کاربر"}
               closeModal={() => setShowEditUserModal(false)}
             >
-              <UserEditForm />
+              <UserEditForm setShowEditUserModal={setShowEditUserModal} />
             </Modal>
           ) : showEditUserGroupsModal ? (
             <Modal
