@@ -41,6 +41,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
   useMaterialReactTable,
+  getMRT_RowSelectionHandler,
 } from "material-react-table";
 
 function ItemsGridCreateGroup({ groupName }) {
@@ -161,6 +162,11 @@ function ItemsGridCreateGroup({ groupName }) {
     data: itemsTableData,
     positionGlobalFilter: "left",
     enableRowSelection: true,
+    muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
+      onClick: (event) =>
+        getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
+      sx: { cursor: "pointer" },
+    }),
     initialState: {
       density: "compact",
       showGlobalFilter: true,
