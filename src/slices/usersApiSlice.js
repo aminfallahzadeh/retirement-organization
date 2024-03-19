@@ -112,7 +112,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           "Authorization": `Bearer ${token}`,
         },
       }),
-      keepUnusedDataFor: 5,
     }),
     getGroupItems: builder.query({
       query: ({ token, groupId }) => ({
@@ -122,7 +121,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           "Authorization": `Bearer ${token}`,
         },
       }),
-      keepUnusedDataFor: 5,
     }),
     deleteGroupItems: builder.mutation({
       query: ({ token, groupID }) => ({

@@ -10,6 +10,7 @@ import {
   Add as AddIcon,
   Search as SearchIcon,
   Login as LoginIcon,
+  ArrowBackOutlined as ArrowBackOutlinedIcon,
 } from "@mui/icons-material";
 
 function SaveButton({
@@ -71,6 +72,10 @@ function SaveButton({
           ) : icon === "login" ? (
             <>
               <LoginIcon />
+            </>
+          ) : icon === "arrow-back" ? (
+            <>
+              <ArrowBackOutlinedIcon />
             </>
           ) : null}
           {children}

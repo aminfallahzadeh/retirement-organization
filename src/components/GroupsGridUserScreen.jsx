@@ -43,9 +43,16 @@ function GroupsGridUserScreen() {
   const { userGroupsTableData } = useSelector((state) => state.userGroupsData);
   const { groupsUserTableData } = useSelector((state) => state.groupsUserData);
 
-  const { data: groups, isLoading, isSuccess, error } = useGetGroupQuery(token);
+  const {
+    data: groups,
+    isLoading,
+    isSuccess,
+    error,
+    refetch,
+  } = useGetGroupQuery(token);
 
   useEffect(() => {
+    refetch();
     if (isSuccess) {
       const data = groups.itemList.map((group) => ({
         id: group.id,
@@ -65,8 +72,7 @@ function GroupsGridUserScreen() {
         },
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [groups, isSuccess, dispatch, error]);
+  }, [groups, isSuccess, dispatch, error, refetch, userGroupsTableData]);
 
   const columns = useMemo(
     () => [

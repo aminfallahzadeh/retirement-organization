@@ -17,6 +17,7 @@ import {
 } from "../slices/itemsDataSlice";
 
 // library imports
+import { toast } from "react-toastify";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -47,8 +48,8 @@ function ItemsGrid() {
   const {
     data: items,
     isLoading,
-    isFetching,
     isSuccess,
+    error,
     refetch,
   } = useGetItemsQuery(token);
 
@@ -65,9 +66,15 @@ function ItemsGrid() {
       );
 
       dispatch(setItemsTableData(filteredData));
+    } else if (error) {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, isSuccess, dispatch, refetch]);
+  }, [items, isSuccess, dispatch, refetch, groupItemsTableData, error]);
 
   const columns = useMemo(
     () => [
@@ -151,7 +158,7 @@ function ItemsGrid() {
 
   return (
     <>
-      {isLoading || isFetching ? (
+      {isLoading ? (
         <p className="skeleton">
           <Skeleton count={5} />
         </p>

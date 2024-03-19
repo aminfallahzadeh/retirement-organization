@@ -17,6 +17,7 @@ import {
 } from "../slices/groupItemsDataSlice";
 
 // library imports
+import { toast } from "react-toastify";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -48,7 +49,7 @@ function GroupItemGrid() {
     data: groupItems,
     isSuccess,
     isLoading,
-    isFetching,
+    error,
     refetch,
   } = useGetGroupItemsQuery({ token, groupId: selectedGroupData?.id });
 
@@ -62,8 +63,15 @@ function GroupItemGrid() {
       }));
 
       dispatch(setGroupItemsTableData(data));
+    } else if (error) {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     }
-  }, [groupItems, isSuccess, dispatch, refetch]);
+  }, [groupItems, isSuccess, dispatch, refetch, error]);
 
   const columns = useMemo(
     () => [
@@ -148,7 +156,7 @@ function GroupItemGrid() {
 
   const content = (
     <>
-      {isLoading || isFetching ? (
+      {isLoading ? (
         <p className="skeleton">
           <Skeleton count={5} />
         </p>

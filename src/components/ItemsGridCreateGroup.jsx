@@ -24,6 +24,9 @@ import {
 } from "../slices/usersApiSlice";
 import { setItemsTableData } from "../slices/itemsDataSlice";
 
+// mui imports
+import { Box } from "@mui/material";
+
 // library imports
 import { toast } from "react-toastify";
 import { PaginationItem } from "@mui/material";
@@ -164,7 +167,9 @@ function ItemsGridCreateGroup({ groupName }) {
       pagination: { pageIndex: 0, pageSize: 7 },
     },
     renderTopToolbarCustomActions: () => (
-      <div>
+      <Box
+        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
+      >
         <UserButton
           variant="outline-success"
           icon={"done"}
@@ -173,7 +178,16 @@ function ItemsGridCreateGroup({ groupName }) {
         >
           &nbsp; ذخیره
         </UserButton>
-      </div>
+
+        <UserButton
+          variant="outline-primary"
+          icon={"arrow-back"}
+          onClickFn={() => navigate("/retirement-organization/groups")}
+          isLoading={isCreating || isDeleting || isInserting}
+        >
+          &nbsp; بازگشت
+        </UserButton>
+      </Box>
     ),
     muiPaginationProps: {
       color: "success",
@@ -203,10 +217,6 @@ function ItemsGridCreateGroup({ groupName }) {
     const selectedRows = table.getSelectedRowModel().rows;
     setAddedItems(selectedRows.map((row) => row.original));
   }, [table, rowSelection]);
-
-  useEffect(() => {
-    console.log(addedItems);
-  }, [addedItems]);
 
   // check if token is expired on compoennt mount
   useEffect(() => {

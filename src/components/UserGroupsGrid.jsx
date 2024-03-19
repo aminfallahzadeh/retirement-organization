@@ -16,6 +16,7 @@ import {
 } from "../slices/userGroupsDataSlice.js";
 
 // library imports
+import { toast } from "react-toastify";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -46,7 +47,7 @@ function UserGroupsGrid() {
     data: userGroups,
     isSuccess,
     isLoading,
-    isFetching,
+    error,
     refetch,
   } = useGetUserGroupsQuery({ token, userId: selectedUserData?.id });
 
@@ -59,8 +60,15 @@ function UserGroupsGrid() {
         name: item.groupName,
       }));
       dispatch(setUserGroupsTableData(data));
+    } else if (error) {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
     }
-  }, [userGroups, isSuccess, dispatch, refetch]);
+  }, [userGroups, isSuccess, dispatch, refetch, error]);
 
   const columns = useMemo(
     () => [
@@ -138,7 +146,7 @@ function UserGroupsGrid() {
 
   const content = (
     <>
-      {isLoading || isFetching ? (
+      {isLoading ? (
         <p className="skeleton">
           <Skeleton count={3} />
         </p>
