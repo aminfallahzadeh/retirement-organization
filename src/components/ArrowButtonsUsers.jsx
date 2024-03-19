@@ -1,4 +1,5 @@
 // library imports
+import { toast } from "react-toastify";
 import {
   KeyboardDoubleArrowLeft,
   KeyboardDoubleArrowRight,
@@ -8,6 +9,10 @@ import { Button } from "react-bootstrap";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
+import {
+  useDeleteGroupUsersMutation,
+  useInsertGroupUsersMutation,
+} from "../slices/usersApiSlice";
 
 // components
 import UserButton from "./UserButton";
@@ -20,77 +25,55 @@ import {
 import { addUserGroup, removeUserGroups } from "../slices/userGroupsDataSlice";
 
 function ArrowButtonsUsers() {
+  const { token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  const { selectedUserGroupData } = useSelector(
+  const { selectedUserGroupData, userGroupsTableData } = useSelector(
     (state) => state.userGroupsData
   );
   const { selectedGroupUserData } = useSelector(
     (state) => state.groupsUserData
   );
+  const { selectedUserData } = useSelector((state) => state.usersData);
 
-  // const { selectedGroupData } = useSelector((state) => state.groupsData);
-  // const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
-  // const { token } = useSelector((state) => state.auth);
+  const [deleteGroupUsers, { isLoading: isDeleting }] =
+    useDeleteGroupUsersMutation();
 
-  // const [insertGroupItem] = useInsertGroupItemMutation();
-  // const [deleteGroupItems, { isLoading: isDeleting }] =
-  //   useDeleteGroupItemsMutation();
+  const [insertGroupUsers, { isLoading: isInserting }] =
+    useInsertGroupUsersMutation();
 
-  // const saveChangesHandler = async () => {
-  //   try {
-  //     const groupID = selectedGroupData?.id;
-  //     console.log(groupID);
-  //     const deleteRes = await deleteGroupItems({
-  //       token,
-  //       groupID,
-  //     }).unwrap();
-  //     console.log(deleteRes);
-  //     toast.success(deleteRes.message, {
-  //       autoClose: 2000,
-  //       style: {
-  //         fontSize: "18px",
-  //       },
-  //     });
-  //     try {
-  //       const data = groupItemsTableData.map((item) => ({
-  //         "id": "",
-  //         "itemID": item.id,
-  //         "itemName": "",
-  //         groupID,
-  //       }));
-  //       console.log(data);
-  //       const insertRes = await insertGroupItem({
-  //         token,
-  //         data,
-  //       }).unwrap();
-  //       console.log(insertRes);
-  //       toast.success(insertRes.message, {
-  //         autoClose: 2000,
-  //         style: {
-  //           fontSize: "18px",
-  //         },
-  //       });
-  //     } catch (err) {
-  //       console.log(err);
-  //       toast.error(err?.data?.message || err.error, {
-  //         autoClose: 2000,
-  //         style: {
-  //           fontSize: "18px",
-  //         },
-  //       });
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //     toast.error(err?.data?.message || err.error, {
-  //       autoClose: 2000,
-  //       style: {
-  //         fontSize: "18px",
-  //       },
-  //     });
-  //   }
-  // };
-
+  const saveChangesHandler = async () => {
+    try {
+      const userID = selectedUserData.id;
+      const deleteRes = await deleteGroupUsers({
+        token,
+        userID,
+      }).unwrap();
+      console.log(deleteRes);
+      try {
+        const data = userGroupsTableData.map((item) => ({
+          "id": "",
+          userID,
+          "groupID": item.id,
+          "groupName": "",
+        }));
+        const insertRes = await insertGroupUsers({
+          token,
+          data,
+        }).unwrap();
+        console.log(insertRes);
+        toast.success(insertRes.message, {
+          autoClose: 2000,
+        });
+      } catch (err) {
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const handleAddGroup = (id) => {
     dispatch(addUserGroup(selectedGroupUserData));
     dispatch(removeGroupsFromTable(id));
@@ -125,7 +108,12 @@ function ArrowButtonsUsers() {
       </Button>
 
       <div>
-        <UserButton variant="outline-success" icon={"done"}>
+        <UserButton
+          variant="outline-success"
+          icon={"done"}
+          onClickFn={saveChangesHandler}
+          isLoading={isDeleting || isInserting}
+        >
           ذخیره
         </UserButton>
       </div>

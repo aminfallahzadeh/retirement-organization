@@ -80,18 +80,14 @@ function ItemsGridCreateGroup({ groupName }) {
           "isdeleted": false,
         },
       }).unwrap();
-      console.log(createGroupRes);
-
       try {
         const groupID = createGroupRes.itemList[0].id;
-        console.log(groupID);
         const deleteRes = await deleteGroupItems({
           token,
           groupID,
         }).unwrap();
         console.log(deleteRes);
         try {
-          console.log(groupID);
           const data = addedItems.map((item) => ({
             "id": "",
             "itemID": item.id,

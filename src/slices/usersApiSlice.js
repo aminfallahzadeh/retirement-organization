@@ -73,11 +73,31 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           "Authorization": `Bearer ${token}`,
         },
       }),
-      // keepUnusedDataFor: 5,
     }),
     getUserGroups: builder.query({
       query: ({ token, userId }) => ({
         url: `${USERS_URL_HTTPS}/GetGroupUser?userID=${userId}`,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
+    deleteGroupUsers: builder.mutation({
+      query: ({ token, userID }) => ({
+        url: `${USERS_URL_HTTPS}/DeleteGroupUser?userID=${userID}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
+    insertGroupUsers: builder.mutation({
+      query: ({ token, data }) => ({
+        url: `${USERS_URL_HTTPS}/InsertGroupUser`,
+        method: "POST",
+        body: data,
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
@@ -153,4 +173,6 @@ export const {
   useInsertGroupItemMutation,
   useGetGroupItemsQuery,
   useGetUserGroupsQuery,
+  useDeleteGroupUsersMutation,
+  useInsertGroupUsersMutation,
 } = usersApiSlice;

@@ -54,7 +54,6 @@ function ArrowButtonsGroups() {
           "itemName": "",
           groupID,
         }));
-        console.log(data);
         const insertRes = await insertGroupItem({
           token,
           data,

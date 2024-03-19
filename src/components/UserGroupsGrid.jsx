@@ -46,18 +46,21 @@ function UserGroupsGrid() {
     data: userGroups,
     isSuccess,
     isLoading,
+    isFetching,
+    refetch,
   } = useGetUserGroupsQuery({ token, userId: selectedUserData?.id });
 
   // trigger the fetch
   useEffect(() => {
+    refetch();
     if (isSuccess) {
       const data = userGroups.itemList.map((item) => ({
-        id: item.id,
+        id: item.groupID,
         name: item.groupName,
       }));
       dispatch(setUserGroupsTableData(data));
     }
-  }, [userGroups, isSuccess, dispatch]);
+  }, [userGroups, isSuccess, dispatch, refetch]);
 
   const columns = useMemo(
     () => [
@@ -135,7 +138,7 @@ function UserGroupsGrid() {
 
   const content = (
     <>
-      {isLoading ? (
+      {isLoading || isFetching ? (
         <p className="skeleton">
           <Skeleton count={3} />
         </p>
