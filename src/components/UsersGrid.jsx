@@ -88,6 +88,7 @@ function UsersGrid() {
   useEffect(() => {
     refetch();
     if (isSuccess) {
+      console.log(users);
       const data = users.itemList.map((user) => ({
         id: user.id,
         isActive: user.isActive === true ? "فعال" : "غیر فعال",
@@ -113,11 +114,12 @@ function UsersGrid() {
     return () => {
       dispatch(setUsersTableData([]));
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     users,
     isSuccess,
     dispatch,
-    error,
+    // error,
     refetch,
     showEditUserModal,
     showEditUserGroupsModal,
@@ -141,7 +143,7 @@ function UsersGrid() {
         align: "right",
       },
       {
-        accessorKey: "fname",
+        accessorKey: "firstName",
         header: "نام",
         size: 50,
         muiTableHeadCellProps: {
@@ -156,7 +158,7 @@ function UsersGrid() {
         align: "right",
       },
       {
-        accessorKey: "lname",
+        accessorKey: "lastName",
         header: "نام خانوادگی",
         size: 50,
         muiTableHeadCellProps: {

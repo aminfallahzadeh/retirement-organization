@@ -7,7 +7,7 @@ import ItemsGridCreateGroup from "../components/ItemsGridCreateGroup";
 function CreateGroupScreen() {
   const [groupName, setGroupName] = useState("");
 
-  return (
+  const content = (
     <section className="main">
       <div className="formContainer flex-row">
         <form className="inputBox__form">
@@ -32,6 +32,8 @@ function CreateGroupScreen() {
       </div>
     </section>
   );
+
+  return content;
 }
 
 export default CreateGroupScreen;

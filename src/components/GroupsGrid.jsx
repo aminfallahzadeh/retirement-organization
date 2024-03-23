@@ -145,11 +145,13 @@ function GroupsGrid() {
     return () => {
       dispatch(setGroupsTableData([]));
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     groups,
     isSuccess,
     dispatch,
-    error,
+    // error,
     refetch,
     showDeleteGroupModal,
     showEditNameModal,

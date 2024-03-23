@@ -224,6 +224,10 @@ function ItemsGridCreateGroup({ groupName }) {
     setAddedItems(selectedRows.map((row) => row.original));
   }, [table, rowSelection]);
 
+  useEffect(() => {
+    console.log(addedItems);
+  }, [addedItems]);
+
   // check if token is expired on compoennt mount
   useEffect(() => {
     refreshTokenHandler();
