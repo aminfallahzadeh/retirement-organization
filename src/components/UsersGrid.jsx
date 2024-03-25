@@ -102,7 +102,23 @@ function UsersGrid() {
         mobile: user.mobile,
       }));
       dispatch(setUsersTableData(data));
-    } else if (error) {
+    }
+
+    return () => {
+      dispatch(setUsersTableData([]));
+    };
+  }, [
+    users,
+    isSuccess,
+    dispatch,
+    refetch,
+    showEditUserModal,
+    showEditUserGroupsModal,
+  ]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
       toast.error(error?.data?.message || error.error, {
         autoClose: 2000,
         style: {
@@ -110,20 +126,7 @@ function UsersGrid() {
         },
       });
     }
-
-    return () => {
-      dispatch(setUsersTableData([]));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    users,
-    isSuccess,
-    dispatch,
-    // error,
-    refetch,
-    showEditUserModal,
-    showEditUserGroupsModal,
-  ]);
+  }, [error]);
 
   const columns = useMemo(
     () => [

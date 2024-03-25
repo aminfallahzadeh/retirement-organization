@@ -4,18 +4,6 @@ function AffairsStaffInfoForm() {
       <div className="inputBox__form">
         <input
           type="text"
-          id="personalCode"
-          className="inputBox__form--input"
-          required
-        />
-        <label htmlFor="personalCode" className="inputBox__form--label ">
-          <span>*</span> کد ملی
-        </label>
-      </div>
-
-      <div className="inputBox__form">
-        <input
-          type="text"
           id="group"
           className="inputBox__form--input"
           required

@@ -35,7 +35,7 @@ function UserEditForm({ setShowEditUserModal }) {
   };
 
   useEffect(() => {
-    console.log(userObject);
+    console.log("userObject", userObject);
   }, [userObject]);
 
   const updateUserHandler = async () => {

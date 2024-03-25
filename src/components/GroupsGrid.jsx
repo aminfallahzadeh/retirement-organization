@@ -133,7 +133,24 @@ function GroupsGrid() {
         name: group.groupName,
       }));
       dispatch(setGroupsTableData(data));
-    } else if (error) {
+    }
+
+    return () => {
+      dispatch(setGroupsTableData([]));
+    };
+  }, [
+    groups,
+    isSuccess,
+    dispatch,
+    refetch,
+    showDeleteGroupModal,
+    showEditNameModal,
+    showEditItemsModal,
+  ]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
       toast.error(error?.data?.message || error.error, {
         autoClose: 2000,
         style: {
@@ -141,22 +158,7 @@ function GroupsGrid() {
         },
       });
     }
-
-    return () => {
-      dispatch(setGroupsTableData([]));
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    groups,
-    isSuccess,
-    dispatch,
-    // error,
-    refetch,
-    showDeleteGroupModal,
-    showEditNameModal,
-    showEditItemsModal,
-  ]);
+  }, [error]);
 
   const columns = useMemo(
     () => [
