@@ -7,10 +7,6 @@ import { convertToPersianNumber } from "../helper.js";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-// mui imports
-import { Box, IconButton } from "@mui/material";
-import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-
 // library imports
 import { PaginationItem } from "@mui/material";
 import {
@@ -29,24 +25,24 @@ const data = [
   {
     code: "۰۱۲۳۴۵۶۷۸۹",
     name: "سعید علوی",
+    type: "درخواست بازنشستگی",
     date: "۱۴۰۲-۱۳-۱۳",
-    relation: "همسر",
   },
   {
     code: "۰۱۲۳۴۵۶۷۸۹",
     name: "سعید علوی",
+    type: "درخواست بازنشستگی",
     date: "۱۴۰۲-۱۳-۱۳",
-    relation: "همسر",
   },
   {
     code: "۰۱۲۳۴۵۶۷۸۹",
     name: "سعید علوی",
+    type: "درخواست بازنشستگی",
     date: "۱۴۰۲-۱۳-۱۳",
-    relation: "همسر",
   },
 ];
 
-function RetiredInfoGrid() {
+function CartableGrid() {
   const columns = useMemo(
     () => [
       {
@@ -76,8 +72,21 @@ function RetiredInfoGrid() {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
+        accessorKey: "type",
+        header: "نوع درخواست",
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+          align: "right",
+        },
+        muiTableBodyCellProps: {
+          sx: { fontFamily: "sahel" },
+          align: "right",
+        },
+        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
+      },
+      {
         accessorKey: "date",
-        header: "تاریخ تولد",
+        header: "تاریخ درخواست",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -87,33 +96,6 @@ function RetiredInfoGrid() {
           align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-      },
-      {
-        accessorKey: "relation",
-        header: "نسبت",
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "right",
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-      },
-      {
-        accessorKey: "actions",
-        header: "عملیات",
-        Cell: () => (
-          <Box sx={{ display: "flex", gap: "8px" }}>
-            <IconButton color="secondary">
-              <EditIcon />
-            </IconButton>
-            <IconButton color="error">
-              <DeleteIcon />
-            </IconButton>
-          </Box>
-        ),
       },
     ],
     []
@@ -143,9 +125,14 @@ function RetiredInfoGrid() {
     },
   });
 
-  const content = <MaterialReactTable table={table} />;
+  const content = (
+    <section>
+      <h4 className="title">کارتابل</h4>
+      <MaterialReactTable table={table} />
+    </section>
+  );
 
   return content;
 }
 
-export default RetiredInfoGrid;
+export default CartableGrid;

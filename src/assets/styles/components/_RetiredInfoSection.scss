@@ -1,29 +1,29 @@
-.RetiredInfoSection {
-    margin-top: 100px;
-    display: flex;
-    flex-direction: column;
-    row-gap: 20px;
+// .RetiredInfoSection {
+//     margin-top: 100px;
+//     display: flex;
+//     flex-direction: column;
+//     row-gap: 20px;
 
-    &__labels {
-        background-color: $color-grey-1;
-        padding: 10px 20px;
-        width: 100%;
-        border-radius: 2px;
+//     &__labels {
+//         background-color: $color-grey-1;
+//         padding: 10px 20px;
+//         width: 100%;
+//         border-radius: 2px;
 
-        &--list {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            list-style: none;
-            margin-bottom: 0 !important;
+//         &--list {
+//             display: grid;
+//             grid-template-columns: repeat(5, 1fr);
+//             list-style: none;
+//             margin-bottom: 0 !important;
 
-            li {
-                text-align: center;
-            }
-        }
-    }
+//             li {
+//                 text-align: center;
+//             }
+//         }
+//     }
 
-    &__createbtn > * {
-        width: 100%;
-        height: 55px;
-    }
-}
+//     &__createbtn > * {
+//         width: 100%;
+//         height: 55px;
+//     }
+// }

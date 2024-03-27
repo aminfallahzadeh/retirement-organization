@@ -1,5 +1,5 @@
 // component imports
-import CartableGrid from "../components/CartableGrid";
+import CartableGrid from "../grids/CartableGrid";
 
 function Dashboard() {
   return (

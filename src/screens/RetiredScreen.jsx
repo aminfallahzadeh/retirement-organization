@@ -1,11 +1,11 @@
-import RetiredSection from "../components/RetiredSection";
-import RetiredInfoSection from "../components/RetiredInfoSection";
+import IndividualInfoSection from "../sections/retired/IndividualInfoSection";
+import RelatedInfoSection from "../sections/retired/RelatedInfoSection";
 
 function RetiredScreen() {
   return (
     <div className="main">
-      <RetiredSection />
-      <RetiredInfoSection />
+      <IndividualInfoSection />
+      <RelatedInfoSection />
     </div>
   );
 }

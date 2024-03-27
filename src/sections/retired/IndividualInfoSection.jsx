@@ -1,7 +1,7 @@
 // component imports
-import RetiredAdditionalInfo from "../forms/RetiredAdditionalInfo";
-import RetiredStaffInfo from "../forms/RetiredStaffInfo";
-import RetiredPersonalInfo from "../forms/RetiredPersonalInfo";
+import RetiredAdditionalInfo from "../../forms/RetiredAdditionalInfo";
+import RetiredStaffInfo from "../../forms/RetiredStaffInfo";
+import RetiredPersonalInfo from "../../forms/RetiredPersonalInfo";
 
 // redux imports
 import { useSelector } from "react-redux";
@@ -12,12 +12,17 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-function RetiredSection() {
+function IndividualInfoSection() {
   const { retiredData } = useSelector((state) => state.retiredState);
 
   const content = (
     <section className="pensionersAffairs">
-      <Accordion sx={{ backgroundColor: "#2e3456", color: "#fff" }}>
+      <Accordion
+        sx={{
+          backgroundColor: "#2e3456",
+          color: "#fff",
+        }}
+      >
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
@@ -61,4 +66,4 @@ function RetiredSection() {
   return content;
 }
 
-export default RetiredSection;
+export default IndividualInfoSection;

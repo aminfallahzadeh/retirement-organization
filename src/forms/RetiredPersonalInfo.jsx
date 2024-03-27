@@ -24,7 +24,7 @@ function RetiredPersonalInfo({ retiredData }) {
     <form method="POST" className="grid grid--col-3 formContainer" noValidate>
       <div className="row-span-2 flex-row flex-row--grow-second">
         <div className="formPic">
-          <PersonOutlinedIcon />
+          <PersonOutlinedIcon sx={{ fontSize: 70, color: "#707070" }} />
         </div>
 
         <div className="flex-col flex-center flex-col--grow">
