@@ -28,12 +28,12 @@ import {
 } from "@mui/icons-material";
 
 // components
-import Modal from "./Modal";
-import UserEditForm from "./UserEditForm";
-import UserButton from "./UserButton";
-import GroupsGridUserScreen from "./GroupsGridUserScreen";
-import UserGroupsGrid from "./UserGroupsGrid";
-import ArrowButtonsUsers from "./ArrowButtonsUsers";
+import Modal from "../components/Modal";
+import UserEditForm from "../components/UserEditForm";
+import UserButton from "../components/UserButton";
+import GroupsGridUserScreen from "../components/GroupsGridUserScreen";
+import UserGroupsGrid from "../components/UserGroupsGrid";
+import ArrowButtonsUsers from "../components/ArrowButtonsUsers";
 
 // library imports
 import { PaginationItem } from "@mui/material";

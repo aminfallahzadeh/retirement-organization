@@ -28,6 +28,21 @@ Grids:
   [+] remove circle selections on top grids @done(24-03-18 19:01)
   [ ] add multiselection on bottom grids
   [ ] implement multi selection for sub grids
+  [ ] change grids theme
+  [ ] move all grids from components folder to grids folder
+
+Cartable Screen:
+  [ ] add roles grid to cartable screen
+  [ ] add request grid to the bottom of roles grid
+  [ ] request grid send request to based on first role as default for initial data 
+  [ ] change request grid data based on role selection
+
+Users Screen:
+  [ ] implement create new user screen
+  [ ] fix update user query error 500
+
+Retired Screen:
+  [ ] add request tab for other retired requests
 
 Queries:
   [-] split queries in relavant files @cancelled(24-03-18 19:01)
@@ -43,4 +58,4 @@ NewForms:
 
 Routing: 
   [+] refactor and fix routing system @done(24-03-18 19:03)
-  [ ] add error page to routs
+  [+] add error page to routs @done(24-03-27 15:27)

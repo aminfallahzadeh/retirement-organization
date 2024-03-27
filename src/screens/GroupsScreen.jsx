@@ -1,5 +1,5 @@
 // components
-import GroupsGrid from "../components/GroupsGrid";
+import GroupsGrid from "../grids/GroupsGrid";
 
 function GroupsScreen() {
   return (

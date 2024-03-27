@@ -1,4 +1,4 @@
-function AffairsBankInfoForm() {
+function RetiredAdditionalInfo() {
   return (
     <form method="POST" className="grid grid--col-3 formContainer " noValidate>
       <div className="inputBox__form">
@@ -75,4 +75,4 @@ function AffairsBankInfoForm() {
   );
 }
 
-export default AffairsBankInfoForm;
+export default RetiredAdditionalInfo;

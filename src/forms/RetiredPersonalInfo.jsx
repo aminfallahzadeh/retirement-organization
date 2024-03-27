@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 // mui imports
 import { PersonOutlined as PersonOutlinedIcon } from "@mui/icons-material";
 
-function AffairsPersonalInfoForm({ retiredData }) {
+function RetiredPersonalInfo({ retiredData }) {
   const [personObject, setPersonObject] = useState(retiredData);
 
   useEffect(() => {
@@ -404,4 +404,4 @@ function AffairsPersonalInfoForm({ retiredData }) {
   return content;
 }
 
-export default AffairsPersonalInfoForm;
+export default RetiredPersonalInfo;

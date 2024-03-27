@@ -22,7 +22,7 @@ function SidebarNav() {
         <SubMenu
           label={
             <>
-              <PersonOutlinedIcon sx={{ color: "#00863e" }} />
+              <PersonOutlinedIcon sx={{ color: "#fff" }} />
               &nbsp; &nbsp;
               <span>امور بازنشستان</span>
             </>
@@ -39,26 +39,26 @@ function SidebarNav() {
           <MenuItem> گزارشات </MenuItem>
         </SubMenu>
         <MenuItem>
-          <GroupOutlinedIcon sx={{ color: "#00863e" }} />
+          <GroupOutlinedIcon sx={{ color: "#fff" }} />
           &nbsp; &nbsp; امورمشتریان
         </MenuItem>
         <MenuItem>
-          <PaymentOutlinedIcon sx={{ color: "#00863e" }} />
+          <PaymentOutlinedIcon sx={{ color: "#fff" }} />
           &nbsp; &nbsp; حقوق و دستمزد{" "}
         </MenuItem>
         <MenuItem>
-          <HomeOutlinedIcon sx={{ color: "#00863e" }} />
+          <HomeOutlinedIcon sx={{ color: "#fff" }} />
           &nbsp; &nbsp; اجتماعی و رفاهی
         </MenuItem>
         <MenuItem>
-          <EqualizerOutlinedIcon sx={{ color: "#00863e" }} />
+          <EqualizerOutlinedIcon sx={{ color: "#fff" }} />
           &nbsp; &nbsp; مدیریت سیستم{" "}
         </MenuItem>
 
         <SubMenu
           label={
             <>
-              <LightbulbOutlinedIcon sx={{ color: "#00863e" }} />
+              <LightbulbOutlinedIcon sx={{ color: "#fff" }} />
               &nbsp; &nbsp;
               <span>اطلاعات پایه</span>
             </>
@@ -73,7 +73,7 @@ function SidebarNav() {
         </SubMenu>
 
         <MenuItem>
-          <AssignmentTurnedInOutlinedIcon sx={{ color: "#00863e" }} />
+          <AssignmentTurnedInOutlinedIcon sx={{ color: "#fff" }} />
           &nbsp; &nbsp; گزارشات{" "}
         </MenuItem>
       </Menu>

@@ -17,12 +17,12 @@ import {
 import { convertToPersianNumber, findById } from "../helper.js";
 
 // components
-import Modal from "./Modal";
-import GroupEditForm from "./GroupEditForm";
-import UserButton from "./UserButton";
-import ItemsGrid from "./ItemsGrid";
-import GroupItemGrid from "./GroupItemGrid";
-import ArrowButtonsGroups from "./ArrowButtonsGroups";
+import Modal from "../components/Modal";
+import GroupEditForm from "../components/GroupEditForm";
+import UserButton from "../components/UserButton";
+import ItemsGrid from "../components/ItemsGrid";
+import GroupItemGrid from "../components/GroupItemGrid";
+import ArrowButtonsGroups from "../components/ArrowButtonsGroups";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";

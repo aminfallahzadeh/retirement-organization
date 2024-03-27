@@ -1,4 +1,4 @@
-function AffairsStaffInfoForm() {
+function RetiredStaffInfo() {
   const content = (
     <form method="POST" className="grid grid--col-3 formContainer" noValidate>
       <div className="inputBox__form">
@@ -110,4 +110,4 @@ function AffairsStaffInfoForm() {
   return content;
 }
 
-export default AffairsStaffInfoForm;
+export default RetiredStaffInfo;

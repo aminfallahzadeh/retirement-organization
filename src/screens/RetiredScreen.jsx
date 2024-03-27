@@ -1,8 +1,7 @@
-// components
 import RetiredSection from "../components/RetiredSection";
 import RetiredInfoSection from "../components/RetiredInfoSection";
 
-function RetirementAffairsScreen() {
+function RetiredScreen() {
   return (
     <div className="main">
       <RetiredSection />
@@ -11,4 +10,4 @@ function RetirementAffairsScreen() {
   );
 }
 
-export default RetirementAffairsScreen;
+export default RetiredScreen;

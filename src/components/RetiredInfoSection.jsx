@@ -36,9 +36,7 @@ function RetiredInfoSection() {
         <RetiredInfoGrid />
       </div>
 
-      <div>
-        <RetiredHokmInfoModal />
-      </div>
+      <div>{/* <RetiredHokmInfoModal /> */}</div>
     </section>
   );
 }

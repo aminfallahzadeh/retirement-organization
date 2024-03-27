@@ -11,18 +11,18 @@
 }
 
 .ps-sidebar-container {
-	background-color: $color-dark-purple-1 !important;
-	color: $color-grey-2 !important;
+	background-color: $color-fg-primary !important;
+	color: $color-white !important;
 }
 
 .ps-menu-button {
 	transition: all 0.25s;
 
 	&:hover {
-		background-color: $color-dark-purple-2 !important;
+		background-color: $color-fg-tertiary !important;
 	}
 }
 
 .ps-submenu-content {
-	background-color: $color-grey-3 !important;
+	background-color: $color-fg-secondary !important;
 }

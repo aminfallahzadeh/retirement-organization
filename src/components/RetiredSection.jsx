@@ -1,7 +1,7 @@
 // component imports
-import AffairsBankInfoForm from "./AffairsBankInfoForm";
-import AffairsStaffInfoForm from "./AffairsStaffInfoForm";
-import AffairsPersonalInfoForm from "./AffairsPersonalInfoForm";
+import RetiredAdditionalInfo from "../forms/RetiredAdditionalInfo";
+import RetiredStaffInfo from "../forms/RetiredStaffInfo";
+import RetiredPersonalInfo from "../forms/RetiredPersonalInfo";
 
 // redux imports
 import { useSelector } from "react-redux";
@@ -17,42 +17,42 @@ function RetiredSection() {
 
   const content = (
     <section className="pensionersAffairs">
-      <Accordion sx={{ backgroundColor: "#d6d6d6" }}>
+      <Accordion sx={{ backgroundColor: "#2e3456", color: "#fff" }}>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
-          expandIcon={<ArrowDropDownIcon />}
+          expandIcon={<ArrowDropDownIcon sx={{ color: "#fff" }} />}
         >
           اطلاعات فردی بازنشسته
         </AccordionSummary>
         <AccordionDetails>
-          <AffairsPersonalInfoForm retiredData={retiredData} />
+          <RetiredPersonalInfo retiredData={retiredData} />
         </AccordionDetails>
       </Accordion>
 
-      <Accordion sx={{ backgroundColor: "#d6d6d6" }}>
+      <Accordion sx={{ backgroundColor: "#2e3456", color: "#fff" }}>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
-          expandIcon={<ArrowDropDownIcon />}
+          expandIcon={<ArrowDropDownIcon sx={{ color: "#fff" }} />}
         >
           اطلاعات پرسنلی
         </AccordionSummary>
         <AccordionDetails>
-          <AffairsStaffInfoForm />
+          <RetiredStaffInfo />
         </AccordionDetails>
       </Accordion>
 
-      <Accordion sx={{ backgroundColor: "#d6d6d6" }}>
+      <Accordion sx={{ backgroundColor: "#2e3456", color: "#fff" }}>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
-          expandIcon={<ArrowDropDownIcon />}
+          expandIcon={<ArrowDropDownIcon sx={{ color: "#fff" }} />}
         >
           اطلاعات تکمیلی
         </AccordionSummary>
         <AccordionDetails>
-          <AffairsBankInfoForm />
+          <RetiredAdditionalInfo />
         </AccordionDetails>
       </Accordion>
     </section>
