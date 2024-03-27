@@ -1,5 +1,5 @@
 // react imports
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 // helper imports
 import { convertToPersianNumber } from "../helper.js";
@@ -8,8 +8,11 @@ import { convertToPersianNumber } from "../helper.js";
 import { defaultTableOptions } from "../utils.js";
 
 // mui imports
-import { Box, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+
+// components
+import UserButton from "../components/UserButton";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -28,25 +31,16 @@ import {
 const data = [
   {
     code: "۰۱۲۳۴۵۶۷۸۹",
-    name: "سعید علوی",
-    date: "۱۴۰۲-۱۳-۱۳",
-    relation: "همسر",
-  },
-  {
-    code: "۰۱۲۳۴۵۶۷۸۹",
-    name: "سعید علوی",
-    date: "۱۴۰۲-۱۳-۱۳",
-    relation: "همسر",
-  },
-  {
-    code: "۰۱۲۳۴۵۶۷۸۹",
-    name: "سعید علوی",
+    fname: "سعید",
+    lname: "علوی",
     date: "۱۴۰۲-۱۳-۱۳",
     relation: "همسر",
   },
 ];
 
 function RelatedInfoGrid() {
+  const [rowSelection, setRowSelection] = useState({});
+
   const columns = useMemo(
     () => [
       {
@@ -54,24 +48,32 @@ function RelatedInfoGrid() {
         header: "کد ملی",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
-        accessorKey: "name",
-        header: "نام و نام خانوادگی فرستنده",
+        accessorKey: "fname",
+        header: "نام",
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        muiTableBodyCellProps: {
+          sx: { fontFamily: "sahel" },
+        },
+        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
+      },
+      {
+        accessorKey: "lname",
+        header: "نام خانوادگی",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
@@ -102,17 +104,33 @@ function RelatedInfoGrid() {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
-        accessorKey: "actions",
-        header: "عملیات",
+        accessorKey: "editNameAction",
+        header: "ویرایش",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
         Cell: () => (
-          <Box sx={{ display: "flex", gap: "8px" }}>
-            <IconButton color="secondary">
-              <EditIcon />
-            </IconButton>
-            <IconButton color="error">
-              <DeleteIcon />
-            </IconButton>
-          </Box>
+          <IconButton color="success">
+            <EditIcon />
+          </IconButton>
+        ),
+      },
+      {
+        accessorKey: "deleteAction",
+        header: "حذف",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        Cell: () => (
+          <IconButton color="error">
+            <DeleteIcon />
+          </IconButton>
         ),
       },
     ],
@@ -123,11 +141,29 @@ function RelatedInfoGrid() {
     ...defaultTableOptions,
     columns,
     data,
+    initialState: {
+      density: "compact",
+    },
+    muiTableBodyRowProps: ({ row }) => ({
+      //implement row selection click events manually
+      onClick: () =>
+        setRowSelection(() => ({
+          [row.id]: true,
+        })),
+      selected: rowSelection[row.id],
+      sx: {
+        cursor: "pointer",
+      },
+    }),
+    renderTopToolbarCustomActions: () => (
+      <UserButton variant="outline-primary" icon={"add"}>
+        ایجاد
+      </UserButton>
+    ),
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
       showRowsPerPage: false,
-      dir: "rtl",
       renderItem: (item) => (
         <PaginationItem
           {...item}
@@ -141,6 +177,9 @@ function RelatedInfoGrid() {
         />
       ),
     },
+    getRowId: (originalRow) => originalRow.id,
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
   });
 
   const content = <MaterialReactTable table={table} />;

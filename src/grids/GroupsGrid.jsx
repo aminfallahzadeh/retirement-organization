@@ -168,14 +168,11 @@ function GroupsGrid() {
         size: 450,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-        align: "right",
       },
       {
         accessorKey: "editNameAction",

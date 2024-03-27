@@ -1,12 +1,18 @@
-import * as React from "react";
+// react imports
+import { useState } from "react";
+
+// mui imports
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
-// import TabPanel from "@mui/lab/TabPanel";
+import TabPanel from "@mui/lab/TabPanel";
+
+// component imports
+import RelatedInfoGrid from "../../grids/RelatedInfoGrid";
 
 export default function LabTabs() {
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = useState("1");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -27,9 +33,30 @@ export default function LabTabs() {
           <Tab label="مالی" value="5" />
         </TabList>
       </Box>
-      {/* <TabPanel value="1">Item One</TabPanel>
-      <TabPanel value="2">Item Two</TabPanel>
-      <TabPanel value="3">Item Three</TabPanel> */}
+      <TabPanel
+        value="1"
+        sx={{
+          padding: "0",
+        }}
+      >
+        <RelatedInfoGrid />
+      </TabPanel>
+      <TabPanel
+        value="2"
+        sx={{
+          padding: "0",
+        }}
+      >
+        Grid 2
+      </TabPanel>
+      <TabPanel
+        value="3"
+        sx={{
+          padding: "0",
+        }}
+      >
+        Grid 3
+      </TabPanel>
     </TabContext>
   );
 }
