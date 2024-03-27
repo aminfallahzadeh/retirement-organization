@@ -1,3 +1,6 @@
+// bootstrap styles
+import "bootstrap/dist/css/bootstrap.min.css";
+
 // library imports
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";

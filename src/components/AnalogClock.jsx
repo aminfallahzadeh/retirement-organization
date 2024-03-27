@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Clock from "react-clock";
 import "react-clock/dist/Clock.css";
 
-function PersianClock() {
+function AnalogClock() {
   const [value, setValue] = useState(new Date());
 
   useEffect(() => {
@@ -16,4 +16,4 @@ function PersianClock() {
   return <Clock value={value} size={65} />;
 }
 
-export default PersianClock;
+export default AnalogClock;

@@ -71,21 +71,7 @@
 				color: $color-grey-1;
 
 				&:hover {
-					color: $color-accent-dark;
-				}
-			}
-		}
-
-		&--register {
-			text-align: center;
-			font-size: 20px;
-
-			a {
-				font-weight: 500;
-				transition: all 0.25s;
-
-				&:hover {
-					color: $color-accent-dark;
+					color: $color-accent-green;
 				}
 			}
 		}

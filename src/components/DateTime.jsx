@@ -2,11 +2,11 @@
 import moment from "moment-jalaali";
 
 // component imports
-import PersianClock from "./PersianClock";
+import AnalogClock from "./AnalogClock";
 
 // helpers
 import { convertToPersianNumber } from "../helper";
-function PersianDate() {
+function DateTime() {
   // Get current date in Jalali calendar
   const currentDate = moment().locale("fa").format("jYYYY/jMM/jDD");
 
@@ -14,12 +14,12 @@ function PersianDate() {
   const persianDate = convertToPersianNumber(currentDate);
 
   return (
-    <div className="PersianDateTime">
-      <PersianClock />
+    <div className="datetime">
+      <AnalogClock />
 
       <div style={{ color: "white" }}>{persianDate}</div>
     </div>
   );
 }
 
-export default PersianDate;
+export default DateTime;

@@ -148,7 +148,7 @@ function Login() {
           <div className="loginContainer__box--inputBox">
             <Captcha />
           </div>
-          <div className="loginContainer__box--register">
+          <div>
             <UserButton
               variant="outline-light"
               isLoading={isLoading}

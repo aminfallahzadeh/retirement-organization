@@ -1,48 +1,18 @@
-// library imports
-import "bootstrap/dist/css/bootstrap.min.css";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-
 // rrd imports
 import { Link } from "react-router-dom";
 
 // component imports
-import NavDropdown from "./NavDropdown";
 import ProfilePicure from "./ProfilePicture";
-import PersianDate from "./PersianDate";
+import DateTime from "./DateTime";
 
-// react imports
-import { useState, useRef, useEffect, useCallback } from "react";
+// hooks
+import useLogout from "../hooks/useLogout";
+
+// mui imports
+import { Logout as LogoutIcon } from "@mui/icons-material";
 
 function TopbarNav({ userName }) {
-  const [dropdown, setDropdown] = useState(false);
-
-  const dropdownRef = useRef(null);
-  const dropdownTogglerRef = useRef(null);
-
-  const toggleDropdown = () => {
-    setDropdown(!dropdown);
-  };
-
-  const closeDropdown = useCallback(
-    (e) => {
-      if (
-        dropdownRef.current &&
-        dropdown &&
-        !dropdownRef.current.contains(e.target) &&
-        !dropdownTogglerRef.current.contains(e.target)
-      ) {
-        setDropdown(false);
-      }
-    },
-    [dropdown]
-  );
-
-  useEffect(() => {
-    document.addEventListener("mousedown", closeDropdown);
-    return () => {
-      document.removeEventListener("mousedown", closeDropdown);
-    };
-  }, [closeDropdown]);
+  const logoutHandler = useLogout();
 
   const content = (
     <nav className="topnav">
@@ -60,13 +30,13 @@ function TopbarNav({ userName }) {
           <ProfilePicure />
 
           <ul className="topnav__container--links-list">
-            <li onClick={toggleDropdown} ref={dropdownTogglerRef}>
-              <ArrowDropDownIcon /> {userName}
+            <li>{userName}</li>
+            <li onClick={logoutHandler}>
+              <LogoutIcon sx={{ fontSize: 20 }} /> خروج
             </li>
             <li>
               <Link to={"/retirement-organization/dashboard"}>کارتابل</Link>
             </li>
-            <li>اعلانات</li>
           </ul>
         </div>
 
@@ -76,9 +46,8 @@ function TopbarNav({ userName }) {
           alt="banner"
         />
 
-        <PersianDate />
+        <DateTime />
       </div>
-      {dropdown && <NavDropdown ref={dropdownRef} />}
     </nav>
   );
 

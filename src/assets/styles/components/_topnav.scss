@@ -20,7 +20,7 @@
         }
 
         &--links {
-            color: $color-grey-2;
+            color: $color-white;
             margin-bottom: 0 !important;
             display: flex;
             justify-content: center;
@@ -42,12 +42,21 @@
                 cursor: pointer;
                 transition: all 0.25s;
 
+                a {
+                    color: $color-white;
+                    transition: all 0.25s;
+                }
+
+                a:hover {
+                    color: $color-fg-tertiary;
+                }
+
                 & > * {
                     text-decoration: none;
                 }
 
                 &:hover {
-                    color: $color-grey-3;
+                    color: $color-fg-tertiary;
                 }
             }
         }
