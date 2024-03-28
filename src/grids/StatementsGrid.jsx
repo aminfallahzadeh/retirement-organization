@@ -43,9 +43,15 @@ const data = [
 function StatementsGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const [showStatementModal, setShowStatementModal] = useState(false);
+  const [showDeleteStatementModal, setShowDeleteStatementModal] =
+    useState(false);
 
   const handleShowStatementModal = () => {
     setShowStatementModal(true);
+  };
+
+  const handleShowDeleteStatementModal = () => {
+    setShowDeleteStatementModal(true);
   };
 
   const columns = useMemo(
@@ -135,7 +141,7 @@ function StatementsGrid() {
           sx: { color: "green", fontFamily: "sahel" },
         },
         Cell: () => (
-          <IconButton color="error">
+          <IconButton color="error" onClick={handleShowDeleteStatementModal}>
             <DeleteIcon />
           </IconButton>
         ),
@@ -191,14 +197,33 @@ function StatementsGrid() {
 
   const content = (
     <>
-      {showStatementModal && (
+      {showStatementModal ? (
         <Modal
           title={"حکم بازنشسته"}
           closeModal={() => setShowStatementModal(false)}
         >
           <RetiredStatementInfoForm />
         </Modal>
-      )}
+      ) : showDeleteStatementModal ? (
+        <Modal
+          title={"حذف حکم"}
+          closeModal={() => setShowDeleteStatementModal(false)}
+        >
+          <p>آیا از حذف این حکم اطمینان دارید؟</p>
+          <div className="flex-row flex-center">
+            <UserButton variant={"outline-success"} icon={"done"}>
+              بله
+            </UserButton>
+            <UserButton
+              variant={"danger"}
+              icon={"close"}
+              onClickFn={() => setShowDeleteStatementModal(false)}
+            >
+              خیر
+            </UserButton>
+          </div>
+        </Modal>
+      ) : null}
       <MaterialReactTable table={table} />
     </>
   );

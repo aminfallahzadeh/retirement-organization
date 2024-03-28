@@ -43,9 +43,14 @@ const data = [
 function RelatedInfoGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const [showDependentModal, setShowDependentModal] = useState(false);
+  const [showDeleteRelatedModal, setShowDeleteRelatedModal] = useState(false);
 
   const handleShowDependentModal = () => {
     setShowDependentModal(true);
+  };
+
+  const handleShowDeleteRelatedModal = () => {
+    setShowDeleteRelatedModal(true);
   };
 
   const columns = useMemo(
@@ -135,7 +140,7 @@ function RelatedInfoGrid() {
           sx: { color: "green", fontFamily: "sahel" },
         },
         Cell: () => (
-          <IconButton color="error">
+          <IconButton color="error" onClick={handleShowDeleteRelatedModal}>
             <DeleteIcon />
           </IconButton>
         ),
@@ -191,14 +196,33 @@ function RelatedInfoGrid() {
 
   const content = (
     <>
-      {showDependentModal && (
+      {showDependentModal ? (
         <Modal
           title={"اطلاعات فرد وابسته"}
           closeModal={() => setShowDependentModal(false)}
         >
           <DependentInfoForm />
         </Modal>
-      )}
+      ) : showDeleteRelatedModal ? (
+        <Modal
+          title={"حذف وابسته"}
+          closeModal={() => setShowDeleteRelatedModal(false)}
+        >
+          <p>آیا از حذف این وابسته اطمینان دارید؟</p>
+          <div className="flex-row flex-center">
+            <UserButton variant={"outline-success"} icon={"done"}>
+              بله
+            </UserButton>
+            <UserButton
+              variant={"danger"}
+              icon={"close"}
+              onClickFn={() => setShowDeleteRelatedModal(false)}
+            >
+              خیر
+            </UserButton>
+          </div>
+        </Modal>
+      ) : null}
       <MaterialReactTable table={table} />
     </>
   );
