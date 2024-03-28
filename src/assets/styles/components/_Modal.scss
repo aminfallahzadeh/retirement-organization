@@ -18,6 +18,11 @@
     &__header {
         text-align: center;
     }
+
+    &__body {
+        max-height: 600px;
+        overflow-y: auto;
+    }
 }
 
 .overlay {

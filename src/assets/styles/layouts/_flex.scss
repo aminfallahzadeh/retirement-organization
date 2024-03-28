@@ -36,13 +36,16 @@
     align-items: center;
 }
 
-.flex-space-between {
-    justify-content: space-between;
+.flex-end {
+    align-items: flex-end;
 }
 
-.flex-right {
-    justify-content: right;
-    align-items: center;
+.flex-start {
+    align-items: flex-start;
+}
+
+.flex-space-between {
+    justify-content: space-between;
 }
 
 .flex-grow-1 {

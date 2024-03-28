@@ -13,6 +13,8 @@ import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 // components
 import UserButton from "../components/UserButton";
+import Modal from "../components/Modal";
+import DependentInfoForm from "../forms/DependentInfoForm";
 
 // library imports
 import { PaginationItem } from "@mui/material";
@@ -40,6 +42,11 @@ const data = [
 
 function RelatedInfoGrid() {
   const [rowSelection, setRowSelection] = useState({});
+  const [showDependentModal, setShowDependentModal] = useState(false);
+
+  const handleShowDependentModal = () => {
+    setShowDependentModal(true);
+  };
 
   const columns = useMemo(
     () => [
@@ -113,7 +120,7 @@ function RelatedInfoGrid() {
           sx: { color: "green", fontFamily: "sahel" },
         },
         Cell: () => (
-          <IconButton color="success">
+          <IconButton color="success" onClick={handleShowDependentModal}>
             <EditIcon />
           </IconButton>
         ),
@@ -182,7 +189,19 @@ function RelatedInfoGrid() {
     state: { rowSelection },
   });
 
-  const content = <MaterialReactTable table={table} />;
+  const content = (
+    <>
+      {showDependentModal && (
+        <Modal
+          title={"اطلاعات فرد وابسته"}
+          closeModal={() => setShowDependentModal(false)}
+        >
+          <DependentInfoForm />
+        </Modal>
+      )}
+      <MaterialReactTable table={table} />
+    </>
+  );
 
   return content;
 }

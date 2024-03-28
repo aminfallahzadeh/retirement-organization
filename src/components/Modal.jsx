@@ -14,8 +14,8 @@ function Modal({ title, closeModal, children }) {
 
         <div className="Modal__header">
           <h4>{title}</h4>
+          <hr />
         </div>
-        <hr />
 
         <div className="Modal__body">{children}</div>
       </section>
