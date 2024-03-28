@@ -32,7 +32,7 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-function GroupsGridUserScreen() {
+function GroupsGridUser() {
   const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
   const refreshTokenHandler = useRefreshToken();
@@ -167,4 +167,4 @@ function GroupsGridUserScreen() {
   );
 }
 
-export default GroupsGridUserScreen;
+export default GroupsGridUser;

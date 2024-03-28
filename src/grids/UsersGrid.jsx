@@ -29,10 +29,10 @@ import {
 
 // components
 import Modal from "../components/Modal";
-import UserEditForm from "../components/UserEditForm";
+import EditUserForm from "../forms/EditUserForm";
 import UserButton from "../components/UserButton";
-import GroupsGridUserScreen from "../components/GroupsGridUserScreen";
-import UserGroupsGrid from "../components/UserGroupsGrid";
+import GroupsGridUser from "../grids/GroupsGridUser";
+import UserGroupsGrid from "../grids/UserGroupsGrid";
 import ArrowButtonsUsers from "../components/ArrowButtonsUsers";
 
 // library imports
@@ -319,7 +319,7 @@ function UsersGrid() {
               title={"ویرایش اطلاعات کاربر"}
               closeModal={() => setShowEditUserModal(false)}
             >
-              <UserEditForm setShowEditUserModal={setShowEditUserModal} />
+              <EditUserForm setShowEditUserModal={setShowEditUserModal} />
             </Modal>
           ) : showEditUserGroupsModal ? (
             <Modal
@@ -327,7 +327,7 @@ function UsersGrid() {
               closeModal={() => setShowEditUserGroupsModal(false)}
             >
               <div className="flex-row">
-                <GroupsGridUserScreen />
+                <GroupsGridUser />
                 <ArrowButtonsUsers />
                 <UserGroupsGrid />
               </div>

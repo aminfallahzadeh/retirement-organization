@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { useUpdateUserMutation } from "../slices/usersApiSlice";
 
 // components import
-import UserButton from "./UserButton";
+import UserButton from "../components/UserButton";
 
 // library imports
 import { toast } from "react-toastify";
@@ -75,10 +75,7 @@ function UserEditForm({ setShowEditUserModal }) {
     <section className="formContainer flex-col flex-center">
       <form method="POST" className="grid grid--col-3">
         <div className="inputBox__form">
-          <div
-            className="inputBox__form--input"
-            style={{ backgroundColor: "#a0a0a0" }}
-          >
+          <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">نام کاربری</div>
             <div className="inputBox__form--readOnly-content">
               {userObject.username}
@@ -137,6 +134,7 @@ function UserEditForm({ setShowEditUserModal }) {
             id="isActive"
             style={{ cursor: "pointer" }}
             name="isActive"
+            required
             value={userObject.isActive}
             onChange={handleUserObjectChange}
           >
