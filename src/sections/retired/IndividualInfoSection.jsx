@@ -19,14 +19,13 @@ function IndividualInfoSection() {
     <section className="pensionersAffairs">
       <Accordion
         sx={{
-          backgroundColor: "#2e3456",
-          color: "#fff",
+          backgroundColor: "#d9d9d9",
         }}
       >
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
-          expandIcon={<ArrowDropDownIcon sx={{ color: "#fff" }} />}
+          expandIcon={<ArrowDropDownIcon />}
         >
           اطلاعات فردی بازنشسته
         </AccordionSummary>
@@ -35,11 +34,15 @@ function IndividualInfoSection() {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion sx={{ backgroundColor: "#2e3456", color: "#fff" }}>
+      <Accordion
+        sx={{
+          backgroundColor: "#d9d9d9",
+        }}
+      >
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
-          expandIcon={<ArrowDropDownIcon sx={{ color: "#fff" }} />}
+          expandIcon={<ArrowDropDownIcon />}
         >
           اطلاعات پرسنلی
         </AccordionSummary>
@@ -48,11 +51,15 @@ function IndividualInfoSection() {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion sx={{ backgroundColor: "#2e3456", color: "#fff" }}>
+      <Accordion
+        sx={{
+          backgroundColor: "#d9d9d9",
+        }}
+      >
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
-          expandIcon={<ArrowDropDownIcon sx={{ color: "#fff" }} />}
+          expandIcon={<ArrowDropDownIcon />}
         >
           اطلاعات تکمیلی
         </AccordionSummary>
