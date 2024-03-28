@@ -72,6 +72,7 @@ function ItemsCreateGroupGrid({ groupName }) {
     isFetching,
     isSuccess,
     refetch,
+    error,
   } = useGetItemsQuery(token);
 
   const handleAddItem = async () => {
@@ -137,6 +138,18 @@ function ItemsCreateGroupGrid({ groupName }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, isSuccess, dispatch, refetch]);
 
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+        style: {
+          fontSize: "18px",
+        },
+      });
+    }
+  }, [error]);
+
   const columns = useMemo(
     () => [
       {
@@ -159,7 +172,6 @@ function ItemsCreateGroupGrid({ groupName }) {
     ...defaultTableOptions,
     columns,
     data: itemsTableData,
-    positionGlobalFilter: "left",
     enableRowSelection: true,
     muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
       onClick: (event) =>
@@ -168,7 +180,6 @@ function ItemsCreateGroupGrid({ groupName }) {
     }),
     initialState: {
       density: "compact",
-      showGlobalFilter: true,
       pagination: { pageIndex: 0, pageSize: 7 },
     },
     renderTopToolbarCustomActions: () => (

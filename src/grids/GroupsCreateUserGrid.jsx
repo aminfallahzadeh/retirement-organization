@@ -10,7 +10,7 @@ import { Box } from "@mui/material";
 import {} from "@mui/icons-material";
 
 // helpers
-import { convertToPersianNumber, findById } from "../helper.js";
+import { convertToPersianNumber } from "../helper.js";
 
 // components
 import UserButton from "../components/UserButton";
@@ -21,10 +21,7 @@ import { defaultTableOptions } from "../utils.js";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
-import {
-  setGroupsTableData,
-  setSelectedGroupData,
-} from "../slices/groupsDataSlice";
+import { setGroupsTableData } from "../slices/groupsDataSlice";
 
 // library imports
 import { toast } from "react-toastify";
@@ -40,10 +37,12 @@ import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
   useMaterialReactTable,
+  getMRT_RowSelectionHandler,
 } from "material-react-table";
 
 function GriyosCreateUserGrid() {
   const [rowSelection, setRowSelection] = useState({});
+  const [addedGroups, setAddedGroups] = useState([]);
   const { token } = useSelector((state) => state.auth);
   const refreshTokenHandler = useRefreshToken();
 
@@ -110,20 +109,16 @@ function GriyosCreateUserGrid() {
     ...defaultTableOptions,
     columns,
     data: groupsTableData,
+    enableRowSelection: true,
+    muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
+      onClick: (event) =>
+        getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
+      sx: { cursor: "pointer" },
+    }),
     initialState: {
       density: "compact",
+      pagination: { pageIndex: 0, pageSize: 7 },
     },
-    muiTableBodyRowProps: ({ row }) => ({
-      //implement row selection click events manually
-      onClick: () =>
-        setRowSelection(() => ({
-          [row.id]: true,
-        })),
-      selected: rowSelection[row.id],
-      sx: {
-        cursor: "pointer",
-      },
-    }),
     renderTopToolbarCustomActions: () => (
       <Box
         sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
@@ -164,20 +159,13 @@ function GriyosCreateUserGrid() {
   });
 
   useEffect(() => {
-    const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedGroup = findById(groupsTableData, id);
+    const selectedRows = table.getSelectedRowModel().rows;
+    setAddedGroups(selectedRows.map((row) => row.original));
+  }, [table, rowSelection]);
 
-    if (id) {
-      dispatch(setSelectedGroupData(selectedGroup));
-    } else {
-      dispatch(setSelectedGroupData([]));
-    }
-
-    return () => {
-      // Cleanup function to clear selected group
-      dispatch(setSelectedGroupData([]));
-    };
-  }, [dispatch, table, rowSelection, groupsTableData]);
+  useEffect(() => {
+    console.log(addedGroups);
+  }, [addedGroups]);
 
   // check if token is expired on compoennt mount
   useEffect(() => {
