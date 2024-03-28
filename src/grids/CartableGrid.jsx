@@ -21,66 +21,19 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-const data = [
-  {
-    code: "۰۱۲۳۴۵۶۷۸۹",
-    name: "سعید علوی",
-    type: "درخواست بازنشستگی",
-    date: "۱۴۰۲-۱۳-۱۳",
-  },
-  {
-    code: "۰۱۲۳۴۵۶۷۸۹",
-    name: "سعید علوی",
-    type: "درخواست بازنشستگی",
-    date: "۱۴۰۲-۱۳-۱۳",
-  },
-  {
-    code: "۰۱۲۳۴۵۶۷۸۹",
-    name: "سعید علوی",
-    type: "درخواست بازنشستگی",
-    date: "۱۴۰۲-۱۳-۱۳",
-  },
-];
+const data = [];
 
 function CartableGrid() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "code",
-        header: "کد ملی",
+        accessorKey: "sender",
+        header: "فرستنده",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "right",
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-      },
-      {
-        accessorKey: "name",
-        header: "نام و نام خانوادگی فرستنده",
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "right",
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-      },
-      {
-        accessorKey: "type",
-        header: "نوع درخواست",
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-          align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
@@ -89,11 +42,20 @@ function CartableGrid() {
         header: "تاریخ درخواست",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "right",
+        },
+        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
+      },
+      {
+        accessorKey: "body",
+        header: "متن درخواست",
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        muiTableBodyCellProps: {
+          sx: { fontFamily: "sahel" },
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
@@ -125,12 +87,7 @@ function CartableGrid() {
     },
   });
 
-  const content = (
-    <section>
-      <h4 className="title">کارتابل</h4>
-      <MaterialReactTable table={table} />
-    </section>
-  );
+  const content = <MaterialReactTable table={table} />;
 
   return content;
 }

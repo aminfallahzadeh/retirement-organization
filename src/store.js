@@ -10,6 +10,7 @@ import groupItemsDataSliceReducer from "./slices/groupItemsDataSlice";
 import usersDataSliceReducer from "./slices/usersDataSlice";
 import userGroupsDataSliceReducer from "./slices/userGroupsDataSlice";
 import groupsUserDataSliceReducer from "./slices/groupsUserDataSlice";
+import rolesDataSlice from "./slices/rolesDataSlice";
 
 const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ const store = configureStore({
     usersData: usersDataSliceReducer,
     userGroupsData: userGroupsDataSliceReducer,
     groupsUserData: groupsUserDataSliceReducer,
+    rolesData: rolesDataSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),
