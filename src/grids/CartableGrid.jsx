@@ -8,11 +8,13 @@ import { convertToPersianNumber } from "../helper.js";
 import { defaultTableOptions } from "../utils.js";
 
 // redux imports
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useGetRequestQuery } from "../slices/requestApiSlice";
 
 // library imports
 import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import { setRequestData } from "../slices/requestDataSlice";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -31,16 +33,50 @@ import {
 function CartableGrid({ selectedRole }) {
   const { token } = useSelector((state) => state.auth);
 
+  const dispatch = useDispatch();
+
+  const { requestData } = useSelector((state) => state.requestData);
+
   useEffect(() => {
     console.log(selectedRole);
     console.log("token", token);
   }, [selectedRole, token]);
 
-  const { data: requests } = useGetRequestQuery(token);
+  const {
+    data: requests,
+    isSuccess,
+    isLoading,
+    isFetching,
+    error,
+  } = useGetRequestQuery({ token, role: selectedRole });
 
   useEffect(() => {
     console.log(requests);
   }, [requests]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      const data = requests.itemList.map((item) => ({
+        id: item.id,
+        sender: item.requestFrom,
+        date: item.requestDate,
+        body: item.Text,
+      }));
+
+      dispatch(setRequestData(data));
+    }
+    return () => {
+      dispatch(setRequestData([]));
+    };
+  }, [requests, isSuccess, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
 
   const columns = useMemo(
     () => [
@@ -84,7 +120,7 @@ function CartableGrid({ selectedRole }) {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: [],
+    data: requestData,
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
@@ -105,7 +141,17 @@ function CartableGrid({ selectedRole }) {
     },
   });
 
-  const content = <MaterialReactTable table={table} />;
+  const content = (
+    <>
+      {isLoading || isFetching ? (
+        <p className="skeleton">
+          <Skeleton count={3} />
+        </p>
+      ) : (
+        <MaterialReactTable table={table} />
+      )}
+    </>
+  );
 
   return content;
 }

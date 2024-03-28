@@ -16,13 +16,37 @@ export const requestApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getRequest: builder.query({
-      query: (token) => ({
-        url: `${REQUEST_URL_HTTPS}/GetRequest?Role=asd`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      }),
+      query: ({
+        token,
+        role,
+        personID,
+        requestID,
+        RequestDateFrom,
+        RequestDateTo,
+      }) => {
+        let url = `${REQUEST_URL_HTTPS}/GetRequest?Role=${role}`;
+
+        if (personID) {
+          url += `&PersonID=${personID}`;
+        }
+        if (requestID) {
+          url += `&RequestID=${requestID}`;
+        }
+        if (RequestDateFrom) {
+          url += `&RequestDateFrom=${RequestDateFrom}`;
+        }
+        if (RequestDateTo) {
+          url += `&RequestDateTo=${RequestDateTo}`;
+        }
+
+        return {
+          url,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        };
+      },
     }),
   }),
 });
