@@ -1,5 +1,5 @@
 // react imports
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 
 // helper imports
 import { convertToPersianNumber } from "../helper.js";
@@ -7,7 +7,12 @@ import { convertToPersianNumber } from "../helper.js";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
+// redux imports
+import { useSelector } from "react-redux";
+import { useGetRequestQuery } from "../slices/requestApiSlice";
+
 // library imports
+import { toast } from "react-toastify";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -21,9 +26,22 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-const data = [];
+// const data = [];
 
-function CartableGrid() {
+function CartableGrid({ selectedRole }) {
+  const { token } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    console.log(selectedRole);
+    console.log("token", token);
+  }, [selectedRole, token]);
+
+  const { data: requests } = useGetRequestQuery(token);
+
+  useEffect(() => {
+    console.log(requests);
+  }, [requests]);
+
   const columns = useMemo(
     () => [
       {
@@ -66,7 +84,7 @@ function CartableGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data,
+    data: [],
     muiPaginationProps: {
       color: "success",
       variant: "outlined",

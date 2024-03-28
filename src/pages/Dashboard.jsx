@@ -14,8 +14,13 @@ import RoleSelectionForm from "../forms/RoleSelectionForm";
 
 function Dashboard() {
   const { token } = useSelector((state) => state.auth);
-  const { data: roles, isLoading, error, isSuccess } = useGetRoleQuery(token);
-  const [selectedRole, setSelectedRole] = useState("");
+  const {
+    data: roles,
+    isLoading,
+    error,
+    isSuccess: isRolesSuccess,
+  } = useGetRoleQuery(token);
+  const [selectedRole, setSelectedRole] = useState(null);
 
   useEffect(() => {
     if (error) {
@@ -27,14 +32,15 @@ function Dashboard() {
   }, [error]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isRolesSuccess) {
       setSelectedRole(roles?.itemList[0].itemName);
     }
-  }, [isSuccess, roles, setSelectedRole]);
+  }, [isRolesSuccess, roles, setSelectedRole]);
 
   useEffect(() => {
     console.log(selectedRole);
-  }, [selectedRole]);
+    console.log(isRolesSuccess);
+  }, [selectedRole, isRolesSuccess]);
 
   return (
     <section className="main flex flex-col">
@@ -44,7 +50,9 @@ function Dashboard() {
         isLoading={isLoading}
         roles={roles}
       />
-      <CartableGrid />
+      {isRolesSuccess && selectedRole && (
+        <CartableGrid selectedRole={selectedRole} />
+      )}
     </section>
   );
 }
