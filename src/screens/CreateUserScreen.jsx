@@ -1,7 +1,38 @@
+// react imports
+import { useState, useEffect } from "react";
+
 // components
 import GroupsCreateUserGrid from "../grids/GroupsCreateUserGrid";
 
 function CreateUserScreen() {
+  const [userObject, setUserObject] = useState({
+    id: "",
+    username: "",
+    password: "",
+    isActive: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    sex: "",
+    tel: "",
+    mobile: "",
+    createDate: "",
+    createUser: "",
+    isDelete: 0,
+    editDate: "",
+    editUser: "",
+    refreshToken: "",
+  });
+
+  const handleUserObjectChange = (e) => {
+    const { name, value } = e.target;
+    setUserObject({ ...userObject, [name]: value });
+  };
+
+  useEffect(() => {
+    console.log("userObject", userObject);
+  }, [userObject]);
+
   const content = (
     <section className="main">
       <form className="formContainer grid grid--col-4">
@@ -11,6 +42,8 @@ function CreateUserScreen() {
             className="inputBox__form--input"
             required
             id="usrName"
+            name="username"
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="usrName">
             نام کاربری
@@ -22,6 +55,8 @@ function CreateUserScreen() {
             type="text"
             className="inputBox__form--input"
             required
+            name="password"
+            onChange={handleUserObjectChange}
             title="لطفا یک رمز عبور معتبر وارد کنید"
             id="pssw"
           />
@@ -37,6 +72,7 @@ function CreateUserScreen() {
             style={{ cursor: "pointer" }}
             name="isActive"
             required
+            onChange={handleUserObjectChange}
           >
             <option>انتخاب</option>
             <option value="true">فعال</option>
@@ -53,6 +89,8 @@ function CreateUserScreen() {
             className="inputBox__form--input"
             required
             id="nam"
+            name="firstName"
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="nam">
             نام
@@ -65,6 +103,8 @@ function CreateUserScreen() {
             className="inputBox__form--input"
             required
             id="namekh"
+            name="lastName"
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="namekh">
             نام خانوادگی
@@ -77,6 +117,8 @@ function CreateUserScreen() {
             className="inputBox__form--input"
             required
             id="postE"
+            name="email"
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="postE">
             پست الکترونیک
@@ -89,6 +131,8 @@ function CreateUserScreen() {
             id="sex"
             style={{ cursor: "pointer" }}
             required
+            name="sex"
+            onChange={handleUserObjectChange}
           >
             <option>انتخاب</option>
             <option value="true">مرد</option>
@@ -105,6 +149,8 @@ function CreateUserScreen() {
             className="inputBox__form--input"
             required
             id="Tell"
+            name="tel"
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="Tell">
             تلفن ثابت
@@ -117,6 +163,8 @@ function CreateUserScreen() {
             className="inputBox__form--input"
             required
             id="Cell"
+            name="mobile"
+            onChange={handleUserObjectChange}
           />
           <label className="inputBox__form--label" htmlFor="Cell">
             تلفن همراه
@@ -124,7 +172,7 @@ function CreateUserScreen() {
         </div>
       </form>
 
-      <GroupsCreateUserGrid />
+      <GroupsCreateUserGrid userObject={userObject} />
     </section>
   );
 

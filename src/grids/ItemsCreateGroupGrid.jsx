@@ -49,6 +49,7 @@ function ItemsCreateGroupGrid({ groupName }) {
   const { token } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [insertGroup, { isLoading: isCreating }] = useInsertGroupMutation();
   const [deleteGroupItems, { isLoading: isDeleting }] =
@@ -64,8 +65,6 @@ function ItemsCreateGroupGrid({ groupName }) {
 
   const [rowSelection, setRowSelection] = useState({});
 
-  const dispatch = useDispatch();
-
   const {
     data: items,
     isLoading,
@@ -75,7 +74,7 @@ function ItemsCreateGroupGrid({ groupName }) {
     error,
   } = useGetItemsQuery(token);
 
-  const handleAddItem = async () => {
+  const handleCreateGroup = async () => {
     try {
       const createGroupRes = await insertGroup({
         token,
@@ -189,7 +188,7 @@ function ItemsCreateGroupGrid({ groupName }) {
         <UserButton
           variant="outline-success"
           icon={"done"}
-          onClickFn={handleAddItem}
+          onClickFn={handleCreateGroup}
           disabled={!groupName}
           isLoading={isCreating || isDeleting || isInserting}
         >

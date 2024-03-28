@@ -26,13 +26,13 @@ function UserEditForm({ setShowEditUserModal }) {
     sex: "0",
   });
 
-  const [updateUser, { isLoading }] = useUpdateUserMutation();
-  const { token } = useSelector((state) => state.auth);
-
   const handleUserObjectChange = (e) => {
     const { name, value } = e.target;
     setUserObject({ ...userObject, [name]: value });
   };
+
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
+  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
     console.log("userObject", userObject);

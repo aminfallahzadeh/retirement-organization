@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 // mui imports
 import { Box } from "@mui/material";
-import {} from "@mui/icons-material";
 
 // helpers
 import { convertToPersianNumber } from "../helper.js";
@@ -20,7 +19,12 @@ import { defaultTableOptions } from "../utils.js";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { useGetGroupQuery } from "../slices/usersApiSlice";
+import {
+  useGetGroupQuery,
+  useInsertUserMutation,
+  useInsertGroupUsersMutation,
+  useDeleteGroupUsersMutation,
+} from "../slices/usersApiSlice";
 import { setGroupsTableData } from "../slices/groupsDataSlice";
 
 // library imports
@@ -40,8 +44,9 @@ import {
   getMRT_RowSelectionHandler,
 } from "material-react-table";
 
-function GriyosCreateUserGrid() {
+function GriyosCreateUserGrid({ userObject }) {
   const [rowSelection, setRowSelection] = useState({});
+
   const [addedGroups, setAddedGroups] = useState([]);
   const { token } = useSelector((state) => state.auth);
   const refreshTokenHandler = useRefreshToken();
@@ -59,6 +64,66 @@ function GriyosCreateUserGrid() {
     error,
     refetch,
   } = useGetGroupQuery(token);
+
+  const [insertUser, { isLoading: isCreating }] = useInsertUserMutation();
+  const [insertGroupUsers, { isLoading: isInserting }] =
+    useInsertGroupUsersMutation();
+  const [deleteGroupUsers, { isLoading: isDeleting }] =
+    useDeleteGroupUsersMutation();
+
+  const handleCreateUser = async () => {
+    try {
+      const createUserRes = await insertUser({
+        token,
+        data: {
+          ...userObject,
+          "sex":
+            userObject.sex === "1" || userObject.sex === true ? true : false,
+          "isActive": userObject.isActive === "true" ? true : false,
+        },
+      }).unwrap();
+      try {
+        const userID = createUserRes.itemList[0].id;
+        const deleteRes = await deleteGroupUsers({
+          token,
+          userID,
+        }).unwrap();
+        console.log(deleteRes);
+        try {
+          const data = addedGroups.map((item) => ({
+            "id": "",
+            userID,
+            "groupID": item.id,
+            "groupName": "",
+          }));
+          const insertRes = await insertGroupUsers({
+            token,
+            data,
+          }).unwrap();
+          console.log(insertRes);
+          toast.success(insertRes.message, {
+            autoClose: 2000,
+          });
+          navigate("/retirement-organization/users");
+        } catch (err) {
+          console.log(err);
+          toast.error(err?.data?.message || err.error, {
+            autoClose: 2000,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
 
   useEffect(() => {
     refetch();
@@ -123,7 +188,13 @@ function GriyosCreateUserGrid() {
       <Box
         sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
       >
-        <UserButton variant="outline-success" icon={"done"}>
+        <UserButton
+          variant="outline-success"
+          icon={"done"}
+          onClickFn={handleCreateUser}
+          disabled={isCreating}
+          isLoading={isCreating || isDeleting || isInserting}
+        >
           &nbsp; ذخیره
         </UserButton>
 
@@ -131,6 +202,7 @@ function GriyosCreateUserGrid() {
           variant="outline-primary"
           icon={"arrow-back"}
           onClickFn={() => navigate("/retirement-organization/users")}
+          disabled={isCreating || isDeleting || isInserting}
         >
           &nbsp; بازگشت
         </UserButton>

@@ -25,11 +25,7 @@ function CreateGroupScreen() {
         </form>
       </div>
 
-      <div className="flex-row">
-        <div className="flex-grow-1">
-          <ItemsCreateGroupGrid groupName={groupName} />
-        </div>
-      </div>
+      <ItemsCreateGroupGrid groupName={groupName} />
     </section>
   );
 
