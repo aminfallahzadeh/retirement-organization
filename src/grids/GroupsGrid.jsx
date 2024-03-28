@@ -18,10 +18,10 @@ import { convertToPersianNumber, findById } from "../helper.js";
 
 // components
 import Modal from "../components/Modal";
-import GroupEditForm from "../components/GroupEditForm";
+import EditGroupForm from "../forms/EditGroupForm";
 import UserButton from "../components/UserButton";
-import ItemsGrid from "../components/ItemsGrid";
-import GroupItemGrid from "../components/GroupItemGrid";
+import ItemsGrid from "../grids/ItemsGrid";
+import GroupItemsGrid from "../grids/GroupItemsGrid";
 import ArrowButtonsGroups from "../components/ArrowButtonsGroups";
 
 // utils imports
@@ -318,7 +318,7 @@ function GroupsGrid() {
               title={"ویرایش نام گروه"}
               closeModal={() => setShowEditNameModal(false)}
             >
-              <GroupEditForm setShowEditModal={setShowEditNameModal} />
+              <EditGroupForm setShowEditModal={setShowEditNameModal} />
             </Modal>
           ) : showDeleteGroupModal ? (
             <Modal
@@ -352,7 +352,7 @@ function GroupsGrid() {
               <div className="flex-row">
                 <ItemsGrid />
                 <ArrowButtonsGroups />
-                <GroupItemGrid />
+                <GroupItemsGrid />
               </div>
             </Modal>
           ) : null}

@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { useUpdateGroupMutation } from "../slices/usersApiSlice";
 
 // components import
-import UserButton from "./UserButton";
+import UserButton from "../components/UserButton";
 
 function GroupNameInput({ setShowEditModal }) {
   const { selectedGroupData } = useSelector((state) => state.groupsData);

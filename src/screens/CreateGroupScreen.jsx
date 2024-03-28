@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 // components
-import ItemsGridCreateGroup from "../components/ItemsGridCreateGroup";
+import ItemsCreateGroupGrid from "../grids/ItemsCreateGroupGrid";
 
 function CreateGroupScreen() {
   const [groupName, setGroupName] = useState("");
@@ -27,7 +27,7 @@ function CreateGroupScreen() {
 
       <div className="flex-row">
         <div className="flex-grow-1">
-          <ItemsGridCreateGroup groupName={groupName} />
+          <ItemsCreateGroupGrid groupName={groupName} />
         </div>
       </div>
     </section>

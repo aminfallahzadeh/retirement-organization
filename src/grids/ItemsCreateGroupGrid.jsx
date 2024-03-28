@@ -12,7 +12,7 @@ import { convertToPersianNumber } from "../helper.js";
 import { defaultTableOptions } from "../utils.js";
 
 // components
-import UserButton from "./UserButton";
+import UserButton from "../components/UserButton";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
@@ -44,7 +44,7 @@ import {
   getMRT_RowSelectionHandler,
 } from "material-react-table";
 
-function ItemsGridCreateGroup({ groupName }) {
+function ItemsCreateGroupGrid({ groupName }) {
   const [addedItems, setAddedItems] = useState([]);
   const { token } = useSelector((state) => state.auth);
 
@@ -247,4 +247,4 @@ function ItemsGridCreateGroup({ groupName }) {
   );
 }
 
-export default ItemsGridCreateGroup;
+export default ItemsCreateGroupGrid;
