@@ -27,19 +27,19 @@ Grids:
   [+] complete the move functionality in groups grids page @done(24-03-18 19:01)
   [+] remove circle selections on top grids @done(24-03-18 19:01)
   [ ] add multiselection on bottom grids
+  [ ] replace pagination with scrolling
   [ ] implement multi selection for sub grids
   [ ] change grids theme
-  [ ] move all grids from components folder to grids folder
+  [+] move all grids from components folder to grids folder @done(24-03-28 19:48)
 
 Cartable Screen:
-  [ ] add roles grid to cartable screen
-  [ ] add request grid to the bottom of roles grid
-  [ ] request grid send request to based on first role as default for initial data 
-  [ ] change request grid data based on role selection
+  [+] add roles combo box to cartable screen @done(24-03-28 19:48)
+  [+] add request grid to the bottom of roles grid @done(24-03-28 19:48)
+  [+] request grid send request to based on first role as default for initial data @done(24-03-28 19:48)
+  [+] change request grid data based on role selection @done(24-03-28 19:48)
 
 Users Screen:
-  [ ] implement create new user screen
-  [ ] fix update user query error 500
+  [+] implement create new user screen @done(24-03-28 19:49)
 
 Retired Screen:
   [ ] add request tab for other retired requests

@@ -10,6 +10,7 @@ import TabPanel from "@mui/lab/TabPanel";
 
 // component imports
 import RelatedInfoGrid from "../../grids/RelatedInfoGrid";
+import StatementsGrid from "../../grids/StatementsGrid";
 
 export default function LabTabs() {
   const [value, setValue] = useState("1");
@@ -20,7 +21,7 @@ export default function LabTabs() {
 
   return (
     <TabContext value={value}>
-      <Box>
+      <Box sx={{ bgcolor: "background.paper", borderRadius: 1 }}>
         <TabList
           onChange={handleChange}
           aria-label="lab API tabs example"
@@ -47,7 +48,7 @@ export default function LabTabs() {
           padding: "0",
         }}
       >
-        Grid 2
+        <StatementsGrid />
       </TabPanel>
       <TabPanel
         value="3"
