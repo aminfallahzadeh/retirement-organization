@@ -99,10 +99,7 @@ function Login() {
 
   const content = (
     <>
-      {" "}
-      <video autoPlay loop className="bg" muted>
-        <source src="./images/winter.webm" type="video/webm" />
-      </video>
+      <img src="./images/login-bg.jpg" className="bg" />
       <form
         className="loginContainer"
         onSubmit={handleSubmit}
