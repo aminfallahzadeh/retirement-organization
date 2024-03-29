@@ -49,13 +49,13 @@ function App() {
     throttle: 500,
   });
 
-  useEffect(() => {
-    if (!token) {
-      navigate("/retirement-organization/");
-    } else {
-      setUserName(jwtDecode(token).name);
-    }
-  }, [token, navigate, isLoginPage]);
+  // useEffect(() => {
+  //   if (!token) {
+  //     navigate("/retirement-organization/");
+  //   } else {
+  //     setUserName(jwtDecode(token).name);
+  //   }
+  // }, [token, navigate, isLoginPage]);
 
   useEffect(() => {
     if (token) {
