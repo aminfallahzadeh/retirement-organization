@@ -61,7 +61,7 @@ function CartableGrid({ selectedRole }) {
         name: item.stateName,
         sender: item.requestFrom,
         date: item.requestDate,
-        body: item.Text,
+        body: item.requestText,
       }));
 
       dispatch(setRequestData(data));
