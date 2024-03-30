@@ -14,7 +14,7 @@ function RoleSelectionForm({ setSelectedRole, isLoading, roles }) {
             onChange={handleRoleSelection}
           >
             {roles?.itemList?.map((role) => (
-              <option key={role.itemName} value={role.itemName}>
+              <option key={role.itemName} value={role.url}>
                 {role.itemName}
               </option>
             ))}

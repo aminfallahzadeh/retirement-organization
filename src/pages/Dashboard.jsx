@@ -20,6 +20,7 @@ function Dashboard() {
     error,
     isSuccess: isRolesSuccess,
   } = useGetRoleQuery(token);
+
   const [selectedRole, setSelectedRole] = useState(null);
 
   useEffect(() => {
@@ -33,14 +34,10 @@ function Dashboard() {
 
   useEffect(() => {
     if (isRolesSuccess) {
-      setSelectedRole(roles?.itemList[0].itemName);
+      console.log(roles);
+      setSelectedRole(roles?.itemList[0].url);
     }
   }, [isRolesSuccess, roles, setSelectedRole]);
-
-  useEffect(() => {
-    console.log(selectedRole);
-    console.log(isRolesSuccess);
-  }, [selectedRole, isRolesSuccess]);
 
   return (
     <section className="main flex flex-col">

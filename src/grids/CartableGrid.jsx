@@ -39,7 +39,6 @@ function CartableGrid({ selectedRole }) {
 
   useEffect(() => {
     console.log(selectedRole);
-    console.log("token", token);
   }, [selectedRole, token]);
 
   const {
@@ -56,8 +55,10 @@ function CartableGrid({ selectedRole }) {
 
   useEffect(() => {
     if (isSuccess) {
+      console.log(requests);
       const data = requests.itemList.map((item) => ({
         id: item.id,
+        name: item.stateName,
         sender: item.requestFrom,
         date: item.requestDate,
         body: item.Text,
@@ -80,6 +81,17 @@ function CartableGrid({ selectedRole }) {
 
   const columns = useMemo(
     () => [
+      {
+        accessorKey: "name",
+        header: "نام درخواست",
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        muiTableBodyCellProps: {
+          sx: { fontFamily: "sahel" },
+        },
+        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
+      },
       {
         accessorKey: "sender",
         header: "فرستنده",
