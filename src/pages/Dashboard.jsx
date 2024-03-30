@@ -34,7 +34,6 @@ function Dashboard() {
 
   useEffect(() => {
     if (isRolesSuccess) {
-      console.log(roles);
       setSelectedRole(roles?.itemList[0].url);
     }
   }, [isRolesSuccess, roles, setSelectedRole]);

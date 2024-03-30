@@ -153,9 +153,6 @@ function GroupsGrid() {
       console.log(error);
       toast.error(error?.data?.message || error.error, {
         autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
       });
     }
   }, [error]);

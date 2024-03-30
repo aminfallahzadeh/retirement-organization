@@ -31,6 +31,7 @@ import CreateUserScreen from "./screens/CreateUserScreen";
 import RetiredScreen from "./screens/RetiredScreen.jsx";
 import GroupsScreen from "./screens/GroupsScreen";
 import UsersScreen from "./screens/UsersScreen";
+import RequestScreen from "./screens/RequestScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -70,6 +71,11 @@ const router = createBrowserRouter(
         <Route
           path="/retirement-organization/create-user"
           element={<CreateUserScreen />}
+        />
+
+        <Route
+          path="/retirement-organization/request"
+          element={<RequestScreen />}
         />
       </Route>
       <Route path="*" element={<Error />} />

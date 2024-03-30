@@ -1,5 +1,9 @@
 // react imports
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
+import useRefreshToken from "../hooks/useRefresh";
+
+// rrd imports
+import { Link } from "react-router-dom";
 
 // helper imports
 import { convertToPersianNumber } from "../helper.js";
@@ -7,14 +11,21 @@ import { convertToPersianNumber } from "../helper.js";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
+// mui imports
+import { IconButton } from "@mui/material";
+import {
+  RemoveRedEye as RemoveRedEyeIcon,
+  Feed as FeedIcon,
+} from "@mui/icons-material";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetRequestQuery } from "../slices/requestApiSlice";
+import { setRequestTableData } from "../slices/requestsDataSlice.js";
 
 // library imports
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
-import { setRequestData } from "../slices/requestDataSlice";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -28,18 +39,14 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-// const data = [];
-
 function CartableGrid({ selectedRole }) {
+  const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
+  const refreshTokenHandler = useRefreshToken();
 
   const dispatch = useDispatch();
 
-  const { requestData } = useSelector((state) => state.requestData);
-
-  useEffect(() => {
-    console.log(selectedRole);
-  }, [selectedRole, token]);
+  const { requestTableData } = useSelector((state) => state.requestsData);
 
   const {
     data: requests,
@@ -47,29 +54,25 @@ function CartableGrid({ selectedRole }) {
     isLoading,
     isFetching,
     error,
+    refetch,
   } = useGetRequestQuery({ token, role: selectedRole });
 
   useEffect(() => {
-    console.log(requests);
-  }, [requests]);
-
-  useEffect(() => {
+    refetch();
     if (isSuccess) {
-      console.log(requests);
       const data = requests.itemList.map((item) => ({
         id: item.id,
-        name: item.stateName,
         sender: item.requestFrom,
         date: item.requestDate,
         body: item.requestText,
       }));
 
-      dispatch(setRequestData(data));
+      dispatch(setRequestTableData(data));
     }
-    return () => {
-      dispatch(setRequestData([]));
-    };
-  }, [requests, isSuccess, dispatch]);
+    // return () => {
+    //   dispatch(setRequestData([]));
+    // };
+  }, [requests, isSuccess, dispatch, refetch]);
 
   useEffect(() => {
     if (error) {
@@ -82,8 +85,8 @@ function CartableGrid({ selectedRole }) {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "name",
-        header: "نام درخواست",
+        accessorKey: "id",
+        header: "شماره درخواست",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
         },
@@ -115,15 +118,36 @@ function CartableGrid({ selectedRole }) {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
-        accessorKey: "body",
-        header: "متن درخواست",
+        accessorKey: "observe",
+        header: "مشاهده درخواست",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
         },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
+        Cell: ({ row }) => (
+          <Link to={`/retirement-organization/request?id=${row.id}`}>
+            <IconButton color="primary">
+              <RemoveRedEyeIcon />
+            </IconButton>
+          </Link>
+        ),
+      },
+      {
+        accessorKey: "senderInfo",
+        header: "اطلاعات فرستنده",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
         },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
+        Cell: () => (
+          <IconButton color="primary">
+            <FeedIcon />
+          </IconButton>
+        ),
       },
     ],
     []
@@ -132,12 +156,25 @@ function CartableGrid({ selectedRole }) {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: requestData,
+    data: requestTableData,
+    initialState: {
+      density: "compact",
+    },
+    muiTableBodyRowProps: ({ row }) => ({
+      //implement row selection click events manually
+      onClick: () =>
+        setRowSelection(() => ({
+          [row.id]: true,
+        })),
+      selected: rowSelection[row.id],
+      sx: {
+        cursor: "pointer",
+      },
+    }),
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
       showRowsPerPage: false,
-      dir: "rtl",
       renderItem: (item) => (
         <PaginationItem
           {...item}
@@ -151,7 +188,27 @@ function CartableGrid({ selectedRole }) {
         />
       ),
     },
+    getRowId: (originalRow) => originalRow.id,
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
   });
+
+  // useEffect(() => {
+  //   const id = Object.keys(table.getState().rowSelection)[0];
+  //   const selectedRequest = findById(requestTableData, id);
+
+  //   if (id) {
+  //     dispatch(setSelectedRequestData(selectedRequest));
+  //   } else {
+  //     dispatch(setSelectedRequestData([]));
+  //   }
+  // }, [dispatch, table, rowSelection, requestTableData]);
+
+  // check if token is expired on compoennt mount
+  useEffect(() => {
+    refreshTokenHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const content = (
     <>
