@@ -22,11 +22,7 @@ export default function LabTabs() {
   return (
     <TabContext value={value}>
       <Box sx={{ bgcolor: "background.paper", borderRadius: 1 }}>
-        <TabList
-          onChange={handleChange}
-          aria-label="lab API tabs example"
-          variant="fullWidth"
-        >
+        <TabList onChange={handleChange} aria-label="tabs" variant="fullWidth">
           <Tab label="وابسته" value="1" />
           <Tab label="احکام" value="2" />
           <Tab label="فیش حقوقی" value="3" />

@@ -49,7 +49,7 @@ const router = createBrowserRouter(
         />
 
         <Route
-          path="/retirement-organization/affairs"
+          path="/retirement-organization/retired"
           element={<RetiredScreen />}
         />
 

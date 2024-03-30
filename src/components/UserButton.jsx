@@ -11,6 +11,9 @@ import {
   Search as SearchIcon,
   Login as LoginIcon,
   ArrowBackOutlined as ArrowBackOutlinedIcon,
+  Print as PrintIcon,
+  Send as SendIcon,
+  KeyboardReturn as KeyboardReturnIcon,
 } from "@mui/icons-material";
 
 function SaveButton({
@@ -76,6 +79,18 @@ function SaveButton({
           ) : icon === "arrow-back" ? (
             <>
               <ArrowBackOutlinedIcon />
+            </>
+          ) : icon === "print" ? (
+            <>
+              <PrintIcon />
+            </>
+          ) : icon === "send" ? (
+            <>
+              <SendIcon />
+            </>
+          ) : icon === "return" ? (
+            <>
+              <KeyboardReturnIcon />
             </>
           ) : null}
           {children}

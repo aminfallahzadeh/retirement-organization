@@ -28,11 +28,6 @@ function SidebarNav() {
             </>
           }
         >
-          <MenuItem component={<Link to="/retirement-organization/affairs" />}>
-            {" "}
-            بازنشسته
-          </MenuItem>
-
           <MenuItem> احکام گروهی </MenuItem>
           <MenuItem> رویت تعرفه کارمندی </MenuItem>
           <MenuItem> رویت احکام کارمندی </MenuItem>

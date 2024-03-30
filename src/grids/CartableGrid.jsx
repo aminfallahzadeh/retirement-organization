@@ -68,10 +68,11 @@ function CartableGrid({ selectedRole }) {
       }));
 
       dispatch(setRequestTableData(data));
+      sessionStorage.setItem("requests", JSON.stringify(data));
     }
-    // return () => {
-    //   dispatch(setRequestData([]));
-    // };
+    return () => {
+      dispatch(setRequestTableData([]));
+    };
   }, [requests, isSuccess, dispatch, refetch]);
 
   useEffect(() => {
@@ -96,8 +97,19 @@ function CartableGrid({ selectedRole }) {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
+        accessorKey: "requestType",
+        header: "نوع درخواست",
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+        },
+        muiTableBodyCellProps: {
+          sx: { fontFamily: "sahel" },
+        },
+        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
+      },
+      {
         accessorKey: "sender",
-        header: "فرستنده",
+        header: "ارسال کننده",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
         },
@@ -118,6 +130,23 @@ function CartableGrid({ selectedRole }) {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
+        accessorKey: "senderInfo",
+        header: "اطلاعات درخواست کننده",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel", width: "150px" },
+        },
+        Cell: () => (
+          <Link to={"/retirement-organization/retired"}>
+            <IconButton color="primary">
+              <FeedIcon />
+            </IconButton>
+          </Link>
+        ),
+      },
+      {
         accessorKey: "observe",
         header: "مشاهده درخواست",
         enableSorting: false,
@@ -132,21 +161,6 @@ function CartableGrid({ selectedRole }) {
               <RemoveRedEyeIcon />
             </IconButton>
           </Link>
-        ),
-      },
-      {
-        accessorKey: "senderInfo",
-        header: "اطلاعات فرستنده",
-        enableSorting: false,
-        enableColumnActions: false,
-        size: 20,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-        },
-        Cell: () => (
-          <IconButton color="primary">
-            <FeedIcon />
-          </IconButton>
         ),
       },
     ],

@@ -40,12 +40,12 @@ function Dashboard() {
 
   return (
     <section className="main flex flex-col">
-      <h4 className="title">کارتابل</h4>
       <RoleSelectionForm
         setSelectedRole={setSelectedRole}
         isLoading={isLoading}
         roles={roles}
       />
+      <h4 className="title">کارتابل</h4>
       {isRolesSuccess && selectedRole && (
         <CartableGrid selectedRole={selectedRole} />
       )}
