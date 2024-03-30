@@ -3,7 +3,7 @@ import { useMemo, useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
-import { convertToPersianNumber, findById } from "../helper.js";
+import { findById } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -18,13 +18,13 @@ import {
 
 // library imports
 import { toast } from "react-toastify";
-import { PaginationItem } from "@mui/material";
-import {
-  ChevronLeft,
-  ChevronRight,
-  FirstPage,
-  LastPage,
-} from "@mui/icons-material";
+// import { PaginationItem } from "@mui/material";
+// import {
+//   ChevronLeft,
+//   ChevronRight,
+//   FirstPage,
+//   LastPage,
+// } from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -114,25 +114,28 @@ function GroupItemGrid() {
         cursor: "pointer",
       },
     }),
-    muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
-      showRowsPerPage: false,
-      siblingCount: 0,
-      size: "small",
-      renderItem: (item) => (
-        <PaginationItem
-          {...item}
-          page={convertToPersianNumber(item.page)}
-          slots={{
-            previous: ChevronRight,
-            next: ChevronLeft,
-            first: LastPage,
-            last: FirstPage,
-          }}
-        />
-      ),
-    },
+    enablePagination: false,
+    muiTableContainerProps: { sx: { height: "300px" } },
+    enableBottomToolbar: false,
+    // muiPaginationProps: {
+    //   color: "success",
+    //   variant: "outlined",
+    //   showRowsPerPage: false,
+    //   siblingCount: 0,
+    //   size: "small",
+    //   renderItem: (item) => (
+    //     <PaginationItem
+    //       {...item}
+    //       page={convertToPersianNumber(item.page)}
+    //       slots={{
+    //         previous: ChevronRight,
+    //         next: ChevronLeft,
+    //         first: LastPage,
+    //         last: FirstPage,
+    //       }}
+    //     />
+    //   ),
+    // },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },

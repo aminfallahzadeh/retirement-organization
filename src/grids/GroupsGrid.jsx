@@ -350,9 +350,29 @@ function GroupsGrid() {
               closeModal={() => setShowEditItemsModal(false)}
             >
               <div className="flex-row">
-                <ItemsGrid />
-                <ArrowButtonsGroups />
-                <GroupItemsGrid />
+                <div>
+                  <div className="Modal__header">
+                    <h4>دسترسی ها</h4>
+                    <hr />
+                  </div>
+                  <ItemsGrid />
+                </div>
+
+                <div>
+                  <div className="Modal__header">
+                    <h4>عملیات</h4>
+                    <hr />
+                  </div>
+                  <ArrowButtonsGroups />
+                </div>
+
+                <div>
+                  <div className="Modal__header">
+                    <h4>دسترسی های گروه</h4>
+                    <hr />
+                  </div>
+                  <GroupItemsGrid />
+                </div>
               </div>
             </Modal>
           ) : null}
