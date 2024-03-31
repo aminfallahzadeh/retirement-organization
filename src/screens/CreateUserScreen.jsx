@@ -73,6 +73,7 @@ function CreateUserScreen() {
             name="isActive"
             required
             onChange={handleUserObjectChange}
+            value={userObject.isActive}
           >
             <option>انتخاب</option>
             <option value="true">فعال</option>
@@ -132,6 +133,7 @@ function CreateUserScreen() {
             style={{ cursor: "pointer" }}
             required
             name="sex"
+            value={userObject.sex}
             onChange={handleUserObjectChange}
           >
             <option>انتخاب</option>

@@ -5,11 +5,12 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useUpdateUserMutation } from "../slices/usersApiSlice";
 
-// components import
-import UserButton from "../components/UserButton";
-
 // library imports
 import { toast } from "react-toastify";
+
+// mui imports
+import { LoadingButton } from "@mui/lab";
+import { Save as SaveIcon } from "@mui/icons-material";
 
 function UserEditForm({ setShowEditUserModal }) {
   const { selectedUserData } = useSelector((state) => state.usersData);
@@ -200,12 +201,12 @@ function UserEditForm({ setShowEditUserModal }) {
             className="inputBox__form--input"
             id="sex"
             style={{ cursor: "pointer" }}
-            value={userObject.sex}
+            value={userObject.sex || ""}
             name="sex"
             onChange={handleUserObjectChange}
           >
-            <option value="false">زن</option>
             <option value="true">مرد</option>
+            <option value="false">زن</option>
           </select>
           <label className="inputBox__form--label" htmlFor="sex">
             جنسیت
@@ -213,16 +214,17 @@ function UserEditForm({ setShowEditUserModal }) {
         </div>
       </form>
 
-      <div>
-        <UserButton
-          variant={"outline-success"}
-          icon={"done"}
-          onClickFn={updateUserHandler}
-          isLoading={isLoading}
-        >
-          ذخیره
-        </UserButton>
-      </div>
+      <LoadingButton
+        dir="ltr"
+        endIcon={<SaveIcon />}
+        loading={isLoading}
+        onClick={updateUserHandler}
+        variant="contained"
+        color="success"
+        sx={{ fontFamily: "sahel" }}
+      >
+        <span>ذخیره</span>
+      </LoadingButton>
     </section>
   );
 

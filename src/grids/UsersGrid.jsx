@@ -2,12 +2,6 @@
 import { useMemo, useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefresh";
 
-// helper imports
-import { convertToPersianNumber, findById } from "../helper.js";
-
-// utils imports
-import { defaultTableOptions } from "../utils.js";
-
 // rrd imports
 import { Link } from "react-router-dom";
 
@@ -15,22 +9,30 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useGetUserQuery } from "../slices/usersApiSlice";
 
+// mui imports
+import { IconButton, Box, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import {
+  Edit as EditIcon,
+  ChecklistRtl as ChecklistRtlIcon,
+  Add as AddIcon,
+  Refresh as RefreshIcon,
+} from "@mui/icons-material";
+
+// helpers
+import { convertToPersianNumber, findById } from "../helper.js";
+
+// utils imports
+import { defaultTableOptions } from "../utils.js";
+
 import {
   setUsersTableData,
   setSelectedUserData,
 } from "../slices/usersDataSlice.js";
 
-// mui imports
-import { IconButton, Box } from "@mui/material";
-import {
-  Edit as EditIcon,
-  ChecklistRtl as ChecklistRtlIcon,
-} from "@mui/icons-material";
-
 // components
 import Modal from "../components/Modal";
 import EditUserForm from "../forms/EditUserForm";
-import UserButton from "../components/UserButton";
 import GroupsGridUser from "../grids/GroupsGridUser";
 import UserGroupsGrid from "../grids/UserGroupsGrid";
 import ArrowButtonsUsers from "../components/ArrowButtonsUsers";
@@ -246,19 +248,28 @@ function UsersGrid() {
         sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
       >
         <Link to={"/retirement-organization/create-user"}>
-          <UserButton variant="outline-primary" icon={"add"}>
-            ایجاد کاربر
-          </UserButton>
+          <Button
+            dir="ltr"
+            endIcon={<AddIcon />}
+            variant="contained"
+            color="primary"
+            sx={{ fontFamily: "sahel" }}
+          >
+            <span>ایجاد کاربر</span>
+          </Button>
         </Link>
 
-        <UserButton
-          variant="outline-success"
-          icon={"refresh"}
-          onClickFn={handleRefresh}
-          isLoading={isFetching}
+        <LoadingButton
+          dir="ltr"
+          endIcon={<RefreshIcon />}
+          loading={isFetching}
+          onClick={handleRefresh}
+          variant="contained"
+          color="primary"
+          sx={{ fontFamily: "sahel" }}
         >
-          بروز رسانی
-        </UserButton>
+          <span>بروز رسانی</span>
+        </LoadingButton>
       </Box>
     ),
     muiPaginationProps: {

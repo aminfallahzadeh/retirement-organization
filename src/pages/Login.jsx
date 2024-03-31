@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 // component imports
 import Captcha from "../components/Captcha";
-import UserButton from "../components/UserButton";
 
 // helpers
 import { generateCaptcha } from "../helper.js";
@@ -28,7 +27,9 @@ import { toast } from "react-toastify";
 import {
   LockOutlined as LockOutlinIcon,
   PersonOutlined as PersonOutlinedIcon,
+  Login as LoginIcon,
 } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 
 function Login() {
   const { captcha } = useSelector((state) => state.captcha);
@@ -44,6 +45,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // user authentication logic
+
     try {
       const res = await login({ username, password }).unwrap();
       dispatch(setCredentials({ ...res }));
@@ -145,18 +147,19 @@ function Login() {
           <div className="loginContainer__box--inputBox">
             <Captcha />
           </div>
-          <div>
-            <UserButton
-              variant="outline-light"
-              isLoading={isLoading}
-              onClickFn={handleSubmit}
-              icon={"login"}
-              size="lg"
-              fullWidth={true}
-            >
-              &nbsp; ورود
-            </UserButton>
-          </div>
+
+          <LoadingButton
+            dir="ltr"
+            onClick={handleSubmit}
+            endIcon={<LoginIcon />}
+            loading={isLoading}
+            variant="contained"
+            color="primary"
+            sx={{ width: "100%", fontFamily: "sahel" }}
+          >
+            <span>ورود</span>
+          </LoadingButton>
+
           <div className="loginContainer__box--rememberForgot">
             <div className="loginContainer__box--rememberForgot--forgot">
               <a href="#">کلمه عبور را فراموش کرده اید ؟</a>

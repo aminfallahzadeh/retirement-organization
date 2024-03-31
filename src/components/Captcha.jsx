@@ -12,11 +12,12 @@ import {
   setCaptchaText,
 } from "../slices/captchaSlice";
 
-// conponents
-import UserButton from "./UserButton";
-
 // mui imports
-import { VpnKeyOutlined as VpnKeyOutlinedIcon } from "@mui/icons-material";
+import {
+  VpnKeyOutlined as VpnKeyOutlinedIcon,
+  Refresh as RefreshIcon,
+} from "@mui/icons-material";
+import { Button } from "@mui/material";
 
 function Captcha() {
   const { userInput, captchaText } = useSelector((state) => state.captcha);
@@ -108,11 +109,9 @@ function Captcha() {
         <VpnKeyOutlinedIcon style={style} />
       </div>
       <div className="flex-row flex-space-between u-margin-bottom-md">
-        <UserButton
-          variant={"outline-light"}
-          icon={"refresh"}
-          onClickFn={refreshCaptcha}
-        ></UserButton>
+        <Button onClick={refreshCaptcha} color="primary" variant="outlined">
+          <RefreshIcon />
+        </Button>
 
         <canvas
           ref={canvasRef}

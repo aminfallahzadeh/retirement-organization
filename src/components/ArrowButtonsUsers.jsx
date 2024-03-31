@@ -1,12 +1,3 @@
-// library imports
-import { toast } from "react-toastify";
-import {
-  KeyboardDoubleArrowLeft,
-  KeyboardDoubleArrowRight,
-} from "@mui/icons-material";
-import { Button } from "react-bootstrap";
-// import { toast } from "react-toastify";
-
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -14,8 +5,17 @@ import {
   useInsertGroupUsersMutation,
 } from "../slices/usersApiSlice";
 
-// components
-import UserButton from "./UserButton";
+// library imports
+import { toast } from "react-toastify";
+
+// mui imports
+import {
+  KeyboardDoubleArrowLeft as DoubleArrowLeftIcon,
+  KeyboardDoubleArrowRight as DoubleArrowRightIcon,
+  Save as SaveIcon,
+} from "@mui/icons-material";
+import { Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 import {
   addGroupsToTable,
@@ -95,28 +95,31 @@ function ArrowButtonsUsers() {
       }}
     >
       <Button
-        variant="outline-primary"
         onClick={() => handleAddGroup(selectedGroupUserData.id)}
+        variant="contained"
+        color="primary"
       >
-        <KeyboardDoubleArrowLeft />
+        <DoubleArrowLeftIcon />
       </Button>
       <Button
-        variant="outline-primary"
         onClick={() => handleRemoveGroup(selectedUserGroupData.id)}
+        variant="contained"
+        color="primary"
       >
-        <KeyboardDoubleArrowRight />
+        <DoubleArrowRightIcon />
       </Button>
 
-      <div>
-        <UserButton
-          variant="outline-success"
-          icon={"done"}
-          onClickFn={saveChangesHandler}
-          isLoading={isDeleting || isInserting}
-        >
-          ذخیره
-        </UserButton>
-      </div>
+      <LoadingButton
+        dir="ltr"
+        endIcon={<SaveIcon />}
+        loading={isDeleting || isInserting}
+        onClick={saveChangesHandler}
+        variant="contained"
+        color="success"
+        sx={{ fontFamily: "sahel" }}
+      >
+        <span>ذخیره</span>
+      </LoadingButton>
     </div>
   );
 

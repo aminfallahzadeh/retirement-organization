@@ -1,11 +1,3 @@
-// library imports
-import {
-  KeyboardDoubleArrowLeft,
-  KeyboardDoubleArrowRight,
-} from "@mui/icons-material";
-import { Button } from "react-bootstrap";
-import { toast } from "react-toastify";
-
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -13,8 +5,17 @@ import {
   useDeleteGroupItemsMutation,
 } from "../slices/usersApiSlice";
 
-// components
-import UserButton from "./UserButton";
+// library imports
+import { toast } from "react-toastify";
+
+// mui imports
+import {
+  KeyboardDoubleArrowLeft as DoubleArrowLeftIcon,
+  KeyboardDoubleArrowRight as DoubleArrowRightIcon,
+  Save as SaveIcon,
+} from "@mui/icons-material";
+import { Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 import {
   removeItemsFromTable,
@@ -34,8 +35,7 @@ function ArrowButtonsGroups() {
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
   const { token } = useSelector((state) => state.auth);
 
-  const [deleteGroupItems, { isLoading: isDeleting }] =
-    useDeleteGroupItemsMutation();
+  const [deleteGroupItems, { isLoading }] = useDeleteGroupItemsMutation();
   const [insertGroupItem] = useInsertGroupItemMutation();
 
   const saveChangesHandler = async () => {
@@ -97,28 +97,31 @@ function ArrowButtonsGroups() {
       }}
     >
       <Button
-        variant="outline-primary"
         onClick={() => handleAddGroupItem(selectedItemData.id)}
+        variant="contained"
+        color="primary"
       >
-        <KeyboardDoubleArrowLeft />
+        <DoubleArrowLeftIcon />
       </Button>
       <Button
-        variant="outline-primary"
         onClick={() => handleRemoveGroupItem(selectedGroupItemData.id)}
+        variant="contained"
+        color="primary"
       >
-        <KeyboardDoubleArrowRight />
+        <DoubleArrowRightIcon />
       </Button>
 
-      <div>
-        <UserButton
-          variant="outline-success"
-          icon={"done"}
-          onClickFn={saveChangesHandler}
-          isLoading={isDeleting}
-        >
-          ذخیره
-        </UserButton>
-      </div>
+      <LoadingButton
+        dir="ltr"
+        endIcon={<SaveIcon />}
+        loading={isLoading}
+        onClick={saveChangesHandler}
+        variant="contained"
+        color="success"
+        sx={{ fontFamily: "sahel" }}
+      >
+        <span>ذخیره</span>
+      </LoadingButton>
     </div>
   );
 

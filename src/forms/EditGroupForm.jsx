@@ -1,15 +1,16 @@
 // react imports
 import { useState, useEffect } from "react";
 
-// library imports
-import { toast } from "react-toastify";
-
 // redux imports
 import { useSelector } from "react-redux";
 import { useUpdateGroupMutation } from "../slices/usersApiSlice";
 
-// components import
-import UserButton from "../components/UserButton";
+// library imports
+import { toast } from "react-toastify";
+
+// mui imports
+import { LoadingButton } from "@mui/lab";
+import { Save as SaveIcon } from "@mui/icons-material";
 
 function GroupNameInput({ setShowEditModal }) {
   const { selectedGroupData } = useSelector((state) => state.groupsData);
@@ -62,17 +63,18 @@ function GroupNameInput({ setShowEditModal }) {
         </label>
       </form>
 
-      <div>
-        <UserButton
-          isLoading={isLoading}
-          onClickFn={updateGroupHandler}
-          variant={"outline-success"}
-          icon={"done"}
-          disabled={groupName === selectedGroupData?.name || !groupName}
-        >
-          ذخیره
-        </UserButton>
-      </div>
+      <LoadingButton
+        dir="ltr"
+        endIcon={<SaveIcon />}
+        loading={isLoading}
+        onClick={updateGroupHandler}
+        variant="contained"
+        disabled={groupName === selectedGroupData?.name || !groupName}
+        color="success"
+        sx={{ fontFamily: "sahel" }}
+      >
+        <span>ذخیره</span>
+      </LoadingButton>
     </section>
   );
 

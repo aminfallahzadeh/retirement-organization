@@ -5,28 +5,6 @@ import useRefreshToken from "../hooks/useRefresh";
 // rrd imports
 import { Link } from "react-router-dom";
 
-// mui imports
-import { IconButton, Box } from "@mui/material";
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  ChecklistRtl as ChecklistRtlIcon,
-} from "@mui/icons-material";
-
-// helpers
-import { convertToPersianNumber, findById } from "../helper.js";
-
-// components
-import Modal from "../components/Modal";
-import EditGroupForm from "../forms/EditGroupForm";
-import UserButton from "../components/UserButton";
-import ItemsGrid from "../grids/ItemsGrid";
-import GroupItemsGrid from "../grids/GroupItemsGrid";
-import ArrowButtonsGroups from "../components/ArrowButtonsGroups";
-
-// utils imports
-import { defaultTableOptions } from "../utils.js";
-
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -37,6 +15,32 @@ import {
   setGroupsTableData,
   setSelectedGroupData,
 } from "../slices/groupsDataSlice";
+
+// mui imports
+import { IconButton, Box, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  ChecklistRtl as ChecklistRtlIcon,
+  Add as AddIcon,
+  Refresh as RefreshIcon,
+  Close as CloseIcon,
+  Done as DoneIcon,
+} from "@mui/icons-material";
+
+// helpers
+import { convertToPersianNumber, findById } from "../helper.js";
+
+// utils imports
+import { defaultTableOptions } from "../utils.js";
+
+// components
+import Modal from "../components/Modal";
+import EditGroupForm from "../forms/EditGroupForm";
+import ItemsGrid from "../grids/ItemsGrid";
+import GroupItemsGrid from "../grids/GroupItemsGrid";
+import ArrowButtonsGroups from "../components/ArrowButtonsGroups";
 
 // library imports
 import { toast } from "react-toastify";
@@ -243,19 +247,28 @@ function GroupsGrid() {
         sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
       >
         <Link to={"/retirement-organization/create-group"}>
-          <UserButton variant="outline-primary" icon={"add"}>
-            ایجاد گروه
-          </UserButton>
+          <Button
+            dir="ltr"
+            endIcon={<AddIcon />}
+            variant="contained"
+            color="primary"
+            sx={{ fontFamily: "sahel" }}
+          >
+            <span>ایجاد گروه</span>
+          </Button>
         </Link>
 
-        <UserButton
-          variant="outline-success"
-          onClickFn={handleRefresh}
-          icon={"refresh"}
-          isLoading={isFetching}
+        <LoadingButton
+          dir="ltr"
+          endIcon={<RefreshIcon />}
+          loading={isFetching}
+          onClick={handleRefresh}
+          variant="contained"
+          color="primary"
+          sx={{ fontFamily: "sahel" }}
         >
-          بروز رسانی
-        </UserButton>
+          <span>بروز رسانی</span>
+        </LoadingButton>
       </Box>
     ),
     muiPaginationProps: {
@@ -324,21 +337,27 @@ function GroupsGrid() {
             >
               <p>آیا از حذف این گروه اطمینان دارید؟</p>
               <div className="flex-row flex-center">
-                <UserButton
-                  variant={"outline-success"}
-                  isLoading={isDeleting}
-                  onClickFn={deleteGroupHandler}
-                  icon={"done"}
+                <LoadingButton
+                  dir="ltr"
+                  endIcon={<DoneIcon />}
+                  loading={isDeleting}
+                  onClick={deleteGroupHandler}
+                  variant="contained"
+                  color="success"
+                  sx={{ fontFamily: "sahel" }}
                 >
-                  بله
-                </UserButton>
-                <UserButton
-                  variant={"danger"}
-                  icon={"close"}
-                  onClickFn={() => setShowDeleteGroupModal(false)}
+                  <span>بله</span>
+                </LoadingButton>
+                <Button
+                  dir="ltr"
+                  endIcon={<CloseIcon />}
+                  onClick={() => setShowDeleteGroupModal(false)}
+                  variant="contained"
+                  color="error"
+                  sx={{ fontFamily: "sahel" }}
                 >
-                  خیر
-                </UserButton>
+                  <span>خیر</span>
+                </Button>
               </div>
             </Modal>
           ) : showEditItemsModal ? (

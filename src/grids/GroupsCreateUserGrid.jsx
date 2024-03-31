@@ -77,8 +77,7 @@ function GriyosCreateUserGrid({ userObject }) {
         token,
         data: {
           ...userObject,
-          "sex":
-            userObject.sex === "1" || userObject.sex === true ? true : false,
+          "sex": userObject.sex === "true" ? true : false,
           "isActive": userObject.isActive === "true" ? true : false,
         },
       }).unwrap();
