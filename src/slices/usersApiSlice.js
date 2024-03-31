@@ -175,6 +175,16 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
+    deleteUser: builder.mutation({
+      query: ({ token, id }) => ({
+        url: `${USERS_URL_HTTPS}/DeleteUser?id=${id}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -196,4 +206,5 @@ export const {
   useGetUserGroupsQuery,
   useDeleteGroupUsersMutation,
   useInsertGroupUsersMutation,
+  useDeleteUserMutation,
 } = usersApiSlice;

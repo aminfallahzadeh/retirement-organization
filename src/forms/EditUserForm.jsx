@@ -29,6 +29,7 @@ function UserEditForm({ setShowEditUserModal }) {
   const handleUserObjectChange = (e) => {
     const { name, value } = e.target;
     setUserObject({ ...userObject, [name]: value });
+    console.log("change value", value);
   };
 
   const [updateUser, { isLoading }] = useUpdateUserMutation();
@@ -44,9 +45,8 @@ function UserEditForm({ setShowEditUserModal }) {
         token,
         data: {
           ...userObject,
-          "sex":
-            userObject.sex === "1" || userObject.sex === true ? true : false,
-          "isActive": userObject.isActive === "فعال" ? true : false,
+          "sex": userObject.sex === "true" ? true : false,
+          "isActive": userObject.isActive === "true" ? true : false,
           "editDate": "string",
           "editUser": "string",
           "refreshToken": "string",
@@ -68,7 +68,11 @@ function UserEditForm({ setShowEditUserModal }) {
   };
 
   useEffect(() => {
-    setUserObject(selectedUserData);
+    setUserObject({
+      ...selectedUserData,
+      isActive: selectedUserData.isActive === "فعال" ? true : false,
+      sex: selectedUserData.sex === true ? "true" : "false",
+    });
   }, [selectedUserData]);
 
   const content = (
@@ -200,8 +204,8 @@ function UserEditForm({ setShowEditUserModal }) {
             name="sex"
             onChange={handleUserObjectChange}
           >
-            <option value="0">زن</option>
-            <option value="1">مرد</option>
+            <option value="false">زن</option>
+            <option value="true">مرد</option>
           </select>
           <label className="inputBox__form--label" htmlFor="sex">
             جنسیت

@@ -15,6 +15,16 @@ export const requestApiSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
+    getExpert: builder.query({
+      query: ({ token, data }) => ({
+        url: `${REQUEST_URL_HTTPS}/GetExpert`,
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
     getRequest: builder.query({
       query: ({
         token,
@@ -48,7 +58,45 @@ export const requestApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+    insertRequest: builder.mutation({
+      query: ({ token, data }) => ({
+        url: `${REQUEST_URL_HTTPS}/InsertRequest`,
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
+    sendRequestToNextState: builder.mutation({
+      query: ({ token, data }) => ({
+        url: `${REQUEST_URL_HTTPS}/SendRequestToNextState`,
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
+    getRequestType: builder.query({
+      query: (token) => ({
+        url: `${REQUEST_URL_HTTPS}/GetRequestType`,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetRoleQuery, useGetRequestQuery } = requestApiSlice;
+export const {
+  useGetRoleQuery,
+  useGetExpertQuery,
+  useGetRequestQuery,
+  useGetRequestTypeQuery,
+  useInsertRequestMutation,
+  useSendRequestToNextStateMutation,
+} = requestApiSlice;

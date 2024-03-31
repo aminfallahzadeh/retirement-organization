@@ -88,10 +88,10 @@ function UsersGrid() {
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      console.log(users);
+      console.log("users", users);
       const data = users.itemList.map((user) => ({
         id: user.id,
-        isActive: user.isActive === true ? "فعال" : "غیر فعال",
+        isActive: user.isActive ? "فعال" : "غیر فعال",
         lastName: user.lastName,
         firstName: user.firstName,
         username: user.username,
@@ -103,7 +103,6 @@ function UsersGrid() {
       }));
       dispatch(setUsersTableData(data));
     }
-
     return () => {
       dispatch(setUsersTableData([]));
     };
