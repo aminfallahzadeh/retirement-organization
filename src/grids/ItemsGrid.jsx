@@ -1,6 +1,5 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
-import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
 import { findById } from "../helper.js";
@@ -38,8 +37,6 @@ function ItemsGrid() {
   // access the data from redux store
   const { itemsTableData } = useSelector((state) => state.itemsData);
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
-
-  const refreshTokenHandler = useRefreshToken();
 
   const [rowSelection, setRowSelection] = useState({});
 
@@ -152,12 +149,6 @@ function ItemsGrid() {
       dispatch(setSelectedItemData(null));
     }
   }, [dispatch, table, rowSelection, itemsTableData]);
-
-  // check if token is expired on compoennt mount
-  useEffect(() => {
-    refreshTokenHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>

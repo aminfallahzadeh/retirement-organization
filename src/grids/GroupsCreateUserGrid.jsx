@@ -1,6 +1,5 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
-import useRefreshToken from "../hooks/useRefresh";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -49,7 +48,6 @@ function GriyosCreateUserGrid({ userObject }) {
 
   const [addedGroups, setAddedGroups] = useState([]);
   const { token } = useSelector((state) => state.auth);
-  const refreshTokenHandler = useRefreshToken();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -237,16 +235,6 @@ function GriyosCreateUserGrid({ userObject }) {
     const selectedRows = table.getSelectedRowModel().rows;
     setAddedGroups(selectedRows.map((row) => row.original));
   }, [table, rowSelection]);
-
-  useEffect(() => {
-    console.log(addedGroups);
-  }, [addedGroups]);
-
-  // check if token is expired on compoennt mount
-  useEffect(() => {
-    refreshTokenHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const content = (
     <>

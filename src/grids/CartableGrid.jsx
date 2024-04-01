@@ -1,6 +1,5 @@
 // react imports
 import { useMemo, useEffect, useState } from "react";
-import useRefreshToken from "../hooks/useRefresh";
 
 // rrd imports
 import { Link } from "react-router-dom";
@@ -42,7 +41,6 @@ import {
 function CartableGrid({ selectedRole }) {
   const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
-  const refreshTokenHandler = useRefreshToken();
 
   const dispatch = useDispatch();
 
@@ -217,12 +215,6 @@ function CartableGrid({ selectedRole }) {
   //     dispatch(setSelectedRequestData([]));
   //   }
   // }, [dispatch, table, rowSelection, requestTableData]);
-
-  // check if token is expired on compoennt mount
-  useEffect(() => {
-    refreshTokenHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const content = (
     <>

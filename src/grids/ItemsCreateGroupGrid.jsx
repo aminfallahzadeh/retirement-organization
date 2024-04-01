@@ -1,6 +1,5 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
-import useRefreshToken from "../hooks/useRefresh";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -59,9 +58,6 @@ function ItemsCreateGroupGrid({ groupName }) {
 
   // access the data from redux store
   const { itemsTableData } = useSelector((state) => state.itemsData);
-  //   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
-
-  const refreshTokenHandler = useRefreshToken();
 
   const [rowSelection, setRowSelection] = useState({});
 
@@ -237,16 +233,6 @@ function ItemsCreateGroupGrid({ groupName }) {
     const selectedRows = table.getSelectedRowModel().rows;
     setAddedItems(selectedRows.map((row) => row.original));
   }, [table, rowSelection]);
-
-  useEffect(() => {
-    console.log(addedItems);
-  }, [addedItems]);
-
-  // check if token is expired on compoennt mount
-  useEffect(() => {
-    refreshTokenHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>

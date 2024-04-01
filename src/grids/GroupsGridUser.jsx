@@ -1,6 +1,5 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
-import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
 import { convertToPersianNumber, findById } from "../helper.js";
@@ -35,7 +34,6 @@ import {
 function GroupsGridUser() {
   const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
-  const refreshTokenHandler = useRefreshToken();
 
   const dispatch = useDispatch();
 
@@ -147,12 +145,6 @@ function GroupsGridUser() {
       dispatch(setSelectedGroupUserData(null));
     }
   }, [dispatch, table, rowSelection, groupsUserTableData]);
-
-  // check if token is expired on compoennt mount
-  useEffect(() => {
-    refreshTokenHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>

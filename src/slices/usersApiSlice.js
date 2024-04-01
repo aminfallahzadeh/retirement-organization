@@ -14,14 +14,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         headers: { "Content-Type": "application/json" },
       }),
     }),
-    refresh: builder.mutation({
-      query: (data) => ({
-        url: `${USERS_URL_HTTPS}/RefreshToken`,
-        method: "POST",
-        body: data,
-        headers: { "Content-Type": "application/json" },
-      }),
-    }),
     getGroup: builder.query({
       query: (token) => ({
         url: `${USERS_URL_HTTPS}/GetGroup`,
@@ -190,7 +182,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useLoginMutation,
-  useRefreshMutation,
   useLogoutMutation,
   useGetGroupQuery,
   useInsertGroupMutation,

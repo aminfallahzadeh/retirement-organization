@@ -1,6 +1,5 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
-import useRefreshToken from "../hooks/useRefresh";
 
 // helpers
 import { findById } from "../helper.js";
@@ -35,7 +34,6 @@ import {
 function GroupItemGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const dispatch = useDispatch();
-  const refreshTokenHandler = useRefreshToken();
 
   // access selected row info
   const { selectedGroupData } = useSelector((state) => state.groupsData);
@@ -151,11 +149,6 @@ function GroupItemGrid() {
       dispatch(setSelectedGroupItemData(null));
     }
   }, [dispatch, table, rowSelection, groupItemsTableData]);
-
-  // check if token is expired on compoennt mount
-  useEffect(() => {
-    refreshTokenHandler();
-  }, [refreshTokenHandler]);
 
   const content = (
     <>
