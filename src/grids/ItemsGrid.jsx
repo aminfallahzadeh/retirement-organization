@@ -23,6 +23,7 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
+import { Box } from "@mui/material";
 
 function ItemsGrid() {
   const { token } = useSelector((state) => state.auth);

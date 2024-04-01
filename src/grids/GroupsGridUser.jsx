@@ -25,6 +25,7 @@ import { findById } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
+import { Box } from "@mui/material";
 
 function GroupsGridUser() {
   const [rowSelection, setRowSelection] = useState({});

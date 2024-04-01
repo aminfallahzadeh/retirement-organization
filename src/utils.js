@@ -4,7 +4,6 @@ import { MRT_Localization_FA } from "material-react-table/locales/fa";
 // table default options
 export const defaultTableOptions = {
   localization: MRT_Localization_FA,
-  enablePagination: true,
   paginationDisplayMode: "pages",
   enableFullScreenToggle: false,
   positionToolbarAlertBanner: "none",

@@ -51,12 +51,12 @@ function Login() {
       dispatch(setCredentials({ ...res }));
       setUsername("");
       setPassword("");
-      console.log(res);
 
       if (captcha) {
         navigate("/retirement-organization/dashboard");
         /* console.log(res); */
         toast.success(res.message, {
+          fontSize: "18px",
           autoClose: 2000,
         });
       } else if (!captcha) {
@@ -65,6 +65,7 @@ function Login() {
         dispatch(setCaptchaInput(""));
         dispatch(setCaptcha(false));
         toast.error("! کد امنیتی اشتباه است", {
+          fontSize: "18px",
           autoClose: 2000,
         });
       }
@@ -74,6 +75,7 @@ function Login() {
       dispatch(setCaptchaText(generateCaptcha(6)));
       dispatch(setCaptchaInput(""));
       toast.error(err?.data?.message || err.error, {
+        fontSize: "18px",
         autoClose: 2000,
       });
     }

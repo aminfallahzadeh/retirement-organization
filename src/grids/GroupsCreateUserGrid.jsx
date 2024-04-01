@@ -22,23 +22,12 @@ import "react-loading-skeleton/dist/skeleton.css";
 // mui imports
 import { Box, Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { PaginationItem } from "@mui/material";
-import {
-  ChevronLeft,
-  ChevronRight,
-  LastPage,
-  FirstPage,
-  Save as SaveIcon,
-  ArrowBack as BackIcon,
-} from "@mui/icons-material";
+import { Save as SaveIcon, ArrowBack as BackIcon } from "@mui/icons-material";
 import {
   MaterialReactTable,
   useMaterialReactTable,
   getMRT_RowSelectionHandler,
 } from "material-react-table";
-
-// helpers
-import { convertToPersianNumber } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -172,6 +161,9 @@ function GriyosCreateUserGrid({ userObject }) {
     columns,
     data: groupsTableData,
     enableRowSelection: true,
+    enablePagination: false,
+    enableBottomToolbar: false,
+    muiTableContainerProps: { sx: { height: "500px" } },
     muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
       onClick: (event) =>
         getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
@@ -181,6 +173,7 @@ function GriyosCreateUserGrid({ userObject }) {
       density: "compact",
       pagination: { pageIndex: 0, pageSize: 7 },
     },
+
     renderTopToolbarCustomActions: () => (
       <Box
         sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
@@ -209,23 +202,6 @@ function GriyosCreateUserGrid({ userObject }) {
         </Button>
       </Box>
     ),
-    muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
-      showRowsPerPage: false,
-      renderItem: (item) => (
-        <PaginationItem
-          {...item}
-          page={convertToPersianNumber(item.page)}
-          slots={{
-            previous: ChevronRight,
-            next: ChevronLeft,
-            first: LastPage,
-            last: FirstPage,
-          }}
-        />
-      ),
-    },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },

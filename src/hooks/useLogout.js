@@ -23,17 +23,13 @@ const useLogout = () => {
       });
       dispatch(logout());
       toast.success(res.data.message, {
+        fontSize: "18px",
         autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
       });
     } catch (err) {
       toast.error(err?.data?.message || err.error, {
+        fontSize: "18px",
         autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
       });
     }
   };

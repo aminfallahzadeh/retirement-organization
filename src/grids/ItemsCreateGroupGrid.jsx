@@ -27,18 +27,7 @@ import {
   useMaterialReactTable,
   getMRT_RowSelectionHandler,
 } from "material-react-table";
-import { PaginationItem } from "@mui/material";
-import {
-  ChevronLeft,
-  ChevronRight,
-  FirstPage,
-  LastPage,
-  Save as SaveIcon,
-  ArrowBack as BackIcon,
-} from "@mui/icons-material";
-
-// helpers
-import { convertToPersianNumber } from "../helper.js";
+import { Save as SaveIcon, ArrowBack as BackIcon } from "@mui/icons-material";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -168,6 +157,9 @@ function ItemsCreateGroupGrid({ groupName }) {
     columns,
     data: itemsTableData,
     enableRowSelection: true,
+    enablePagination: false,
+    enableBottomToolbar: false,
+    muiTableContainerProps: { sx: { height: "500px" } },
     muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
       onClick: (event) =>
         getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
@@ -205,25 +197,6 @@ function ItemsCreateGroupGrid({ groupName }) {
         </Button>
       </Box>
     ),
-    muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
-      showRowsPerPage: false,
-      siblingCount: 0,
-      size: "small",
-      renderItem: (item) => (
-        <PaginationItem
-          {...item}
-          page={convertToPersianNumber(item.page)}
-          slots={{
-            previous: ChevronRight,
-            next: ChevronLeft,
-            first: LastPage,
-            last: FirstPage,
-          }}
-        />
-      ),
-    },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },

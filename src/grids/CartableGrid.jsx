@@ -175,6 +175,7 @@ function CartableGrid({ selectedRole }) {
         cursor: "pointer",
       },
     }),
+    // fix top items go under the body
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
