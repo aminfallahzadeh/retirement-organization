@@ -1,12 +1,6 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
-// helpers
-import { convertToPersianNumber, findById } from "../helper.js";
-
-// utils imports
-import { defaultTableOptions } from "../utils.js";
-
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetUserGroupsQuery } from "../slices/usersApiSlice";
@@ -15,21 +9,22 @@ import {
   setSelectedUserGroupData,
 } from "../slices/userGroupsDataSlice.js";
 
-// library imports
-import { toast } from "react-toastify";
-import { PaginationItem } from "@mui/material";
-import {
-  ChevronLeft,
-  ChevronRight,
-  FirstPage,
-  LastPage,
-} from "@mui/icons-material";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+// mui imports
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
+
+// library imports
+import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+// helpers
+import { convertToPersianNumber, findById } from "../helper.js";
+
+// utils imports
+import { defaultTableOptions } from "../utils.js";
 
 function UserGroupsGrid() {
   const [rowSelection, setRowSelection] = useState({});
@@ -92,6 +87,9 @@ function UserGroupsGrid() {
     ...defaultTableOptions,
     columns,
     data: userGroupsTableData,
+    enablePagination: false,
+    enableBottomToolbar: false,
+    muiTableContainerProps: { sx: { height: "300px" } },
     positionGlobalFilter: "left",
     initialState: {
       density: "compact",
@@ -109,25 +107,6 @@ function UserGroupsGrid() {
         cursor: "pointer",
       },
     }),
-    muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
-      showRowsPerPage: false,
-      siblingCount: 0,
-      size: "small",
-      renderItem: (item) => (
-        <PaginationItem
-          {...item}
-          page={convertToPersianNumber(item.page)}
-          slots={{
-            previous: ChevronRight,
-            next: ChevronLeft,
-            first: LastPage,
-            last: FirstPage,
-          }}
-        />
-      ),
-    },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },

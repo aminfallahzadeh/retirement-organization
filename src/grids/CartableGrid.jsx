@@ -4,11 +4,10 @@ import { useMemo, useEffect, useState } from "react";
 // rrd imports
 import { Link } from "react-router-dom";
 
-// helper imports
-import { convertToPersianNumber } from "../helper.js";
-
-// utils imports
-import { defaultTableOptions } from "../utils.js";
+// redux imports
+import { useSelector, useDispatch } from "react-redux";
+import { useGetRequestQuery } from "../slices/requestApiSlice";
+import { setRequestTableData } from "../slices/requestsDataSlice.js";
 
 // mui imports
 import { IconButton } from "@mui/material";
@@ -16,28 +15,18 @@ import {
   RemoveRedEye as RemoveRedEyeIcon,
   Feed as FeedIcon,
 } from "@mui/icons-material";
-
-// redux imports
-import { useSelector, useDispatch } from "react-redux";
-import { useGetRequestQuery } from "../slices/requestApiSlice";
-import { setRequestTableData } from "../slices/requestsDataSlice.js";
-
-// library imports
-import { toast } from "react-toastify";
-import Skeleton from "react-loading-skeleton";
-import { PaginationItem } from "@mui/material";
-import {
-  ChevronLeft,
-  ChevronRight,
-  FirstPage,
-  LastPage,
-} from "@mui/icons-material";
-import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
 
+// library imports
+import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+// utils imports
+import { defaultTableOptions } from "../utils.js";
 function CartableGrid({ selectedRole }) {
   const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
@@ -169,6 +158,9 @@ function CartableGrid({ selectedRole }) {
     ...defaultTableOptions,
     columns,
     data: requestTableData,
+    enablePagination: false,
+    enableBottomToolbar: false,
+    muiTableContainerProps: { sx: { height: "500px" } },
     initialState: {
       density: "compact",
     },
@@ -183,23 +175,6 @@ function CartableGrid({ selectedRole }) {
         cursor: "pointer",
       },
     }),
-    muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
-      showRowsPerPage: false,
-      renderItem: (item) => (
-        <PaginationItem
-          {...item}
-          page={convertToPersianNumber(item.page)}
-          slots={{
-            previous: ChevronRight,
-            next: ChevronLeft,
-            first: LastPage,
-            last: FirstPage,
-          }}
-        />
-      ),
-    },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },

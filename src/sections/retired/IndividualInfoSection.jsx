@@ -67,6 +67,21 @@ function IndividualInfoSection() {
           <RetiredAdditionalInfo />
         </AccordionDetails>
       </Accordion>
+
+      <Accordion
+        sx={{
+          backgroundColor: "#d9d9d9",
+        }}
+      >
+        <AccordionSummary
+          id="panel-header"
+          aria-controls="panel-content"
+          expandIcon={<ArrowDropDownIcon />}
+        >
+          پرونده الکترونیک
+        </AccordionSummary>
+        <AccordionDetails>پرونده الکترونیک</AccordionDetails>
+      </Accordion>
     </section>
   );
 

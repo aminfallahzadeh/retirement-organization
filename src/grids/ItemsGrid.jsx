@@ -17,13 +17,6 @@ import {
 
 // library imports
 import { toast } from "react-toastify";
-// import { PaginationItem } from "@mui/material";
-// import {
-//   ChevronLeft,
-//   ChevronRight,
-//   FirstPage,
-//   LastPage,
-// } from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -99,7 +92,6 @@ function ItemsGrid() {
     initialState: {
       density: "compact",
       showGlobalFilter: true,
-      pagination: { pageIndex: 0, pageSize: 7 },
     },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
@@ -115,25 +107,6 @@ function ItemsGrid() {
     enablePagination: false,
     muiTableContainerProps: { sx: { height: "300px" } },
     enableBottomToolbar: false,
-    // muiPaginationProps: {
-    //   color: "success",
-    //   variant: "outlined",
-    //   showRowsPerPage: false,
-    //   siblingCount: 0,
-    //   size: "small",
-    //   renderItem: (item) => (
-    //     <PaginationItem
-    //       {...item}
-    //       page={convertToPersianNumber(item.page)}
-    //       slots={{
-    //         previous: ChevronRight,
-    //         next: ChevronLeft,
-    //         first: LastPage,
-    //         last: FirstPage,
-    //       }}
-    //     />
-    //   ),
-    // },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },

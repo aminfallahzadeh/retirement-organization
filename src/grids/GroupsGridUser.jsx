@@ -1,12 +1,6 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
-// helpers
-import { convertToPersianNumber, findById } from "../helper.js";
-
-// utils imports
-import { defaultTableOptions } from "../utils.js";
-
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
@@ -15,21 +9,22 @@ import {
   setSelectedGroupUserData,
 } from "../slices/groupsUserDataSlice.js";
 
-// library imports
-import { toast } from "react-toastify";
-import { PaginationItem } from "@mui/material";
-import {
-  ChevronLeft,
-  ChevronRight,
-  LastPage,
-  FirstPage,
-} from "@mui/icons-material";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+// mui imports
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
+
+// library imports
+import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+// helpers
+import { findById } from "../helper.js";
+
+// utils imports
+import { defaultTableOptions } from "../utils.js";
 
 function GroupsGridUser() {
   const [rowSelection, setRowSelection] = useState({});
@@ -95,10 +90,12 @@ function GroupsGridUser() {
     columns,
     data: groupsUserTableData,
     positionGlobalFilter: "left",
+    enablePagination: false,
+    enableBottomToolbar: false,
+    muiTableContainerProps: { sx: { height: "300px" } },
     initialState: {
       density: "compact",
       showGlobalFilter: true,
-      pagination: { pageIndex: 0, pageSize: 7 },
     },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
@@ -111,25 +108,6 @@ function GroupsGridUser() {
         cursor: "pointer",
       },
     }),
-    muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
-      showRowsPerPage: false,
-      siblingCount: 0,
-      size: "small",
-      renderItem: (item) => (
-        <PaginationItem
-          {...item}
-          page={convertToPersianNumber(item.page)}
-          slots={{
-            previous: ChevronRight,
-            next: ChevronLeft,
-            first: LastPage,
-            last: FirstPage,
-          }}
-        />
-      ),
-    },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },

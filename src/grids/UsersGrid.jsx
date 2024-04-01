@@ -17,9 +17,13 @@ import {
   Add as AddIcon,
   Refresh as RefreshIcon,
 } from "@mui/icons-material";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
 
 // helpers
-import { convertToPersianNumber, findById } from "../helper.js";
+import { findById } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -37,20 +41,9 @@ import UserGroupsGrid from "../grids/UserGroupsGrid";
 import ArrowButtonsUsers from "../components/ArrowButtonsUsers";
 
 // library imports
-import { PaginationItem } from "@mui/material";
 import { toast } from "react-toastify";
-import {
-  ChevronLeft,
-  ChevronRight,
-  FirstPage,
-  LastPage,
-} from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from "material-react-table";
 
 function UsersGrid() {
   const [rowSelection, setRowSelection] = useState({});
@@ -227,6 +220,9 @@ function UsersGrid() {
     ...defaultTableOptions,
     columns,
     data: usersTableData,
+    enablePagination: false,
+    enableBottomToolbar: false,
+    muiTableContainerProps: { sx: { height: "500px" } },
     initialState: {
       density: "compact",
     },
@@ -270,23 +266,6 @@ function UsersGrid() {
         </LoadingButton>
       </Box>
     ),
-    muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
-      showRowsPerPage: false,
-      renderItem: (item) => (
-        <PaginationItem
-          {...item}
-          page={convertToPersianNumber(item.page)}
-          slots={{
-            previous: ChevronRight,
-            next: ChevronLeft,
-            first: LastPage,
-            last: FirstPage,
-          }}
-        />
-      ),
-    },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
