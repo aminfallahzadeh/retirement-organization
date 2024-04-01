@@ -37,10 +37,15 @@
             }
 
             li {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                column-gap: 2px;
                 text-decoration: none;
                 list-style: none;
                 cursor: pointer;
                 transition: all 0.25s;
+                font-size: 1.5rem;
 
                 a {
                     color: $color-white;

@@ -5,7 +5,7 @@ function ProfilePicture() {
   return (
     <div className="ProfilePicture">
       <a href="#">
-        <PersonIcon sx={{ fontSize: "40px", color: "#eee" }} />
+        <PersonIcon sx={{ fontSize: "30px", color: "#eee" }} />
       </a>
     </div>
   );

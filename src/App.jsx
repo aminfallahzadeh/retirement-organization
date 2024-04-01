@@ -1,5 +1,15 @@
-// bootstrap styles
-import "bootstrap/dist/css/bootstrap.min.css";
+// react imports
+import { useState, useEffect } from "react";
+import useLogout from "./hooks/useLogout";
+
+// rrd imports
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+
+// redux imports
+import { useSelector } from "react-redux";
+
+// mui imports
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 // library imports
 import "react-toastify/dist/ReactToastify.css";
@@ -11,17 +21,13 @@ import { jwtDecode } from "jwt-decode";
 import SidebarNav from "./components/SidebarNav";
 import TopbarNav from "./components/TopbarNav";
 
-// react imports
-import { useState, useEffect } from "react";
-import useLogout from "./hooks/useLogout";
-
-// rrd imports
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-
-// redux imports
-import { useSelector } from "react-redux";
-
 function App() {
+  const theme = createTheme({
+    typography: {
+      fontSize: 20,
+    },
+  });
+
   // states for user activity
   const [isActive, setIsActive] = useState(true);
   const [remaining, setRemaining] = useState(0);
@@ -75,12 +81,14 @@ function App() {
 
   return (
     <>
-      {!isLoginPage && <TopbarNav userName={userName} />}
-      {!isLoginPage && <SidebarNav />}
-      <main style={{ height: "100%" }}>
-        <Outlet />
-      </main>
-      <ToastContainer />
+      <ThemeProvider theme={theme}>
+        {!isLoginPage && <TopbarNav userName={userName} />}
+        {!isLoginPage && <SidebarNav />}
+        <main style={{ height: "100%" }}>
+          <Outlet />
+        </main>
+        <ToastContainer />
+      </ThemeProvider>
     </>
   );
 }
