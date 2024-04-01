@@ -5,15 +5,6 @@ import useRefreshToken from "../hooks/useRefresh";
 // rrd imports
 import { useNavigate } from "react-router-dom";
 
-// helpers
-import { convertToPersianNumber } from "../helper.js";
-
-// utils imports
-import { defaultTableOptions } from "../utils.js";
-
-// components
-import UserButton from "../components/UserButton";
-
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -24,25 +15,34 @@ import {
 } from "../slices/usersApiSlice";
 import { setItemsTableData } from "../slices/itemsDataSlice";
 
-// mui imports
-import { Box } from "@mui/material";
-
 // library imports
 import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+// mui imports
+import { Box, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+  getMRT_RowSelectionHandler,
+} from "material-react-table";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
   ChevronRight,
   FirstPage,
   LastPage,
+  Save as SaveIcon,
+  ArrowBack as BackIcon,
 } from "@mui/icons-material";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-  getMRT_RowSelectionHandler,
-} from "material-react-table";
+
+// helpers
+import { convertToPersianNumber } from "../helper.js";
+
+// utils imports
+import { defaultTableOptions } from "../utils.js";
 
 function ItemsCreateGroupGrid({ groupName }) {
   const [addedItems, setAddedItems] = useState([]);
@@ -185,24 +185,28 @@ function ItemsCreateGroupGrid({ groupName }) {
       <Box
         sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
       >
-        <UserButton
-          variant="outline-success"
-          icon={"done"}
-          onClickFn={handleCreateGroup}
-          disabled={!groupName}
-          isLoading={isCreating || isDeleting || isInserting}
+        <LoadingButton
+          dir="ltr"
+          endIcon={<SaveIcon />}
+          loading={isCreating || isDeleting || isInserting}
+          onClick={handleCreateGroup}
+          variant="contained"
+          color="success"
+          sx={{ fontFamily: "sahel" }}
         >
-          &nbsp; ذخیره
-        </UserButton>
+          <span>ذخیره</span>
+        </LoadingButton>
 
-        <UserButton
-          variant="outline-primary"
-          icon={"arrow-back"}
-          onClickFn={() => navigate("/retirement-organization/groups")}
-          disabled={isCreating || isDeleting || isInserting}
+        <Button
+          dir="ltr"
+          endIcon={<BackIcon />}
+          onClick={() => navigate("/retirement-organization/groups")}
+          variant="contained"
+          color="primary"
+          sx={{ fontFamily: "sahel" }}
         >
-          &nbsp; بازگشت
-        </UserButton>
+          <span>بازگشت</span>
+        </Button>
       </Box>
     ),
     muiPaginationProps: {

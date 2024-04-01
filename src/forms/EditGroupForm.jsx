@@ -69,8 +69,8 @@ function GroupNameInput({ setShowEditModal }) {
         loading={isLoading}
         onClick={updateGroupHandler}
         variant="contained"
-        disabled={groupName === selectedGroupData?.name || !groupName}
         color="success"
+        disabled={groupName === selectedGroupData?.name || !groupName}
         sx={{ fontFamily: "sahel" }}
       >
         <span>ذخیره</span>

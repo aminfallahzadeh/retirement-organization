@@ -1,28 +1,19 @@
 // react imports
 import { useMemo, useState } from "react";
 
-// helper imports
-import { convertToPersianNumber } from "../helper.js";
-
-// utils imports
-import { defaultTableOptions } from "../utils.js";
-
 // mui imports
-import { IconButton } from "@mui/material";
+import { IconButton, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-
-// components
-import UserButton from "../components/UserButton";
-import Modal from "../components/Modal";
-import RetiredStatementInfoForm from "../forms/RetiredStatementInfoForm";
-
-// library imports
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
   ChevronRight,
   FirstPage,
   LastPage,
+  Add as AddIcon,
+  Close as CloseIcon,
+  Done as DoneIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -30,35 +21,44 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
+// components
+import Modal from "../components/Modal";
+import RetiredRelatedInfoForm from "../forms/RetiredRelatedInfoForm";
+
+// helper imports
+import { convertToPersianNumber } from "../helper.js";
+
+// utils imports
+import { defaultTableOptions } from "../utils.js";
+
 const data = [
   {
-    serial: "۰۱۲۳۴۵۶۷۸۹",
-    kind: "test",
-    number: "123",
-    issueDate: "۱۴۰۲-۱۳-۱۳",
-    runDate: "۱۴۰۲-۱۳-۱۳",
+    code: "۰۱۲۳۴۵۶۷۸۹",
+    fname: "سعید",
+    lname: "علوی",
+    date: "۱۴۰۲-۱۳-۱۳",
+    relation: "همسر",
   },
 ];
 
-function StatementsGrid() {
+function RetiredRelatedInfoGrid() {
   const [rowSelection, setRowSelection] = useState({});
-  const [showStatementModal, setShowStatementModal] = useState(false);
-  const [showDeleteStatementModal, setShowDeleteStatementModal] =
-    useState(false);
+  const [showDependentModal, setShowDependentModal] = useState(false);
+  const [showDeleteRelatedModal, setShowDeleteRelatedModal] = useState(false);
 
-  const handleShowStatementModal = () => {
-    setShowStatementModal(true);
+  const handleShowDependentModal = () => {
+    setShowDependentModal(true);
   };
 
-  const handleShowDeleteStatementModal = () => {
-    setShowDeleteStatementModal(true);
+  const handleShowDeleteRelatedModal = () => {
+    setShowDeleteRelatedModal(true);
   };
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "serial",
-        header: "سریال حکم",
+        accessorKey: "code",
+        header: "کد ملی",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
         },
@@ -68,8 +68,8 @@ function StatementsGrid() {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
-        accessorKey: "kind",
-        header: "نوع حکم",
+        accessorKey: "fname",
+        header: "نام",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
         },
@@ -79,33 +79,33 @@ function StatementsGrid() {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
-        accessorKey: "number",
-        header: "شماره حکم",
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-      },
-      {
-        accessorKey: "issueDate",
-        header: "تاریخ صدور",
+        accessorKey: "lname",
+        header: "نام خانوادگی",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
+        },
+        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
+      },
+      {
+        accessorKey: "date",
+        header: "تاریخ تولد",
+        muiTableHeadCellProps: {
+          sx: { color: "green", fontFamily: "sahel" },
+          align: "right",
+        },
+        muiTableBodyCellProps: {
+          sx: { fontFamily: "sahel" },
           align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
-        accessorKey: "runDate",
-        header: "تاریخ اجرا",
+        accessorKey: "relation",
+        header: "نسبت",
         muiTableHeadCellProps: {
           sx: { color: "green", fontFamily: "sahel" },
           align: "right",
@@ -126,7 +126,7 @@ function StatementsGrid() {
           sx: { color: "green", fontFamily: "sahel" },
         },
         Cell: () => (
-          <IconButton color="success" onClick={handleShowStatementModal}>
+          <IconButton color="success" onClick={handleShowDependentModal}>
             <EditIcon />
           </IconButton>
         ),
@@ -141,7 +141,7 @@ function StatementsGrid() {
           sx: { color: "green", fontFamily: "sahel" },
         },
         Cell: () => (
-          <IconButton color="error" onClick={handleShowDeleteStatementModal}>
+          <IconButton color="error" onClick={handleShowDeleteRelatedModal}>
             <DeleteIcon />
           </IconButton>
         ),
@@ -169,9 +169,15 @@ function StatementsGrid() {
       },
     }),
     renderTopToolbarCustomActions: () => (
-      <UserButton variant="outline-primary" icon={"add"}>
-        ایجاد
-      </UserButton>
+      <Button
+        dir="ltr"
+        endIcon={<AddIcon />}
+        variant="contained"
+        color="primary"
+        sx={{ fontFamily: "sahel" }}
+      >
+        <span>ایجاد</span>
+      </Button>
     ),
     muiPaginationProps: {
       color: "success",
@@ -197,30 +203,40 @@ function StatementsGrid() {
 
   const content = (
     <>
-      {showStatementModal ? (
+      {showDependentModal ? (
         <Modal
-          title={"حکم بازنشسته"}
-          closeModal={() => setShowStatementModal(false)}
+          title={"اطلاعات فرد وابسته"}
+          closeModal={() => setShowDependentModal(false)}
         >
-          <RetiredStatementInfoForm />
+          <RetiredRelatedInfoForm />
         </Modal>
-      ) : showDeleteStatementModal ? (
+      ) : showDeleteRelatedModal ? (
         <Modal
-          title={"حذف حکم"}
-          closeModal={() => setShowDeleteStatementModal(false)}
+          title={"حذف وابسته"}
+          closeModal={() => setShowDeleteRelatedModal(false)}
         >
-          <p>آیا از حذف این حکم اطمینان دارید؟</p>
+          <p>آیا از حذف این وابسته اطمینان دارید؟</p>
           <div className="flex-row flex-center">
-            <UserButton variant={"outline-success"} icon={"done"}>
-              بله
-            </UserButton>
-            <UserButton
-              variant={"danger"}
-              icon={"close"}
-              onClickFn={() => setShowDeleteStatementModal(false)}
+            <LoadingButton
+              dir="ltr"
+              endIcon={<DoneIcon />}
+              variant="contained"
+              color="success"
+              sx={{ fontFamily: "sahel" }}
             >
-              خیر
-            </UserButton>
+              <span>بله</span>
+            </LoadingButton>
+
+            <Button
+              dir="ltr"
+              endIcon={<CloseIcon />}
+              onClick={() => setShowDeleteRelatedModal(false)}
+              variant="contained"
+              color="error"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>خیر</span>
+            </Button>
           </div>
         </Modal>
       ) : null}
@@ -231,4 +247,4 @@ function StatementsGrid() {
   return content;
 }
 
-export default StatementsGrid;
+export default RetiredRelatedInfoGrid;

@@ -1,7 +1,8 @@
-// components
-import UserButton from "../components/UserButton";
+// mui imports
+import { LoadingButton } from "@mui/lab";
+import { Save as SaveIcon } from "@mui/icons-material";
 
-function DependentInfoForm() {
+function RetiredRelatedInfoForm() {
   return (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-4">
@@ -467,12 +468,18 @@ function DependentInfoForm() {
       </form>
 
       <div style={{ marginRight: "auto" }}>
-        <UserButton variant={"outline-success"} icon={"done"}>
-          ذخیره
-        </UserButton>
+        <LoadingButton
+          dir="ltr"
+          endIcon={<SaveIcon />}
+          variant="contained"
+          color="success"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>ذخیره</span>
+        </LoadingButton>
       </div>
     </section>
   );
 }
 
-export default DependentInfoForm;
+export default RetiredRelatedInfoForm;

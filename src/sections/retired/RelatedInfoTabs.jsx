@@ -9,8 +9,8 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
 // component imports
-import RelatedInfoGrid from "../../grids/RelatedInfoGrid";
-import StatementsGrid from "../../grids/StatementsGrid";
+import RetiredRelatedInfoGrid from "../../grids/RetiredRelatedInfoGrid";
+import RetiredStatementGrid from "../../grids/RetiredStatementGrid";
 
 export default function LabTabs() {
   const [value, setValue] = useState("1");
@@ -36,7 +36,7 @@ export default function LabTabs() {
           padding: "0",
         }}
       >
-        <RelatedInfoGrid />
+        <RetiredRelatedInfoGrid />
       </TabPanel>
       <TabPanel
         value="2"
@@ -44,7 +44,7 @@ export default function LabTabs() {
           padding: "0",
         }}
       >
-        <StatementsGrid />
+        <RetiredStatementGrid />
       </TabPanel>
       <TabPanel
         value="3"

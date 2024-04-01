@@ -1,24 +1,26 @@
 // react imports
 import { useState } from "react";
 
-// helpers
-import { findById } from "../helper.js";
-
 // rrd imports
 import { useLocation } from "react-router-dom";
 
 // mui imports
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
+import { Box, Tab, Button } from "@mui/material";
+import { LoadingButton, TabContext, TabList, TabPanel } from "@mui/lab";
+import {
+  Save as SaveIcon,
+  Outbox as OutboxIcon,
+  Print as PrintIcon,
+  Redo as RedoIcon,
+} from "@mui/icons-material";
 
 // components
 import RequestAttachmentsSection from "../sections/request/RequestAttachmentsSection";
 import RequestHistorySection from "../sections/request/RequestHistorySection";
 import RequestInfoSection from "../sections/request/RequestInfoSection";
-import UserButton from "../components/UserButton";
+
+// helpers
+import { findById } from "../helper.js";
 
 function RequestScreen() {
   const [value, setValue] = useState("1");
@@ -71,18 +73,42 @@ function RequestScreen() {
       </TabContext>
 
       <div style={{ marginRight: "auto" }} className="flex-row">
-        <UserButton variant={"outline-success"} icon={"print"}>
-          &nbsp; چاپ
-        </UserButton>
-        <UserButton variant={"outline-success"} icon={"send"}>
-          &nbsp; ارسال
-        </UserButton>
-        <UserButton variant={"outline-success"} icon={"done"}>
-          &nbsp; ذخیره
-        </UserButton>
-        <UserButton variant={"outline-success"} icon={"return"}>
-          &nbsp; برگشت
-        </UserButton>
+        <Button
+          dir="ltr"
+          endIcon={<PrintIcon />}
+          variant="contained"
+          color="primary"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>چاپ</span>
+        </Button>
+        <Button
+          dir="ltr"
+          endIcon={<OutboxIcon />}
+          variant="contained"
+          color="primary"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>ارسال</span>
+        </Button>
+        <LoadingButton
+          dir="ltr"
+          endIcon={<SaveIcon />}
+          variant="contained"
+          color="success"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>ذخیره</span>
+        </LoadingButton>
+        <Button
+          dir="ltr"
+          endIcon={<RedoIcon />}
+          variant="contained"
+          color="warning"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>برگشت</span>
+        </Button>
       </div>
     </section>
   );

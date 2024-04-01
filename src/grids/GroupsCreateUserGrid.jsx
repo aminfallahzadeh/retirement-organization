@@ -5,18 +5,6 @@ import useRefreshToken from "../hooks/useRefresh";
 // rrd imports
 import { useNavigate } from "react-router-dom";
 
-// mui imports
-import { Box } from "@mui/material";
-
-// helpers
-import { convertToPersianNumber } from "../helper.js";
-
-// components
-import UserButton from "../components/UserButton";
-
-// utils imports
-import { defaultTableOptions } from "../utils.js";
-
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -29,20 +17,32 @@ import { setGroupsTableData } from "../slices/groupsDataSlice";
 
 // library imports
 import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+// mui imports
+import { Box, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
   ChevronRight,
   LastPage,
   FirstPage,
+  Save as SaveIcon,
+  ArrowBack as BackIcon,
 } from "@mui/icons-material";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
   useMaterialReactTable,
   getMRT_RowSelectionHandler,
 } from "material-react-table";
+
+// helpers
+import { convertToPersianNumber } from "../helper.js";
+
+// utils imports
+import { defaultTableOptions } from "../utils.js";
 
 function GriyosCreateUserGrid({ userObject }) {
   const [rowSelection, setRowSelection] = useState({});
@@ -187,24 +187,28 @@ function GriyosCreateUserGrid({ userObject }) {
       <Box
         sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
       >
-        <UserButton
-          variant="outline-success"
-          icon={"done"}
-          onClickFn={handleCreateUser}
-          disabled={isCreating}
-          isLoading={isCreating || isDeleting || isInserting}
+        <LoadingButton
+          dir="ltr"
+          endIcon={<SaveIcon />}
+          loading={isCreating || isDeleting || isInserting}
+          onClick={handleCreateUser}
+          variant="contained"
+          color="success"
+          sx={{ fontFamily: "sahel" }}
         >
-          &nbsp; ذخیره
-        </UserButton>
+          <span>ذخیره</span>
+        </LoadingButton>
 
-        <UserButton
-          variant="outline-primary"
-          icon={"arrow-back"}
-          onClickFn={() => navigate("/retirement-organization/users")}
-          disabled={isCreating || isDeleting || isInserting}
+        <Button
+          dir="ltr"
+          endIcon={<BackIcon />}
+          onClick={() => navigate("/retirement-organization/users")}
+          variant="contained"
+          color="primary"
+          sx={{ fontFamily: "sahel" }}
         >
-          &nbsp; بازگشت
-        </UserButton>
+          <span>بازگشت</span>
+        </Button>
       </Box>
     ),
     muiPaginationProps: {
