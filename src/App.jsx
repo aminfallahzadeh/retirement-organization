@@ -24,7 +24,7 @@ import TopbarNav from "./components/TopbarNav";
 function App() {
   const theme = createTheme({
     typography: {
-      fontSize: 20,
+      fontSize: 14,
     },
   });
 

@@ -64,8 +64,8 @@ Routing:
 UI:
   [+] change bootstrap button with mui buttons @done(24-04-01 19:13)
   [+] remove bootstrap css and library completely @done(24-04-01 19:13)
-  [ ] apply 62.5% font size to html globally and fix all the font sizes
+  [-] apply 62.5% font size to html globally and fix all the font sizes @cancelled(24-04-02 02:59)
   [ ] find and replace modern color palette
 
 Refacoring:
-  [ ] refactor code imports
+  [+] refactor code imports @done(24-04-02 02:59)

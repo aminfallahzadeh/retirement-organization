@@ -8,7 +8,7 @@
 	width: $side-nav-width !important;
 	z-index: 8 !important;
 	height: 100% !important;
-	font-size: 1.5rem !important;
+	font-size: 1rem !important;
 }
 
 .ps-sidebar-container {
@@ -22,6 +22,10 @@
 	&:hover {
 		background-color: $color-fg-tertiary !important;
 	}
+}
+
+.ps-menu-label {
+	display: flex;
 }
 
 .ps-submenu-content {
