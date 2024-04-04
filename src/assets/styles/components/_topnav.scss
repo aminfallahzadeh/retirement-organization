@@ -12,6 +12,7 @@
         column-gap: 50px;
         margin-right: 60px;
         margin-top: 10px;
+        position: relative;
 
         &--logo {
             img {
@@ -75,3 +76,86 @@
         }
     }
 }
+
+// .topnav {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     height: $top-nav-height;
+//     position: fixed;
+//     top: 0;
+//     right: 0;
+//     width: 100%;
+//     z-index: 9;
+//     background-color: $color-fg-primary;
+//     padding-right: calc($side-nav-width + 2%);
+//     padding-left: 1rem;
+
+//     &__items {
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+
+//         &--logo {
+//             img {
+//                 width: 4rem;
+//                 height: 4rem;
+//             }
+//         }
+
+//         &--links {
+//             color: $color-white;
+//             display: flex;
+//             justify-content: center;
+//             align-items: center;
+//             flex-direction: row;
+//             column-gap: 30px;
+//             margin-right: 1rem;
+
+//             &-list {
+//                 display: flex;
+//                 justify-content: center;
+//                 align-items: center;
+//                 column-gap: 20px;
+
+//                 li {
+//                     display: flex;
+//                     justify-content: center;
+//                     align-items: center;
+//                     column-gap: 2px;
+//                     text-decoration: none;
+//                     list-style: none;
+//                     cursor: pointer;
+//                     transition: all 0.25s;
+//                     font-size: 1rem;
+
+//                     a {
+//                         color: $color-white;
+//                         transition: all 0.25s;
+//                     }
+
+//                     a:hover {
+//                         color: $color-fg-tertiary;
+//                     }
+
+//                     & > * {
+//                         text-decoration: none;
+//                     }
+
+//                     &:hover {
+//                         color: $color-fg-tertiary;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+
+//     &__banner {
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         &--img {
+//             width: 280px;
+//         }
+//     }
+// }

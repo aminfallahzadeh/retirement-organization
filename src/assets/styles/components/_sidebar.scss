@@ -6,14 +6,15 @@
 	overflow-x: hidden !important;
 	min-width: $side-nav-width !important;
 	width: $side-nav-width !important;
-	z-index: 8 !important;
+	z-index: 9 !important;
 	height: 100% !important;
 	font-size: 1rem !important;
+	border-left-style: none !important;
 }
 
 .ps-sidebar-container {
-	background-color: $color-fg-primary !important;
-	color: $color-white !important;
+	background-color: $color-grey-1 !important;
+	color: $color-black !important;
 }
 
 .ps-menu-button {

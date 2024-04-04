@@ -14,11 +14,12 @@ function DateTime() {
   const persianDate = convertToPersianNumber(currentDate);
 
   return (
-    <div className="datetime">
-      <AnalogClock />
-
-      <div style={{ color: "white" }}>{persianDate}</div>
-    </div>
+    <>
+      <div className="datetime">
+        <AnalogClock />
+        <div style={{ color: "white" }}>{persianDate}</div>
+      </div>
+    </>
   );
 }
 
