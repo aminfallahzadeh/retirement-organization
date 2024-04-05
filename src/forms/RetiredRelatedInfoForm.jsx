@@ -338,8 +338,7 @@ function RetiredRelatedInfoForm() {
       </form>
 
       <div className="Modal__header u-margin-top-sm">
-        <h4> اطلاعات خویش فرمایی</h4>
-        <hr />
+        <h4 className="title-secondary"> اطلاعات خویش فرمایی</h4>
       </div>
 
       <form method="POST" className="grid grid--col-4">
@@ -392,8 +391,7 @@ function RetiredRelatedInfoForm() {
       </form>
 
       <div className="Modal__header u-margin-top-sm">
-        <h4>اطلاعات پشتیبان</h4>
-        <hr />
+        <h4 className="title-secondary">اطلاعات پشتیبان</h4>
       </div>
 
       <form method="POST" className="grid grid--col-4">

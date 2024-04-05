@@ -382,8 +382,7 @@ function RetiredStatementInfoForm() {
       </form>
 
       <div className="Modal__header u-margin-top-md">
-        <h4>اطلاعات حکم بازنشستگی</h4>
-        <hr />
+        <h4 className="title-secondary">اطلاعات حکم بازنشستگی</h4>
       </div>
 
       <form method="POST" className="grid grid--col-4">
@@ -424,8 +423,7 @@ function RetiredStatementInfoForm() {
       </form>
 
       <div className="Modal__header u-margin-top-md">
-        <h4>اطلاعات پشتیبان</h4>
-        <hr />
+        <h4 className="title-secondary">اطلاعات پشتیبان</h4>
       </div>
 
       <form method="POSt" className="grid grid--col-4">
@@ -527,8 +525,7 @@ function RetiredStatementInfoForm() {
       </form>
 
       <div className="Modal__header u-margin-top-md">
-        <h4>موظفین</h4>
-        <hr />
+        <h4 className="title-secondary">موظفین</h4>
       </div>
 
       <div style={gridTitleStyle}>
