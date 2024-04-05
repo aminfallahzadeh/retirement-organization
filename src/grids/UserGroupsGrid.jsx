@@ -71,8 +71,8 @@ function UserGroupsGrid() {
         accessorKey: "name",
         header: (
           <span>
-            گروه های کاربر{" "}
-            <span style={{ fontStyle: "italic", color: "#3a6ea5" }}>
+            گروه های کاربر:{" "}
+            <span style={{ fontStyle: "italic", color: "#034e0a" }}>
               {selectedUserData?.username}
             </span>
           </span>

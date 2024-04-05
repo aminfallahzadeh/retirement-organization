@@ -72,8 +72,8 @@ function GroupItemGrid() {
         accessorKey: "name",
         header: (
           <span>
-            دسترسی های گروه{" "}
-            <span style={{ fontStyle: "italic", color: "#05ac13" }}>
+            دسترسی های گروه:{" "}
+            <span style={{ fontStyle: "italic", color: "#3a6ea5" }}>
               {selectedGroupData?.name}
             </span>
           </span>
