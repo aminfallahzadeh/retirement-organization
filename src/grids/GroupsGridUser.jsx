@@ -25,7 +25,6 @@ import { findById } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
-import { Box } from "@mui/material";
 
 function GroupsGridUser() {
   const [rowSelection, setRowSelection] = useState({});
@@ -72,10 +71,14 @@ function GroupsGridUser() {
     () => [
       {
         accessorKey: "name",
-        header: "نام گروه",
+        header: "گروه ها",
         size: 300,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(0, 78, 152, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },

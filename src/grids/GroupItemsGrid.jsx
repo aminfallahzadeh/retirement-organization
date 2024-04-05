@@ -70,20 +70,29 @@ function GroupItemGrid() {
     () => [
       {
         accessorKey: "name",
-        header: "نام آیتم",
+        header: (
+          <span>
+            دسترسی های گروه{" "}
+            <span style={{ fontStyle: "italic", color: "#05ac13" }}>
+              {selectedGroupData?.name}
+            </span>
+          </span>
+        ),
         size: 300,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
+          sx: {
+            color: "#03620a",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .2)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
     ],
-    []
+    [selectedGroupData?.name]
   );
 
   const table = useMaterialReactTable({

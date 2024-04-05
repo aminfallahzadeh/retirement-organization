@@ -25,7 +25,6 @@ import { findById } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
-import { Box } from "@mui/material";
 
 function UserGroupsGrid() {
   const [rowSelection, setRowSelection] = useState({});
@@ -70,10 +69,21 @@ function UserGroupsGrid() {
     () => [
       {
         accessorKey: "name",
-        header: "نام گروه",
+        header: (
+          <span>
+            گروه های کاربر{" "}
+            <span style={{ fontStyle: "italic", color: "#3a6ea5" }}>
+              {selectedUserData?.username}
+            </span>
+          </span>
+        ),
         size: 300,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(0, 78, 152, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
@@ -81,7 +91,7 @@ function UserGroupsGrid() {
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
     ],
-    []
+    [selectedUserData?.username]
   );
 
   const table = useMaterialReactTable({

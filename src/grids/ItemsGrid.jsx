@@ -23,7 +23,6 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { Box } from "@mui/material";
 
 function ItemsGrid() {
   const { token } = useSelector((state) => state.auth);
@@ -71,10 +70,14 @@ function ItemsGrid() {
     () => [
       {
         accessorKey: "name",
-        header: "نام آیتم",
+        header: "دسترسی ها",
         size: 300,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#03620a",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .2)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
@@ -105,6 +108,11 @@ function ItemsGrid() {
         cursor: "pointer",
       },
     }),
+    muiTableHeadCellProps: {
+      sx: {
+        backgroundColor: "#cfcfcf",
+      },
+    },
     enablePagination: false,
     muiTableContainerProps: { sx: { height: "300px" } },
     enableBottomToolbar: false,
