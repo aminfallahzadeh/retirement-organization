@@ -308,9 +308,31 @@ function UsersGrid() {
               closeModal={() => setShowEditUserGroupsModal(false)}
             >
               <div className="flex-row">
-                <GroupsGridUser />
-                <ArrowButtonsUsers />
-                <UserGroupsGrid />
+                <div>
+                  <div className="Modal__header">
+                    <h4 className="title-tertiary">گروه ها</h4>
+                  </div>
+
+                  <GroupsGridUser />
+                </div>
+
+                <div>
+                  <div className="Modal__header">
+                    <h4 className="title-tertiary">عملیات</h4>
+                  </div>
+
+                  <div style={{ marginTop: "6rem" }}>
+                    <ArrowButtonsUsers />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="Modal__header">
+                    <h4 className="title-tertiary">گروه های کاربر</h4>
+                  </div>
+
+                  <UserGroupsGrid />
+                </div>
               </div>
             </Modal>
           ) : null}

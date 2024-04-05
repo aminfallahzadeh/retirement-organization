@@ -43,6 +43,18 @@ button {
     }
 }
 
+.title-tertiary {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: $color-accent-red;
+    transition: text-shadow 0.25s;
+    cursor: default;
+
+    &:hover {
+        text-shadow: 2px 2px 5px $color-grey-4;
+    }
+}
+
 .paragraph-primary {
     color: $color-grey-5;
     padding: 1.5rem;

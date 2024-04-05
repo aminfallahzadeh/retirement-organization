@@ -306,7 +306,9 @@ function GroupsGrid() {
               title={"حذف گروه"}
               closeModal={() => setShowDeleteGroupModal(false)}
             >
-              <p>آیا از حذف این گروه اطمینان دارید؟</p>
+              <p className="paragraph-primary">
+                آیا از حذف این گروه اطمینان دارید؟
+              </p>
               <div className="flex-row flex-center">
                 <LoadingButton
                   dir="ltr"
@@ -339,24 +341,23 @@ function GroupsGrid() {
               <div className="flex-row">
                 <div>
                   <div className="Modal__header">
-                    <h4>دسترسی ها</h4>
-                    <hr />
+                    <h4 className="title-tertiary">دسترسی ها</h4>
                   </div>
                   <ItemsGrid />
                 </div>
 
                 <div>
                   <div className="Modal__header">
-                    <h4>عملیات</h4>
-                    <hr />
+                    <h4 className="title-tertiary">عملیات</h4>
                   </div>
-                  <ArrowButtonsGroups />
+                  <div style={{ marginTop: "6rem" }}>
+                    <ArrowButtonsGroups />
+                  </div>
                 </div>
 
                 <div>
                   <div className="Modal__header">
-                    <h4>دسترسی های گروه</h4>
-                    <hr />
+                    <h4 className="title-tertiary">دسترسی های گروه</h4>
                   </div>
                   <GroupItemsGrid />
                 </div>
