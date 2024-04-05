@@ -109,7 +109,12 @@ function Captcha() {
         <VpnKeyOutlinedIcon style={style} />
       </div>
       <div className="flex-row flex-space-between u-margin-bottom-md">
-        <Button onClick={refreshCaptcha} color="primary" variant="outlined">
+        <Button
+          onClick={refreshCaptcha}
+          color="primary"
+          variant="contained"
+          size="small"
+        >
           <RefreshIcon />
         </Button>
 

@@ -159,7 +159,11 @@ function GroupsGrid() {
         header: "نام گروه",
         size: 450,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#03620a",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .2)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
@@ -168,12 +172,16 @@ function GroupsGrid() {
       },
       {
         accessorKey: "editNameAction",
-        header: "ویرایش نام",
+        header: "ویرایش گروه",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#03620a",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .2)",
+          },
         },
         Cell: () => (
           <IconButton color="success" onClick={handleShowEditNameModal}>
@@ -183,12 +191,16 @@ function GroupsGrid() {
       },
       {
         accessorKey: "editItemsAction",
-        header: "ویرایش آیتم ها",
+        header: "ویرایش دسترسی ها",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#03620a",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .2)",
+          },
         },
         Cell: () => (
           <IconButton color="primary" onClick={handleShowEditItemsModal}>
@@ -203,7 +215,11 @@ function GroupsGrid() {
         enableColumnActions: false,
         size: 20,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#03620a",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .2)",
+          },
         },
         Cell: () => (
           <IconButton color="error" onClick={handlShowDeleteGroupModal}>

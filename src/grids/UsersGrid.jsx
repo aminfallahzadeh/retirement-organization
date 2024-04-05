@@ -127,12 +127,14 @@ function UsersGrid() {
         header: "نام کاربری",
         size: 50,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(0, 78, 152, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "center",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
@@ -142,12 +144,14 @@ function UsersGrid() {
         header: "نام",
         size: 50,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(0, 78, 152, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "center",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
@@ -157,12 +161,14 @@ function UsersGrid() {
         header: "نام خانوادگی",
         size: 50,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(0, 78, 152, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "center",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
@@ -172,24 +178,30 @@ function UsersGrid() {
         header: "وضعیت",
         size: 50,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(0, 78, 152, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "center",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
         align: "right",
       },
       {
         accessorKey: "editNameAction",
-        header: "ویرایش",
+        header: "ویرایش کاربر",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(0, 78, 152, .4)",
+          },
         },
         Cell: () => (
           <IconButton color="success" onClick={handleShowEditNameModal}>
@@ -204,7 +216,11 @@ function UsersGrid() {
         enableColumnActions: false,
         size: 20,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(0, 78, 152, .4)",
+          },
         },
         Cell: () => (
           <IconButton color="primary" onClick={handleShowEditUserGroupsModal}>
