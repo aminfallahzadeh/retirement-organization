@@ -2,7 +2,7 @@
 import StatementItemsGrid from "../grids/StatementItemsGrid";
 
 function BatchStatementsForm() {
-  return (
+  const content = (
     <section className="formContainer">
       <h4 className="title-primary">احکام گروهی</h4>
       <form method="POST" className="grid grid--col-4 u-margin-top-md">
@@ -103,6 +103,7 @@ function BatchStatementsForm() {
       </div>
     </section>
   );
+  return content;
 }
 
 export default BatchStatementsForm;
