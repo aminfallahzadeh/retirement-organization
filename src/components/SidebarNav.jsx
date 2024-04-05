@@ -28,7 +28,14 @@ function SidebarNav() {
             </>
           }
         >
-          <MenuItem> احکام گروهی </MenuItem>
+          <MenuItem
+            component={
+              <Link to={"/retirement-organization/batch-statements"} />
+            }
+          >
+            {" "}
+            احکام گروهی{" "}
+          </MenuItem>
           <MenuItem> رویت تعرفه کارمندی </MenuItem>
           <MenuItem> رویت احکام کارمندی </MenuItem>
           <MenuItem> گزارشات </MenuItem>
