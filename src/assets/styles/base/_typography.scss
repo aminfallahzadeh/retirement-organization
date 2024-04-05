@@ -19,3 +19,31 @@ button {
     font-family: inherit;
     font-size: 1em;
 }
+
+.title-primary {
+    background-color: $color-grey-3;
+    color: $color-grey-5;
+    border-radius: 2px;
+    padding: 10px 10px;
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+.title-secondary {
+    font-size: 1.2rem;
+    color: $color-grey-4;
+    display: inl;
+    margin-bottom: 1rem;
+
+    &:after {
+        content: "";
+        display: block;
+        border-top: 2px solid $color-grey-4;
+        margin-top: 0.5em;
+    }
+}
+
+.paragraph-primary {
+    color: $color-grey-5;
+    padding: 1.5rem;
+}

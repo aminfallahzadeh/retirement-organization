@@ -45,7 +45,7 @@ function Dashboard() {
         isLoading={isLoading}
         roles={roles}
       />
-      <h4 className="title">کارتابل</h4>
+      <h4 className="title-primary">کارتابل</h4>
       {isRolesSuccess && selectedRole && (
         <CartableGrid selectedRole={selectedRole} />
       )}

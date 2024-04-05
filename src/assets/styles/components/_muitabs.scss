@@ -1,10 +1,10 @@
 .MuiTabs-indicator {
-    background-color: #b63f00 !important;
-    color: #b63f00 !important;
+    background-color: $color-accent-red !important;
+    color: $color-accent-red !important;
 }
 
 .MuiTab-root.Mui-selected {
-    color: red !important;
+    color: $color-accent-red !important;
 }
 
 .MuiTab-root {

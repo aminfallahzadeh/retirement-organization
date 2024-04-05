@@ -215,7 +215,9 @@ function RetiredRelatedInfoGrid() {
           title={"حذف وابسته"}
           closeModal={() => setShowDeleteRelatedModal(false)}
         >
-          <p>آیا از حذف این وابسته اطمینان دارید؟</p>
+          <p className="paragraph-primary">
+            آیا از حذف این وابسته اطمینان دارید؟
+          </p>
           <div className="flex-row flex-center">
             <LoadingButton
               dir="ltr"

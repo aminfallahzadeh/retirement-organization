@@ -6,6 +6,7 @@
     width: 100%;
     z-index: 9;
     background-color: $color-fg-primary;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
     &__container {
         display: flex;
@@ -54,7 +55,7 @@
                 }
 
                 a:hover {
-                    color: $color-fg-tertiary;
+                    color: $color-accent-red;
                 }
 
                 & > * {
@@ -62,7 +63,7 @@
                 }
 
                 &:hover {
-                    color: $color-fg-tertiary;
+                    color: $color-accent-red;
                 }
             }
         }

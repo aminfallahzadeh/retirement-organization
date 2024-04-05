@@ -19,7 +19,8 @@ function IndividualInfoSection() {
     <section className="pensionersAffairs">
       <Accordion
         sx={{
-          backgroundColor: "#d9d9d9",
+          color: "#333533",
+          backgroundColor: "#c0c0c0",
         }}
       >
         <AccordionSummary
@@ -36,7 +37,8 @@ function IndividualInfoSection() {
 
       <Accordion
         sx={{
-          backgroundColor: "#d9d9d9",
+          color: "#333533",
+          backgroundColor: "#c0c0c0",
         }}
       >
         <AccordionSummary
@@ -53,7 +55,8 @@ function IndividualInfoSection() {
 
       <Accordion
         sx={{
-          backgroundColor: "#d9d9d9",
+          color: "#333533",
+          backgroundColor: "#c0c0c0",
         }}
       >
         <AccordionSummary
@@ -70,7 +73,8 @@ function IndividualInfoSection() {
 
       <Accordion
         sx={{
-          backgroundColor: "#d9d9d9",
+          color: "#333533",
+          backgroundColor: "#c0c0c0",
         }}
       >
         <AccordionSummary

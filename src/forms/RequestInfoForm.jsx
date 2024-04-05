@@ -1,7 +1,7 @@
 function RequestInfoForm({ body }) {
   return (
     <section className="formContainer">
-      <h4 className="title">اطلاعات درخواست</h4>
+      <h4 className="title-primary">اطلاعات درخواست</h4>
       <form method="POST" className="grid grid--col-4 u-margin-top-md">
         <div className="inputBox__form">
           <input
@@ -61,7 +61,7 @@ function RequestInfoForm({ body }) {
         </div>
       </form>
 
-      <h4 className="title u-margin-top-md">متن درخواست</h4>
+      <h4 className="title-primary u-margin-top-md">متن درخواست</h4>
 
       <form method="POST" className="grid grid--col-4 u-margin-top-md">
         <div className="inputBox__form col-span-4 row-span-3">
@@ -76,7 +76,7 @@ function RequestInfoForm({ body }) {
         </div>
       </form>
 
-      <h4 className="title u-margin-top-md">توضیحات کارشناس</h4>
+      <h4 className="title-primary u-margin-top-md">توضیحات کارشناس</h4>
 
       <form method="POST" className="grid grid--col-4 u-margin-top-md">
         <div className="inputBox__form col-span-4 row-span-3">
