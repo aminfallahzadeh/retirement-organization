@@ -39,7 +39,6 @@ function CartableGrid({ selectedRole }) {
     data: requests,
     isSuccess,
     isLoading,
-    isFetching,
     error,
     refetch,
   } = useGetRequestQuery({ token, role: selectedRole });
@@ -75,61 +74,21 @@ function CartableGrid({ selectedRole }) {
       {
         accessorKey: "id",
         header: "شماره درخواست",
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "requestType",
         header: "نوع درخواست",
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "sender",
         header: "ارسال کننده",
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "date",
         header: "تاریخ درخواست",
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
@@ -143,6 +102,7 @@ function CartableGrid({ selectedRole }) {
             color: "#001a57",
             fontFamily: "sahel",
             backgroundColor: "rgba(47, 255, 66, .4)",
+            borderRight: "1px solid #cfcfcf",
             width: "150px",
           },
         },
@@ -160,13 +120,6 @@ function CartableGrid({ selectedRole }) {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
         Cell: ({ row }) => (
           <Link to={`/retirement-organization/request?id=${row.id}`}>
             <IconButton color="primary">
@@ -186,9 +139,6 @@ function CartableGrid({ selectedRole }) {
     enablePagination: false,
     enableBottomToolbar: false,
     muiTableContainerProps: { sx: { height: "500px" } },
-    initialState: {
-      density: "compact",
-    },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>

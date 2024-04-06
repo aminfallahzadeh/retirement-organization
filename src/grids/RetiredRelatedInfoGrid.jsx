@@ -59,76 +59,26 @@ function RetiredRelatedInfoGrid() {
       {
         accessorKey: "code",
         header: "کد ملی",
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "fname",
         header: "نام",
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "lname",
         header: "نام خانوادگی",
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "date",
         header: "تاریخ تولد",
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "relation",
         header: "نسبت",
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
@@ -137,13 +87,6 @@ function RetiredRelatedInfoGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
         Cell: () => (
           <IconButton color="success" onClick={handleShowDependentModal}>
             <EditIcon />
@@ -156,13 +99,6 @@ function RetiredRelatedInfoGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
         Cell: () => (
           <IconButton color="error" onClick={handleShowDeleteRelatedModal}>
             <DeleteIcon />
@@ -177,9 +113,6 @@ function RetiredRelatedInfoGrid() {
     ...defaultTableOptions,
     columns,
     data,
-    initialState: {
-      density: "compact",
-    },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>

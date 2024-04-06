@@ -126,69 +126,25 @@ function UsersGrid() {
         accessorKey: "username",
         header: "نام کاربری",
         size: 50,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-        align: "right",
       },
       {
         accessorKey: "firstName",
         header: "نام",
         size: 50,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-        align: "right",
       },
       {
         accessorKey: "lastName",
         header: "نام خانوادگی",
         size: 50,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-        align: "right",
       },
       {
         accessorKey: "isActive",
         header: "وضعیت",
         size: 50,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
-        align: "right",
       },
       {
         accessorKey: "editNameAction",
@@ -196,13 +152,6 @@ function UsersGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
         Cell: () => (
           <IconButton color="success" onClick={handleShowEditNameModal}>
             <EditIcon />
@@ -215,13 +164,6 @@ function UsersGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
         Cell: () => (
           <IconButton color="primary" onClick={handleShowEditUserGroupsModal}>
             <ChecklistRtlIcon />
@@ -239,9 +181,6 @@ function UsersGrid() {
     enablePagination: false,
     enableBottomToolbar: false,
     muiTableContainerProps: { sx: { height: "500px" } },
-    initialState: {
-      density: "compact",
-    },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>

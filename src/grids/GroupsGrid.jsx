@@ -158,16 +158,6 @@ function GroupsGrid() {
         accessorKey: "name",
         header: "نام گروه",
         size: 450,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
@@ -176,13 +166,6 @@ function GroupsGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
         Cell: () => (
           <IconButton color="success" onClick={handleShowEditNameModal}>
             <EditIcon />
@@ -195,13 +178,6 @@ function GroupsGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
         Cell: () => (
           <IconButton color="primary" onClick={handleShowEditItemsModal}>
             <ChecklistRtlIcon />
@@ -214,13 +190,6 @@ function GroupsGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
         Cell: () => (
           <IconButton color="error" onClick={handlShowDeleteGroupModal}>
             <DeleteIcon />

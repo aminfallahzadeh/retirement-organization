@@ -17,6 +17,7 @@ $breakpoint argument choices:
 - phone
 - tab-port
 - tab-land
+- desk
 - big-desk
 
 */
@@ -43,7 +44,7 @@ $breakpoint argument choices:
         }
     }
 
-    @if $breakpoint==mid-desk {
+    @if $breakpoint==desk {
         // 1500px
         @media (max-width: 93.75em) {
             @content;
