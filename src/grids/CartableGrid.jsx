@@ -219,10 +219,16 @@ function CartableGrid({ selectedRole }) {
 
   const content = (
     <>
-      {isLoading || isFetching ? (
-        <p className="skeleton">
-          <Skeleton count={3} />
-        </p>
+      {isLoading ? (
+        <div className="skeleton-lg">
+          <Skeleton
+            count={7}
+            baseColor="#dfdfdf"
+            highlightColor="#9f9f9f"
+            duration={1}
+            direction="rtl"
+          />
+        </div>
       ) : (
         <MaterialReactTable table={table} />
       )}

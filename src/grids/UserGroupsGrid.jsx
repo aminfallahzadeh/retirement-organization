@@ -137,9 +137,16 @@ function UserGroupsGrid() {
   const content = (
     <>
       {isLoading ? (
-        <p className="skeleton">
-          <Skeleton count={3} />
-        </p>
+        <div className="skeleton-md">
+          <Skeleton
+            count={7}
+            baseColor="#dfdfdf"
+            highlightColor="#9f9f9f"
+            duration={1}
+            direction="rtl"
+            width={280}
+          />
+        </div>
       ) : (
         <MaterialReactTable table={table} />
       )}
