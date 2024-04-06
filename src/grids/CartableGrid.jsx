@@ -76,7 +76,11 @@ function CartableGrid({ selectedRole }) {
         accessorKey: "id",
         header: "شماره درخواست",
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
@@ -87,7 +91,11 @@ function CartableGrid({ selectedRole }) {
         accessorKey: "requestType",
         header: "نوع درخواست",
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
@@ -98,7 +106,11 @@ function CartableGrid({ selectedRole }) {
         accessorKey: "sender",
         header: "ارسال کننده",
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
@@ -109,7 +121,11 @@ function CartableGrid({ selectedRole }) {
         accessorKey: "date",
         header: "تاریخ درخواست",
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
@@ -123,7 +139,12 @@ function CartableGrid({ selectedRole }) {
         enableColumnActions: false,
         size: 20,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel", width: "150px" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+            width: "150px",
+          },
         },
         Cell: () => (
           <Link to={"/retirement-organization/retired"}>
@@ -140,7 +161,11 @@ function CartableGrid({ selectedRole }) {
         enableColumnActions: false,
         size: 20,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         Cell: ({ row }) => (
           <Link to={`/retirement-organization/request?id=${row.id}`}>

@@ -74,9 +74,9 @@ function ItemsGrid() {
         size: 300,
         muiTableHeadCellProps: {
           sx: {
-            color: "#03620a",
+            color: "#001a57",
             fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .2)",
+            backgroundColor: "rgba(47, 255, 66, .4)",
           },
         },
         muiTableBodyCellProps: {

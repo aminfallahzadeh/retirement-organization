@@ -1,5 +1,5 @@
 // rrd imports
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 // library imports
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
@@ -16,7 +16,14 @@ import {
 } from "@mui/icons-material";
 
 function SidebarNav() {
-  return (
+  const location = useLocation();
+
+  const groupsPath = location.pathname === "/retirement-organization/groups";
+  const userPath = location.pathname === "/retirement-organization/users";
+  const batchStatementsPath =
+    location.pathname === "/retirement-organization/batch-statements";
+
+  const content = (
     <Sidebar rtl={true}>
       <Menu>
         <SubMenu
@@ -32,6 +39,7 @@ function SidebarNav() {
             component={
               <Link to={"/retirement-organization/batch-statements"} />
             }
+            active={batchStatementsPath}
           >
             {" "}
             احکام گروهی{" "}
@@ -66,10 +74,16 @@ function SidebarNav() {
             </>
           }
         >
-          <MenuItem component={<Link to="/retirement-organization/groups" />}>
+          <MenuItem
+            component={<Link to="/retirement-organization/groups" />}
+            active={groupsPath}
+          >
             گروه ها
           </MenuItem>
-          <MenuItem component={<Link to="/retirement-organization/users" />}>
+          <MenuItem
+            component={<Link to="/retirement-organization/users" />}
+            active={userPath}
+          >
             کاربران
           </MenuItem>
         </SubMenu>
@@ -81,6 +95,7 @@ function SidebarNav() {
       </Menu>
     </Sidebar>
   );
+  return content;
 }
 
 export default SidebarNav;

@@ -32,3 +32,8 @@
 .ps-submenu-content {
 	background-color: $color-grey-2 !important;
 }
+
+.ps-active {
+	background-color: $color-grey-1 !important;
+	color: $color-fg-primary !important;
+}

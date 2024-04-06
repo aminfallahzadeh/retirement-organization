@@ -1,5 +1,5 @@
 // rrd imports
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 // component imports
 import ProfilePicure from "./ProfilePicture";
@@ -13,6 +13,10 @@ import { Logout as LogoutIcon } from "@mui/icons-material";
 
 function TopbarNav({ userName }) {
   const logoutHandler = useLogout();
+  const location = useLocation();
+
+  const cartablePath =
+    location.pathname === "/retirement-organization/dashboard";
 
   const content = (
     <nav className="topnav">
@@ -34,7 +38,7 @@ function TopbarNav({ userName }) {
             <li onClick={logoutHandler}>
               <LogoutIcon sx={{ fontSize: 20 }} /> خروج
             </li>
-            <li>
+            <li className={cartablePath ? "topnav__active" : ""}>
               <Link to={"/retirement-organization/dashboard"}>کارتابل</Link>
             </li>
           </ul>
@@ -50,44 +54,6 @@ function TopbarNav({ userName }) {
       </div>
     </nav>
   );
-
-  // const content = (
-  //   <nav className="topnav">
-  //     <div className="topnav__items">
-  //       <a className="topnav__items--logo">
-  //         <img
-  //           alt="logo"
-  //           src="./logo.png"
-  //           width="80"
-  //           height="80"
-  //           className="d-inline-block align-top"
-  //         />
-  //       </a>
-  //       <div className="topnav__items--links">
-  //         <ProfilePicure />
-  //         <div>
-  //           <ul className="topnav__items--links-list">
-  //             <li>{userName}</li>
-  //             <li onClick={logoutHandler}>
-  //               <LogoutIcon sx={{ fontSize: 20 }} /> خروج
-  //             </li>
-  //             <li>
-  //               <Link to={"/retirement-organization/dashboard"}>کارتابل</Link>
-  //             </li>
-  //           </ul>
-  //         </div>
-  //       </div>
-  //     </div>
-
-  //     {/* <div className="topnav__banner">
-  //       <img src="./banner.png" className="topnav__banner--img" alt="banner" />
-  //     </div> */}
-
-  //     <div className="topnav__datetime">
-  //       <DateTime />
-  //     </div>
-  //   </nav>
-  // );
 
   return content;
 }

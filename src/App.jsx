@@ -35,8 +35,8 @@ function App() {
 
   const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
   const location = useLocation();
+
   const isLoginPage = location.pathname === "/retirement-organization/";
   const logoutHandler = useLogout();
 

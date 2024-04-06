@@ -72,7 +72,7 @@ function UserGroupsGrid() {
         header: (
           <span>
             گروه های کاربر:{" "}
-            <span style={{ fontStyle: "italic", color: "#034e0a" }}>
+            <span style={{ fontStyle: "italic", color: "#03620a" }}>
               {selectedUserData?.username}
             </span>
           </span>
@@ -82,7 +82,7 @@ function UserGroupsGrid() {
           sx: {
             color: "#001a57",
             fontFamily: "sahel",
-            backgroundColor: "rgba(0, 78, 152, .4)",
+            backgroundColor: "rgba(47, 255, 66, .4)",
           },
         },
         muiTableBodyCellProps: {

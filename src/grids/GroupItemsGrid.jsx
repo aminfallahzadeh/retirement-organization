@@ -73,7 +73,7 @@ function GroupItemGrid() {
         header: (
           <span>
             دسترسی های گروه:{" "}
-            <span style={{ fontStyle: "italic", color: "#3a6ea5" }}>
+            <span style={{ fontStyle: "italic", color: "#03620a" }}>
               {selectedGroupData?.name}
             </span>
           </span>
@@ -81,9 +81,9 @@ function GroupItemGrid() {
         size: 300,
         muiTableHeadCellProps: {
           sx: {
-            color: "#03620a",
+            color: "#001a57",
             fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .2)",
+            backgroundColor: "rgba(47, 255, 66, .4)",
           },
         },
         muiTableBodyCellProps: {

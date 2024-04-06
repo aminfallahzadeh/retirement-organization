@@ -62,7 +62,11 @@ function RetiredStatementGrid() {
         accessorKey: "serial",
         header: "سریال حکم",
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
@@ -73,7 +77,11 @@ function RetiredStatementGrid() {
         accessorKey: "kind",
         header: "نوع حکم",
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
@@ -84,8 +92,11 @@ function RetiredStatementGrid() {
         accessorKey: "number",
         header: "شماره حکم",
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
@@ -96,12 +107,14 @@ function RetiredStatementGrid() {
         accessorKey: "issueDate",
         header: "تاریخ صدور",
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
@@ -109,12 +122,14 @@ function RetiredStatementGrid() {
         accessorKey: "runDate",
         header: "تاریخ اجرا",
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-          align: "right",
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         muiTableBodyCellProps: {
           sx: { fontFamily: "sahel" },
-          align: "right",
         },
         Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
@@ -125,7 +140,11 @@ function RetiredStatementGrid() {
         enableColumnActions: false,
         size: 20,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         Cell: () => (
           <IconButton color="success" onClick={handleShowStatementModal}>
@@ -140,7 +159,11 @@ function RetiredStatementGrid() {
         enableColumnActions: false,
         size: 20,
         muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
+          sx: {
+            color: "#001a57",
+            fontFamily: "sahel",
+            backgroundColor: "rgba(47, 255, 66, .4)",
+          },
         },
         Cell: () => (
           <IconButton color="error" onClick={handleShowDeleteStatementModal}>

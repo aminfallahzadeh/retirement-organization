@@ -130,7 +130,7 @@ function UsersGrid() {
           sx: {
             color: "#001a57",
             fontFamily: "sahel",
-            backgroundColor: "rgba(0, 78, 152, .4)",
+            backgroundColor: "rgba(47, 255, 66, .4)",
           },
         },
         muiTableBodyCellProps: {
@@ -147,7 +147,7 @@ function UsersGrid() {
           sx: {
             color: "#001a57",
             fontFamily: "sahel",
-            backgroundColor: "rgba(0, 78, 152, .4)",
+            backgroundColor: "rgba(47, 255, 66, .4)",
           },
         },
         muiTableBodyCellProps: {
@@ -164,7 +164,7 @@ function UsersGrid() {
           sx: {
             color: "#001a57",
             fontFamily: "sahel",
-            backgroundColor: "rgba(0, 78, 152, .4)",
+            backgroundColor: "rgba(47, 255, 66, .4)",
           },
         },
         muiTableBodyCellProps: {
@@ -181,7 +181,7 @@ function UsersGrid() {
           sx: {
             color: "#001a57",
             fontFamily: "sahel",
-            backgroundColor: "rgba(0, 78, 152, .4)",
+            backgroundColor: "rgba(47, 255, 66, .4)",
           },
         },
         muiTableBodyCellProps: {
@@ -200,7 +200,7 @@ function UsersGrid() {
           sx: {
             color: "#001a57",
             fontFamily: "sahel",
-            backgroundColor: "rgba(0, 78, 152, .4)",
+            backgroundColor: "rgba(47, 255, 66, .4)",
           },
         },
         Cell: () => (
@@ -219,7 +219,7 @@ function UsersGrid() {
           sx: {
             color: "#001a57",
             fontFamily: "sahel",
-            backgroundColor: "rgba(0, 78, 152, .4)",
+            backgroundColor: "rgba(47, 255, 66, .4)",
           },
         },
         Cell: () => (
