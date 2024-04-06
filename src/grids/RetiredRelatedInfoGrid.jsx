@@ -59,27 +59,22 @@ function RetiredRelatedInfoGrid() {
       {
         accessorKey: "code",
         header: "کد ملی",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "fname",
         header: "نام",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "lname",
         header: "نام خانوادگی",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "date",
         header: "تاریخ تولد",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "relation",
         header: "نسبت",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "editNameAction",

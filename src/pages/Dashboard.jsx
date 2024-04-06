@@ -39,13 +39,15 @@ function Dashboard() {
   }, [isRolesSuccess, roles, setSelectedRole]);
 
   return (
-    <section className="main flex flex-col">
-      <RoleSelectionForm
-        setSelectedRole={setSelectedRole}
-        isLoading={isLoading}
-        roles={roles}
-      />
-      <h4 className="title-primary">کارتابل</h4>
+    <section className="main flex-col">
+      <div className="flex-row flex-row--grow">
+        <h4 className="title-primary">کارتابل</h4>
+        <RoleSelectionForm
+          setSelectedRole={setSelectedRole}
+          isLoading={isLoading}
+          roles={roles}
+        />
+      </div>
       {isRolesSuccess && selectedRole && (
         <CartableGrid selectedRole={selectedRole} />
       )}

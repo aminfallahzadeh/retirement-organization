@@ -74,38 +74,25 @@ function CartableGrid({ selectedRole }) {
       {
         accessorKey: "id",
         header: "شماره درخواست",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "requestType",
         header: "نوع درخواست",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "sender",
         header: "ارسال کننده",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "date",
         header: "تاریخ درخواست",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "senderInfo",
-        header: "اطلاعات درخواست کننده",
+        header: "درخواست کننده",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-            borderRight: "1px solid #cfcfcf",
-            width: "150px",
-          },
-        },
         Cell: () => (
           <Link to={"/retirement-organization/retired"}>
             <IconButton color="primary">
@@ -150,7 +137,6 @@ function CartableGrid({ selectedRole }) {
         cursor: "pointer",
       },
     }),
-    // fix top items go under the body
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },

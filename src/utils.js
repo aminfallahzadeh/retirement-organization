@@ -1,4 +1,4 @@
-//Import Material React Table Translations
+// mui imports
 import { MRT_Localization_FA } from "material-react-table/locales/fa";
 
 // table default options
@@ -22,6 +22,7 @@ export const defaultTableOptions = {
       fontFamily: "sahel",
       backgroundColor: "rgba(47, 255, 66, .4)",
       borderRight: "1px solid #cfcfcf",
+      fontWeight: "600",
     },
   },
   initialState: {
