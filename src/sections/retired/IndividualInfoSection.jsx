@@ -2,6 +2,7 @@
 import RetiredAdditionalInfo from "../../forms/RetiredAdditionalInfo";
 import RetiredStaffInfo from "../../forms/RetiredStaffInfo";
 import RetiredPersonalInfo from "../../forms/RetiredPersonalInfo";
+import FolderTree from "../../components/FolderTree";
 
 // redux imports
 import { useSelector } from "react-redux";
@@ -84,7 +85,9 @@ function IndividualInfoSection() {
         >
           پرونده الکترونیک
         </AccordionSummary>
-        <AccordionDetails>پرونده الکترونیک</AccordionDetails>
+        <AccordionDetails>
+          <FolderTree />
+        </AccordionDetails>
       </Accordion>
     </section>
   );
