@@ -132,4 +132,18 @@
 			color: $color-accent-red;
 		}
 	}
+
+	&--icon {
+		position: absolute;
+		left: 3.3rem;
+		top: 0.5rem;
+		cursor: pointer;
+	}
+
+	&--calender {
+		position: absolute;
+		top: 2.2rem;
+		left: 3.3rem;
+		z-index: 9;
+	}
 }

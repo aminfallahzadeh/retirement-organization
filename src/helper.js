@@ -1,3 +1,6 @@
+// library imports
+import moment from "moment-jalaali";
+
 // convert english numbers to persian
 export const convertToPersianNumber = (num) => {
   const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
@@ -18,4 +21,10 @@ export const generateCaptcha = (len) => {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;
+};
+
+// change date to persian date
+export const convertToPersianDate = (data) => {
+  const result = moment(data).format("jYYYY/jMM/jDD");
+  return convertToPersianNumber(result);
 };

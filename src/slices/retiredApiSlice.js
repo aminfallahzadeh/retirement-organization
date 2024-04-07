@@ -7,8 +7,8 @@ import { apiSlice } from "./apiSlice";
 export const retiredApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getRetired: builder.query({
-      query: ({ token, nationalCode }) => ({
-        url: `${RETIRED_URL_HTTPS}/GetRetired?nationalCode=${nationalCode}`,
+      query: ({ token, personId }) => ({
+        url: `${RETIRED_URL_HTTPS}/GetRetired?personId=${personId}`,
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,

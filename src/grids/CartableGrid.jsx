@@ -1,13 +1,14 @@
 // react imports
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useCallback } from "react";
 
 // rrd imports
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetRequestQuery } from "../slices/requestApiSlice";
 import { setRequestTableData } from "../slices/requestsDataSlice.js";
+import { setSelectedRequestData } from "../slices/requestsDataSlice.js";
 
 // mui imports
 import { IconButton } from "@mui/material";
@@ -27,11 +28,16 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
+
+// hjelpers
+import { findById } from "../helper.js";
+
 function CartableGrid({ selectedRole }) {
   const [rowSelection, setRowSelection] = useState({});
   const { token } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { requestTableData } = useSelector((state) => state.requestsData);
 
@@ -43,16 +49,20 @@ function CartableGrid({ selectedRole }) {
     refetch,
   } = useGetRequestQuery({ token, role: selectedRole });
 
+  let navigateHandler;
+
   useEffect(() => {
     refetch();
     if (isSuccess) {
       const data = requests.itemList.map((item) => ({
         id: item.id,
+        personId: item.personID,
         sender: item.requestFrom,
         date: item.requestDate,
         body: item.requestText,
       }));
 
+      console.log("requests", requests);
       dispatch(setRequestTableData(data));
       sessionStorage.setItem("requests", JSON.stringify(data));
     }
@@ -94,11 +104,9 @@ function CartableGrid({ selectedRole }) {
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <Link to={"/retirement-organization/retired"}>
-            <IconButton color="primary">
-              <FeedIcon />
-            </IconButton>
-          </Link>
+          <IconButton color="primary" onClick={navigateHandler}>
+            <FeedIcon />
+          </IconButton>
         ),
       },
       {
@@ -116,7 +124,7 @@ function CartableGrid({ selectedRole }) {
         ),
       },
     ],
-    []
+    [navigateHandler]
   );
 
   const table = useMaterialReactTable({
@@ -142,16 +150,24 @@ function CartableGrid({ selectedRole }) {
     state: { rowSelection },
   });
 
-  // useEffect(() => {
-  //   const id = Object.keys(table.getState().rowSelection)[0];
-  //   const selectedRequest = findById(requestTableData, id);
+  navigateHandler = useCallback(async () => {
+    const id = Object.keys(table.getState().rowSelection)[0];
+    const selectedRequest = findById(requestTableData, id);
 
-  //   if (id) {
-  //     dispatch(setSelectedRequestData(selectedRequest));
-  //   } else {
-  //     dispatch(setSelectedRequestData([]));
-  //   }
-  // }, [dispatch, table, rowSelection, requestTableData]);
+    await dispatch(setSelectedRequestData(selectedRequest));
+    navigate("/retirement-organization/retired");
+  }, [table, dispatch, navigate, requestTableData]);
+
+  useEffect(() => {
+    const id = Object.keys(table.getState().rowSelection)[0];
+    const selectedRequest = findById(requestTableData, id);
+
+    if (id) {
+      dispatch(setSelectedRequestData(selectedRequest));
+    } else {
+      dispatch(setSelectedRequestData([]));
+    }
+  }, [dispatch, table, rowSelection, requestTableData]);
 
   const content = (
     <>

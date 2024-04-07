@@ -3,16 +3,32 @@ import { useState, useEffect } from "react";
 
 // mui imports
 import { PersonOutlined as PersonOutlinedIcon } from "@mui/icons-material";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 
-function RetiredPersonalInfo({ retiredData }) {
+// helpers
+import { convertToPersianDate } from "../helper.js";
+
+import "jalaali-react-date-picker/lib/styles/index.css";
+import { DatePicker } from "jalaali-react-date-picker";
+
+function RetiredPersonalInfoForm({ retiredData }) {
   const [personObject, setPersonObject] = useState(retiredData);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const handleShowDatePicker = () => {
+    setShowDatePicker(!showDatePicker);
+  };
+
+  useEffect(() => {
+    console.log("retiredData in form", retiredData);
+  }, [retiredData]);
 
   useEffect(() => {
     setPersonObject(retiredData);
   }, [retiredData]);
 
   useEffect(() => {
-    console.log(personObject);
+    console.log("personObject", personObject);
   }, [personObject]);
 
   const handlePersonObjectChange = (e) => {
@@ -110,10 +126,11 @@ function RetiredPersonalInfo({ retiredData }) {
           name="genderID"
           id="gender"
           className="inputBox__form--input"
-          value={personObject?.genderID || 0}
+          value={personObject?.genderID || "2"}
           onChange={handlePersonObjectChange}
           required
         >
+          <option value="2">انتخاب</option>
           <option value="0">مرد</option>
           <option value="1">زن</option>
         </select>
@@ -127,8 +144,22 @@ function RetiredPersonalInfo({ retiredData }) {
           type="text"
           id="birthDate"
           className="inputBox__form--input"
+          value={
+            convertToPersianDate(personObject?.personBirthDate) ||
+            "از تقویم انتخاب کنید"
+          }
+          name="personBirthDate"
           required
         />
+        <div className="inputBox__form--icon">
+          <CalendarTodayOutlinedIcon
+            color="action"
+            onClick={handleShowDatePicker}
+          />
+        </div>
+        <div className="inputBox__form--calender">
+          {showDatePicker && <DatePicker />}
+        </div>
         <label htmlFor="birthDate" className="inputBox__form--label">
           <span>*</span> تاریخ تولد
         </label>
@@ -399,9 +430,13 @@ function RetiredPersonalInfo({ retiredData }) {
           توضیحات
         </label>
       </div>
+
+      {/* <div>
+        <DatePicker />
+      </div> */}
     </form>
   );
   return content;
 }
 
-export default RetiredPersonalInfo;
+export default RetiredPersonalInfoForm;

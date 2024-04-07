@@ -67,7 +67,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
         top: "44px",
         height: "calc(100% - 48px)",
         width: "1.5px",
-        backgroundColor: theme.palette.grey[300],
+        backgroundColor: theme.palette.grey[600],
       },
     },
     "&:hover": {
@@ -144,6 +144,7 @@ export default function FolderTree() {
     key: "muirtl",
     stylisPlugins: [prefixer, rtlPlugin],
   });
+
   return (
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
@@ -156,6 +157,9 @@ export default function FolderTree() {
             flexGrow: 1,
             maxWidth: 400,
             overflowY: "auto",
+            backgroundColor: "#cfcfcf",
+            borderRadius: "6px",
+            padding: "5px",
           }}
         >
           <StyledTreeItem
@@ -165,56 +169,47 @@ export default function FolderTree() {
           >
             <StyledTreeItem
               itemId="5"
-              labelText="پوشه اول"
+              labelText="احراز هویت"
               labelIcon={FolderRounded}
             >
               <StyledTreeItem
                 itemId="8"
-                labelText="تصویر اول"
+                labelText="صفحه اول شناسنامه"
                 labelIcon={DotIcon}
               />
               <StyledTreeItem
                 itemId="9"
-                labelText="تصویر دوم"
+                labelText="صفحه دوم شناسنامه"
                 labelIcon={DotIcon}
               />
               <StyledTreeItem
                 itemId="10"
-                labelText="تصویر سوم"
+                labelText="تصویر کارت ملی"
                 labelIcon={DotIcon}
               />
             </StyledTreeItem>
             <StyledTreeItem
               itemId="3"
-              labelText="پوشه دوم"
+              labelText="حکم حقوقی"
               labelIcon={FolderRounded}
             >
               <StyledTreeItem
                 itemId="12"
-                labelText="تصویر اول"
-                labelIcon={DotIcon}
-              />
-              <StyledTreeItem
-                itemId="13"
-                labelText="تصویر دوم"
-                labelIcon={DotIcon}
-              />
-              <StyledTreeItem
-                itemId="14"
-                labelText="تصویر سوم"
+                labelText="تصویر حکم"
                 labelIcon={DotIcon}
               />
             </StyledTreeItem>
             <StyledTreeItem
-              itemId="6"
-              labelText="تصویر اول"
-              labelIcon={DotIcon}
-            />
-            <StyledTreeItem
-              itemId="7"
-              labelText="تصویر دوم"
-              labelIcon={DotIcon}
-            />
+              itemId="4"
+              labelText="فیش حقوقی"
+              labelIcon={FolderRounded}
+            >
+              <StyledTreeItem
+                itemId="11"
+                labelText="تصویر فیش حقوقی"
+                labelIcon={DotIcon}
+              />
+            </StyledTreeItem>
           </StyledTreeItem>
         </SimpleTreeView>
       </ThemeProvider>
