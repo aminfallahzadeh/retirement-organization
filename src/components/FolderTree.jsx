@@ -20,7 +20,7 @@ function DotIcon() {
         width: 6,
         height: 6,
         borderRadius: "70%",
-        bgcolor: "warning.main",
+        bgcolor: "#ff6700",
         display: "inline-block",
         verticalAlign: "middle",
         zIndex: 1,
@@ -38,10 +38,7 @@ const StyledTreeItemLabel = styled(Typography)({
 });
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
-  color:
-    theme.palette.mode === "light"
-      ? theme.palette.grey[800]
-      : theme.palette.grey[400],
+  color: theme.palette.grey[800],
   position: "relative",
   [`& .${treeItemClasses.content}`]: {
     "flexDirection": "row-reverse",
@@ -60,10 +57,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
     [`&.Mui-expanded `]: {
       "&:not(.Mui-focused, .Mui-selected, .Mui-selected.Mui-focused) .labelIcon":
         {
-          color:
-            theme.palette.mode === "light"
-              ? theme.palette.primary.main
-              : theme.palette.secondary.dark,
+          color: theme.palette.primary.main,
         },
       "&::before": {
         content: '""',
@@ -73,10 +67,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
         top: "44px",
         height: "calc(100% - 48px)",
         width: "1.5px",
-        backgroundColor:
-          theme.palette.mode === "light"
-            ? theme.palette.grey[300]
-            : theme.palette.grey[700],
+        backgroundColor: theme.palette.grey[300],
       },
     },
     "&:hover": {
@@ -85,10 +76,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
         theme.palette.mode === "light" ? theme.palette.primary.main : "white",
     },
     [`&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused`]: {
-      backgroundColor:
-        theme.palette.mode === "light"
-          ? theme.palette.primary.main
-          : theme.palette.secondary.dark,
+      backgroundColor: theme.palette.primary.main,
       color: "white",
     },
   },
