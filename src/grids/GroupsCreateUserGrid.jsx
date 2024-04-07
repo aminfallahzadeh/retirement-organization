@@ -10,7 +10,6 @@ import {
   useGetGroupQuery,
   useInsertUserMutation,
   useInsertGroupUsersMutation,
-  useDeleteGroupUsersMutation,
 } from "../slices/usersApiSlice";
 import { setGroupsTableData } from "../slices/groupsDataSlice";
 
@@ -20,7 +19,13 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 // mui imports
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  createTheme,
+  ThemeProvider,
+  useTheme,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Save as SaveIcon, ArrowBack as BackIcon } from "@mui/icons-material";
 import {
@@ -28,11 +33,13 @@ import {
   useMaterialReactTable,
   getMRT_RowSelectionHandler,
 } from "material-react-table";
+import { faIR } from "@mui/material/locale";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
 function GriyosCreateUserGrid({ userObject }) {
+  const theme = useTheme();
   const [rowSelection, setRowSelection] = useState({});
 
   const [addedGroups, setAddedGroups] = useState([]);
@@ -55,8 +62,6 @@ function GriyosCreateUserGrid({ userObject }) {
   const [insertUser, { isLoading: isCreating }] = useInsertUserMutation();
   const [insertGroupUsers, { isLoading: isInserting }] =
     useInsertGroupUsersMutation();
-  const [deleteGroupUsers, { isLoading: isDeleting }] =
-    useDeleteGroupUsersMutation();
 
   const handleCreateUser = async () => {
     try {
@@ -68,35 +73,24 @@ function GriyosCreateUserGrid({ userObject }) {
           "isActive": userObject.isActive === "true" ? true : false,
         },
       }).unwrap();
+
       try {
         const userID = createUserRes.itemList[0].id;
-        const deleteRes = await deleteGroupUsers({
-          token,
+        const data = addedGroups.map((item) => ({
+          "id": "",
           userID,
+          "groupID": item.id,
+          "groupName": "",
+        }));
+        const insertRes = await insertGroupUsers({
+          token,
+          data,
         }).unwrap();
-        console.log(deleteRes);
-        try {
-          const data = addedGroups.map((item) => ({
-            "id": "",
-            userID,
-            "groupID": item.id,
-            "groupName": "",
-          }));
-          const insertRes = await insertGroupUsers({
-            token,
-            data,
-          }).unwrap();
-          console.log(insertRes);
-          toast.success(insertRes.message, {
-            autoClose: 2000,
-          });
-          navigate("/retirement-organization/users");
-        } catch (err) {
-          console.log(err);
-          toast.error(err?.data?.message || err.error, {
-            autoClose: 2000,
-          });
-        }
+        console.log(insertRes);
+        toast.success(insertRes.message, {
+          autoClose: 2000,
+        });
+        navigate("/retirement-organization/users");
       } catch (err) {
         console.log(err);
         toast.error(err?.data?.message || err.error, {
@@ -143,7 +137,7 @@ function GriyosCreateUserGrid({ userObject }) {
       {
         accessorKey: "name",
         header: "نام گروه",
-        size: 450,
+        size: 800,
       },
     ],
     []
@@ -174,7 +168,7 @@ function GriyosCreateUserGrid({ userObject }) {
         <LoadingButton
           dir="ltr"
           endIcon={<SaveIcon />}
-          loading={isCreating || isDeleting || isInserting}
+          loading={isCreating || isInserting}
           onClick={handleCreateUser}
           variant="contained"
           color="success"
@@ -218,7 +212,13 @@ function GriyosCreateUserGrid({ userObject }) {
           />
         </div>
       ) : (
-        <MaterialReactTable table={table} />
+        <ThemeProvider
+          theme={createTheme({ ...theme, direction: "rtl" }, faIR)}
+        >
+          <div style={{ direction: "rtl" }}>
+            <MaterialReactTable table={table} />
+          </div>
+        </ThemeProvider>
       )}
     </>
   );

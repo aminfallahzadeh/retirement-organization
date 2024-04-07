@@ -148,9 +148,9 @@ export default function FolderTree() {
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
         <SimpleTreeView
-          aria-label="gmail"
-          defaultExpandedItems={["3"]}
-          defaultSelectedItems="3"
+          // aria-label="gmail"
+          // defaultExpandedItems={["3"]}
+          // defaultSelectedItems="3"
           sx={{
             height: "fit-content",
             flexGrow: 1,

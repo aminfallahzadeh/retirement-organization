@@ -9,7 +9,6 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   useGetItemsQuery,
   useInsertGroupMutation,
-  useDeleteGroupItemsMutation,
   useInsertGroupItemMutation,
 } from "../slices/usersApiSlice";
 import { setItemsTableData } from "../slices/itemsDataSlice";
@@ -20,7 +19,13 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 // mui imports
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  createTheme,
+  ThemeProvider,
+  useTheme,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
   MaterialReactTable,
@@ -28,11 +33,13 @@ import {
   getMRT_RowSelectionHandler,
 } from "material-react-table";
 import { Save as SaveIcon, ArrowBack as BackIcon } from "@mui/icons-material";
+import { faIR } from "@mui/material/locale";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
 function ItemsCreateGroupGrid({ groupName }) {
+  const theme = useTheme();
   const [addedItems, setAddedItems] = useState([]);
   const { token } = useSelector((state) => state.auth);
 
@@ -40,8 +47,6 @@ function ItemsCreateGroupGrid({ groupName }) {
   const dispatch = useDispatch();
 
   const [insertGroup, { isLoading: isCreating }] = useInsertGroupMutation();
-  const [deleteGroupItems, { isLoading: isDeleting }] =
-    useDeleteGroupItemsMutation();
   const [insertGroupItem, { isLoading: isInserting }] =
     useInsertGroupItemMutation();
 
@@ -71,33 +76,21 @@ function ItemsCreateGroupGrid({ groupName }) {
       }).unwrap();
       try {
         const groupID = createGroupRes.itemList[0].id;
-        const deleteRes = await deleteGroupItems({
-          token,
+        const data = addedItems.map((item) => ({
+          "id": "",
+          "itemID": item.id,
+          "itemName": "",
           groupID,
+        }));
+        const insertRes = await insertGroupItem({
+          token,
+          data,
         }).unwrap();
-        console.log(deleteRes);
-        try {
-          const data = addedItems.map((item) => ({
-            "id": "",
-            "itemID": item.id,
-            "itemName": "",
-            groupID,
-          }));
-          const insertRes = await insertGroupItem({
-            token,
-            data,
-          }).unwrap();
-          console.log(insertRes);
-          toast.success(insertRes.message, {
-            autoClose: 2000,
-          });
-          navigate("/retirement-organization/groups");
-        } catch (err) {
-          console.log(err);
-          toast.error(err?.data?.message || err.error, {
-            autoClose: 2000,
-          });
-        }
+        console.log(insertRes);
+        toast.success(insertRes.message, {
+          autoClose: 2000,
+        });
+        navigate("/retirement-organization/groups");
       } catch (err) {
         console.log(err);
         toast.error(err?.data?.message || err.error, {
@@ -139,7 +132,7 @@ function ItemsCreateGroupGrid({ groupName }) {
       {
         accessorKey: "name",
         header: "نام آیتم",
-        size: 300,
+        size: 800,
       },
     ],
     []
@@ -165,7 +158,7 @@ function ItemsCreateGroupGrid({ groupName }) {
         <LoadingButton
           dir="ltr"
           endIcon={<SaveIcon />}
-          loading={isCreating || isDeleting || isInserting}
+          loading={isCreating || isInserting}
           onClick={handleCreateGroup}
           variant="contained"
           color="success"
@@ -209,7 +202,13 @@ function ItemsCreateGroupGrid({ groupName }) {
           />
         </div>
       ) : (
-        <MaterialReactTable table={table} />
+        <ThemeProvider
+          theme={createTheme({ ...theme, direction: "rtl" }, faIR)}
+        >
+          <div style={{ direction: "rtl" }}>
+            <MaterialReactTable table={table} />
+          </div>
+        </ThemeProvider>
       )}
     </>
   );
