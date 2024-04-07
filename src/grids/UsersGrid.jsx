@@ -126,25 +126,21 @@ function UsersGrid() {
         accessorKey: "username",
         header: "نام کاربری",
         size: 50,
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "firstName",
         header: "نام",
         size: 50,
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "lastName",
         header: "نام خانوادگی",
         size: 50,
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "isActive",
         header: "وضعیت",
         size: 50,
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "editNameAction",

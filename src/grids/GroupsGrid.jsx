@@ -158,7 +158,6 @@ function GroupsGrid() {
         accessorKey: "name",
         header: "نام گروه",
         size: 450,
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "editNameAction",

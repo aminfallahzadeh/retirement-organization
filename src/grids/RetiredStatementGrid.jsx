@@ -61,27 +61,22 @@ function RetiredStatementGrid() {
       {
         accessorKey: "serial",
         header: "سریال حکم",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "kind",
         header: "نوع حکم",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "number",
         header: "شماره حکم",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "issueDate",
         header: "تاریخ صدور",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "runDate",
         header: "تاریخ اجرا",
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
       {
         accessorKey: "editNameAction",

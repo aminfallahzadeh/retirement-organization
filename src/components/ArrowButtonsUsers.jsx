@@ -1,9 +1,6 @@
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import {
-  useDeleteGroupUsersMutation,
-  useInsertGroupUsersMutation,
-} from "../slices/usersApiSlice";
+import { useInsertGroupUsersMutation } from "../slices/usersApiSlice";
 
 // library imports
 import { toast } from "react-toastify";
@@ -36,42 +33,30 @@ function ArrowButtonsUsers() {
   );
   const { selectedUserData } = useSelector((state) => state.usersData);
 
-  const [deleteGroupUsers, { isLoading: isDeleting }] =
-    useDeleteGroupUsersMutation();
-
   const [insertGroupUsers, { isLoading: isInserting }] =
     useInsertGroupUsersMutation();
 
   const saveChangesHandler = async () => {
     try {
       const userID = selectedUserData.id;
-      const deleteRes = await deleteGroupUsers({
-        token,
+      const data = userGroupsTableData.map((item) => ({
+        "id": "",
         userID,
+        "groupID": item.id,
+        "groupName": "",
+      }));
+      const insertRes = await insertGroupUsers({
+        token,
+        data,
       }).unwrap();
-      console.log(deleteRes);
-      try {
-        const data = userGroupsTableData.map((item) => ({
-          "id": "",
-          userID,
-          "groupID": item.id,
-          "groupName": "",
-        }));
-        const insertRes = await insertGroupUsers({
-          token,
-          data,
-        }).unwrap();
-        console.log(insertRes);
-        toast.success(insertRes.message, {
-          autoClose: 2000,
-        });
-      } catch (err) {
-        toast.error(err?.data?.message || err.error, {
-          autoClose: 2000,
-        });
-      }
+      console.log(insertRes);
+      toast.success(insertRes.message, {
+        autoClose: 2000,
+      });
     } catch (err) {
-      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
     }
   };
   const handleAddGroup = (id) => {
@@ -112,7 +97,7 @@ function ArrowButtonsUsers() {
       <LoadingButton
         dir="ltr"
         endIcon={<SaveIcon />}
-        loading={isDeleting || isInserting}
+        loading={isInserting}
         onClick={saveChangesHandler}
         variant="contained"
         color="success"

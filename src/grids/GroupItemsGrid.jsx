@@ -79,17 +79,6 @@ function GroupItemGrid() {
           </span>
         ),
         size: 300,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
     ],
     [selectedGroupData?.name]

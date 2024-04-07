@@ -73,17 +73,6 @@ function GroupsGridUser() {
         accessorKey: "name",
         header: "گروه ها",
         size: 300,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
     ],
     []
@@ -94,9 +83,6 @@ function GroupsGridUser() {
     columns,
     data: groupsUserTableData,
     positionGlobalFilter: "left",
-    enablePagination: false,
-    enableBottomToolbar: false,
-    muiTableContainerProps: { sx: { height: "300px" } },
     initialState: {
       density: "compact",
       showGlobalFilter: true,
@@ -112,6 +98,9 @@ function GroupsGridUser() {
         cursor: "pointer",
       },
     }),
+    enablePagination: false,
+    enableBottomToolbar: false,
+    muiTableContainerProps: { sx: { height: "300px" } },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },

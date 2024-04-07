@@ -1,9 +1,6 @@
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import {
-  useInsertGroupItemMutation,
-  useDeleteGroupItemsMutation,
-} from "../slices/usersApiSlice";
+import { useInsertGroupItemMutation } from "../slices/usersApiSlice";
 
 // library imports
 import { toast } from "react-toastify";
@@ -35,39 +32,26 @@ function ArrowButtonsGroups() {
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
   const { token } = useSelector((state) => state.auth);
 
-  const [deleteGroupItems, { isLoading }] = useDeleteGroupItemsMutation();
-  const [insertGroupItem] = useInsertGroupItemMutation();
+  const [insertGroupItem, { isLoading: isInserting }] =
+    useInsertGroupItemMutation();
 
   const saveChangesHandler = async () => {
     try {
       const groupID = selectedGroupData?.id;
-      console.log(groupID);
-      const deleteRes = await deleteGroupItems({
-        token,
+      const data = groupItemsTableData.map((item) => ({
+        "id": "",
+        "itemID": item.id,
+        "itemName": "",
         groupID,
+      }));
+      const insertRes = await insertGroupItem({
+        token,
+        data,
       }).unwrap();
-      console.log(deleteRes);
-      try {
-        const data = groupItemsTableData.map((item) => ({
-          "id": "",
-          "itemID": item.id,
-          "itemName": "",
-          groupID,
-        }));
-        const insertRes = await insertGroupItem({
-          token,
-          data,
-        }).unwrap();
-        console.log(insertRes);
-        toast.success(insertRes.message, {
-          autoClose: 2000,
-        });
-      } catch (err) {
-        console.log(err);
-        toast.error(err?.data?.message || err.error, {
-          autoClose: 2000,
-        });
-      }
+      console.log(insertRes);
+      toast.success(insertRes.message, {
+        autoClose: 2000,
+      });
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -114,7 +98,7 @@ function ArrowButtonsGroups() {
       <LoadingButton
         dir="ltr"
         endIcon={<SaveIcon />}
-        loading={isLoading}
+        loading={isInserting}
         onClick={saveChangesHandler}
         variant="contained"
         color="success"

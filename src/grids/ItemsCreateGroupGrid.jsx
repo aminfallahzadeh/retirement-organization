@@ -140,13 +140,6 @@ function ItemsCreateGroupGrid({ groupName }) {
         accessorKey: "name",
         header: "نام آیتم",
         size: 300,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
     ],
     []
@@ -165,10 +158,6 @@ function ItemsCreateGroupGrid({ groupName }) {
         getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
       sx: { cursor: "pointer" },
     }),
-    initialState: {
-      density: "compact",
-      pagination: { pageIndex: 0, pageSize: 7 },
-    },
     renderTopToolbarCustomActions: () => (
       <Box
         sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
@@ -210,9 +199,15 @@ function ItemsCreateGroupGrid({ groupName }) {
   return (
     <>
       {isLoading || isFetching ? (
-        <p className="skeleton">
-          <Skeleton count={5} />
-        </p>
+        <div className="skeleton-lg">
+          <Skeleton
+            count={7}
+            baseColor="#dfdfdf"
+            highlightColor="#9f9f9f"
+            duration={1}
+            direction="rtl"
+          />
+        </div>
       ) : (
         <MaterialReactTable table={table} />
       )}

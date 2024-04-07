@@ -144,13 +144,6 @@ function GriyosCreateUserGrid({ userObject }) {
         accessorKey: "name",
         header: "نام گروه",
         size: 450,
-        muiTableHeadCellProps: {
-          sx: { color: "green", fontFamily: "sahel" },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
     ],
     []
@@ -215,9 +208,15 @@ function GriyosCreateUserGrid({ userObject }) {
   const content = (
     <>
       {isLoading ? (
-        <p className="skeleton">
-          <Skeleton count={3} />
-        </p>
+        <div className="skeleton-lg">
+          <Skeleton
+            count={7}
+            baseColor="#dfdfdf"
+            highlightColor="#9f9f9f"
+            duration={1}
+            direction="rtl"
+          />
+        </div>
       ) : (
         <MaterialReactTable table={table} />
       )}

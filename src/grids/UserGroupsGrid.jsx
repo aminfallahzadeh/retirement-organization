@@ -78,17 +78,6 @@ function UserGroupsGrid() {
           </span>
         ),
         size: 300,
-        muiTableHeadCellProps: {
-          sx: {
-            color: "#001a57",
-            fontFamily: "sahel",
-            backgroundColor: "rgba(47, 255, 66, .4)",
-          },
-        },
-        muiTableBodyCellProps: {
-          sx: { fontFamily: "sahel" },
-        },
-        Cell: ({ renderedCellValue }) => <strong>{renderedCellValue}</strong>,
       },
     ],
     [selectedUserData?.username]
@@ -105,7 +94,6 @@ function UserGroupsGrid() {
     initialState: {
       density: "compact",
       showGlobalFilter: true,
-      pagination: { pageIndex: 0, pageSize: 7 },
     },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
