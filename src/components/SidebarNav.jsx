@@ -13,6 +13,8 @@ import {
   EqualizerOutlined as EqualizerOutlinedIcon,
   LightbulbOutlined as LightbulbOutlinedIcon,
   AssignmentTurnedInOutlined as AssignmentTurnedInOutlinedIcon,
+  Group as GroupIcon,
+  HealthAndSafetyOutlined as HealthAndSafetyOutlinedIcon,
 } from "@mui/icons-material";
 
 function SidebarNav() {
@@ -44,21 +46,28 @@ function SidebarNav() {
             {" "}
             احکام گروهی{" "}
           </MenuItem>
-          <MenuItem> رویت تعرفه کارمندی </MenuItem>
           <MenuItem> رویت احکام کارمندی </MenuItem>
           <MenuItem> گزارشات </MenuItem>
         </SubMenu>
         <MenuItem>
           <GroupOutlinedIcon sx={{ color: "#ff6700" }} />
-          &nbsp; &nbsp; امورمشتریان
+          &nbsp; &nbsp; امور مشترکین
         </MenuItem>
         <MenuItem>
           <PaymentOutlinedIcon sx={{ color: "#ff6700" }} />
           &nbsp; &nbsp; حقوق و دستمزد{" "}
         </MenuItem>
         <MenuItem>
+          <GroupIcon sx={{ color: "#ff6700" }} />
+          &nbsp; &nbsp; اجتماعی
+        </MenuItem>
+        <MenuItem>
           <HomeOutlinedIcon sx={{ color: "#ff6700" }} />
-          &nbsp; &nbsp; اجتماعی و رفاهی
+          &nbsp; &nbsp; رفاهی
+        </MenuItem>
+        <MenuItem>
+          <HealthAndSafetyOutlinedIcon sx={{ color: "#ff6700" }} />
+          &nbsp; &nbsp; سلامت
         </MenuItem>
         <MenuItem>
           <EqualizerOutlinedIcon sx={{ color: "#ff6700" }} />
