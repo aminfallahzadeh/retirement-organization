@@ -32,7 +32,7 @@ function DotIcon() {
 
 const StyledTreeItemLabel = styled(Typography)({
   color: "inherit",
-  fontFamily: "General Sans",
+  fontFamily: "sahel",
   fontWeight: "inherit",
   flexGrow: 1,
 });
