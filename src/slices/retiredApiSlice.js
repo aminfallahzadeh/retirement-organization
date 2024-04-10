@@ -15,9 +15,9 @@ export const retiredApiSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
-    getRetiredAccountByNationalCode: builder.query({
-      query: ({ token, nationalcode }) => ({
-        url: `${RETIRED_URL_HTTPS}/GetRetiredAccountByNationalCode?nationalcode=${nationalcode}`,
+    getRetiredAccount: builder.query({
+      query: ({ token, personID }) => ({
+        url: `${RETIRED_URL_HTTPS}/GetRetiredAccount?personID=${personID}`,
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
@@ -62,7 +62,7 @@ export const retiredApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetRetiredQuery,
-  useGetRetiredAccountByNationalCodeQuery,
+  useGetRetiredAccountQuery,
   useUpdateRetiredPensionaryComplementaryMutation,
   useUpdateRetiredMutation,
   useUpdateRetiredAccountMutation,

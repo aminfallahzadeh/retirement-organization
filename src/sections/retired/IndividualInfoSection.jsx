@@ -43,7 +43,6 @@ function IndividualInfoSection() {
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      // dispatch(setRetiredData(retiredData));
       setPersonObject(retiredData?.itemList[0]);
     }
   }, [
@@ -124,10 +123,7 @@ function IndividualInfoSection() {
           اطلاعات تکمیلی
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredAdditionalInfo
-            personObject={personObject}
-            setPersonObject={setPersonObject}
-          />
+          <RetiredAdditionalInfo personID={selectedRequestData?.personId} />
         </AccordionDetails>
       </Accordion>
 

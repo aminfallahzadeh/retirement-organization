@@ -7,14 +7,19 @@ import { apiSlice } from "./apiSlice";
 export const sharedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getLookupData: builder.query({
-      query: ({ token, lookUpType }) => ({
-        url: `${SHARED_URL_HTTPS}/GetLookupData?lookUpType=${lookUpType}`,
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      }),
+      query: ({ token, lookUpType, lookUpID }) => {
+        let url = `${SHARED_URL_HTTPS}/GetLookupData?lookUpType=${lookUpType}`;
+        if (lookUpID) {
+          url += `&lookUpID=${lookUpID}`;
+        }
+        return {
+          url: url,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        };
+      },
     }),
     insertLookUp: builder.mutation({
       query: ({ token, data }) => ({
