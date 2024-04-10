@@ -10,3 +10,4 @@ export const RETIREMENT_CALCULATION_URL_HTTPS =
   "https://185.129.238.13/api/RetirementCalculationController";
 export const RETIREMENT_STATEMENT_URL_HTTPS =
   "https://185.129.238.13/api/RetirementStatement";
+export const SHARED_URL_HTTPS = "https://185.129.238.13/api/Shared";

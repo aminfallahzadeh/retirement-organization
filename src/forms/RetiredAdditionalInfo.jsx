@@ -1,4 +1,9 @@
-function RetiredAdditionalInfo() {
+function RetiredAdditionalInfo({ personObject, setPersonObject }) {
+  const handlePersonObjectChange = (e) => {
+    const { name, value } = e.target;
+    setPersonObject({ ...personObject, [name]: value });
+  };
+
   return (
     <form method="POST" className="grid grid--col-3 formContainer " noValidate>
       <div className="inputBox__form">

@@ -150,7 +150,7 @@ export default function FolderTree() {
       <ThemeProvider theme={theme}>
         <SimpleTreeView
           // aria-label="gmail"
-          // defaultExpandedItems={["3"]}
+          defaultExpandedItems={["1"]}
           // defaultSelectedItems="3"
           sx={{
             height: "fit-content",

@@ -1,16 +1,15 @@
 // react imports
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // component imports
 import RetiredAdditionalInfo from "../../forms/RetiredAdditionalInfo";
-import RetiredStaffInfo from "../../forms/RetiredStaffInfo";
+import RetiredStaffInfoForm from "../../forms/RetiredStaffInfoForm";
 import RetiredPersonalInfoForm from "../../forms/RetiredPersonalInfoForm";
 import FolderTree from "../../components/FolderTree";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetRetiredQuery } from "../../slices/retiredApiSlice.js";
-import { setRetiredData } from "../../slices/retiredStateSlice.js";
 
 // mui imports
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
@@ -28,6 +27,7 @@ import { LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 
 function IndividualInfoSection() {
+  const [personObject, setPersonObject] = useState({});
   const { token } = useSelector((state) => state.auth);
   const { selectedRequestData } = useSelector((state) => state.requestsData);
 
@@ -43,9 +43,9 @@ function IndividualInfoSection() {
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      dispatch(setRetiredData(retiredData));
+      // dispatch(setRetiredData(retiredData));
+      setPersonObject(retiredData?.itemList[0]);
     }
-    console.log("retiredData", retiredData);
   }, [
     refetch,
     dispatch,
@@ -53,6 +53,10 @@ function IndividualInfoSection() {
     retiredData,
     selectedRequestData?.personId,
   ]);
+
+  useEffect(() => {
+    console.log("personObject", personObject);
+  }, [personObject]);
 
   useEffect(() => {
     if (error) {
@@ -78,7 +82,10 @@ function IndividualInfoSection() {
           اطلاعات فردی بازنشسته
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredPersonalInfoForm retiredData={retiredData?.itemList[0]} />
+          <RetiredPersonalInfoForm
+            personObject={personObject}
+            setPersonObject={setPersonObject}
+          />
         </AccordionDetails>
       </Accordion>
 
@@ -96,7 +103,10 @@ function IndividualInfoSection() {
           اطلاعات پرسنلی
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredStaffInfo />
+          <RetiredStaffInfoForm
+            personObject={personObject}
+            setPersonObject={setPersonObject}
+          />
         </AccordionDetails>
       </Accordion>
 
@@ -114,7 +124,10 @@ function IndividualInfoSection() {
           اطلاعات تکمیلی
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredAdditionalInfo />
+          <RetiredAdditionalInfo
+            personObject={personObject}
+            setPersonObject={setPersonObject}
+          />
         </AccordionDetails>
       </Accordion>
 

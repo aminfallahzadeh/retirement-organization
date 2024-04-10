@@ -1,39 +1,59 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // mui imports
 import { PersonOutlined as PersonOutlinedIcon } from "@mui/icons-material";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import { CalendarTodayOutlined as CalenderIcon } from "@mui/icons-material";
 
 // helpers
 import { convertToPersianDate } from "../helper.js";
 
+// libary imports
 import "jalaali-react-date-picker/lib/styles/index.css";
-import { DatePicker } from "jalaali-react-date-picker";
+import { InputDatePicker } from "jalaali-react-date-picker";
 
-function RetiredPersonalInfoForm({ retiredData }) {
-  const [personObject, setPersonObject] = useState(retiredData);
-  const [showDatePicker, setShowDatePicker] = useState(false);
+function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
+  const [selectedBirthDate, setSelectedBirthDate] = useState(
+    convertToPersianDate(personObject.personBirthDate)
+  );
+  const [selectedDeathDate, setSelectedDeathDate] = useState(
+    convertToPersianDate(personObject.personDeathDate)
+  );
+  const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
+  const [isDeathCalenderOpen, setIsDeathCalenderOpen] = useState(false);
 
-  const handleShowDatePicker = () => {
-    setShowDatePicker(!showDatePicker);
+  const handleBirthDateChange = (date) => {
+    setSelectedBirthDate(date);
+    setPersonObject({
+      ...personObject,
+      personBirthdate: selectedBirthDate.toISOString(),
+    });
+    setIsBirthCalenderOpen(false);
   };
 
-  useEffect(() => {
-    console.log("retiredData in form", retiredData);
-  }, [retiredData]);
+  const handleDeathDateChange = (date) => {
+    setSelectedDeathDate(date);
+    setPersonObject({
+      ...personObject,
+      personDeathDate: selectedDeathDate.toISOString(),
+    });
+    setIsDeathCalenderOpen(false);
+  };
 
-  useEffect(() => {
-    setPersonObject(retiredData);
-  }, [retiredData]);
+  const handleBirthOpenChange = (open) => {
+    setIsBirthCalenderOpen(open);
+  };
 
-  useEffect(() => {
-    console.log("personObject", personObject);
-  }, [personObject]);
+  const handleDeathOpenChange = (open) => {
+    setIsDeathCalenderOpen(open);
+  };
 
   const handlePersonObjectChange = (e) => {
     const { name, value } = e.target;
-    setPersonObject({ ...personObject, [name]: value });
+    setPersonObject({
+      ...personObject,
+      [name]: value,
+    });
   };
 
   const content = (
@@ -140,29 +160,24 @@ function RetiredPersonalInfoForm({ retiredData }) {
       </div>
 
       <div className="inputBox__form">
-        <input
-          type="text"
-          id="birthDate"
-          className="inputBox__form--input"
-          value={
-            convertToPersianDate(personObject?.personBirthDate) ||
-            "از تقویم انتخاب کنید"
-          }
-          name="personBirthDate"
-          required
+        <InputDatePicker
+          value={selectedBirthDate}
+          onChange={handleBirthDateChange}
+          format={"jYYYY-jMM-jDD"}
+          onOpenChange={handleBirthOpenChange}
+          suffixIcon={<CalenderIcon />}
+          open={isBirthCalenderOpen}
+          style={{
+            border: "2px solid #cfcfcf",
+            borderRadius: "6px",
+            marginLeft: "0.5rem",
+          }}
+          wrapperStyle={{
+            border: "none",
+            cursor: "pointer",
+          }}
         />
-        <div className="inputBox__form--icon">
-          <CalendarTodayOutlinedIcon
-            color="action"
-            onClick={handleShowDatePicker}
-          />
-        </div>
-        <div className="inputBox__form--calender">
-          {showDatePicker && <DatePicker />}
-        </div>
-        <label htmlFor="birthDate" className="inputBox__form--label">
-          <span>*</span> تاریخ تولد
-        </label>
+        <lable className="inputBox__form--readOnly-label">تاریخ تولد</lable>
       </div>
 
       <div className="inputBox__form">
@@ -199,9 +214,9 @@ function RetiredPersonalInfoForm({ retiredData }) {
         <input
           type="text"
           id="retireNum"
-          name="pensionaryid"
+          name="pensionaryId"
           className="inputBox__form--input"
-          value={personObject?.pensionaryid || ""}
+          value={personObject?.pensionaryId || ""}
           onChange={handlePersonObjectChange}
           required
         />
@@ -243,14 +258,14 @@ function RetiredPersonalInfoForm({ retiredData }) {
       <div className="inputBox__form">
         <input
           type="text"
-          id="childNum"
+          id="backupNum"
           name="personCellPhone2"
           className="inputBox__form--input"
           value={personObject?.personCellPhone2 || ""}
           onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="childNum" className="inputBox__form--label">
+        <label htmlFor="backupNum" className="inputBox__form--label">
           تلفن پشتیبان
         </label>
       </div>
@@ -258,35 +273,44 @@ function RetiredPersonalInfoForm({ retiredData }) {
       <div className="inputBox__form">
         <input
           type="text"
-          id="childNum"
+          id="backupName"
+          value={personObject?.backupFirstName || ""}
+          name="backupFirstName"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="childNum" className="inputBox__form--label">
-          نام و نام خانوادگی پشتیبان
+        <label htmlFor="backupName" className="inputBox__form--label">
+          نام پشتیبان
         </label>
       </div>
 
       <div className="inputBox__form">
         <input
           type="text"
-          id="sacrStatus"
+          id="backupLname"
+          value={personObject?.backupLastName || ""}
+          name="backupLastName"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="sacrStatus" className="inputBox__form--label">
-          وضعیت ایثارگری
+        <label htmlFor="backupLname" className="inputBox__form--label">
+          نام خانوادگی پشتیبان
         </label>
       </div>
 
       <div className="inputBox__form">
         <input
           type="text"
-          id="text"
+          id="personEmail"
+          value={personObject?.personEmail || ""}
+          name="personEmail"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="email" className="inputBox__form--label">
+        <label htmlFor="personEmail" className="inputBox__form--label">
           پست الکترونیک
         </label>
       </div>
@@ -294,11 +318,14 @@ function RetiredPersonalInfoForm({ retiredData }) {
       <div className="inputBox__form">
         <input
           type="text"
-          id="degree"
+          id="educationTypeId"
+          value={personObject?.educationTypeId || ""}
+          name="educationTypeId"
           className="inputBox__form--input field"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="degree" className="inputBox__form--label">
+        <label htmlFor="educationTypeId" className="inputBox__form--label">
           <span>*</span> مدرک تحصیلی
         </label>
       </div>
@@ -306,11 +333,14 @@ function RetiredPersonalInfoForm({ retiredData }) {
       <div className="inputBox__form">
         <input
           type="text"
-          id="country"
+          id="personCountry"
+          value={personObject?.personCountry || ""}
+          name="personCountry"
           className="inputBox__form--input field"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="country" className="inputBox__form--label">
+        <label htmlFor="personCountry" className="inputBox__form--label">
           <span>*</span> کشور
         </label>
       </div>
@@ -318,11 +348,14 @@ function RetiredPersonalInfoForm({ retiredData }) {
       <div className="inputBox__form">
         <input
           type="text"
-          id="region"
+          id="personState"
+          value={personObject?.personState || ""}
+          name="personState"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="region" className="inputBox__form--label">
+        <label htmlFor="personState" className="inputBox__form--label">
           استان
         </label>
       </div>
@@ -330,11 +363,14 @@ function RetiredPersonalInfoForm({ retiredData }) {
       <div className="inputBox__form">
         <input
           type="text"
-          id="city"
+          id="personCity"
+          value={personObject?.personCity || ""}
+          name="personCity"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="city" className="inputBox__form--label">
+        <label htmlFor="personCity" className="inputBox__form--label">
           شهر
         </label>
       </div>
@@ -342,22 +378,28 @@ function RetiredPersonalInfoForm({ retiredData }) {
       <div className="inputBox__form">
         <input
           type="text"
-          id="area"
+          id="personRegion"
+          value={`${personObject?.personRegion}` || ""}
+          name="personRegion"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="area" className="inputBox__form--label">
+        <label htmlFor="personRegion" className="inputBox__form--label">
           <span>*</span> منطقه سکونت
         </label>
       </div>
       <div className="inputBox__form">
         <input
           type="text"
-          id="district"
+          id="personArea"
+          value={`${personObject?.personArea}` || ""}
+          name="personArea"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="district" className="inputBox__form--label">
+        <label htmlFor="personArea" className="inputBox__form--label">
           ناحیه سکونت
         </label>
       </div>
@@ -365,11 +407,14 @@ function RetiredPersonalInfoForm({ retiredData }) {
       <div className="inputBox__form">
         <input
           type="text"
-          id="postalCode"
+          id="personPostalCode"
+          value={personObject?.personPostalCode || ""}
+          name="personPostalCode"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="postalCode" className="inputBox__form--label">
+        <label htmlFor="personPostalCode" className="inputBox__form--label">
           کد پستی
         </label>
       </div>
@@ -377,44 +422,64 @@ function RetiredPersonalInfoForm({ retiredData }) {
       <div className="inputBox__form">
         <input
           type="text"
-          id="accom"
+          id="housingTypeId"
+          value={personObject?.housingTypeId || ""}
+          name="housingTypeId"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="accom" className="inputBox__form--label">
+        <label htmlFor="housingTypeId" className="inputBox__form--label">
           وضعیت مسکن
         </label>
       </div>
       <div className="inputBox__form">
         <input
           type="text"
-          id="marrageCond"
+          id="maritalStatusId"
+          value={personObject?.maritalStatusId || ""}
+          name="maritalStatusId"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         />
-        <label htmlFor="marrageCond" className="inputBox__form--label">
+        <label htmlFor="maritalStatusId" className="inputBox__form--label">
           وضعیت تاهل
         </label>
       </div>
+
       <div className="inputBox__form">
-        <input
-          type="text"
-          id="deathDate"
-          className="inputBox__form--input"
-          required
+        <InputDatePicker
+          value={selectedDeathDate}
+          onChange={handleDeathDateChange}
+          format={"jYYYY-jMM-jDD"}
+          onOpenChange={handleDeathOpenChange}
+          open={isDeathCalenderOpen}
+          suffixIcon={<CalenderIcon />}
+          style={{
+            border: "2px solid #cfcfcf",
+            borderRadius: "6px",
+            marginLeft: "0.5rem",
+          }}
+          wrapperStyle={{
+            border: "none",
+            cursor: "pointer",
+          }}
         />
-        <label htmlFor="deathDate" className="inputBox__form--label">
-          تاریخ فوت
-        </label>
+        <lable className="inputBox__form--readOnly-label">تاریخ فوت</lable>
       </div>
+
       <div className="inputBox__form col-span-3">
         <textarea
           type="text"
-          id="address"
+          id="personAddress"
+          value={personObject?.personAddress || ""}
+          name="personAddress"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         ></textarea>
-        <label htmlFor="address" className="inputBox__form--label">
+        <label htmlFor="personAddress" className="inputBox__form--label">
           نشانی
         </label>
       </div>
@@ -422,18 +487,17 @@ function RetiredPersonalInfoForm({ retiredData }) {
       <div className="inputBox__form row-col-span-3">
         <textarea
           type="text"
-          id="explanations"
+          id="personDescription"
+          value={personObject?.personDescription || ""}
+          name="personDescription"
           className="inputBox__form--input"
+          onChange={handlePersonObjectChange}
           required
         ></textarea>
-        <label htmlFor="explanations" className="inputBox__form--label">
+        <label htmlFor="personDescription" className="inputBox__form--label">
           توضیحات
         </label>
       </div>
-
-      {/* <div>
-        <DatePicker />
-      </div> */}
     </form>
   );
   return content;

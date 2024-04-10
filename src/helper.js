@@ -1,5 +1,5 @@
 // library imports
-import moment from "moment-jalaali";
+import momentj from "moment-jalaali";
 
 // convert english numbers to persian
 export const convertToPersianNumber = (num) => {
@@ -25,6 +25,6 @@ export const generateCaptcha = (len) => {
 
 // change date to persian date
 export const convertToPersianDate = (data) => {
-  const result = moment(data).format("jYYYY/jMM/jDD");
-  return convertToPersianNumber(result);
+  const result = momentj(data);
+  return result;
 };

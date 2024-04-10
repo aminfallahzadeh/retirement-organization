@@ -41,9 +41,9 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
               error: "<string>",
               expiredate,
             },
-            headers: {
-              "Content-Type": "application/json",
-            },
+            // headers: {
+            //   "Content-Type": "application/json",
+            // },
           },
           api,
           extraOptions
@@ -54,6 +54,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
           console.log("data", refreshResult.data);
         } else {
           api.dispatch(logout());
+          console.log("result", refreshResult);
         }
       } finally {
         release();
