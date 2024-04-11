@@ -44,7 +44,7 @@ function GroupNameInput({ setShowEditModal }) {
   };
 
   useEffect(() => {
-    setGroupName(selectedGroupData.name);
+    setGroupName(selectedGroupData?.name);
   }, [selectedGroupData]);
 
   const content = (

@@ -25,7 +25,7 @@ import { InputDatePicker } from "jalaali-react-date-picker";
 function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
   const [maritalStatusCombo, setMaritalStatusCombo] = useState([]);
   const [selectedBirthDate, setSelectedBirthDate] = useState(
-    convertToPersianDate(personObject.personBirthDate)
+    convertToPersianDate(personObject.personBirthdate)
   );
   const [selectedDeathDate, setSelectedDeathDate] = useState(
     convertToPersianDate(personObject.personDeathDate)
