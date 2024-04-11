@@ -24,8 +24,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   await mutex.waitForUnlock();
   let result = await baseQuery(args, api, extraOptions);
 
-  console.log("error res", result);
-
   if (result.error && result.error.status === "FETCH_ERROR") {
     if (!mutex.isLocked()) {
       const release = await mutex.acquire();
@@ -47,7 +45,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
           api,
           extraOptions
         );
-        console.log("refresh result", refreshResult);
         if (refreshResult.data) {
           api.dispatch(setNewCredentials({ ...refreshResult.data }));
           result = await baseQuery(
@@ -60,7 +57,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
             api,
             extraOptions
           );
-          console.log("data", refreshResult.data);
         } else {
           api.dispatch(logout());
         }
@@ -72,7 +68,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       result = await baseQuery(args, api, extraOptions);
     }
   }
-  console.log("final result", result);
   return result;
 };
 

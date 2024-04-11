@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 // reduxt imports
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
+import { useUpdateRetiredMutation } from "../slices/retiredApiSlice.js";
 import { useSelector } from "react-redux";
 
 // mui imports
@@ -16,53 +17,114 @@ import {
 } from "@mui/icons-material";
 
 // helpers
-import { convertToPersianDate } from "../helper.js";
+import {
+  convertToPersianDate,
+  convertToPersianNumber,
+  convertToEnglishNumber,
+} from "../helper.js";
 
 // libary imports
+import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
 function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
+  const [genderCombo, setGenderCombo] = useState([]);
+  const [educationCombo, setEducationCombo] = useState([]);
+  const [housingCombo, setHousingCombo] = useState([]);
   const [maritalStatusCombo, setMaritalStatusCombo] = useState([]);
-  const [selectedBirthDate, setSelectedBirthDate] = useState(
-    convertToPersianDate(personObject.personBirthdate)
-  );
-  const [selectedDeathDate, setSelectedDeathDate] = useState(
-    convertToPersianDate(personObject.personDeathDate)
-  );
+  const [selectedBirthDate, setSelectedBirthDate] = useState(null);
+  const [selectedDeathDate, setSelectedDeathDate] = useState(null);
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
   const [isDeathCalenderOpen, setIsDeathCalenderOpen] = useState(false);
 
   const { token } = useSelector((state) => state.auth);
 
-  const { data: maritalStatusComboItems, isSuccess: isComboSuccess } =
+  const [updateRetired, { isLoading: isUpdating }] = useUpdateRetiredMutation();
+
+  const { data: genderComboItems, isSuccess: isGenderComboSuccess } =
+    useGetLookupDataQuery({
+      token,
+      lookUpType: "Gender",
+    });
+
+  const { data: educationComboItems, isSuccess: isEducationComboSuccess } =
+    useGetLookupDataQuery({
+      token,
+      lookUpType: "EducationType",
+    });
+
+  const { data: housingComboItems, isSuccess: isHousingComboSuccess } =
+    useGetLookupDataQuery({
+      token,
+      lookUpType: "HousingType",
+    });
+
+  const { data: maritalStatusComboItems, isSuccess: isMatritalComboSuccess } =
     useGetLookupDataQuery({
       token,
       lookUpType: "MaritialStatus",
-      lookUpID: personObject.maritalStatusID,
     });
 
   useEffect(() => {
-    if (isComboSuccess) {
+    setSelectedBirthDate(convertToPersianDate(personObject.personBirthDate));
+  }, [personObject.personBirthDate]);
+
+  useEffect(() => {
+    setSelectedDeathDate(convertToPersianDate(personObject.personDeathDate));
+  }, [personObject.personDeathDate]);
+
+  useEffect(() => {
+    if (selectedBirthDate) {
+      setPersonObject({
+        ...personObject,
+        personBirthDate: selectedBirthDate.toISOString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBirthDate]);
+
+  useEffect(() => {
+    if (selectedDeathDate) {
+      setPersonObject({
+        ...personObject,
+        personDeathDate: selectedDeathDate.toISOString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDeathDate]);
+
+  useEffect(() => {
+    if (isGenderComboSuccess) {
+      setGenderCombo(genderComboItems.itemList);
+    }
+  }, [isGenderComboSuccess, genderComboItems]);
+
+  useEffect(() => {
+    if (isEducationComboSuccess) {
+      setEducationCombo(educationComboItems.itemList);
+    }
+  }, [isEducationComboSuccess, educationComboItems]);
+
+  useEffect(() => {
+    if (isHousingComboSuccess) {
+      setHousingCombo(housingComboItems.itemList);
+    }
+  }, [isHousingComboSuccess, housingComboItems]);
+
+  useEffect(() => {
+    if (isMatritalComboSuccess) {
       setMaritalStatusCombo(maritalStatusComboItems.itemList);
     }
-  }, [isComboSuccess, maritalStatusComboItems]);
+  }, [isMatritalComboSuccess, maritalStatusComboItems]);
 
   const handleBirthDateChange = (date) => {
     setSelectedBirthDate(date);
-    setPersonObject({
-      ...personObject,
-      personBirthdate: selectedBirthDate.toISOString(),
-    });
     setIsBirthCalenderOpen(false);
   };
 
   const handleDeathDateChange = (date) => {
     setSelectedDeathDate(date);
-    setPersonObject({
-      ...personObject,
-      personDeathDate: selectedDeathDate.toISOString(),
-    });
     setIsDeathCalenderOpen(false);
   };
 
@@ -82,6 +144,40 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
     });
   };
 
+  const handleUpdateRetired = async () => {
+    try {
+      const updateRes = await updateRetired({
+        token,
+        data: {
+          ...personObject,
+          personNationalCode: convertToEnglishNumber(
+            personObject.personNationalCode
+          ),
+          personCertificatetNo: convertToEnglishNumber(
+            personObject.personCertificatetNo
+          ),
+          personPhone: convertToEnglishNumber(personObject.personPhone),
+        },
+        personCellPhone: convertToEnglishNumber(personObject.personCellPhone),
+        personCellPhone2: convertToEnglishNumber(personObject.personCellPhone2),
+        personRegion: parseInt(
+          convertToEnglishNumber(personObject.personRegion)
+        ),
+        personArea: parseInt(convertToEnglishNumber(personObject.personArea)),
+        personPostalCode: convertToEnglishNumber(personObject.personPostalCode),
+      });
+      console.log(updateRes);
+      toast.success(updateRes.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
   const content = (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>
@@ -95,13 +191,16 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
               <input
                 type="text"
                 name="personFirstName"
-                id="name"
+                id="personFirstName"
                 className="inputBox__form--input"
                 value={personObject?.personFirstName || ""}
                 onChange={handlePersonObjectChange}
                 required
               />
-              <label htmlFor="name" className="inputBox__form--label">
+              <label
+                htmlFor="personFirstName"
+                className="inputBox__form--label"
+              >
                 <span>*</span> نام
               </label>
             </div>
@@ -109,13 +208,13 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
               <input
                 type="text"
                 name="personLastName"
-                id="surname"
+                id="personLastName"
                 className="inputBox__form--input"
                 value={personObject?.personLastName || ""}
                 onChange={handlePersonObjectChange}
                 required
               />
-              <label htmlFor="surname" className="inputBox__form--label">
+              <label htmlFor="personLastName" className="inputBox__form--label">
                 <span>*</span> نام خانوادگی
               </label>
             </div>
@@ -126,13 +225,15 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
           <input
             type="text"
             name="personNationalCode"
-            id="melliCode"
+            id="personNationalCode"
             className="inputBox__form--input"
-            value={personObject?.personNationalCode || ""}
+            value={
+              convertToPersianNumber(personObject?.personNationalCode) ?? ""
+            }
             onChange={handlePersonObjectChange}
             required
           />
-          <label htmlFor="melliCode" className="inputBox__form--label">
+          <label htmlFor="personNationalCode" className="inputBox__form--label">
             <span>*</span> کد ملی
           </label>
         </div>
@@ -141,13 +242,18 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
           <input
             type="text"
             name="personCertificatetNo"
-            id="shCode"
+            id="personCertificatetNo"
             className="inputBox__form--input"
-            value={personObject?.personCertificatetNo || ""}
+            value={
+              convertToPersianNumber(personObject?.personCertificatetNo) ?? ""
+            }
             onChange={handlePersonObjectChange}
             required
           />
-          <label htmlFor="shCode" className="inputBox__form--label">
+          <label
+            htmlFor="personCertificatetNo"
+            className="inputBox__form--label"
+          >
             <span>*</span> شماره شناسنامه
           </label>
         </div>
@@ -155,14 +261,14 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
         <div className="inputBox__form">
           <input
             type="text"
-            id="fatherName"
+            id="personFatherName"
             name="personFatherName"
             className="inputBox__form--input"
             value={personObject?.personFatherName || ""}
             onChange={handlePersonObjectChange}
             required
           />
-          <label htmlFor="fatherName" className="inputBox__form--label">
+          <label htmlFor="personFatherName" className="inputBox__form--label">
             نام پدر
           </label>
         </div>
@@ -171,17 +277,20 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
           <select
             type="text"
             name="genderID"
-            id="gender"
+            id="genderID"
             className="inputBox__form--input"
             value={personObject?.genderID || "2"}
             onChange={handlePersonObjectChange}
             required
           >
-            <option value="2">انتخاب</option>
-            <option value="0">مرد</option>
-            <option value="1">زن</option>
+            <option value="0">انتخاب</option>
+            {genderCombo.map((gender) => (
+              <option key={gender.lookUpID} value={gender.lookUpID}>
+                {gender.lookUpName}
+              </option>
+            ))}
           </select>
-          <label htmlFor="gender" className="inputBox__form--label">
+          <label htmlFor="genderID" className="inputBox__form--label">
             <span>*</span> جنسیت
           </label>
         </div>
@@ -211,13 +320,13 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
           <input
             type="text"
             name="personBirthPlace"
-            id="birthPlace"
+            id="personBirthPlace"
             className="inputBox__form--input"
             value={personObject?.personBirthPlace || ""}
             onChange={handlePersonObjectChange}
             required
           />
-          <label htmlFor="birthPlace" className="inputBox__form--label">
+          <label htmlFor="personBirthPlace" className="inputBox__form--label">
             <span>*</span> محل تولد
           </label>
         </div>
@@ -225,14 +334,14 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
         <div className="inputBox__form">
           <input
             type="text"
-            id="otherName"
+            id="personPreviousName"
             name="personPreviousName"
             className="inputBox__form--input"
             value={personObject?.personPreviousName || ""}
             onChange={handlePersonObjectChange}
             required
           />
-          <label htmlFor="otherName" className="inputBox__form--label">
+          <label htmlFor="personPreviousName" className="inputBox__form--label">
             نام و نام خانوادگی قبلی
           </label>
         </div>
@@ -243,7 +352,7 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
             id="retireNum"
             name="pensionaryId"
             className="inputBox__form--input"
-            value={personObject?.pensionaryId || ""}
+            value={personObject?.pensionaryID || ""}
             onChange={handlePersonObjectChange}
             required
           />
@@ -255,14 +364,14 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
         <div className="inputBox__form">
           <input
             type="text"
-            id="staticPhone"
+            id="personPhone"
             name="personPhone"
             className="inputBox__form--input"
-            value={personObject?.personPhone || ""}
+            value={convertToPersianNumber(personObject?.personPhone) ?? ""}
             onChange={handlePersonObjectChange}
             required
           />
-          <label htmlFor="staticPhone" className="inputBox__form--label">
+          <label htmlFor="personPhone" className="inputBox__form--label">
             تلفن ثابت
           </label>
         </div>
@@ -270,14 +379,14 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
         <div className="inputBox__form">
           <input
             type="text"
-            id="cellPhone"
+            id="personCellPhone"
             name="personCellPhone"
             className="inputBox__form--input"
-            value={personObject?.personCellPhone || ""}
+            value={convertToPersianNumber(personObject?.personCellPhone) ?? ""}
             onChange={handlePersonObjectChange}
             required
           />
-          <label htmlFor="cellPhone" className="inputBox__form--label">
+          <label htmlFor="personCellPhone" className="inputBox__form--label">
             تلفن همراه
           </label>
         </div>
@@ -288,7 +397,7 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
             id="backupNum"
             name="personCellPhone2"
             className="inputBox__form--input"
-            value={personObject?.personCellPhone2 || ""}
+            value={convertToPersianNumber(personObject?.personCellPhone2) ?? ""}
             onChange={handlePersonObjectChange}
             required
           />
@@ -343,16 +452,23 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
         </div>
 
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
-            id="educationTypeId"
-            value={personObject?.educationTypeId || ""}
-            name="educationTypeId"
+            id="educationTypeID"
+            value={personObject?.educationTypeID || ""}
+            name="educationTypeID"
             className="inputBox__form--input field"
             onChange={handlePersonObjectChange}
             required
-          />
-          <label htmlFor="educationTypeId" className="inputBox__form--label">
+          >
+            <option value="0">انتخاب کنید</option>
+            {educationCombo.map((edu) => (
+              <option key={edu.lookUpID} value={edu.lookUpID}>
+                {edu.lookUpName}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="educationTypeID" className="inputBox__form--label">
             <span>*</span> مدرک تحصیلی
           </label>
         </div>
@@ -406,7 +522,7 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
           <input
             type="text"
             id="personRegion"
-            value={`${personObject?.personRegion}` || ""}
+            value={convertToPersianNumber(personObject?.personRegion) ?? ""}
             name="personRegion"
             className="inputBox__form--input"
             onChange={handlePersonObjectChange}
@@ -420,7 +536,7 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
           <input
             type="text"
             id="personArea"
-            value={`${personObject?.personArea}` || ""}
+            value={convertToPersianNumber(personObject?.personArea) ?? ""}
             name="personArea"
             className="inputBox__form--input"
             onChange={handlePersonObjectChange}
@@ -435,7 +551,7 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
           <input
             type="text"
             id="personPostalCode"
-            value={personObject?.personPostalCode || ""}
+            value={convertToPersianNumber(personObject?.personPostalCode) ?? ""}
             name="personPostalCode"
             className="inputBox__form--input"
             onChange={handlePersonObjectChange}
@@ -447,16 +563,23 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
         </div>
 
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
-            id="housingTypeId"
-            value={personObject?.housingTypeId || ""}
-            name="housingTypeId"
+            id="housingTypeID"
+            value={personObject?.housingTypeID || ""}
+            name="housingTypeID"
             className="inputBox__form--input"
             onChange={handlePersonObjectChange}
             required
-          />
-          <label htmlFor="housingTypeId" className="inputBox__form--label">
+          >
+            <option value="0">انتخاب</option>
+            {housingCombo.map((house) => (
+              <option key={house.lookUpID} value={house.lookUpID}>
+                {house.lookUpName}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="housingTypeID" className="inputBox__form--label">
             وضعیت مسکن
           </label>
         </div>
@@ -464,21 +587,21 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
         <div className="inputBox__form">
           <select
             type="text"
-            name="maritalStatusId"
-            id="maritalStatusId"
+            name="maritalStatusID"
+            id="maritalStatusID"
             className="inputBox__form--input"
-            value={personObject?.maritalStatusId || "2"}
+            value={personObject?.maritalStatusID || "0"}
             onChange={handlePersonObjectChange}
             required
           >
-            <option value="2">انتخاب</option>
+            <option value="0">انتخاب</option>
             {maritalStatusCombo.map((item) => (
               <option key={item.lookUpID} value={item.lookUpID}>
                 {item.lookUpName}
               </option>
             ))}
           </select>
-          <label htmlFor="gender" className="inputBox__form--label">
+          <label htmlFor="maritalStatusID" className="inputBox__form--label">
             وضعیت تاهل
           </label>
         </div>
@@ -539,6 +662,8 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
         <LoadingButton
           dir="ltr"
           endIcon={<SaveIcon />}
+          loading={isUpdating}
+          onClick={handleUpdateRetired}
           variant="contained"
           color="success"
           sx={{ fontFamily: "sahel" }}

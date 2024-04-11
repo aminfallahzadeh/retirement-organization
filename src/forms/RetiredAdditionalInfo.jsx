@@ -83,7 +83,7 @@ function RetiredAdditionalInfo({ personID }) {
   } = useGetLookupDataQuery({
     token,
     lookUpType: "BankBranch",
-    lookUpId: accountData.bankBranchID,
+    // lookUpId: accountData.bankBranchID,
   });
 
   useEffect(() => {
@@ -117,10 +117,6 @@ function RetiredAdditionalInfo({ personID }) {
     }
   }, [bankBranchComboError]);
 
-  useEffect(() => {
-    console.log("accountData", accountData);
-  }, [accountData]);
-
   const handleUpdateRetiredAccount = async () => {
     try {
       const updateRes = await updateRetiredAccount({
@@ -138,7 +134,6 @@ function RetiredAdditionalInfo({ personID }) {
         },
       }).unwrap();
       setEditable(false);
-      console.log("updateRes", updateRes);
       toast.success(updateRes.message, {
         autoClose: 2000,
       });

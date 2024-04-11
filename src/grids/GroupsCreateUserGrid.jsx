@@ -59,6 +59,10 @@ function GriyosCreateUserGrid({ userObject }) {
     refetch,
   } = useGetGroupQuery(token);
 
+  useEffect(() => {
+    console.log("userObject 2", userObject);
+  }, [userObject]);
+
   const [insertUser, { isLoading: isCreating }] = useInsertUserMutation();
   const [insertGroupUsers, { isLoading: isInserting }] =
     useInsertGroupUsersMutation();
@@ -73,7 +77,6 @@ function GriyosCreateUserGrid({ userObject }) {
           "isActive": userObject.isActive === "true" ? true : false,
         },
       }).unwrap();
-
       try {
         const userID = createUserRes.itemList[0].id;
         const data = addedGroups.map((item) => ({

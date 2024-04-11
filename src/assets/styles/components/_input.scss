@@ -82,8 +82,7 @@
 		}
 
 		&:disabled {
-			background-color: $color-grey-2;
-			border: 2px solid transparent;
+			color: $color-grey-3;
 		}
 	}
 

@@ -54,16 +54,16 @@ function IndividualInfoSection() {
   ]);
 
   useEffect(() => {
-    console.log("personObject", personObject);
-  }, [personObject]);
-
-  useEffect(() => {
     if (error) {
       toast.error(error?.data?.message || error.error, {
         autoClose: 2000,
       });
     }
   }, [error]);
+
+  // useEffect(() => {
+  //   console.log("personObject", personObject);
+  // }, [personObject]);
 
   const content = (
     <section className="pensionersAffairs">
