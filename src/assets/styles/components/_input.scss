@@ -60,6 +60,7 @@
 		border-radius: $border-radius-secondary;
 		outline: none;
 		text-align: right;
+		transition: all 0.25s;
 
 		&-height-40 {
 			height: 40px !important;
@@ -67,16 +68,22 @@
 
 		&:focus ~ .inputBox__form--label,
 		&:valid ~ .inputBox__form--label,
-		&:disabled ~ .inputBox__login--label {
+		&:disabled ~ .inputBox__form--label {
 			position: absolute;
 			top: -10px;
 			right: 20px;
 			font-size: 12px;
-			background-color: $color-white;
+			background-color: $color-grey-1;
 			color: $color-grey-4;
 			border-radius: $border-radius-secondary;
 			padding: 0 10px;
 			cursor: text;
+			transition: all 0.25s;
+		}
+
+		&:disabled {
+			background-color: $color-grey-2;
+			border: 2px solid transparent;
 		}
 	}
 
@@ -90,10 +97,6 @@
 		border-radius: $border-radius-secondary;
 		padding: 0 10px;
 		cursor: default;
-
-		span {
-			color: $color-accent-red;
-		}
 	}
 
 	&--readOnly-input {
