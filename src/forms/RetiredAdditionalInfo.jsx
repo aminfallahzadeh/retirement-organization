@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 // redux imports
 import { useSelector } from "react-redux";
+import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import { useGetRetiredAccountQuery } from "../slices/retiredApiSlice";
 import { useUpdateRetiredAccountMutation } from "../slices/retiredApiSlice";
 
@@ -17,14 +18,23 @@ import {
 // library imports
 import { toast } from "react-toastify";
 
+// helpers
+import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
+
 function RetiredAdditionalInfo({ personID }) {
+  const [bankCombo, setBankCombo] = useState([]);
+  const [bankBranchCombo, setBankBranchCombo] = useState([]);
   const [accountData, setAccountData] = useState({});
   const { token } = useSelector((state) => state.auth);
 
   const [updateRetiredAccount, { isLoading: isUpdating }] =
     useUpdateRetiredAccountMutation();
 
-  const { data: retiredAccountData, isSuccess } = useGetRetiredAccountQuery({
+  const {
+    data: retiredAccountData,
+    isSuccess,
+    error,
+  } = useGetRetiredAccountQuery({
     token,
     personID,
   });
@@ -41,6 +51,65 @@ function RetiredAdditionalInfo({ personID }) {
   }, [isSuccess, retiredAccountData]);
 
   useEffect(() => {
+    if (error) {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
+
+  const {
+    data: bankComboItems,
+    isSuccess: isBankComboSuccess,
+    error: bankComboError,
+  } = useGetLookupDataQuery({
+    token,
+    lookUpType: "Bank",
+    lookUpId: accountData.bankID,
+  });
+
+  const {
+    data: bankBranchComboItems,
+    isSuccess: isBankBranchComboSuccess,
+    error: bankBranchComboError,
+  } = useGetLookupDataQuery({
+    token,
+    lookUpType: "BankBranch",
+    lookUpId: accountData.bankBranchID,
+  });
+
+  useEffect(() => {
+    if (isBankComboSuccess) {
+      setBankCombo(bankComboItems.itemList);
+    }
+  }, [isBankComboSuccess, bankComboItems]);
+
+  useEffect(() => {
+    if (bankComboError) {
+      toast.error(bankComboError?.data?.message || bankComboError.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [bankComboError]);
+
+  useEffect(() => {
+    if (isBankBranchComboSuccess) {
+      setBankBranchCombo(bankBranchComboItems.itemList);
+    }
+  }, [isBankBranchComboSuccess, bankBranchComboItems]);
+
+  useEffect(() => {
+    if (bankBranchComboError) {
+      toast.error(
+        bankBranchComboError?.data?.message || bankBranchComboError.error,
+        {
+          autoClose: 2000,
+        }
+      );
+    }
+  }, [bankBranchComboError]);
+
+  useEffect(() => {
     console.log("accountData", accountData);
   }, [accountData]);
 
@@ -51,8 +120,13 @@ function RetiredAdditionalInfo({ personID }) {
         data: {
           ...accountData,
           ledgerCode: parseInt(accountData.ledgerCode),
-          insuranceAmount: parseInt(accountData.insuranceAmount),
-          insuranceCoef: parseFloat(accountData.insuranceCoef),
+          insuranceAmount: parseInt(
+            convertToEnglishNumber(accountData.insuranceAmount)
+          ),
+          insuranceCoef: parseFloat(
+            convertToEnglishNumber(accountData.insuranceCoef)
+          ),
+          accountNo: convertToEnglishNumber(accountData.accountNo),
         },
       }).unwrap();
       console.log("updateRes", updateRes);
@@ -71,7 +145,7 @@ function RetiredAdditionalInfo({ personID }) {
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
             id="bankID"
             name="bankID"
@@ -79,14 +153,21 @@ function RetiredAdditionalInfo({ personID }) {
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
             required
-          />
+          >
+            <option value="2">انتخاب</option>
+            {bankCombo.map((bank) => (
+              <option key={bank.lookUpID} value={bank.lookUpID}>
+                {bank.lookUpName}
+              </option>
+            ))}
+          </select>
           <label htmlFor="bankID" className="inputBox__form--label">
             بانک
           </label>
         </div>
 
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
             id="bankBranchID"
             name="bankBranchID"
@@ -94,7 +175,14 @@ function RetiredAdditionalInfo({ personID }) {
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
             required
-          />
+          >
+            <option value="2">انتخاب</option>
+            {bankBranchCombo.map((bankBranch) => (
+              <option key={bankBranch.lookUpID} value={bankBranch.lookUpID}>
+                {bankBranch.lookUpName}
+              </option>
+            ))}
+          </select>
           <label htmlFor="bankBranchID" className="inputBox__form--label">
             شعبه
           </label>
@@ -105,7 +193,7 @@ function RetiredAdditionalInfo({ personID }) {
             type="text"
             id="accountNo"
             name="accountNo"
-            value={accountData.accountNo || ""}
+            value={convertToPersianNumber(accountData.accountNo) ?? ""}
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
             required
@@ -120,7 +208,7 @@ function RetiredAdditionalInfo({ personID }) {
             type="text"
             id="ledgerCode"
             name="ledgerCode"
-            value={accountData.ledgerCode || ""}
+            value={convertToPersianNumber(accountData.ledgerCode) ?? ""}
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
             required
@@ -135,7 +223,7 @@ function RetiredAdditionalInfo({ personID }) {
             type="text"
             id="insuranceCoef"
             name="insuranceCoef"
-            value={accountData.insuranceCoef || ""}
+            value={convertToPersianNumber(accountData.insuranceCoef) ?? ""}
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
             required
@@ -150,7 +238,7 @@ function RetiredAdditionalInfo({ personID }) {
             type="text"
             id="insuranceAmount"
             name="insuranceAmount"
-            value={accountData.insuranceAmount || ""}
+            value={convertToPersianNumber(accountData.insuranceAmount) ?? ""}
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
             required

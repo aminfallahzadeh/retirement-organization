@@ -1,10 +1,46 @@
 // library imports
 import momentj from "moment-jalaali";
 
-// convert english numbers to persian
+// convert to persian number
 export const convertToPersianNumber = (num) => {
   const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-  return String(num).replace(/\d/g, (match) => persianDigits[match]);
+  const result = String(num).replace(/\d/g, (match) => persianDigits[match]);
+  return result;
+};
+
+// convert to english number
+export const convertToEnglishNumber = (str) => {
+  let persianNumbers = [
+      /۰/g,
+      /۱/g,
+      /۲/g,
+      /۳/g,
+      /۴/g,
+      /۵/g,
+      /۶/g,
+      /۷/g,
+      /۸/g,
+      /۹/g,
+    ],
+    arabicNumbers = [
+      /٠/g,
+      /١/g,
+      /٢/g,
+      /٣/g,
+      /٤/g,
+      /٥/g,
+      /٦/g,
+      /٧/g,
+      /٨/g,
+      /٩/g,
+    ];
+
+  if (typeof str === "string") {
+    for (var i = 0; i < 10; i++) {
+      str = str.replace(persianNumbers[i], i).replace(arabicNumbers[i], i);
+    }
+  }
+  return str;
 };
 
 // find item by id
