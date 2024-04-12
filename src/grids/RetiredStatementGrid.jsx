@@ -1,5 +1,10 @@
 // react imports
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+// redux imports
+import { useSelector, useDispatch } from "react-redux";
+import { useGetListOfRetirementStatementsQuery } from "../slices/retirementStatementApiSlice.js";
+import { setStatementTableData } from "../slices/statementDataSlice.js";
 
 // mui imports
 import { IconButton, Button } from "@mui/material";
@@ -32,6 +37,11 @@ import { convertToPersianNumber } from "../helper.js";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
+// library imports
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { toast } from "react-toastify";
+
 const data = [
   {
     serial: "۰۱۲۳۴۵۶۷۸۹",
@@ -48,6 +58,27 @@ function RetiredStatementGrid() {
   const [showDeleteStatementModal, setShowDeleteStatementModal] =
     useState(false);
 
+  const { token } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+
+  // access the data from redux store
+  // const { statementTableData } = useSelector(
+  //   (state) => state.statementDataSlice
+  // );
+  const { selectedRequestData } = useSelector((state) => state.requestsData);
+
+  // const {
+  //   data: statements,
+  //   isSuccess,
+  //   isLoading,
+  //   error,
+  //   refetch,
+  // } = useGetListOfRetirementStatementsQuery({
+  //   token,
+  //   personID: selectedRequestData?.personId,
+  // });
+
   const handleShowStatementModal = () => {
     setShowStatementModal(true);
   };
@@ -55,6 +86,36 @@ function RetiredStatementGrid() {
   const handleShowDeleteStatementModal = () => {
     setShowDeleteStatementModal(true);
   };
+
+  // useEffect(() => {
+  //   refetch();
+  //   if (isSuccess) {
+  //     const data = statements.itemList.map((statement) => ({
+  //       id: statement.statementID,
+  //     }));
+  //     dispatch(setStatementTableData(data));
+  //   }
+
+  //   return () => {
+  //     dispatch(setStatementTableData([]));
+  //   };
+  // }, [
+  //   isSuccess,
+  //   refetch,
+  //   dispatch,
+  //   statements,
+  //   showStatementModal,
+  //   showDeleteStatementModal,
+  // ]);
+
+  // useEffect(() => {
+  //   if (error) {
+  //     console.log(error);
+  //     toast.error(error?.data?.message || error.error, {
+  //       autoClose: 2000,
+  //     });
+  //   }
+  // }, [error]);
 
   const columns = useMemo(
     () => [

@@ -70,10 +70,6 @@ function RetiredRelatedInfoGrid() {
     setShowDeleteRelatedModal(true);
   };
 
-  const handleRefresh = () => {
-    refetch();
-  };
-
   useEffect(() => {
     refetch();
     if (isSuccess) {

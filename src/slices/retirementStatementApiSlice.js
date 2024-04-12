@@ -6,18 +6,9 @@ import { apiSlice } from "./apiSlice";
 
 export const retirementStatementApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getRetirementStatement: builder.query({
-      query: ({ token, RetirementStatementID }) => ({
-        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GetRetirementStatement?RetirementStatementID=${RetirementStatementID}`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      }),
-    }),
-    getListOfRetirementStatement: builder.query({
-      query: (token) => ({
-        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GetListOfRetirementStatement`,
+    getListOfRetirementStatements: builder.query({
+      query: ({ token, personID }) => ({
+        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GetListOfRetirementStatements?personID=${personID}`,
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
@@ -103,8 +94,7 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useGetRetirementStatementQuery,
-  useGetListOfRetirementStatementQuery,
+  useGetListOfRetirementStatementsQuery,
   useGenerateNewRetirementStatementQuery,
   useInsertRetirementStatementMutation,
   useUpdateRetirementStatementMutation,

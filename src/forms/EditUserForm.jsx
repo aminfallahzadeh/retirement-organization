@@ -30,7 +30,6 @@ function UserEditForm({ setShowEditUserModal }) {
   const handleUserObjectChange = (e) => {
     const { name, value } = e.target;
     setUserObject({ ...userObject, [name]: value });
-    console.log("change value", value);
   };
 
   const [updateUser, { isLoading }] = useUpdateUserMutation();
@@ -69,11 +68,13 @@ function UserEditForm({ setShowEditUserModal }) {
   };
 
   useEffect(() => {
-    setUserObject({
-      ...selectedUserData,
-      isActive: selectedUserData.isActive === "فعال" ? true : false,
-      sex: selectedUserData.sex === true ? "true" : "false",
-    });
+    if (selectedUserData) {
+      setUserObject({
+        ...selectedUserData,
+        isActive: selectedUserData.isActive === "فعال" ? true : false,
+        sex: selectedUserData.sex === true ? "true" : "false",
+      });
+    }
   }, [selectedUserData]);
 
   const content = (
