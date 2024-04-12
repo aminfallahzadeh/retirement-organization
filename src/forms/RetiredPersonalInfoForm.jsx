@@ -30,6 +30,7 @@ import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
 function RetiredPersonalInfoForm() {
+  const [editable, setEditable] = useState(false);
   const [genderCombo, setGenderCombo] = useState([]);
   const [educationCombo, setEducationCombo] = useState([]);
   const [housingCombo, setHousingCombo] = useState([]);
@@ -126,6 +127,10 @@ function RetiredPersonalInfoForm() {
     }
   }, [isMatritalComboSuccess, maritalStatusComboItems]);
 
+  const handleEditable = () => {
+    setEditable(true);
+  };
+
   const handleBirthDateChange = (date) => {
     setSelectedBirthDate(date);
     setIsBirthCalenderOpen(false);
@@ -199,6 +204,7 @@ function RetiredPersonalInfoForm() {
           <div className="flex-col flex-center flex-col--grow">
             <div className="inputBox__form">
               <input
+                disabled={!editable}
                 type="text"
                 name="personFirstName"
                 id="personFirstName"
@@ -216,6 +222,7 @@ function RetiredPersonalInfoForm() {
             </div>
             <div className="inputBox__form">
               <input
+                disabled={!editable}
                 type="text"
                 name="personLastName"
                 id="personLastName"
@@ -233,6 +240,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             name="personNationalCode"
             id="personNationalCode"
@@ -250,6 +258,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             name="personCertificatetNo"
             id="personCertificatetNo"
@@ -270,6 +279,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="personFatherName"
             name="personFatherName"
@@ -285,6 +295,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <select
+            disabled={!editable}
             type="text"
             name="genderID"
             id="genderID"
@@ -307,6 +318,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <InputDatePicker
+            disabled={!editable}
             value={selectedBirthDate}
             onChange={handleBirthDateChange}
             format={"jYYYY-jMM-jDD"}
@@ -328,6 +340,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             name="personBirthPlace"
             id="personBirthPlace"
@@ -343,6 +356,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="personPreviousName"
             name="personPreviousName"
@@ -358,6 +372,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="retireNum"
             name="pensionaryId"
@@ -373,6 +388,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="personPhone"
             name="personPhone"
@@ -388,6 +404,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="personCellPhone"
             name="personCellPhone"
@@ -403,6 +420,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="backupNum"
             name="personCellPhone2"
@@ -418,6 +436,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="backupName"
             value={personObject?.backupFirstName || ""}
@@ -433,6 +452,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="backupLname"
             value={personObject?.backupLastName || ""}
@@ -448,6 +468,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="personEmail"
             value={personObject?.personEmail || ""}
@@ -463,6 +484,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <select
+            disabled={!editable}
             type="text"
             id="educationTypeID"
             value={personObject?.educationTypeID || ""}
@@ -485,6 +507,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="personCountry"
             value={personObject?.personCountry || ""}
@@ -500,6 +523,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="personState"
             value={personObject?.personState || ""}
@@ -515,6 +539,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="personCity"
             value={personObject?.personCity || ""}
@@ -530,6 +555,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="personRegion"
             value={convertToPersianNumber(personObject?.personRegion) ?? ""}
@@ -544,6 +570,7 @@ function RetiredPersonalInfoForm() {
         </div>
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="personArea"
             value={convertToPersianNumber(personObject?.personArea) ?? ""}
@@ -559,6 +586,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="personPostalCode"
             value={convertToPersianNumber(personObject?.personPostalCode) ?? ""}
@@ -574,6 +602,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <select
+            disabled={!editable}
             type="text"
             id="housingTypeID"
             value={personObject?.housingTypeID || ""}
@@ -596,6 +625,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <select
+            disabled={!editable}
             type="text"
             name="maritalStatusID"
             id="maritalStatusID"
@@ -618,6 +648,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form">
           <InputDatePicker
+            disabled={!editable}
             value={selectedDeathDate}
             onChange={handleDeathDateChange}
             format={"jYYYY-jMM-jDD"}
@@ -639,6 +670,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form col-span-3">
           <textarea
+            disabled={!editable}
             type="text"
             id="personAddress"
             value={personObject?.personAddress || ""}
@@ -654,6 +686,7 @@ function RetiredPersonalInfoForm() {
 
         <div className="inputBox__form row-col-span-3">
           <textarea
+            disabled={!editable}
             type="text"
             id="personDescription"
             value={personObject?.personDescription || ""}
@@ -684,6 +717,8 @@ function RetiredPersonalInfoForm() {
         <Button
           dir="ltr"
           endIcon={<EditIcon />}
+          onClick={handleEditable}
+          disabled={editable}
           variant="contained"
           color="primary"
           sx={{ fontFamily: "sahel" }}
