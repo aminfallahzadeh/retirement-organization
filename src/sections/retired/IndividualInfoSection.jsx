@@ -1,5 +1,5 @@
 // react imports
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 // component imports
 import RetiredAdditionalInfo from "../../forms/RetiredAdditionalInfo";
@@ -10,6 +10,7 @@ import FolderTree from "../../components/FolderTree";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetRetiredQuery } from "../../slices/retiredApiSlice.js";
+import { setPersonObject } from "../../slices/retiredStateSlice.js";
 
 // mui imports
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
@@ -27,7 +28,7 @@ import { LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 
 function IndividualInfoSection() {
-  const [personObject, setPersonObject] = useState({});
+  // const [personObject, setPersonObject] = useState({});
   const { token } = useSelector((state) => state.auth);
   const { selectedRequestData } = useSelector((state) => state.requestsData);
 
@@ -43,7 +44,7 @@ function IndividualInfoSection() {
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      setPersonObject(retiredData?.itemList[0]);
+      dispatch(setPersonObject(retiredData?.itemList[0]));
     }
   }, [
     refetch,
@@ -82,8 +83,8 @@ function IndividualInfoSection() {
         </AccordionSummary>
         <AccordionDetails>
           <RetiredPersonalInfoForm
-            personObject={personObject}
-            setPersonObject={setPersonObject}
+          // personObject={personObject}
+          // setPersonObject={setPersonObject}
           />
         </AccordionDetails>
       </Accordion>
@@ -103,8 +104,8 @@ function IndividualInfoSection() {
         </AccordionSummary>
         <AccordionDetails>
           <RetiredStaffInfoForm
-            personObject={personObject}
-            setPersonObject={setPersonObject}
+          // personObject={personObject}
+          // setPersonObject={setPersonObject}
           />
         </AccordionDetails>
       </Accordion>

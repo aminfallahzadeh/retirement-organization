@@ -1,19 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  retiredData: [],
+  personObject: [],
 };
 
 const retiredStateSlice = createSlice({
   name: "retiredState",
   initialState,
   reducers: {
-    setRetiredData: (state, action) => {
-      state.retiredData = action.payload;
+    setPersonObject: (state, action) => {
+      state.personObject = action.payload;
     },
   },
 });
 
-export const { setRetiredData } = retiredStateSlice.actions;
+export const { setPersonObject } = retiredStateSlice.actions;
 
 export default retiredStateSlice.reducer;

@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 // reduxt imports
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import { useUpdateRetiredMutation } from "../slices/retiredApiSlice.js";
-import { useSelector } from "react-redux";
+import { setPersonObject } from "../slices/retiredStateSlice.js";
+import { useSelector, useDispatch } from "react-redux";
 
 // mui imports
 import { Button } from "@mui/material";
@@ -28,7 +29,7 @@ import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
-function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
+function RetiredPersonalInfoForm() {
   const [genderCombo, setGenderCombo] = useState([]);
   const [educationCombo, setEducationCombo] = useState([]);
   const [housingCombo, setHousingCombo] = useState([]);
@@ -39,6 +40,9 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
   const [isDeathCalenderOpen, setIsDeathCalenderOpen] = useState(false);
 
   const { token } = useSelector((state) => state.auth);
+  const { personObject } = useSelector((state) => state.retiredState);
+
+  const dispatch = useDispatch();
 
   const [updateRetired, { isLoading: isUpdating }] = useUpdateRetiredMutation();
 
@@ -76,20 +80,24 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
 
   useEffect(() => {
     if (selectedBirthDate) {
-      setPersonObject({
-        ...personObject,
-        personBirthDate: selectedBirthDate.toISOString(),
-      });
+      dispatch(
+        setPersonObject({
+          ...personObject,
+          personBirthDate: selectedBirthDate.toISOString(),
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBirthDate]);
 
   useEffect(() => {
     if (selectedDeathDate) {
-      setPersonObject({
-        ...personObject,
-        personDeathDate: selectedDeathDate.toISOString(),
-      });
+      dispatch(
+        setPersonObject({
+          ...personObject,
+          personDeathDate: selectedDeathDate.toISOString(),
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDeathDate]);
@@ -138,10 +146,12 @@ function RetiredPersonalInfoForm({ personObject, setPersonObject }) {
 
   const handlePersonObjectChange = (e) => {
     const { name, value } = e.target;
-    setPersonObject({
-      ...personObject,
-      [name]: value,
-    });
+    dispatch(
+      setPersonObject({
+        ...personObject,
+        [name]: value,
+      })
+    );
   };
 
   const handleUpdateRetired = async () => {

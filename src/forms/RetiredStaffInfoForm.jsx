@@ -1,5 +1,11 @@
 // react imports
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+// redux imports
+import { setPersonObject } from "../slices/retiredStateSlice.js";
+import { useSelector, useDispatch } from "react-redux";
+import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
+import { useUpdateRetiredMutation } from "../slices/retiredApiSlice.js";
 
 // mui imports
 import { Button } from "@mui/material";
@@ -14,19 +20,79 @@ import {
 import { convertToPersianDate } from "../helper.js";
 
 // libary imports
+import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
-import { DatePicker } from "jalaali-react-date-picker";
+import { InputDatePicker } from "jalaali-react-date-picker";
 
-function RetiredStaffInfoForm({ personObject, setPersonObject }) {
-  const [showDatePicker, setShowDatePicker] = useState(false);
+function RetiredStaffInfoForm() {
+  const [employmentTypeCombo, setEmploymentTypeCombo] = useState([]);
+  const [selectedRetriementDate, setSelectedRetriementDate] = useState(null);
+  const [isRetriementCalenderOpen, setIsRetirementCalenderOpen] =
+    useState(false);
 
-  const handleShowDatePicker = () => {
-    setShowDatePicker(!showDatePicker);
-  };
+  const { token } = useSelector((state) => state.auth);
+  const { personObject } = useSelector((state) => state.retiredState);
+
+  const dispatch = useDispatch();
+
+  const {
+    data: employmentTypeComboItems,
+    isSuccess: isEmploymentTypeComboSuccess,
+    error: employmentTypeComboError,
+  } = useGetLookupDataQuery({
+    token,
+    lookUpType: "EmploymentType",
+  });
+
+  useEffect(() => {
+    if (isEmploymentTypeComboSuccess) {
+      setEmploymentTypeCombo(employmentTypeComboItems.itemList);
+    }
+  }, [isEmploymentTypeComboSuccess, employmentTypeComboItems]);
+
+  useEffect(() => {
+    setSelectedRetriementDate(
+      convertToPersianDate(personObject.retirementDate)
+    );
+  }, [personObject.retirementDate]);
+
+  useEffect(() => {
+    if (employmentTypeComboError) {
+      console.log(employmentTypeComboError);
+      toast.error(
+        employmentTypeComboError?.data?.message ||
+          employmentTypeComboError.error,
+        {
+          autoClose: 2000,
+        }
+      );
+    }
+  }, [employmentTypeComboError]);
+
+  useEffect(() => {
+    if (selectedRetriementDate) {
+      dispatch(
+        setPersonObject({
+          ...personObject,
+          retirementDate: selectedRetriementDate.toISOString(),
+        })
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedRetriementDate]);
 
   const handlePersonObjectChange = (e) => {
     const { name, value } = e.target;
-    setPersonObject({ ...personObject, [name]: value });
+    dispatch(setPersonObject({ ...personObject, [name]: value }));
+  };
+
+  const handleRetiredOpenChange = (open) => {
+    setIsRetirementCalenderOpen(open);
+  };
+
+  const handleRetiredDateChange = (date) => {
+    setSelectedRetriementDate(date);
+    setIsRetirementCalenderOpen(false);
   };
 
   const content = (
@@ -38,7 +104,7 @@ function RetiredStaffInfoForm({ personObject, setPersonObject }) {
             id="retiredGroup"
             name="retiredGroup"
             className="inputBox__form--input"
-            value={personObject?.retiredGroup || ""}
+            value={personObject?.retiredGroup ?? ""}
             onChange={handlePersonObjectChange}
             required
           />
@@ -83,44 +149,46 @@ function RetiredStaffInfoForm({ personObject, setPersonObject }) {
           </label>
         </div>
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
-            id="employmentTypeId"
-            name="employmentTypeId"
-            value={personObject?.employmentTypeId || ""}
+            id="employmentTypeID"
+            name="employmentTypeID"
+            value={personObject?.employmentTypeID || ""}
             onChange={handlePersonObjectChange}
             className="inputBox__form--input"
             required
-          />
-          <label htmlFor="employmentTypeId" className="inputBox__form--label">
+          >
+            <option value="">انتخاب کنید</option>
+            {employmentTypeCombo?.map((item) => (
+              <option key={item.lookUpID} value={item.lookUpID}>
+                {item.lookUpName}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="employmentTypeID" className="inputBox__form--label">
             <span>*</span> نوع استخدام
           </label>
         </div>
 
         <div className="inputBox__form">
-          <input
-            type="text"
-            id="retirementDate"
-            className="inputBox__form--input"
-            onChange={() => {}}
-            value={
-              convertToPersianDate(personObject?.retirementDate) ===
-              "Invalid date"
-                ? "از تقویم انتخاب کنید"
-                : convertToPersianDate(personObject?.retirementDate)
-            }
-            name="retirementDate"
-            required
+          <InputDatePicker
+            value={selectedRetriementDate}
+            onChange={handleRetiredDateChange}
+            format={"jYYYY-jMM-jDD"}
+            onOpenChange={handleRetiredOpenChange}
+            suffixIcon={<CalenderIcon color="action" />}
+            open={isRetriementCalenderOpen}
+            style={{
+              border: "2px solid #cfcfcf",
+              borderRadius: "6px",
+              marginLeft: "0.5rem",
+            }}
+            wrapperStyle={{
+              border: "none",
+              cursor: "pointer",
+            }}
           />
-          <div className="inputBox__form--icon">
-            <CalenderIcon color="action" onClick={handleShowDatePicker} />
-          </div>
-          <div className="inputBox__form--calender">
-            {showDatePicker && <DatePicker />}
-          </div>
-          <label htmlFor="retirementDate" className="inputBox__form--label">
-            <span>*</span> تاریخ بازنشستگی
-          </label>
+          <div className="inputBox__form--readOnly-label">تاریخ بازنشستگی</div>
         </div>
 
         <div className="inputBox__form">
@@ -130,10 +198,10 @@ function RetiredStaffInfoForm({ personObject, setPersonObject }) {
             style={{ cursor: "pointer" }}
             name="pensionaryIsActive"
             required
-            value={personObject?.pensionaryIsActive || "انتخاب"}
+            value={personObject?.pensionaryIsActive || " "}
             onChange={handlePersonObjectChange}
           >
-            <option value="انتخاب">انتخاب کنید</option>
+            <option value=" ">انتخاب کنید</option>
             <option value="true">فعال</option>
             <option value="false">غیر فعال</option>
           </select>
@@ -147,7 +215,7 @@ function RetiredStaffInfoForm({ personObject, setPersonObject }) {
             type="text"
             id="retiredJobDegreeCoef"
             className="inputBox__form--input"
-            value={personObject?.retiredJobDegreeCoef || ""}
+            value={personObject?.retiredJobDegreeCoef ?? ""}
             onChange={handlePersonObjectChange}
             name="retiredJobDegreeCoef"
             required
