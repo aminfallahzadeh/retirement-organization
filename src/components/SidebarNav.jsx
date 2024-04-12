@@ -33,7 +33,7 @@ function SidebarNav() {
             <>
               <PersonOutlinedIcon sx={{ color: "#ff6700" }} />
               &nbsp; &nbsp;
-              <span>امور بازنشستان</span>
+              <span>امور بازنشستگان</span>
             </>
           }
         >
@@ -46,13 +46,26 @@ function SidebarNav() {
             {" "}
             احکام گروهی{" "}
           </MenuItem>
-          <MenuItem> رویت احکام کارمندی </MenuItem>
+          <MenuItem>رویت احکام کارمندی </MenuItem>
           <MenuItem> گزارشات </MenuItem>
         </SubMenu>
-        <MenuItem>
-          <GroupOutlinedIcon sx={{ color: "#ff6700" }} />
-          &nbsp; &nbsp; امور مشترکین
-        </MenuItem>
+        <SubMenu
+          label={
+            <>
+              <GroupOutlinedIcon sx={{ color: "#ff6700" }} />
+              &nbsp; &nbsp;
+              <span> امور مشترکین</span>
+            </>
+          }
+        >
+          <MenuItem>احکام کارمندان</MenuItem>
+          <MenuItem>تعرفه خدمتی کارمندان</MenuItem>
+          <MenuItem>انتقال کسور</MenuItem>
+          <MenuItem>تسویه کسور</MenuItem>
+          <MenuItem>استعلام سابقه کارمند</MenuItem>
+          <MenuItem>محاسبه کسور معوقه</MenuItem>
+          <MenuItem>رویت مقرری ماه اول</MenuItem>
+        </SubMenu>
         <MenuItem>
           <PaymentOutlinedIcon sx={{ color: "#ff6700" }} />
           &nbsp; &nbsp; حقوق و دستمزد{" "}
