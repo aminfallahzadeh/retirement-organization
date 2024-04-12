@@ -9,7 +9,10 @@ import DateTime from "./DateTime";
 import useLogout from "../hooks/useLogout";
 
 // mui imports
-import { Logout as LogoutIcon } from "@mui/icons-material";
+import {
+  Logout as LogoutIcon,
+  SpaceDashboardOutlined as DashboardIcon,
+} from "@mui/icons-material";
 
 function TopbarNav({ userName }) {
   const logoutHandler = useLogout();
@@ -36,10 +39,20 @@ function TopbarNav({ userName }) {
           <ul className="topnav__container--links-list">
             <li>{userName}</li>
             <li onClick={logoutHandler}>
-              <LogoutIcon sx={{ fontSize: 20 }} /> خروج
+              <LogoutIcon sx={{ fontSize: 18 }} /> خروج
             </li>
             <li className={cartablePath ? "topnav__active" : ""}>
-              <Link to={"/retirement-organization/dashboard"}>کارتابل</Link>
+              <Link
+                to={"/retirement-organization/dashboard"}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  columnGap: "3px",
+                }}
+              >
+                <DashboardIcon sx={{ fontSize: 20 }} />
+                کارتابل
+              </Link>
             </li>
           </ul>
         </div>
