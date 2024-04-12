@@ -33,6 +33,7 @@ import GroupsScreen from "./screens/GroupsScreen";
 import UsersScreen from "./screens/UsersScreen";
 import RequestScreen from "./screens/RequestScreen.jsx";
 import BatchStatementsScreen from "./screens/BatchStatementsScreen.jsx";
+import SlipsScreen from "./screens/SlipsScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -78,6 +79,11 @@ const router = createBrowserRouter(
         <Route
           path="/retirement-organization/batch-statements"
           element={<BatchStatementsScreen />}
+        />
+
+        <Route
+          path="/retirement-organization/slips"
+          element={<SlipsScreen />}
         />
       </Route>
       <Route path="*" element={<Error />} />

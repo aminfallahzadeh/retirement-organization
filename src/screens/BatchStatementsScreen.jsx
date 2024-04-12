@@ -29,7 +29,8 @@ function BatchStatementsScreen() {
 
   const content = (
     <>
-      <div className="main flex-col">
+      <section className="main flex-col">
+        <h4 className="title-primary">احکام گروهی</h4>
         <div>
           <BatchStatementsForm />
         </div>
@@ -72,7 +73,7 @@ function BatchStatementsScreen() {
         </div>
 
         {showStatementDraftGrid && <StatementDraftGrid />}
-      </div>
+      </section>
       {showAddItemModal && (
         <Modal
           title={"آیتم های احکام گروهی"}

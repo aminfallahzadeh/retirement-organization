@@ -24,18 +24,14 @@ function SidebarNav() {
   const userPath = location.pathname === "/retirement-organization/users";
   const batchStatementsPath =
     location.pathname === "/retirement-organization/batch-statements";
+  const slipsPath = location.pathname === "/retirement-organization/slips";
 
   const content = (
     <Sidebar rtl={true}>
       <Menu>
         <SubMenu
-          label={
-            <>
-              <PersonOutlinedIcon sx={{ color: "#ff6700" }} />
-              &nbsp; &nbsp;
-              <span>امور بازنشستگان</span>
-            </>
-          }
+          label={<span>امور بازنشستگان</span>}
+          icon={<PersonOutlinedIcon sx={{ color: "#ff6700" }} />}
         >
           <MenuItem
             component={
@@ -50,13 +46,8 @@ function SidebarNav() {
           <MenuItem> گزارشات </MenuItem>
         </SubMenu>
         <SubMenu
-          label={
-            <>
-              <GroupOutlinedIcon sx={{ color: "#ff6700" }} />
-              &nbsp; &nbsp;
-              <span> امور مشترکین</span>
-            </>
-          }
+          label={<span> امور مشترکین</span>}
+          icon={<GroupOutlinedIcon sx={{ color: "#ff6700" }} />}
         >
           <MenuItem>احکام کارمندان</MenuItem>
           <MenuItem>تعرفه خدمتی کارمندان</MenuItem>
@@ -66,35 +57,40 @@ function SidebarNav() {
           <MenuItem>محاسبه کسور معوقه</MenuItem>
           <MenuItem>رویت مقرری ماه اول</MenuItem>
         </SubMenu>
-        <MenuItem>
-          <PaymentOutlinedIcon sx={{ color: "#ff6700" }} />
-          &nbsp; &nbsp; حقوق و دستمزد{" "}
+
+        <SubMenu
+          label={<span>حقوق و دستمزد</span>}
+          icon={<PaymentOutlinedIcon sx={{ color: "#ff6700" }} />}
+        >
+          <MenuItem
+            component={<Link to={"/retirement-organization/slips"} />}
+            active={slipsPath}
+          >
+            فیش های حقوقی
+          </MenuItem>
+          <MenuItem>اعمال تسهیلات کشوری</MenuItem>
+          <MenuItem>تولید فایل حقوق</MenuItem>
+          <MenuItem>تولید فایل ریز اقساط</MenuItem>
+          <MenuItem>رویت فیش های مزایا</MenuItem>
+        </SubMenu>
+        <MenuItem icon={<GroupIcon sx={{ color: "#ff6700" }} />}>
+          اجتماعی
         </MenuItem>
-        <MenuItem>
-          <GroupIcon sx={{ color: "#ff6700" }} />
-          &nbsp; &nbsp; اجتماعی
+        <MenuItem icon={<HomeOutlinedIcon sx={{ color: "#ff6700" }} />}>
+          رفاهی
         </MenuItem>
-        <MenuItem>
-          <HomeOutlinedIcon sx={{ color: "#ff6700" }} />
-          &nbsp; &nbsp; رفاهی
+        <MenuItem
+          icon={<HealthAndSafetyOutlinedIcon sx={{ color: "#ff6700" }} />}
+        >
+          سلامت
         </MenuItem>
-        <MenuItem>
-          <HealthAndSafetyOutlinedIcon sx={{ color: "#ff6700" }} />
-          &nbsp; &nbsp; سلامت
-        </MenuItem>
-        <MenuItem>
-          <EqualizerOutlinedIcon sx={{ color: "#ff6700" }} />
-          &nbsp; &nbsp; مدیریت سیستم{" "}
+        <MenuItem icon={<EqualizerOutlinedIcon sx={{ color: "#ff6700" }} />}>
+          مدیریت سیستم
         </MenuItem>
 
         <SubMenu
-          label={
-            <>
-              <LightbulbOutlinedIcon sx={{ color: "#ff6700" }} />
-              &nbsp; &nbsp;
-              <span>اطلاعات پایه</span>
-            </>
-          }
+          label={<span>اطلاعات پایه</span>}
+          icon={<LightbulbOutlinedIcon sx={{ color: "#ff6700" }} />}
         >
           <MenuItem
             component={<Link to="/retirement-organization/groups" />}
@@ -110,9 +106,10 @@ function SidebarNav() {
           </MenuItem>
         </SubMenu>
 
-        <MenuItem>
-          <AssignmentTurnedInOutlinedIcon sx={{ color: "#ff6700" }} />
-          &nbsp; &nbsp; گزارشات{" "}
+        <MenuItem
+          icon={<AssignmentTurnedInOutlinedIcon sx={{ color: "#ff6700" }} />}
+        >
+          گزارشات
         </MenuItem>
       </Menu>
     </Sidebar>
