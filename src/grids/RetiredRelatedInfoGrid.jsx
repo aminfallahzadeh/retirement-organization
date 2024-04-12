@@ -1,5 +1,10 @@
 // react imports
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+
+// redux imports
+import { useSelector, useDispatch } from "react-redux";
+import { useGetRelatedQuery } from "../slices/relatedApiSlice";
+import { setRelatedTableData } from "../slices/relatedDataSlice";
 
 // mui imports
 import { IconButton, Button } from "@mui/material";
@@ -25,26 +30,37 @@ import {
 import Modal from "../components/Modal";
 import RetiredRelatedInfoForm from "../forms/RetiredRelatedInfoForm";
 
+// library imports
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { toast } from "react-toastify";
+
 // helper imports
 import { convertToPersianNumber } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-const data = [
-  {
-    code: "۰۱۲۳۴۵۶۷۸۹",
-    fname: "سعید",
-    lname: "علوی",
-    date: "۱۴۰۲-۱۳-۱۳",
-    relation: "همسر",
-  },
-];
-
 function RetiredRelatedInfoGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const [showDependentModal, setShowDependentModal] = useState(false);
   const [showDeleteRelatedModal, setShowDeleteRelatedModal] = useState(false);
+
+  const { token } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+
+  // access the data from redux store
+  const { relatedTableData } = useSelector((state) => state.relatedData);
+  const { selectedRequestData } = useSelector((state) => state.requestsData);
+
+  const {
+    data: relateds,
+    isSuccess,
+    isLoading,
+    error,
+    refetch,
+  } = useGetRelatedQuery({ token, personID: selectedRequestData?.personId });
 
   const handleShowDependentModal = () => {
     setShowDependentModal(true);
@@ -54,22 +70,60 @@ function RetiredRelatedInfoGrid() {
     setShowDeleteRelatedModal(true);
   };
 
+  const handleRefresh = () => {
+    refetch();
+  };
+
+  useEffect(() => {
+    refetch();
+    if (isSuccess) {
+      const data = relateds.itemList.map((related) => ({
+        id: related.relatedID,
+        relatedBirthDate: related.personBirthdate,
+        relatedNtionalCode: related.personNationalCode,
+        relatedFirstName: related.personFirstName,
+        relatedLastName: related.personLastName,
+        relation: "",
+      }));
+      dispatch(setRelatedTableData(data));
+    }
+    return () => {
+      dispatch(setRelatedTableData([]));
+    };
+  }, [
+    isSuccess,
+    refetch,
+    relateds,
+    dispatch,
+    showDependentModal,
+    showDeleteRelatedModal,
+  ]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
+
   const columns = useMemo(
     () => [
       {
-        accessorKey: "code",
+        accessorKey: "relatedNtionalCode",
         header: "کد ملی",
       },
       {
-        accessorKey: "fname",
+        accessorKey: "relatedFirstName",
         header: "نام",
       },
       {
-        accessorKey: "lname",
+        accessorKey: "relatedLastName",
         header: "نام خانوادگی",
       },
       {
-        accessorKey: "date",
+        accessorKey: "relatedBirthDate",
         header: "تاریخ تولد",
       },
       {
@@ -107,7 +161,7 @@ function RetiredRelatedInfoGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data,
+    data: relatedTableData,
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -154,46 +208,60 @@ function RetiredRelatedInfoGrid() {
 
   const content = (
     <>
-      {showDependentModal ? (
-        <Modal
-          title={"اطلاعات فرد وابسته"}
-          closeModal={() => setShowDependentModal(false)}
-        >
-          <RetiredRelatedInfoForm />
-        </Modal>
-      ) : showDeleteRelatedModal ? (
-        <Modal
-          title={"حذف وابسته"}
-          closeModal={() => setShowDeleteRelatedModal(false)}
-        >
-          <p className="paragraph-primary">
-            آیا از حذف این وابسته اطمینان دارید؟
-          </p>
-          <div className="flex-row flex-center">
-            <LoadingButton
-              dir="ltr"
-              endIcon={<DoneIcon />}
-              variant="contained"
-              color="success"
-              sx={{ fontFamily: "sahel" }}
+      {isLoading ? (
+        <div className="skeleton-lg">
+          <Skeleton
+            count={7}
+            baseColor="#dfdfdf"
+            highlightColor="#9f9f9f"
+            duration={1}
+            direction="rtl"
+          />
+        </div>
+      ) : (
+        <>
+          {showDependentModal ? (
+            <Modal
+              title={"اطلاعات فرد وابسته"}
+              closeModal={() => setShowDependentModal(false)}
             >
-              <span>بله</span>
-            </LoadingButton>
+              <RetiredRelatedInfoForm />
+            </Modal>
+          ) : showDeleteRelatedModal ? (
+            <Modal
+              title={"حذف وابسته"}
+              closeModal={() => setShowDeleteRelatedModal(false)}
+            >
+              <p className="paragraph-primary">
+                آیا از حذف این وابسته اطمینان دارید؟
+              </p>
+              <div className="flex-row flex-center">
+                <LoadingButton
+                  dir="ltr"
+                  endIcon={<DoneIcon />}
+                  variant="contained"
+                  color="success"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>بله</span>
+                </LoadingButton>
 
-            <Button
-              dir="ltr"
-              endIcon={<CloseIcon />}
-              onClick={() => setShowDeleteRelatedModal(false)}
-              variant="contained"
-              color="error"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>خیر</span>
-            </Button>
-          </div>
-        </Modal>
-      ) : null}
-      <MaterialReactTable table={table} />
+                <Button
+                  dir="ltr"
+                  endIcon={<CloseIcon />}
+                  onClick={() => setShowDeleteRelatedModal(false)}
+                  variant="contained"
+                  color="error"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>خیر</span>
+                </Button>
+              </div>
+            </Modal>
+          ) : null}
+          <MaterialReactTable table={table} />
+        </>
+      )}
     </>
   );
 

@@ -62,10 +62,6 @@ function IndividualInfoSection() {
     }
   }, [error]);
 
-  // useEffect(() => {
-  //   console.log("personObject", personObject);
-  // }, [personObject]);
-
   const content = (
     <section className="pensionersAffairs">
       <Accordion
@@ -82,10 +78,7 @@ function IndividualInfoSection() {
           اطلاعات فردی بازنشسته
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredPersonalInfoForm
-          // personObject={personObject}
-          // setPersonObject={setPersonObject}
-          />
+          <RetiredPersonalInfoForm />
         </AccordionDetails>
       </Accordion>
 
@@ -103,10 +96,7 @@ function IndividualInfoSection() {
           اطلاعات پرسنلی
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredStaffInfoForm
-          // personObject={personObject}
-          // setPersonObject={setPersonObject}
-          />
+          <RetiredStaffInfoForm />
         </AccordionDetails>
       </Accordion>
 
