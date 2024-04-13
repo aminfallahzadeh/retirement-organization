@@ -10,9 +10,10 @@ import groupItemsDataSliceReducer from "./slices/groupItemsDataSlice";
 import usersDataSliceReducer from "./slices/usersDataSlice";
 import userGroupsDataSliceReducer from "./slices/userGroupsDataSlice";
 import groupsUserDataSliceReducer from "./slices/groupsUserDataSlice";
-import requestsDataSlice from "./slices/requestsDataSlice";
-import relatedDataSlice from "./slices/relatedDataSlice";
-import statementDataSlice from "./slices/statementDataSlice";
+import requestsDataSliceReducer from "./slices/requestsDataSlice";
+import relatedDataSliceReducer from "./slices/relatedDataSlice";
+import statementDataSliceReducer from "./slices/statementDataSlice";
+import archiveDataSliceReducer from "./slices/archiveDataSlice";
 
 const store = configureStore({
   reducer: {
@@ -26,9 +27,10 @@ const store = configureStore({
     usersData: usersDataSliceReducer,
     userGroupsData: userGroupsDataSliceReducer,
     groupsUserData: groupsUserDataSliceReducer,
-    requestsData: requestsDataSlice,
-    relatedData: relatedDataSlice,
-    statementData: statementDataSlice,
+    requestsData: requestsDataSliceReducer,
+    relatedData: relatedDataSliceReducer,
+    statementData: statementDataSliceReducer,
+    archiveData: archiveDataSliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

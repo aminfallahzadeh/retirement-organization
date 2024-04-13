@@ -8,7 +8,7 @@ export const relatedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getRelated: builder.query({
       query: ({ token, personID }) => ({
-        url: `${RELATED_URL_HTTPS}/GetRelated?personID=${personID}`,
+        url: `${RELATED_URL_HTTPS}/GetRelated?parentPersonID=${personID}`,
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,

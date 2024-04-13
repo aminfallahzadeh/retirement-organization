@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import RetiredAdditionalInfo from "../../forms/RetiredAdditionalInfo";
 import RetiredStaffInfoForm from "../../forms/RetiredStaffInfoForm";
 import RetiredPersonalInfoForm from "../../forms/RetiredPersonalInfoForm";
-import FolderTree from "../../components/FolderTree";
+import ArchiveTree from "../../components/ArchiveTree";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
@@ -134,7 +134,7 @@ function IndividualInfoSection() {
         <AccordionDetails>
           <div className="flex-col">
             <div className="flex-row">
-              <FolderTree />
+              <ArchiveTree />
               <img src="./images/sample-statement.png" />
             </div>
             <div style={{ marginRight: "auto" }} className="flex-row">

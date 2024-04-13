@@ -36,7 +36,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "react-toastify";
 
 // helper imports
-import { convertToPersianNumber } from "../helper.js";
+import { convertToPersianNumber, convertToPersianDate } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -75,7 +75,7 @@ function RetiredRelatedInfoGrid() {
     if (isSuccess) {
       const data = relateds.itemList.map((related) => ({
         id: related.relatedID,
-        relatedBirthDate: related.personBirthdate,
+        relatedBirthDate: related.personBirthDate,
         relatedNtionalCode: related.personNationalCode,
         relatedFirstName: related.personFirstName,
         relatedLastName: related.personLastName,
@@ -121,6 +121,9 @@ function RetiredRelatedInfoGrid() {
       {
         accessorKey: "relatedBirthDate",
         header: "تاریخ تولد",
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianDate(renderedCellValue).toISOString()}</div>
+        ),
       },
       {
         accessorKey: "relation",

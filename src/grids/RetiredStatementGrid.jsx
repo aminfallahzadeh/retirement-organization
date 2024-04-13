@@ -63,21 +63,19 @@ function RetiredStatementGrid() {
   const dispatch = useDispatch();
 
   // access the data from redux store
-  // const { statementTableData } = useSelector(
-  //   (state) => state.statementDataSlice
-  // );
+  const { statementTableData } = useSelector((state) => state.statementData);
   const { selectedRequestData } = useSelector((state) => state.requestsData);
 
-  // const {
-  //   data: statements,
-  //   isSuccess,
-  //   isLoading,
-  //   error,
-  //   refetch,
-  // } = useGetListOfRetirementStatementsQuery({
-  //   token,
-  //   personID: selectedRequestData?.personId,
-  // });
+  const {
+    data: statements,
+    isSuccess,
+    isLoading,
+    error,
+    refetch,
+  } = useGetListOfRetirementStatementsQuery({
+    token,
+    personID: selectedRequestData?.personId,
+  });
 
   const handleShowStatementModal = () => {
     setShowStatementModal(true);
@@ -87,35 +85,32 @@ function RetiredStatementGrid() {
     setShowDeleteStatementModal(true);
   };
 
-  // useEffect(() => {
-  //   refetch();
-  //   if (isSuccess) {
-  //     const data = statements.itemList.map((statement) => ({
-  //       id: statement.statementID,
-  //     }));
-  //     dispatch(setStatementTableData(data));
-  //   }
+  useEffect(() => {
+    refetch();
+    if (isSuccess) {
+      dispatch(setStatementTableData(statements));
+    }
 
-  //   return () => {
-  //     dispatch(setStatementTableData([]));
-  //   };
-  // }, [
-  //   isSuccess,
-  //   refetch,
-  //   dispatch,
-  //   statements,
-  //   showStatementModal,
-  //   showDeleteStatementModal,
-  // ]);
+    return () => {
+      dispatch(setStatementTableData([]));
+    };
+  }, [
+    isSuccess,
+    refetch,
+    dispatch,
+    statements,
+    showStatementModal,
+    showDeleteStatementModal,
+  ]);
 
-  // useEffect(() => {
-  //   if (error) {
-  //     console.log(error);
-  //     toast.error(error?.data?.message || error.error, {
-  //       autoClose: 2000,
-  //     });
-  //   }
-  // }, [error]);
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
 
   const columns = useMemo(
     () => [
