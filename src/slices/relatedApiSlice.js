@@ -6,6 +6,16 @@ import { apiSlice } from "./apiSlice";
 
 export const relatedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getRelatedListByParentPersonID: builder.query({
+      query: ({ token, parentPersonID }) => ({
+        url: `${RELATED_URL_HTTPS}/GetRelatedListByParentPersonID?parentPersonID=${parentPersonID}`,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
+
     getRelated: builder.query({
       query: ({ token, personID }) => ({
         url: `${RELATED_URL_HTTPS}/GetRelated?parentPersonID=${personID}`,
@@ -51,6 +61,7 @@ export const relatedApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+  useGetRelatedListByParentPersonIDQuery,
   useGetRelatedQuery,
   useInsertRelatedMutation,
   useUpdateRelatedMutation,

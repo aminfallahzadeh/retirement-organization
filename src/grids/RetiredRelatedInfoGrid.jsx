@@ -3,7 +3,7 @@ import { useMemo, useState, useEffect } from "react";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { useGetRelatedQuery } from "../slices/relatedApiSlice";
+import { useGetRelatedListByParentPersonIDQuery } from "../slices/relatedApiSlice";
 import { setRelatedTableData } from "../slices/relatedDataSlice";
 
 // mui imports
@@ -63,7 +63,10 @@ function RetiredRelatedInfoGrid() {
     isLoading,
     error,
     refetch,
-  } = useGetRelatedQuery({ token, personID: selectedRequestData?.personId });
+  } = useGetRelatedListByParentPersonIDQuery({
+    token,
+    parentPersonID: selectedRequestData?.personId,
+  });
 
   const handleShowDependentModal = () => {
     setShowDependentModal(true);
@@ -82,7 +85,7 @@ function RetiredRelatedInfoGrid() {
         relatedNtionalCode: related.personNationalCode,
         relatedFirstName: related.personFirstName,
         relatedLastName: related.personLastName,
-        relation: "",
+        relation: related.relationshipWithParentName,
       }));
       dispatch(setRelatedTableData(data));
     }
