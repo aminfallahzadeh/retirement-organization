@@ -64,3 +64,8 @@ export const convertToPersianDate = (date) => {
   const result = momentj(date);
   return result;
 };
+
+export const convertToPersianDateFormatted = (data) => {
+  const result = momentj(data).format("jYYYY-jMM-jDD");
+  return result;
+};

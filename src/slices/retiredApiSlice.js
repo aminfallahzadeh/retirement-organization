@@ -6,9 +6,20 @@ import { apiSlice } from "./apiSlice";
 
 export const retiredApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getRetired: builder.query({
-      query: ({ token, personId }) => ({
-        url: `${RETIRED_URL_HTTPS}/GetRetired?personId=${personId}`,
+    getRetiredPerson: builder.query({
+      query: ({ token, personID }) => ({
+        url: `${RETIRED_URL_HTTPS}/GetRetiredPerson?personID=${personID}`,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
+    updateRetiredPerson: builder.mutation({
+      query: ({ token, data }) => ({
+        url: `${RETIRED_URL_HTTPS}/UpdateRetiredPerson`,
+        method: "POST",
+        body: data,
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
@@ -61,7 +72,8 @@ export const retiredApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useGetRetiredQuery,
+  useGetRetiredPersonQuery,
+  useUpdateRetiredPersonMutation,
   useGetRetiredAccountQuery,
   useUpdateRetiredPensionaryComplementaryMutation,
   useUpdateRetiredMutation,

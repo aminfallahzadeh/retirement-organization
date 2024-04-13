@@ -184,7 +184,7 @@ function ArchiveTree() {
     stylisPlugins: [prefixer, rtlPlugin],
   });
 
-  return (
+  const content = (
     <>
       {isLoading ? (
         <div>در حال بارگذاری</div>
@@ -260,6 +260,8 @@ function ArchiveTree() {
       )}
     </>
   );
+
+  return content;
 }
 
 export default ArchiveTree;

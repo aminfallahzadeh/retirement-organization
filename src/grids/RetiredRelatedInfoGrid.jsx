@@ -36,7 +36,10 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "react-toastify";
 
 // helper imports
-import { convertToPersianNumber, convertToPersianDate } from "../helper.js";
+import {
+  convertToPersianNumber,
+  convertToPersianDateFormatted,
+} from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -109,6 +112,9 @@ function RetiredRelatedInfoGrid() {
       {
         accessorKey: "relatedNtionalCode",
         header: "کد ملی",
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
       {
         accessorKey: "relatedFirstName",
@@ -122,7 +128,11 @@ function RetiredRelatedInfoGrid() {
         accessorKey: "relatedBirthDate",
         header: "تاریخ تولد",
         Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianDate(renderedCellValue).toISOString()}</div>
+          <div>
+            {convertToPersianNumber(
+              convertToPersianDateFormatted(renderedCellValue)
+            )}
+          </div>
         ),
       },
       {

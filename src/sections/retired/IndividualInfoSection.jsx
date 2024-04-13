@@ -1,16 +1,11 @@
-// react imports
-import { useEffect } from "react";
-
 // component imports
 import RetiredAdditionalInfo from "../../forms/RetiredAdditionalInfo";
 import RetiredStaffInfoForm from "../../forms/RetiredStaffInfoForm";
-import RetiredPersonalInfoForm from "../../forms/RetiredPersonalInfoForm";
+import RetiredPersonForm from "../../forms/RetiredPersonForm";
 import ArchiveTree from "../../components/ArchiveTree";
 
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
-import { useGetRetiredQuery } from "../../slices/retiredApiSlice.js";
-import { setPersonObject } from "../../slices/retiredStateSlice.js";
+import { useSelector } from "react-redux";
 
 // mui imports
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
@@ -24,43 +19,8 @@ import {
 import { Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
-// library imports
-import { toast } from "react-toastify";
-
 function IndividualInfoSection() {
-  // const [personObject, setPersonObject] = useState({});
-  const { token } = useSelector((state) => state.auth);
   const { selectedRequestData } = useSelector((state) => state.requestsData);
-
-  const dispatch = useDispatch();
-
-  const {
-    data: retiredData,
-    isSuccess,
-    error,
-    refetch,
-  } = useGetRetiredQuery({ token, personId: selectedRequestData?.personId });
-
-  useEffect(() => {
-    refetch();
-    if (isSuccess) {
-      dispatch(setPersonObject(retiredData?.itemList[0]));
-    }
-  }, [
-    refetch,
-    dispatch,
-    isSuccess,
-    retiredData,
-    selectedRequestData?.personId,
-  ]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error?.data?.message || error.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [error]);
 
   const content = (
     <section className="pensionersAffairs">
@@ -78,7 +38,7 @@ function IndividualInfoSection() {
           اطلاعات فردی بازنشسته
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredPersonalInfoForm />
+          <RetiredPersonForm />
         </AccordionDetails>
       </Accordion>
 

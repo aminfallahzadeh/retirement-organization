@@ -1,9 +1,15 @@
 // react imports
 import { useState, useEffect } from "react";
 
+// rrd imports
+import { useNavigate } from "react-router-dom";
+
 // reduxt imports
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
-import { useUpdateRetiredMutation } from "../slices/retiredApiSlice.js";
+import {
+  useUpdateRetiredPersonMutation,
+  useGetRetiredPersonQuery,
+} from "../slices/retiredApiSlice.js";
 import { setPersonObject } from "../slices/retiredStateSlice.js";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -29,7 +35,7 @@ import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
-function RetiredPersonalInfoForm() {
+function RetiredPersonForm() {
   const [editable, setEditable] = useState(false);
   const [genderCombo, setGenderCombo] = useState([]);
   const [educationCombo, setEducationCombo] = useState([]);
@@ -41,11 +47,45 @@ function RetiredPersonalInfoForm() {
   const [isDeathCalenderOpen, setIsDeathCalenderOpen] = useState(false);
 
   const { token } = useSelector((state) => state.auth);
+  const { selectedRequestData } = useSelector((state) => state.requestsData);
   const { personObject } = useSelector((state) => state.retiredState);
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [updateRetired, { isLoading: isUpdating }] = useUpdateRetiredMutation();
+  const [updateRetiredPerson, { isLoading: isUpdating }] =
+    useUpdateRetiredPersonMutation();
+
+  useEffect(() => {
+    if (!personObject) {
+      navigate("/retirement-organization/dashboard");
+    }
+  }, [navigate, personObject]);
+
+  const {
+    data: retiredPersonData,
+    isSuccess,
+    error,
+    refetch,
+  } = useGetRetiredPersonQuery({
+    token,
+    personID: selectedRequestData.personId,
+  });
+
+  useEffect(() => {
+    refetch();
+    if (isSuccess) {
+      dispatch(setPersonObject(retiredPersonData?.itemList[0]));
+    }
+  }, [refetch, isSuccess, retiredPersonData?.itemList, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
 
   const { data: genderComboItems, isSuccess: isGenderComboSuccess } =
     useGetLookupDataQuery({
@@ -89,7 +129,7 @@ function RetiredPersonalInfoForm() {
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedBirthDate]);
+  }, [selectedBirthDate, dispatch]);
 
   useEffect(() => {
     if (selectedDeathDate) {
@@ -101,7 +141,7 @@ function RetiredPersonalInfoForm() {
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDeathDate]);
+  }, [selectedDeathDate, dispatch]);
 
   useEffect(() => {
     if (isGenderComboSuccess) {
@@ -161,7 +201,7 @@ function RetiredPersonalInfoForm() {
 
   const handleUpdateRetired = async () => {
     try {
-      const updateRes = await updateRetired({
+      const updateRes = await updateRetiredPerson({
         token,
         data: {
           ...personObject,
@@ -180,11 +220,12 @@ function RetiredPersonalInfoForm() {
         ),
         personArea: parseInt(convertToEnglishNumber(personObject.personArea)),
         personPostalCode: convertToEnglishNumber(personObject.personPostalCode),
-      });
+      }).unwrap();
       console.log(updateRes);
       toast.success(updateRes.message, {
         autoClose: 2000,
       });
+      setEditable(false);
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -371,19 +412,12 @@ function RetiredPersonalInfoForm() {
         </div>
 
         <div className="inputBox__form">
-          <input
-            disabled={!editable}
-            type="text"
-            id="retireNum"
-            name="pensionaryId"
-            className="inputBox__form--input"
-            value={personObject?.pensionaryID || ""}
-            onChange={handlePersonObjectChange}
-            required
-          />
-          <label htmlFor="retireNum" className="inputBox__form--label">
-            شماره بازنشستگی
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">نام کاربری</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(personObject?.retiredID) || ""}
+            </div>
+          </div>
         </div>
 
         <div className="inputBox__form">
@@ -731,4 +765,4 @@ function RetiredPersonalInfoForm() {
   return content;
 }
 
-export default RetiredPersonalInfoForm;
+export default RetiredPersonForm;
