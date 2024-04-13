@@ -1,11 +1,17 @@
 // react imports
 import { useState, useEffect } from "react";
 
+// rrd imports
+import { useNavigate } from "react-router-dom";
+
 // redux imports
-import { setPersonObject } from "../slices/retiredStateSlice.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
-import { useUpdateRetiredMutation } from "../slices/retiredApiSlice.js";
+import { setPensionaryObject } from "../slices/retiredStateSlice.js";
+import {
+  useUpdateRetiredMutation,
+  useGetRetiredPensionaryQuery,
+} from "../slices/retiredApiSlice.js";
 
 // mui imports
 import { Button } from "@mui/material";
@@ -17,23 +23,55 @@ import {
 } from "@mui/icons-material";
 
 // helpers
-import { convertToPersianDate } from "../helper.js";
+import { convertToPersianDate, convertToPersianNumber } from "../helper.js";
 
 // libary imports
 import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
-function RetiredStaffInfoForm() {
+function RetiredPensionaryForm() {
   const [employmentTypeCombo, setEmploymentTypeCombo] = useState([]);
   const [selectedRetriementDate, setSelectedRetriementDate] = useState(null);
   const [isRetriementCalenderOpen, setIsRetirementCalenderOpen] =
     useState(false);
 
   const { token } = useSelector((state) => state.auth);
-  const { personObject } = useSelector((state) => state.retiredState);
+  const { selectedRequestData } = useSelector((state) => state.requestsData);
+  const { pensionaryObject } = useSelector((state) => state.retiredState);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!pensionaryObject) {
+      navigate("/retirement-organization/dashboard");
+    }
+  }, [navigate, pensionaryObject]);
+
+  const {
+    data: pensionaryData,
+    isSuccess: isPensionarySuccess,
+    error: pensionaryError,
+  } = useGetRetiredPensionaryQuery({
+    token,
+    personID: selectedRequestData?.personId,
+  });
+
+  useEffect(() => {
+    if (isPensionarySuccess) {
+      dispatch(setPensionaryObject(pensionaryData?.itemList[0]));
+    }
+  }, [dispatch, isPensionarySuccess, pensionaryData]);
+
+  useEffect(() => {
+    if (pensionaryError) {
+      console.log(pensionaryError);
+      toast.error(pensionaryError?.data?.message || pensionaryError.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [pensionaryError]);
 
   const {
     data: employmentTypeComboItems,
@@ -52,9 +90,9 @@ function RetiredStaffInfoForm() {
 
   useEffect(() => {
     setSelectedRetriementDate(
-      convertToPersianDate(personObject.retirementDate)
+      convertToPersianDate(pensionaryObject?.retirementDate)
     );
-  }, [personObject.retirementDate]);
+  }, [pensionaryObject?.retirementDate]);
 
   useEffect(() => {
     if (employmentTypeComboError) {
@@ -72,8 +110,8 @@ function RetiredStaffInfoForm() {
   useEffect(() => {
     if (selectedRetriementDate) {
       dispatch(
-        setPersonObject({
-          ...personObject,
+        setPensionaryObject({
+          ...pensionaryObject,
           retirementDate: selectedRetriementDate.toISOString(),
         })
       );
@@ -83,7 +121,7 @@ function RetiredStaffInfoForm() {
 
   const handlePersonObjectChange = (e) => {
     const { name, value } = e.target;
-    dispatch(setPersonObject({ ...personObject, [name]: value }));
+    dispatch(setPensionaryObject({ ...pensionaryObject, [name]: value }));
   };
 
   const handleRetiredOpenChange = (open) => {
@@ -104,7 +142,7 @@ function RetiredStaffInfoForm() {
             id="retiredGroup"
             name="retiredGroup"
             className="inputBox__form--input"
-            value={personObject?.retiredGroup ?? ""}
+            value={convertToPersianNumber(pensionaryObject?.retiredGroup) ?? ""}
             onChange={handlePersonObjectChange}
             required
           />
@@ -118,7 +156,10 @@ function RetiredStaffInfoForm() {
             type="text"
             id="retiredOrganizationId"
             name="retiredOrganizationId"
-            value={personObject?.retiredOrganizationId || ""}
+            value={
+              convertToPersianNumber(pensionaryObject?.retiredOrganizationID) ??
+              ""
+            }
             onChange={handlePersonObjectChange}
             className="inputBox__form--input"
             required
@@ -136,7 +177,7 @@ function RetiredStaffInfoForm() {
             type="text"
             id="retiredLastPosition"
             name="retiredLastPosition"
-            value={personObject?.retiredLastPosition || ""}
+            value={pensionaryObject?.retiredLastPosition || ""}
             onChange={handlePersonObjectChange}
             className="inputBox__form--input"
             required
@@ -153,12 +194,12 @@ function RetiredStaffInfoForm() {
             type="text"
             id="employmentTypeID"
             name="employmentTypeID"
-            value={personObject?.employmentTypeID || ""}
+            value={pensionaryObject?.employmentTypeID || ""}
             onChange={handlePersonObjectChange}
             className="inputBox__form--input"
             required
           >
-            <option value="">انتخاب کنید</option>
+            <option value=" ">انتخاب کنید</option>
             {employmentTypeCombo?.map((item) => (
               <option key={item.lookUpID} value={item.lookUpID}>
                 {item.lookUpName}
@@ -198,7 +239,7 @@ function RetiredStaffInfoForm() {
             style={{ cursor: "pointer" }}
             name="pensionaryIsActive"
             required
-            value={personObject?.pensionaryIsActive || " "}
+            value={pensionaryObject?.pensionaryIsActive || " "}
             onChange={handlePersonObjectChange}
           >
             <option value=" ">انتخاب کنید</option>
@@ -215,7 +256,10 @@ function RetiredStaffInfoForm() {
             type="text"
             id="retiredJobDegreeCoef"
             className="inputBox__form--input"
-            value={personObject?.retiredJobDegreeCoef ?? ""}
+            value={
+              convertToPersianNumber(pensionaryObject?.retiredJobDegreeCoef) ??
+              ""
+            }
             onChange={handlePersonObjectChange}
             name="retiredJobDegreeCoef"
             required
@@ -232,7 +276,10 @@ function RetiredStaffInfoForm() {
             type="text"
             id="retiredRealDuration"
             className="inputBox__form--input"
-            value={personObject?.retiredRealDuration || ""}
+            value={
+              convertToPersianNumber(pensionaryObject?.retiredRealDuration) ??
+              ""
+            }
             onChange={handlePersonObjectChange}
             name="retiredRealDuration"
             required
@@ -249,7 +296,10 @@ function RetiredStaffInfoForm() {
             type="text"
             id="retiredGrantDuration"
             className="inputBox__form--input"
-            value={personObject?.retiredGrantDuration || ""}
+            value={
+              convertToPersianNumber(pensionaryObject?.retiredGrantDuration) ??
+              ""
+            }
             onChange={handlePersonObjectChange}
             name="retiredGrantDuration"
             required
@@ -289,4 +339,4 @@ function RetiredStaffInfoForm() {
   return content;
 }
 
-export default RetiredStaffInfoForm;
+export default RetiredPensionaryForm;

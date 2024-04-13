@@ -1,6 +1,6 @@
 // component imports
 import RetiredAdditionalInfo from "../../forms/RetiredAdditionalInfo";
-import RetiredStaffInfoForm from "../../forms/RetiredStaffInfoForm";
+import RetiredPensionaryForm from "../../forms/RetiredPensionaryForm";
 import RetiredPersonForm from "../../forms/RetiredPersonForm";
 import ArchiveTree from "../../components/ArchiveTree";
 
@@ -56,7 +56,7 @@ function IndividualInfoSection() {
           اطلاعات پرسنلی
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredStaffInfoForm />
+          <RetiredPensionaryForm />
         </AccordionDetails>
       </Accordion>
 

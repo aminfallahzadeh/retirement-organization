@@ -413,7 +413,9 @@ function RetiredPersonForm() {
 
         <div className="inputBox__form">
           <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">نام کاربری</div>
+            <div className="inputBox__form--readOnly-label">
+              شماره بازنشستگی
+            </div>
             <div className="inputBox__form--readOnly-content">
               {convertToPersianNumber(personObject?.retiredID) || ""}
             </div>

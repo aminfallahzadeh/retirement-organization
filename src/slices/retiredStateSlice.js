@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   personObject: [],
+  pensionaryObject: [],
 };
 
 const retiredStateSlice = createSlice({
@@ -11,9 +12,14 @@ const retiredStateSlice = createSlice({
     setPersonObject: (state, action) => {
       state.personObject = action.payload;
     },
+
+    setPensionaryObject: (state, action) => {
+      state.pensionaryObject = action.payload;
+    },
   },
 });
 
-export const { setPersonObject } = retiredStateSlice.actions;
+export const { setPersonObject, setPensionaryObject } =
+  retiredStateSlice.actions;
 
 export default retiredStateSlice.reducer;

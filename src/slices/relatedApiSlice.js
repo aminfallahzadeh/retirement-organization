@@ -15,7 +15,6 @@ export const relatedApiSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
-
     getRelated: builder.query({
       query: ({ token, personID }) => ({
         url: `${RELATED_URL_HTTPS}/GetRelated?parentPersonID=${personID}`,
