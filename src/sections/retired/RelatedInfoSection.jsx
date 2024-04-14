@@ -54,7 +54,7 @@ function RelatedInfoSection() {
             padding: "0",
           }}
         >
-          Grid 3
+          <RetiredStatementGrid />
         </TabPanel>
       </TabContext>
     </section>

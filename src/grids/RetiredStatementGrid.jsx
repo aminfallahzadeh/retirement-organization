@@ -299,10 +299,9 @@ function RetiredStatementGrid() {
               </div>
             </Modal>
           ) : null}
+          <MaterialReactTable table={table} />
         </>
       )}
-
-      <MaterialReactTable table={table} />
     </>
   );
 

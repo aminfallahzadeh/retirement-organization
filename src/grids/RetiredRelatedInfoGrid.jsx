@@ -72,7 +72,7 @@ function RetiredRelatedInfoGrid() {
     parentPersonID: selectedRequestData?.personId,
   });
 
-  const handleShowDependentModal = () => {
+  const handleShowRelatedModal = () => {
     setShowDependentModal(true);
   };
 
@@ -154,7 +154,7 @@ function RetiredRelatedInfoGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="success" onClick={handleShowDependentModal}>
+          <IconButton color="success" onClick={handleShowRelatedModal}>
             <EditIcon />
           </IconButton>
         ),
