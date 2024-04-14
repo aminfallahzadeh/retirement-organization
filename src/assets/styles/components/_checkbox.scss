@@ -1,0 +1,39 @@
+.checkboxContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid $color-grey-2;
+    border-radius: 6px;
+    column-gap: 10px;
+    padding: 0px 15px;
+
+    &__title {
+        color: $color-accent-red;
+        flex: 1;
+        transition: all 0.25s;
+
+        &--disabled {
+            color: $color-grey-3;
+            flex: 1;
+            transition: all 0.25s;
+        }
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        column-gap: 5px;
+        flex: 1;
+    }
+
+    &__label {
+        color: $color-grey-5;
+        transition: all 0.25s;
+
+        &--disabled {
+            color: $color-grey-3;
+            transition: all 0.25s;
+        }
+    }
+}

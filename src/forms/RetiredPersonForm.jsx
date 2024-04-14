@@ -189,6 +189,16 @@ function RetiredPersonForm() {
     setIsDeathCalenderOpen(open);
   };
 
+  const handleCheckBoxChange = (e) => {
+    const { name, checked } = e.target;
+    dispatch(
+      setPersonObject({
+        ...personObject,
+        [name]: checked,
+      })
+    );
+  };
+
   const handlePersonObjectChange = (e) => {
     const { name, value } = e.target;
     dispatch(
@@ -408,6 +418,145 @@ function RetiredPersonForm() {
           <label htmlFor="personPreviousName" className="inputBox__form--label">
             نام و نام خانوادگی قبلی
           </label>
+        </div>
+
+        <div className="checkboxContainer col-span-3">
+          <p
+            className={
+              !editable
+                ? "checkboxContainer__title--disabled"
+                : "checkboxContainer__title"
+            }
+          >
+            وضعیت ایثارگری:
+          </p>
+
+          <div className="checkboxContainer__item">
+            <input
+              disabled={!editable}
+              type="checkbox"
+              id="personIsSacrificedFamily"
+              name="personIsSacrificedFamily"
+              checked={!!personObject?.personIsSacrificedFamily}
+              onChange={handleCheckBoxChange}
+            />
+            <label
+              htmlFor="personIsSacrificedFamily"
+              className={
+                !editable
+                  ? "checkboxContainer__label--disabled"
+                  : "checkboxContainer__label"
+              }
+            >
+              {" "}
+              خانواده شهید
+            </label>
+          </div>
+
+          <div className="checkboxContainer__item">
+            <input
+              disabled={!editable}
+              type="checkbox"
+              id="personIsWarrior"
+              name="personIsWarrior"
+              checked={!!personObject?.personIsWarrior}
+              onChange={handleCheckBoxChange}
+            />
+            <label
+              htmlFor="personIsWarrior"
+              className={
+                !editable
+                  ? "checkboxContainer__label--disabled"
+                  : "checkboxContainer__label"
+              }
+            >
+              رزمنده
+            </label>
+          </div>
+
+          <div className="checkboxContainer__item">
+            <input
+              disabled={!editable}
+              type="checkbox"
+              id="personIsChildOfSacrificed"
+              name="personIsChildOfSacrificed"
+              checked={!!personObject?.personIsChildOfSacrificed}
+              onChange={handleCheckBoxChange}
+            />
+            <label
+              htmlFor="personIsChildOfSacrificed"
+              className={
+                !editable
+                  ? "checkboxContainer__label--disabled"
+                  : "checkboxContainer__label"
+              }
+            >
+              فرزند شهید
+            </label>
+          </div>
+
+          <div className="checkboxContainer__item">
+            <input
+              disabled={!editable}
+              type="checkbox"
+              id="personIsSacrificed"
+              name="personIsSacrificed"
+              checked={!!personObject?.personIsSacrificed}
+              onChange={handleCheckBoxChange}
+            />
+            <label
+              htmlFor="personIsSacrificed"
+              className={
+                !editable
+                  ? "checkboxContainer__label--disabled"
+                  : "checkboxContainer__label"
+              }
+            >
+              جانباز
+            </label>
+          </div>
+
+          <div className="checkboxContainer__item">
+            <input
+              disabled={!editable}
+              type="checkbox"
+              id="personIsCaptive"
+              name="personIsCaptive"
+              checked={!!personObject?.personIsCaptive}
+              onChange={handleCheckBoxChange}
+            />
+            <label
+              htmlFor="personIsCaptive"
+              className={
+                !editable
+                  ? "checkboxContainer__label--disabled"
+                  : "checkboxContainer__label"
+              }
+            >
+              شهید
+            </label>
+          </div>
+
+          <div className="checkboxContainer__item">
+            <input
+              disabled={!editable}
+              type="checkbox"
+              id="personIsValiant"
+              name="personIsValiant"
+              checked={!!personObject?.personIsValiant}
+              onChange={handleCheckBoxChange}
+            />
+            <label
+              htmlFor="personIsValiant"
+              className={
+                !editable
+                  ? "checkboxContainer__label--disabled"
+                  : "checkboxContainer__label"
+              }
+            >
+              آزاده
+            </label>
+          </div>
         </div>
 
         <div className="inputBox__form">
