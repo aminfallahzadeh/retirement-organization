@@ -154,7 +154,7 @@ function RetiredPensionaryForm() {
           retiredGroup: parseInt(
             convertToEnglishNumber(pensionaryObject.retiredGroup)
           ),
-          retiredOrganizationID: convertToPersianNumber(
+          retiredOrganizationID: convertToEnglishNumber(
             pensionaryObject.retiredOrganizationID
           ),
           pensionaryIsActive:
@@ -205,8 +205,8 @@ function RetiredPensionaryForm() {
           <input
             disabled={!editable}
             type="text"
-            id="retiredOrganizationId"
-            name="retiredOrganizationId"
+            id="retiredOrganizationID"
+            name="retiredOrganizationID"
             value={
               convertToPersianNumber(pensionaryObject?.retiredOrganizationID) ??
               ""
@@ -216,7 +216,7 @@ function RetiredPensionaryForm() {
             required
           />
           <label
-            htmlFor="retiredOrganizationId"
+            htmlFor="retiredOrganizationID"
             className="inputBox__form--label"
           >
             <span>*</span> آخرین محل خدمت
