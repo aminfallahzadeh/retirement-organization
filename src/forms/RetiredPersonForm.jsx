@@ -221,7 +221,6 @@ function RetiredPersonForm() {
         personArea: parseInt(convertToEnglishNumber(personObject.personArea)),
         personPostalCode: convertToEnglishNumber(personObject.personPostalCode),
       }).unwrap();
-      console.log(updateRes);
       toast.success(updateRes.message, {
         autoClose: 2000,
       });

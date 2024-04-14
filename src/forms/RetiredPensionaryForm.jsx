@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import { setPensionaryObject } from "../slices/retiredStateSlice.js";
 import {
-  useUpdateRetiredMutation,
+  useUpdateRetiredPensionaryMutation,
   useGetRetiredPensionaryQuery,
 } from "../slices/retiredApiSlice.js";
 
@@ -23,7 +23,11 @@ import {
 } from "@mui/icons-material";
 
 // helpers
-import { convertToPersianDate, convertToPersianNumber } from "../helper.js";
+import {
+  convertToPersianDate,
+  convertToPersianNumber,
+  convertToEnglishNumber,
+} from "../helper.js";
 
 // libary imports
 import { toast } from "react-toastify";
@@ -31,6 +35,7 @@ import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
 function RetiredPensionaryForm() {
+  const [editable, setEditable] = useState(false);
   const [employmentTypeCombo, setEmploymentTypeCombo] = useState([]);
   const [selectedRetriementDate, setSelectedRetriementDate] = useState(null);
   const [isRetriementCalenderOpen, setIsRetirementCalenderOpen] =
@@ -39,6 +44,9 @@ function RetiredPensionaryForm() {
   const { token } = useSelector((state) => state.auth);
   const { selectedRequestData } = useSelector((state) => state.requestsData);
   const { pensionaryObject } = useSelector((state) => state.retiredState);
+
+  const [updateRetiredPensionary, { isLoading: isUpdating }] =
+    useUpdateRetiredPensionaryMutation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -119,6 +127,10 @@ function RetiredPensionaryForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRetriementDate]);
 
+  const handleEditable = () => {
+    setEditable(true);
+  };
+
   const handlePersonObjectChange = (e) => {
     const { name, value } = e.target;
     dispatch(setPensionaryObject({ ...pensionaryObject, [name]: value }));
@@ -133,11 +145,49 @@ function RetiredPensionaryForm() {
     setIsRetirementCalenderOpen(false);
   };
 
+  const handleUpdateRetiredPensionary = async () => {
+    try {
+      const updateRes = await updateRetiredPensionary({
+        token,
+        data: {
+          ...pensionaryObject,
+          retiredGroup: parseInt(
+            convertToEnglishNumber(pensionaryObject.retiredGroup)
+          ),
+          retiredOrganizationID: convertToPersianNumber(
+            pensionaryObject.retiredOrganizationID
+          ),
+          pensionaryIsActive:
+            pensionaryObject.pensionaryIsActive === "true" ? true : false,
+        },
+        retiredJobDegreeCoef: parseInt(
+          convertToEnglishNumber(pensionaryObject.retiredJobDegreeCoef)
+        ),
+        retiredRealDuration: parseInt(
+          convertToEnglishNumber(pensionaryObject.retiredRealDuration)
+        ),
+        retiredGrantDuration: parseInt(
+          convertToEnglishNumber(pensionaryObject.retiredGrantDuration)
+        ),
+      }).unwrap();
+      setEditable(false);
+      toast.success(updateRes.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
   const content = (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="retiredGroup"
             name="retiredGroup"
@@ -153,6 +203,7 @@ function RetiredPensionaryForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="retiredOrganizationId"
             name="retiredOrganizationId"
@@ -174,6 +225,7 @@ function RetiredPensionaryForm() {
 
         <div className="inputBox__form">
           <input
+            disabled={!editable}
             type="text"
             id="retiredLastPosition"
             name="retiredLastPosition"
@@ -191,6 +243,7 @@ function RetiredPensionaryForm() {
         </div>
         <div className="inputBox__form">
           <select
+            disabled={!editable}
             type="text"
             id="employmentTypeID"
             name="employmentTypeID"
@@ -213,6 +266,7 @@ function RetiredPensionaryForm() {
 
         <div className="inputBox__form">
           <InputDatePicker
+            disabled={!editable}
             value={selectedRetriementDate}
             onChange={handleRetiredDateChange}
             format={"jYYYY-jMM-jDD"}
@@ -234,6 +288,7 @@ function RetiredPensionaryForm() {
 
         <div className="inputBox__form">
           <select
+            disabled={!editable}
             className="inputBox__form--input"
             id="pensionaryIsActive"
             style={{ cursor: "pointer" }}
@@ -253,6 +308,7 @@ function RetiredPensionaryForm() {
 
         <div className="inputBox__form StaffInfoForm__flex--item">
           <input
+            disabled={!editable}
             type="text"
             id="retiredJobDegreeCoef"
             className="inputBox__form--input"
@@ -273,6 +329,7 @@ function RetiredPensionaryForm() {
         </div>
         <div className="inputBox__form StaffInfoForm__flex--item">
           <input
+            disabled={!editable}
             type="text"
             id="retiredRealDuration"
             className="inputBox__form--input"
@@ -293,6 +350,7 @@ function RetiredPensionaryForm() {
         </div>
         <div className="inputBox__form StaffInfoForm__flex--item">
           <input
+            disabled={!editable}
             type="text"
             id="retiredGrantDuration"
             className="inputBox__form--input"
@@ -317,6 +375,8 @@ function RetiredPensionaryForm() {
         <LoadingButton
           dir="ltr"
           endIcon={<SaveIcon />}
+          loading={isUpdating}
+          onClick={handleUpdateRetiredPensionary}
           variant="contained"
           color="success"
           sx={{ fontFamily: "sahel" }}
@@ -327,6 +387,8 @@ function RetiredPensionaryForm() {
         <Button
           dir="ltr"
           endIcon={<EditIcon />}
+          onClick={handleEditable}
+          disabled={editable}
           variant="contained"
           color="primary"
           sx={{ fontFamily: "sahel" }}

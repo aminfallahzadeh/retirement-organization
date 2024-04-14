@@ -44,9 +44,9 @@ export const retiredApiSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
-    updateRetiredPensionaryComplementary: builder.mutation({
+    updateRetiredPensionary: builder.mutation({
       query: ({ token, data }) => ({
-        url: `${RETIRED_URL_HTTPS}/UpdateRetiredPensionaryComplementary`,
+        url: `${RETIRED_URL_HTTPS}/UpdateRetiredPensionary`,
         method: "POST",
         body: data,
         headers: {
@@ -85,7 +85,7 @@ export const {
   useUpdateRetiredPersonMutation,
   useGetRetiredPensionaryQuery,
   useGetRetiredAccountQuery,
-  useUpdateRetiredPensionaryComplementaryMutation,
+  useUpdateRetiredPensionaryMutation,
   useUpdateRetiredMutation,
   useUpdateRetiredAccountMutation,
 } = retiredApiSlice;
