@@ -4,12 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetListOfRetirementStatementsQuery } from "../slices/retirementStatementApiSlice.js";
-import { setStatementTableData } from "../slices/statementDataSlice.js";
+import {
+  setStatementTableData,
+  setSelectedStatementData,
+} from "../slices/statementDataSlice.js";
 
 // mui imports
 import { IconButton, Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { PaginationItem } from "@mui/material";
 import {
@@ -32,7 +34,11 @@ import Modal from "../components/Modal";
 import RetiredStatementInfoForm from "../forms/RetiredStatementInfoForm";
 
 // helper imports
-import { convertToPersianNumber } from "../helper.js";
+import {
+  convertToPersianNumber,
+  convertToPersianDateFormatted,
+  findById,
+} from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -41,16 +47,6 @@ import { defaultTableOptions } from "../utils.js";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "react-toastify";
-
-const data = [
-  {
-    serial: "۰۱۲۳۴۵۶۷۸۹",
-    kind: "test",
-    number: "123",
-    issueDate: "۱۴۰۲-۱۳-۱۳",
-    runDate: "۱۴۰۲-۱۳-۱۳",
-  },
-];
 
 function RetiredStatementGrid() {
   const [rowSelection, setRowSelection] = useState({});
@@ -88,7 +84,16 @@ function RetiredStatementGrid() {
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      dispatch(setStatementTableData(statements));
+      const data = statements.map((item) => ({
+        id: item.pensionaryID,
+        RetirementStatementID: item.RetirementStatementID,
+        retirementStatementSerial: item.retirementStatementSerial,
+        retirementStatementTypeID: item.retirementStatementTypeID,
+        retirementStatementNo: item.retirementStatementNo,
+        retirementStatementIssueDate: item.retirementStatementIssueDate,
+        retirementStatementRunDate: item.retirementStatementRunDate,
+      }));
+      dispatch(setStatementTableData(data));
     }
 
     return () => {
@@ -115,24 +120,41 @@ function RetiredStatementGrid() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "serial",
+        accessorKey: "retirementStatementSerial",
         header: "سریال حکم",
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
       {
-        accessorKey: "kind",
+        accessorKey: "retirementStatementTypeID",
         header: "نوع حکم",
       },
       {
-        accessorKey: "number",
+        accessorKey: "retirementStatementNo",
         header: "شماره حکم",
       },
       {
-        accessorKey: "issueDate",
+        accessorKey: "retirementStatementIssueDate",
         header: "تاریخ صدور",
+        Cell: ({ renderedCellValue }) => (
+          <div>
+            {convertToPersianNumber(
+              convertToPersianDateFormatted(renderedCellValue)
+            )}
+          </div>
+        ),
       },
       {
-        accessorKey: "runDate",
+        accessorKey: "retirementStatementRunDate",
         header: "تاریخ اجرا",
+        Cell: ({ renderedCellValue }) => (
+          <div>
+            {convertToPersianNumber(
+              convertToPersianDateFormatted(renderedCellValue)
+            )}
+          </div>
+        ),
       },
       {
         accessorKey: "editNameAction",
@@ -165,7 +187,7 @@ function RetiredStatementGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data,
+    data: statementTableData,
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -210,45 +232,76 @@ function RetiredStatementGrid() {
     state: { rowSelection },
   });
 
+  useEffect(() => {
+    const id = Object.keys(table.getState().rowSelection)[0];
+    const selectedGroup = findById(statementTableData, id);
+
+    if (id) {
+      dispatch(setSelectedStatementData(selectedGroup));
+    } else {
+      dispatch(setSelectedStatementData([]));
+    }
+
+    return () => {
+      // Cleanup function to clear selected group
+      dispatch(setSelectedStatementData([]));
+    };
+  }, [dispatch, table, rowSelection, statementTableData]);
+
   const content = (
     <>
-      {showStatementModal ? (
-        <Modal
-          title={"حکم بازنشسته"}
-          closeModal={() => setShowStatementModal(false)}
-        >
-          <RetiredStatementInfoForm />
-        </Modal>
-      ) : showDeleteStatementModal ? (
-        <Modal
-          title={"حذف حکم"}
-          closeModal={() => setShowDeleteStatementModal(false)}
-        >
-          <p>آیا از حذف این حکم اطمینان دارید؟</p>
-          <div className="flex-row flex-center">
-            <LoadingButton
-              dir="ltr"
-              endIcon={<DoneIcon />}
-              variant="contained"
-              color="success"
-              sx={{ fontFamily: "sahel" }}
+      {isLoading ? (
+        <div className="skeleton-lg">
+          <Skeleton
+            count={7}
+            baseColor="#dfdfdf"
+            highlightColor="#9f9f9f"
+            duration={1}
+            direction="rtl"
+          />
+        </div>
+      ) : (
+        <>
+          {showStatementModal ? (
+            <Modal
+              title={"حکم بازنشسته"}
+              closeModal={() => setShowStatementModal(false)}
             >
-              <span>بله</span>
-            </LoadingButton>
+              <RetiredStatementInfoForm />
+            </Modal>
+          ) : showDeleteStatementModal ? (
+            <Modal
+              title={"حذف حکم"}
+              closeModal={() => setShowDeleteStatementModal(false)}
+            >
+              <p>آیا از حذف این حکم اطمینان دارید؟</p>
+              <div className="flex-row flex-center">
+                <LoadingButton
+                  dir="ltr"
+                  endIcon={<DoneIcon />}
+                  variant="contained"
+                  color="success"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>بله</span>
+                </LoadingButton>
 
-            <Button
-              dir="ltr"
-              endIcon={<CloseIcon />}
-              onClick={() => setShowDeleteStatementModal(false)}
-              variant="contained"
-              color="error"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>خیر</span>
-            </Button>
-          </div>
-        </Modal>
-      ) : null}
+                <Button
+                  dir="ltr"
+                  endIcon={<CloseIcon />}
+                  onClick={() => setShowDeleteStatementModal(false)}
+                  variant="contained"
+                  color="error"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>خیر</span>
+                </Button>
+              </div>
+            </Modal>
+          ) : null}
+        </>
+      )}
+
       <MaterialReactTable table={table} />
     </>
   );

@@ -4,7 +4,10 @@ import { useMemo, useState, useEffect } from "react";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetRelatedListByParentPersonIDQuery } from "../slices/relatedApiSlice";
-import { setRelatedTableData } from "../slices/relatedDataSlice";
+import {
+  setRelatedTableData,
+  setSelectedRelatedData,
+} from "../slices/relatedDataSlice";
 
 // mui imports
 import { IconButton, Button } from "@mui/material";
@@ -39,6 +42,7 @@ import { toast } from "react-toastify";
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
+  findById,
 } from "../helper.js";
 
 // utils imports
@@ -80,7 +84,8 @@ function RetiredRelatedInfoGrid() {
     refetch();
     if (isSuccess) {
       const data = relateds.itemList.map((related) => ({
-        id: related.relatedID,
+        id: related.personID,
+        pensionaryID: related.pensionaryID,
         relatedBirthDate: related.personBirthDate,
         relatedNtionalCode: related.personNationalCode,
         relatedFirstName: related.personFirstName,
@@ -217,6 +222,22 @@ function RetiredRelatedInfoGrid() {
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
+
+  useEffect(() => {
+    const id = Object.keys(table.getState().rowSelection)[0];
+    const selectedGroup = findById(relatedTableData, id);
+
+    if (id) {
+      dispatch(setSelectedRelatedData(selectedGroup));
+    } else {
+      dispatch(setSelectedRelatedData([]));
+    }
+
+    return () => {
+      // Cleanup function to clear selected group
+      dispatch(setSelectedRelatedData([]));
+    };
+  }, [dispatch, table, rowSelection, relatedTableData]);
 
   const content = (
     <>
