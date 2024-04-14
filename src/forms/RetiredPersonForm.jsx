@@ -499,13 +499,13 @@ function RetiredPersonForm() {
             <input
               disabled={!editable}
               type="checkbox"
-              id="personIsSacrificed"
-              name="personIsSacrificed"
-              checked={!!personObject?.personIsSacrificed}
+              id="personIsValiant"
+              name="personIsValiant"
+              checked={!!personObject?.personIsValiant}
               onChange={handleCheckBoxChange}
             />
             <label
-              htmlFor="personIsSacrificed"
+              htmlFor="personIsValiant"
               className={
                 !editable
                   ? "checkboxContainer__label--disabled"
@@ -520,13 +520,13 @@ function RetiredPersonForm() {
             <input
               disabled={!editable}
               type="checkbox"
-              id="personIsCaptive"
-              name="personIsCaptive"
-              checked={!!personObject?.personIsCaptive}
+              id="personIsSacrificed"
+              name="personIsSacrificed"
+              checked={!!personObject?.personIsSacrificed}
               onChange={handleCheckBoxChange}
             />
             <label
-              htmlFor="personIsCaptive"
+              htmlFor="personIsSacrificed"
               className={
                 !editable
                   ? "checkboxContainer__label--disabled"
@@ -541,13 +541,13 @@ function RetiredPersonForm() {
             <input
               disabled={!editable}
               type="checkbox"
-              id="personIsValiant"
-              name="personIsValiant"
-              checked={!!personObject?.personIsValiant}
+              id="personIsCaptive"
+              name="personIsCaptive"
+              checked={!!personObject?.personIsCaptive}
               onChange={handleCheckBoxChange}
             />
             <label
-              htmlFor="personIsValiant"
+              htmlFor="personIsCaptive"
               className={
                 !editable
                   ? "checkboxContainer__label--disabled"
