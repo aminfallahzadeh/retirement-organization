@@ -43,16 +43,16 @@ function CreateRelatedForm() {
     personEmail: "string",
     personBirthDate: null,
     personBirthPlace: "",
-    personCountry: "string",
-    personState: "string",
-    personCity: "string",
-    personAddress: "string",
-    personPostalCode: "string",
-    personRegion: 0,
-    personArea: 0,
-    personPhone: "string",
-    personCellPhone: "string",
-    personCellPhone2: "string",
+    personCountry: "",
+    personState: "",
+    personCity: "",
+    personAddress: "",
+    personPostalCode: "",
+    personRegion: "",
+    personArea: "",
+    personPhone: "",
+    personCellPhone: "",
+    personCellPhone2: "",
     backupFirstName: "string",
     backupLastName: "string",
     genderID: "string",
@@ -60,15 +60,15 @@ function CreateRelatedForm() {
     educationTypeID: "string",
     universityID: "string",
     housingTypeID: "string",
-    personSpecialDisease: "string",
-    personDescription: "string",
+    personSpecialDisease: "",
+    personDescription: "",
     parentPersonID: "string",
     pensionaryStatusID: "string",
     pensionaryStartDate: null,
     pensionaryFinishDate: null,
     pensionaryIsUnderGaurantee: true,
-    pensionaryIsActive: true,
-    relationshipWithParentI: "string",
+    pensionaryIsActive: " ",
+    relationshipWithParentID: "",
     employmentTypeID: "string",
     relatedID: 0,
   });
@@ -419,10 +419,13 @@ function CreateRelatedForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleRealtedObjectChange}
+            name="personCellPhone"
+            value={convertToPersianNumber(relatedObject.personCellPhone)}
             required
-            id="cellTell1"
+            id="personCellPhone1"
           />
-          <label className="inputBox__form--label" htmlFor="cellTell1">
+          <label className="inputBox__form--label" htmlFor="personCellPhone1">
             تلفن همراه ۱
           </label>
         </div>
@@ -431,10 +434,13 @@ function CreateRelatedForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleRealtedObjectChange}
+            name="personCellPhone2"
+            value={convertToPersianNumber(relatedObject.personCellPhone2)}
             required
-            id="cellTell2"
+            id="personCellPhone22"
           />
-          <label className="inputBox__form--label" htmlFor="cellTell2">
+          <label className="inputBox__form--label" htmlFor="personCellPhone22">
             تلفن همراه ۲
           </label>
         </div>
@@ -443,9 +449,12 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="sabetTell1"
+            onChange={handleRealtedObjectChange}
+            name="personPhone"
+            value={convertToPersianNumber(relatedObject.personPhone)}
+            id="personPhone1"
           />
-          <label className="inputBox__form--label" htmlFor="sabetTell1">
+          <label className="inputBox__form--label" htmlFor="personPhone1">
             تلفن ثابت ۱
           </label>
         </div>
@@ -465,9 +474,12 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="regionPlace"
+            onChange={handleRealtedObjectChange}
+            name="personRegion"
+            value={convertToPersianNumber(relatedObject.personRegion)}
+            id="personRegion1"
           />
-          <label className="inputBox__form--label" htmlFor="regionPlace">
+          <label className="inputBox__form--label" htmlFor="personRegion1">
             منطقه سکونت
           </label>
         </div>
@@ -477,9 +489,12 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="districtPlace"
+            onChange={handleRealtedObjectChange}
+            name="personArea"
+            value={convertToPersianNumber(relatedObject.personArea)}
+            id="personArea1"
           />
-          <label className="inputBox__form--label" htmlFor="districtPlace">
+          <label className="inputBox__form--label" htmlFor="personArea1">
             ناحیه سکونت
           </label>
         </div>
@@ -488,9 +503,12 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="countryPlace"
+            onChange={handleRealtedObjectChange}
+            name="personCountry"
+            value={relatedObject.personCountry}
+            id="personCountry1"
           />
-          <label className="inputBox__form--label" htmlFor="countryPlace">
+          <label className="inputBox__form--label" htmlFor="personCountry1">
             کشور
           </label>
         </div>
@@ -499,9 +517,12 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="statePlace"
+            onChange={handleRealtedObjectChange}
+            name="personState"
+            value={relatedObject.personState}
+            id="personState1"
           />
-          <label className="inputBox__form--label" htmlFor="statePlace">
+          <label className="inputBox__form--label" htmlFor="personState1">
             استان
           </label>
         </div>
@@ -510,9 +531,12 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="cityPlace"
+            onChange={handleRealtedObjectChange}
+            name="personCity"
+            value={relatedObject.personCity}
+            id="personCity1"
           />
-          <label className="inputBox__form--label" htmlFor="cityPlace">
+          <label className="inputBox__form--label" htmlFor="personCity1">
             شهر
           </label>
         </div>
@@ -522,9 +546,12 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="postalCODE"
+            onChange={handleRealtedObjectChange}
+            name="personPostalCode"
+            value={convertToPersianNumber(relatedObject.personPostalCode)}
+            id="personPostalCode1"
           />
-          <label className="inputBox__form--label" htmlFor="postalCODE">
+          <label className="inputBox__form--label" htmlFor="personPostalCode1">
             کد پستی
           </label>
         </div>
@@ -534,9 +561,12 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="addresss"
+            onChange={handleRealtedObjectChange}
+            name="personAddress"
+            value={relatedObject.personAddress}
+            id="personAddress1"
           />
-          <label className="inputBox__form--label" htmlFor="addresss">
+          <label className="inputBox__form--label" htmlFor="personAddress1">
             نشانی
           </label>
         </div>
@@ -546,9 +576,15 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="specialCase"
+            onChange={handleRealtedObjectChange}
+            name="personSpecialDisease"
+            value={relatedObject.personSpecialDisease}
+            id="personSpecialDisease1"
           />
-          <label className="inputBox__form--label" htmlFor="specialCase">
+          <label
+            className="inputBox__form--label"
+            htmlFor="personSpecialDisease1"
+          >
             بیماری خاص
           </label>
         </div>
@@ -558,9 +594,12 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="descriptionPlace"
+            onChange={handleRealtedObjectChange}
+            name="personDescription"
+            value={relatedObject.personDescription}
+            id="personDescription1"
           ></textarea>
-          <label className="inputBox__form--label" htmlFor="descriptionPlace">
+          <label className="inputBox__form--label" htmlFor="personDescription1">
             توضیحات
           </label>
         </div>
@@ -584,13 +623,23 @@ function CreateRelatedForm() {
 
       <form method="POST" className="grid grid--col-4">
         <div className="inputBox__form col-span-2">
-          <input
+          <select
             type="text"
             className="inputBox__form--input"
             required
-            id="condi"
-          />
-          <label className="inputBox__form--label" htmlFor="condi">
+            onChange={handleRealtedObjectChange}
+            name="pensionaryIsActive"
+            value={relatedObject.pensionaryIsActive}
+            id="pensionaryIsActive1"
+          >
+            <option value=" ">انتخاب کنید</option>
+            <option value="true">فعال</option>
+            <option value="false">غیر فعال</option>
+          </select>
+          <label
+            className="inputBox__form--label"
+            htmlFor="pensionaryIsActive1"
+          >
             وضعیت
           </label>
         </div>
@@ -615,18 +664,6 @@ function CreateRelatedForm() {
           />
           <label className="inputBox__form--label" htmlFor="endDate">
             تاریخ پایان
-          </label>
-        </div>
-
-        <div className="inputBox__form col-span-4">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="desc2"
-          />
-          <label className="inputBox__form--label" htmlFor="desc2">
-            توضیحات
           </label>
         </div>
       </form>
