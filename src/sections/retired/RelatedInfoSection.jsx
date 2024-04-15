@@ -1,16 +1,22 @@
 // react imports
 import { useState } from "react";
 
+// redux imports
+import { useSelector } from "react-redux";
+
 // mui imports
 import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 // component imports
 import RetiredRelatedInfoGrid from "../../grids/RetiredRelatedInfoGrid";
-import RetiredStatementGrid from "../../grids/RetiredStatementGrid";
+import RetiredStatementsGrid from "../../grids/RetiredStatementsGrid";
 
 function RelatedInfoSection() {
   const [value, setValue] = useState("1");
+
+  const { personObject } = useSelector((state) => state.retiredState);
+  const death = personObject?.personDeathDate;
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -25,7 +31,7 @@ function RelatedInfoSection() {
             aria-label="tabs"
             variant="fullWidth"
           >
-            <Tab label="وابسته" value="1" />
+            <Tab label={death ? "موظف" : "وابسته"} value="1" />
             <Tab label="احکام" value="2" />
             <Tab label="فیش حقوقی" value="3" />
             <Tab label="رفاهی" value="4" />
@@ -46,7 +52,7 @@ function RelatedInfoSection() {
             padding: "0",
           }}
         >
-          <RetiredStatementGrid />
+          <RetiredStatementsGrid />
         </TabPanel>
         <TabPanel
           value="3"
@@ -54,7 +60,7 @@ function RelatedInfoSection() {
             padding: "0",
           }}
         >
-          <RetiredStatementGrid />
+          grid
         </TabPanel>
       </TabContext>
     </section>

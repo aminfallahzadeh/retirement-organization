@@ -148,7 +148,7 @@ function RetiredRelatedInfoGrid() {
         header: "نسبت",
       },
       {
-        accessorKey: "editNameAction",
+        accessorKey: "editRelatedAction",
         header: "ویرایش",
         enableSorting: false,
         enableColumnActions: false,
@@ -160,7 +160,7 @@ function RetiredRelatedInfoGrid() {
         ),
       },
       {
-        accessorKey: "deleteAction",
+        accessorKey: "deleteRelatedAction",
         header: "حذف",
         enableSorting: false,
         enableColumnActions: false,

@@ -33,6 +33,11 @@ import {
 import Modal from "../components/Modal";
 import RetiredStatementInfoForm from "../forms/RetiredStatementInfoForm";
 
+// library imports
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { toast } from "react-toastify";
+
 // helper imports
 import {
   convertToPersianNumber,
@@ -43,12 +48,7 @@ import {
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-// library imports
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import { toast } from "react-toastify";
-
-function RetiredStatementGrid() {
+function RetiredStatementsGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const [showStatementModal, setShowStatementModal] = useState(false);
   const [showDeleteStatementModal, setShowDeleteStatementModal] =
@@ -127,12 +127,12 @@ function RetiredStatementGrid() {
         ),
       },
       {
-        accessorKey: "retirementStatementTypeID",
-        header: "نوع حکم",
-      },
-      {
         accessorKey: "retirementStatementNo",
         header: "شماره حکم",
+      },
+      {
+        accessorKey: "retirementStatementTypeID",
+        header: "نوع حکم",
       },
       {
         accessorKey: "retirementStatementIssueDate",
@@ -157,7 +157,7 @@ function RetiredStatementGrid() {
         ),
       },
       {
-        accessorKey: "editNameAction",
+        accessorKey: "editStatementAction",
         header: "ویرایش",
         enableSorting: false,
         enableColumnActions: false,
@@ -169,7 +169,7 @@ function RetiredStatementGrid() {
         ),
       },
       {
-        accessorKey: "deleteAction",
+        accessorKey: "deleteStatementAction",
         header: "حذف",
         enableSorting: false,
         enableColumnActions: false,
@@ -308,4 +308,4 @@ function RetiredStatementGrid() {
   return content;
 }
 
-export default RetiredStatementGrid;
+export default RetiredStatementsGrid;

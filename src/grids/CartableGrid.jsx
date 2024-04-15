@@ -57,6 +57,7 @@ function CartableGrid({ selectedRole }) {
       const data = requests.itemList.map((item) => ({
         id: item.id,
         personId: item.personID,
+        requestTypeNameFa: item.requestTypeNameFa,
         sender: item.requestFrom,
         date: item.requestDate,
         body: item.requestText,
@@ -86,7 +87,7 @@ function CartableGrid({ selectedRole }) {
         header: "شماره درخواست",
       },
       {
-        accessorKey: "requestType",
+        accessorKey: "requestTypeNameFa",
         header: "نوع درخواست",
       },
       {
