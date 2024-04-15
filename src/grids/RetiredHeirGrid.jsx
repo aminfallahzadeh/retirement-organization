@@ -3,20 +3,16 @@ import { useMemo, useState, useEffect } from "react";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { useGetRelatedListByParentPersonIDQuery } from "../slices/relatedApiSlice";
+import { useGetHeirListByParentPersonIDQuery } from "../slices/heirApiSlice";
 import {
-  setRelatedTableData,
-  setSelectedRelatedData,
-} from "../slices/relatedDataSlice";
+  setHeirTableData,
+  setSelectedHeirData,
+} from "../slices/heirDataSlice.js";
 
 // mui imports
-import { IconButton, Button, Box } from "@mui/material";
+import { IconButton, Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Refresh as RefreshIcon,
-} from "@mui/icons-material";
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -36,7 +32,6 @@ import {
 // components
 import Modal from "../components/Modal";
 import RetiredRelatedInfoForm from "../forms/RetiredRelatedInfoForm";
-import CreateRelatedForm from "../forms/CreateRelatedForm.jsx";
 
 // library imports
 import Skeleton from "react-loading-skeleton";
@@ -53,73 +48,63 @@ import {
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-function RetiredRelatedInfoGrid() {
+function RetiredHeirGrid() {
   const [rowSelection, setRowSelection] = useState({});
-  const [showCreateRelatedModal, setShowCreateRelatedModal] = useState(false);
-  const [showEditRelatedModal, setShowEditRelatedModal] = useState(false);
-  const [showDeleteRelatedModal, setShowDeleteRelatedModal] = useState(false);
+  const [showEditHeirModal, setShowEditHeirModal] = useState(false);
+  const [showDeleteHeirModal, setShowDeleteHeirModal] = useState(false);
 
   const { token } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
   // access the data from redux store
-  const { relatedTableData } = useSelector((state) => state.relatedData);
+  const { heirTableData } = useSelector((state) => state.heirData);
   const { selectedRequestData } = useSelector((state) => state.requestsData);
 
   const {
-    data: relateds,
+    data: heirs,
     isSuccess,
     isLoading,
-    isFetching,
     error,
     refetch,
-  } = useGetRelatedListByParentPersonIDQuery({
+  } = useGetHeirListByParentPersonIDQuery({
     token,
     parentPersonID: selectedRequestData?.personId,
   });
 
-  const handleShowCreateRelatedModal = () => {
-    setShowCreateRelatedModal(true);
-  };
-
   const handleShowRelatedModal = () => {
-    setShowEditRelatedModal(true);
+    setShowEditHeirModal(true);
   };
 
   const handleShowDeleteRelatedModal = () => {
-    setShowDeleteRelatedModal(true);
-  };
-
-  const handleRefresh = () => {
-    refetch();
+    setShowDeleteHeirModal(true);
   };
 
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      const data = relateds.itemList.map((related) => ({
-        id: related.personID,
-        pensionaryID: related.pensionaryID,
-        relatedBirthDate: related.personBirthDate,
-        relatedNtionalCode: related.personNationalCode,
-        relatedFirstName: related.personFirstName,
-        relatedLastName: related.personLastName,
-        relation: related.relationshipWithParentName,
+      const data = heirs.itemList.map((heir) => ({
+        id: heir.personID,
+        pensionaryID: heir.pensionaryID,
+        personNationalCode: heir.personNationalCode,
+        personFirstName: heir.personFirstName,
+        personLastName: heir.personLastName,
+        personBirthDate: heir.personBirthDate,
+        relationshipWithParentName: heir.relationshipWithParentName,
+        parentPersonNationalCode: heir.parentPersonNationalCode,
       }));
-      dispatch(setRelatedTableData(data));
+      dispatch(setHeirTableData(data));
     }
     return () => {
-      dispatch(setRelatedTableData([]));
+      dispatch(setHeirTableData([]));
     };
   }, [
     isSuccess,
     refetch,
-    relateds,
+    heirs,
     dispatch,
-    showCreateRelatedModal,
-    showEditRelatedModal,
-    showDeleteRelatedModal,
+    showEditHeirModal,
+    showDeleteHeirModal,
   ]);
 
   useEffect(() => {
@@ -134,22 +119,22 @@ function RetiredRelatedInfoGrid() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "relatedNtionalCode",
+        accessorKey: "personNationalCode",
         header: "کد ملی",
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
       },
       {
-        accessorKey: "relatedFirstName",
+        accessorKey: "personFirstName",
         header: "نام",
       },
       {
-        accessorKey: "relatedLastName",
+        accessorKey: "personLastName",
         header: "نام خانوادگی",
       },
       {
-        accessorKey: "relatedBirthDate",
+        accessorKey: "personBirthDate",
         header: "تاریخ تولد",
         Cell: ({ renderedCellValue }) => (
           <div>
@@ -160,11 +145,18 @@ function RetiredRelatedInfoGrid() {
         ),
       },
       {
-        accessorKey: "relation",
+        accessorKey: "relationshipWithParentName",
         header: "نسبت",
       },
       {
-        accessorKey: "editRelatedAction",
+        accessorKey: "parentPersonNationalCode",
+        header: "شماره پرونده",
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "editHeirAction",
         header: "ویرایش",
         enableSorting: false,
         enableColumnActions: false,
@@ -176,7 +168,7 @@ function RetiredRelatedInfoGrid() {
         ),
       },
       {
-        accessorKey: "deleteRelatedAction",
+        accessorKey: "deleteHeirAction",
         header: "حذف",
         enableSorting: false,
         enableColumnActions: false,
@@ -194,7 +186,7 @@ function RetiredRelatedInfoGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: relatedTableData,
+    data: heirTableData,
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -207,32 +199,15 @@ function RetiredRelatedInfoGrid() {
       },
     }),
     renderTopToolbarCustomActions: () => (
-      <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
+      <Button
+        dir="ltr"
+        endIcon={<AddIcon />}
+        variant="contained"
+        color="primary"
+        sx={{ fontFamily: "sahel" }}
       >
-        <Button
-          dir="ltr"
-          endIcon={<AddIcon />}
-          onClick={handleShowCreateRelatedModal}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>ایجاد</span>
-        </Button>
-
-        <LoadingButton
-          dir="ltr"
-          endIcon={<RefreshIcon />}
-          loading={isFetching}
-          onClick={handleRefresh}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>بروز رسانی</span>
-        </LoadingButton>
-      </Box>
+        <span>ایجاد</span>
+      </Button>
     ),
     muiPaginationProps: {
       color: "success",
@@ -258,19 +233,19 @@ function RetiredRelatedInfoGrid() {
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedGroup = findById(relatedTableData, id);
+    const selectedGroup = findById(heirTableData, id);
 
     if (id) {
-      dispatch(setSelectedRelatedData(selectedGroup));
+      dispatch(setSelectedHeirData(selectedGroup));
     } else {
-      dispatch(setSelectedRelatedData([]));
+      dispatch(setSelectedHeirData([]));
     }
 
     return () => {
       // Cleanup function to clear selected group
-      dispatch(setSelectedRelatedData([]));
+      dispatch(setSelectedHeirData([]));
     };
-  }, [dispatch, table, rowSelection, relatedTableData]);
+  }, [dispatch, table, rowSelection, heirTableData]);
 
   const content = (
     <>
@@ -286,24 +261,17 @@ function RetiredRelatedInfoGrid() {
         </div>
       ) : (
         <>
-          {showCreateRelatedModal ? (
+          {showEditHeirModal ? (
             <Modal
-              title={"ایجاد وابسته"}
-              closeModal={() => setShowCreateRelatedModal(false)}
-            >
-              <CreateRelatedForm />
-            </Modal>
-          ) : showEditRelatedModal ? (
-            <Modal
-              title={"ویرایش اطلاعات وابسته"}
-              closeModal={() => setShowEditRelatedModal(false)}
+              title={"اطلاعات فرد وابسته"}
+              closeModal={() => setShowEditHeirModal(false)}
             >
               <RetiredRelatedInfoForm />
             </Modal>
-          ) : showDeleteRelatedModal ? (
+          ) : showDeleteHeirModal ? (
             <Modal
               title={"حذف وابسته"}
-              closeModal={() => setShowDeleteRelatedModal(false)}
+              closeModal={() => setShowDeleteHeirModal(false)}
             >
               <p className="paragraph-primary">
                 آیا از حذف این وابسته اطمینان دارید؟
@@ -322,7 +290,7 @@ function RetiredRelatedInfoGrid() {
                 <Button
                   dir="ltr"
                   endIcon={<CloseIcon />}
-                  onClick={() => setShowDeleteRelatedModal(false)}
+                  onClick={() => setShowDeleteHeirModal(false)}
                   variant="contained"
                   color="error"
                   sx={{ fontFamily: "sahel" }}
@@ -341,4 +309,4 @@ function RetiredRelatedInfoGrid() {
   return content;
 }
 
-export default RetiredRelatedInfoGrid;
+export default RetiredHeirGrid;

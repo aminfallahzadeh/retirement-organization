@@ -10,7 +10,11 @@ import {
   useUpdateRetiredPersonMutation,
   useGetRetiredPersonQuery,
 } from "../slices/retiredApiSlice.js";
-import { setPersonObject } from "../slices/retiredStateSlice.js";
+import {
+  setPersonObject,
+  setPensionaryID,
+  setPersonID,
+} from "../slices/retiredStateSlice.js";
 import { useSelector, useDispatch } from "react-redux";
 
 // mui imports
@@ -76,6 +80,8 @@ function RetiredPersonForm() {
     refetch();
     if (isSuccess) {
       dispatch(setPersonObject(retiredPersonData?.itemList[0]));
+      dispatch(setPensionaryID(retiredPersonData?.itemList[0].pensionaryID));
+      dispatch(setPersonID(retiredPersonData?.itemList[0].personID));
     }
   }, [refetch, isSuccess, retiredPersonData?.itemList, dispatch]);
 

@@ -11,6 +11,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 // component imports
 import RetiredRelatedInfoGrid from "../../grids/RetiredRelatedInfoGrid";
 import RetiredStatementsGrid from "../../grids/RetiredStatementsGrid";
+import RetiredHeirGrid from "../../grids/RetiredHeirGrid";
 
 function RelatedInfoSection() {
   const [value, setValue] = useState("1");
@@ -31,7 +32,7 @@ function RelatedInfoSection() {
             aria-label="tabs"
             variant="fullWidth"
           >
-            <Tab label={death ? "موظف" : "وابسته"} value="1" />
+            <Tab label={death ? "موظفین" : "وابستگان"} value="1" />
             <Tab label="احکام" value="2" />
             <Tab label="فیش حقوقی" value="3" />
             <Tab label="رفاهی" value="4" />
@@ -44,7 +45,7 @@ function RelatedInfoSection() {
             padding: "0",
           }}
         >
-          <RetiredRelatedInfoGrid />
+          {death ? <RetiredHeirGrid /> : <RetiredRelatedInfoGrid />}
         </TabPanel>
         <TabPanel
           value="2"

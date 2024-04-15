@@ -88,7 +88,7 @@ function RetiredStatementsGrid() {
         id: item.pensionaryID,
         RetirementStatementID: item.RetirementStatementID,
         retirementStatementSerial: item.retirementStatementSerial,
-        retirementStatementTypeID: item.retirementStatementTypeID,
+        retirementStatementTypeName: item.retirementStatementTypeName,
         retirementStatementNo: item.retirementStatementNo,
         retirementStatementIssueDate: item.retirementStatementIssueDate,
         retirementStatementRunDate: item.retirementStatementRunDate,
@@ -131,7 +131,7 @@ function RetiredStatementsGrid() {
         header: "شماره حکم",
       },
       {
-        accessorKey: "retirementStatementTypeID",
+        accessorKey: "retirementStatementTypeName",
         header: "نوع حکم",
       },
       {
@@ -274,7 +274,9 @@ function RetiredStatementsGrid() {
               title={"حذف حکم"}
               closeModal={() => setShowDeleteStatementModal(false)}
             >
-              <p>آیا از حذف این حکم اطمینان دارید؟</p>
+              <p className="paragraph-primary">
+                آیا از حذف این حکم اطمینان دارید؟
+              </p>
               <div className="flex-row flex-center">
                 <LoadingButton
                   dir="ltr"

@@ -6,6 +6,15 @@ import { apiSlice } from "./apiSlice";
 
 export const heirApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getHeirListByParentPersonID: builder.query({
+      query: ({ token, parentPersonID }) => ({
+        url: `${HEIR_URL_HTTPS}/GetHeirListByParentPersonID?parentPersonID=${parentPersonID}`,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
     getHeir: builder.query({
       query: (token) => ({
         url: `${HEIR_URL_HTTPS}/GetHeir`,
@@ -62,6 +71,7 @@ export const heirApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+  useGetHeirListByParentPersonIDQuery,
   useGetHeirQuery,
   useRemoveHeirMutation,
   useUpdateHeirMutation,

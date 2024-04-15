@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   personObject: [],
   pensionaryObject: [],
+  pensionaryID: "",
+  personID: "",
 };
 
 const retiredStateSlice = createSlice({
@@ -16,10 +18,22 @@ const retiredStateSlice = createSlice({
     setPensionaryObject: (state, action) => {
       state.pensionaryObject = action.payload;
     },
+
+    setPensionaryID: (state, action) => {
+      state.pensionaryID = action.payload;
+    },
+
+    setPersonID: (state, action) => {
+      state.personID = action.payload;
+    },
   },
 });
 
-export const { setPersonObject, setPensionaryObject } =
-  retiredStateSlice.actions;
+export const {
+  setPersonObject,
+  setPensionaryObject,
+  setPensionaryID,
+  setPersonID,
+} = retiredStateSlice.actions;
 
 export default retiredStateSlice.reducer;
