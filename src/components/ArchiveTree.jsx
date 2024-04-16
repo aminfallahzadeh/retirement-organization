@@ -147,6 +147,8 @@ function ArchiveTree() {
   const { token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
+  const { archiveStructureData } = useSelector((state) => state.archiveData);
+
   const {
     data: archiveStructure,
     isLoading,
@@ -184,6 +186,25 @@ function ArchiveTree() {
     stylisPlugins: [prefixer, rtlPlugin],
   });
 
+  useEffect(() => {
+    console.log(archiveStructureData);
+  }, [archiveStructureData]);
+
+  const renderTreeItems = (items, parentId) => {
+    return items
+      .filter((item) => item.parentID === parentId)
+      .map((item) => (
+        <StyledTreeItem
+          key={item.id}
+          itemId={item.id}
+          labelText={item.name}
+          labelIcon={FolderRounded}
+        >
+          {renderTreeItems(items, item.id)}
+        </StyledTreeItem>
+      ));
+  };
+
   const content = (
     <>
       {isLoading ? (
@@ -193,7 +214,7 @@ function ArchiveTree() {
           <ThemeProvider theme={theme}>
             <SimpleTreeView
               // aria-label="gmail"
-              defaultExpandedItems={["1"]}
+              // defaultExpandedItems={["97134493291b473f9b3bf8c4c15b27a0"]}
               // defaultSelectedItems="3"
               sx={{
                 height: "fit-content",
@@ -205,55 +226,7 @@ function ArchiveTree() {
                 padding: "5px",
               }}
             >
-              <StyledTreeItem
-                itemId="1"
-                labelText="پرونده الکترونیک"
-                labelIcon={FolderRounded}
-              >
-                <StyledTreeItem
-                  itemId="5"
-                  labelText="احراز هویت"
-                  labelIcon={FolderRounded}
-                >
-                  <StyledTreeItem
-                    itemId="8"
-                    labelText="صفحه اول شناسنامه"
-                    labelIcon={DotIcon}
-                  />
-                  <StyledTreeItem
-                    itemId="9"
-                    labelText="صفحه دوم شناسنامه"
-                    labelIcon={DotIcon}
-                  />
-                  <StyledTreeItem
-                    itemId="10"
-                    labelText="تصویر کارت ملی"
-                    labelIcon={DotIcon}
-                  />
-                </StyledTreeItem>
-                <StyledTreeItem
-                  itemId="3"
-                  labelText="حکم حقوقی"
-                  labelIcon={FolderRounded}
-                >
-                  <StyledTreeItem
-                    itemId="12"
-                    labelText="تصویر حکم"
-                    labelIcon={DotIcon}
-                  />
-                </StyledTreeItem>
-                <StyledTreeItem
-                  itemId="4"
-                  labelText="فیش حقوقی"
-                  labelIcon={FolderRounded}
-                >
-                  <StyledTreeItem
-                    itemId="11"
-                    labelText="تصویر فیش حقوقی"
-                    labelIcon={DotIcon}
-                  />
-                </StyledTreeItem>
-              </StyledTreeItem>
+              {renderTreeItems(archiveStructureData, "0")}
             </SimpleTreeView>
           </ThemeProvider>
         </CacheProvider>
@@ -262,6 +235,84 @@ function ArchiveTree() {
   );
 
   return content;
+  // const content = (
+  //   <>
+  //     {isLoading ? (
+  //       <div>در حال بارگذاری</div>
+  //     ) : (
+  //       <CacheProvider value={cacheRtl}>
+  //         <ThemeProvider theme={theme}>
+  //           <SimpleTreeView
+  //             // aria-label="gmail"
+  //             defaultExpandedItems={["1"]}
+  //             // defaultSelectedItems="3"
+  //             sx={{
+  //               height: "fit-content",
+  //               flexGrow: 1,
+  //               maxWidth: 400,
+  //               overflowY: "auto",
+  //               backgroundColor: "#cfcfcf",
+  //               borderRadius: "6px",
+  //               padding: "5px",
+  //             }}
+  //           >
+  //             <StyledTreeItem
+  //               itemId="1"
+  //               labelText="پرونده الکترونیک"
+  //               labelIcon={FolderRounded}
+  //             >
+  //               <StyledTreeItem
+  //                 itemId="5"
+  //                 labelText="احراز هویت"
+  //                 labelIcon={FolderRounded}
+  //               >
+  //                 <StyledTreeItem
+  //                   itemId="8"
+  //                   labelText="صفحه اول شناسنامه"
+  //                   labelIcon={DotIcon}
+  //                 />
+  //                 <StyledTreeItem
+  //                   itemId="9"
+  //                   labelText="صفحه دوم شناسنامه"
+  //                   labelIcon={DotIcon}
+  //                 />
+  //                 <StyledTreeItem
+  //                   itemId="10"
+  //                   labelText="تصویر کارت ملی"
+  //                   labelIcon={DotIcon}
+  //                 />
+  //               </StyledTreeItem>
+  //               <StyledTreeItem
+  //                 itemId="3"
+  //                 labelText="حکم حقوقی"
+  //                 labelIcon={FolderRounded}
+  //               >
+  //                 <StyledTreeItem
+  //                   itemId="12"
+  //                   labelText="تصویر حکم"
+  //                   labelIcon={DotIcon}
+  //                 />
+  //               </StyledTreeItem>
+  //               <StyledTreeItem
+  //                 itemId="4"
+  //                 labelText="فیش حقوقی"
+  //                 labelIcon={FolderRounded}
+  //               >
+  //                 <StyledTreeItem
+  //                   itemId="11"
+  //                   labelText="تصویر فیش حقوقی"
+  //                   labelIcon={DotIcon}
+  //                 />
+  //               </StyledTreeItem>
+  //             </StyledTreeItem>
+  //           </SimpleTreeView>
+  //         </ThemeProvider>
+  //       </CacheProvider>
+  //     )}
+  //   </>
+  // );
+
+  // return content;
 }
 
 export default ArchiveTree;
