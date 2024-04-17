@@ -7,7 +7,10 @@ import { useNavigate } from "react-router-dom";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
-import { setPensionaryObject } from "../slices/retiredStateSlice.js";
+import {
+  setPensionaryObject,
+  setPensionaryStatusID,
+} from "../slices/retiredStateSlice.js";
 import {
   useUpdateRetiredPensionaryMutation,
   useGetRetiredPensionaryQuery,
@@ -69,6 +72,9 @@ function RetiredPensionaryForm() {
   useEffect(() => {
     if (isPensionarySuccess) {
       dispatch(setPensionaryObject(pensionaryData?.itemList[0]));
+      dispatch(
+        setPensionaryStatusID(pensionaryData?.itemList[0]?.pensionaryStatusID)
+      );
     }
   }, [dispatch, isPensionarySuccess, pensionaryData]);
 

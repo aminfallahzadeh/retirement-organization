@@ -22,7 +22,9 @@ import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
 function CreateRelatedForm() {
-  const { pensionaryID, personID } = useSelector((state) => state.retiredState);
+  const { pensionaryID, personID, pensionaryStatusID } = useSelector(
+    (state) => state.retiredState
+  );
 
   const [relationCombo, setRelationCombo] = useState([]);
   const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);
@@ -181,10 +183,15 @@ function CreateRelatedForm() {
           ...relatedObject,
           personID,
           pensionaryID,
+          pensionaryStatusID,
+          personRegion:
+            parseInt(convertToEnglishNumber(relatedObject.personRegion)) || "",
+          personArea:
+            parseInt(convertToEnglishNumber(relatedObject.personArea)) || "",
         },
-      });
+      }).unwrap();
       console.log(insertRes);
-      toast.success(insertRes.data.message, {
+      toast.success(insertRes.message, {
         autoClose: 2000,
       });
     } catch (err) {
