@@ -190,9 +190,9 @@ function ArchiveTree() {
     console.log(archiveStructureData);
   }, [archiveStructureData]);
 
-  const renderTreeItems = (items, parentId) => {
+  const renderTreeItems = (items, parentID) => {
     return items
-      .filter((item) => item.parentID === parentId)
+      .filter((item) => item.parentID === parentID)
       .map((item) => (
         <StyledTreeItem
           key={item.id}

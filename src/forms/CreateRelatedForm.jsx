@@ -30,48 +30,21 @@ function CreateRelatedForm() {
   const [universityCombo, setUniversityCombo] = useState([]);
 
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
+  const [selectedMritialDate, setSelectedMritialDate] = useState(null);
+  const [selectedSelfEmployeeStartDate, setSelectedSelfEmployeeStartDate] =
+    useState(null);
+  const [selectedSelfEmployeeEndDate, setSelectedSelfEmployeeEndDate] =
+    useState(null);
+
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
-  const [relatedObject, setRelatedObject] = useState({
-    personID: "string",
-    personNationalCode: "",
-    personFirstName: "",
-    personLastName: "",
-    personFatherName: "",
-    personPreviousName: "string",
-    personCertificatetNo: "",
-    personDeathDate: null,
-    personEmail: "string",
-    personBirthDate: null,
-    personBirthPlace: "",
-    personCountry: "",
-    personState: "",
-    personCity: "",
-    personAddress: "",
-    personPostalCode: "",
-    personRegion: "",
-    personArea: "",
-    personPhone: "",
-    personCellPhone: "",
-    personCellPhone2: "",
-    backupFirstName: "string",
-    backupLastName: "string",
-    genderID: "string",
-    maritalStatusID: "string",
-    educationTypeID: "string",
-    universityID: "string",
-    housingTypeID: "string",
-    personSpecialDisease: "",
-    personDescription: "",
-    parentPersonID: "string",
-    pensionaryStatusID: "string",
-    pensionaryStartDate: null,
-    pensionaryFinishDate: null,
-    pensionaryIsUnderGaurantee: true,
-    pensionaryIsActive: " ",
-    relationshipWithParentID: "",
-    employmentTypeID: "string",
-    relatedID: 0,
-  });
+  const [isMritialCalenderOpen, setIsMritialCalenderOpen] = useState(false);
+  const [isSelfEmployeeStartCalenderOpen, setIsSelfEmployeeStartCalenderOpen] =
+    useState(false);
+  const [isSelfEmployeeEndCalenderOpen, setIsSelfEmployeeEndCalenderOpen] =
+    useState(false);
+
+  const [relatedObject, setRelatedObject] = useState({});
+
   const [insertRelated, { isLoading }] = useInsertRelatedMutation();
 
   const { token } = useSelector((state) => state.auth);
@@ -117,27 +90,82 @@ function CreateRelatedForm() {
     setIsBirthCalenderOpen(false);
   };
 
+  const handleMaritialDateChange = (date) => {
+    setSelectedMritialDate(date);
+    setIsMritialCalenderOpen(false);
+  };
+
+  const handleSelfEmployeeStartDateChange = (date) => {
+    setSelectedSelfEmployeeStartDate(date);
+    setIsSelfEmployeeStartCalenderOpen(false);
+  };
+
+  const handleSelfEmployeeEndDateChange = (date) => {
+    setSelectedSelfEmployeeEndDate(date);
+    setIsSelfEmployeeEndCalenderOpen(false);
+  };
+
   const handleBirthOpenChange = (open) => {
     setIsBirthCalenderOpen(open);
+  };
+
+  const handleMaritialOpenChange = (open) => {
+    setIsMritialCalenderOpen(open);
+  };
+
+  const handleSelfEmployeeStartOpenChange = (open) => {
+    setIsSelfEmployeeStartCalenderOpen(open);
+  };
+
+  const handleSelfEmployeeEndOpenChange = (open) => {
+    setIsSelfEmployeeEndCalenderOpen(open);
   };
 
   useEffect(() => {
     if (selectedBirthDate) {
       setRelatedObject({
         ...relatedObject,
-        personID,
-        pensionaryID,
         personBirthhDate: selectedBirthDate.toISOString(),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBirthDate]);
 
+  useEffect(() => {
+    if (selectedMritialDate) {
+      setRelatedObject({
+        ...relatedObject,
+        personMaritalDate: selectedMritialDate.toISOString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedMritialDate]);
+
+  useEffect(() => {
+    if (selectedSelfEmployeeStartDate) {
+      setRelatedObject({
+        ...relatedObject,
+        selfEmployeeStartDate: selectedSelfEmployeeStartDate.toISOString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSelfEmployeeStartDate]);
+
+  useEffect(() => {
+    if (selectedSelfEmployeeEndDate) {
+      setRelatedObject({
+        ...relatedObject,
+        selfEmployeeEndDate: selectedSelfEmployeeEndDate.toISOString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSelfEmployeeEndDate]);
+
   const handleRealtedObjectChange = (e) => {
     const { name, value } = e.target;
     setRelatedObject({
       ...relatedObject,
-      [name]: value,
+      [name]: convertToPersianNumber(value),
     });
   };
 
@@ -151,6 +179,8 @@ function CreateRelatedForm() {
         token,
         data: {
           ...relatedObject,
+          personID,
+          pensionaryID,
         },
       });
       console.log(insertRes);
@@ -196,7 +226,7 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
-            value={relatedObject.personFirstName}
+            value={relatedObject?.personFirstName}
             name="personFirstName"
             required
             id="personFirstName1"
@@ -210,7 +240,7 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
-            value={relatedObject.personLastName}
+            value={relatedObject?.personLastName}
             name="personLastName"
             required
             id="personLastName1"
@@ -224,7 +254,7 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
-            value={convertToPersianNumber(relatedObject.personNationalCode)}
+            value={relatedObject?.personNationalCode}
             name="personNationalCode"
             required
             id="personNationalCode2"
@@ -243,7 +273,7 @@ function CreateRelatedForm() {
             className="inputBox__form--input"
             required
             onChange={handleRealtedObjectChange}
-            value={convertToPersianNumber(relatedObject.personCertificatetNo)}
+            value={relatedObject?.personCertificatetNo}
             name="personCertificatetNo"
             id="personCertificatetNo2"
           />
@@ -289,12 +319,33 @@ function CreateRelatedForm() {
           <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
         </div>
         <div className="inputBox__form">
+          <InputDatePicker
+            value={selectedMritialDate}
+            onChange={handleMaritialDateChange}
+            format={"jYYYY-jMM-jDD"}
+            onOpenChange={handleMaritialOpenChange}
+            suffixIcon={<CalenderIcon color="action" />}
+            open={isMritialCalenderOpen}
+            style={{
+              border: "2px solid #cfcfcf",
+              borderRadius: "6px",
+              marginLeft: "0.5rem",
+            }}
+            wrapperStyle={{
+              border: "none",
+              cursor: "pointer",
+            }}
+          />
+          <div className="inputBox__form--readOnly-label">تاریخ عقد</div>
+        </div>
+
+        <div className="inputBox__form">
           <input
             type="text"
             className="inputBox__form--input"
             required
             onChange={handleRealtedObjectChange}
-            value={relatedObject.personBirthPlace}
+            value={relatedObject?.personBirthPlace}
             name="personBirthPlace"
             id="personBirthPlace1"
           />
@@ -354,21 +405,16 @@ function CreateRelatedForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleRealtedObjectChange}
+            value={relatedObject?.educationTypeCaption}
+            name="educationTypeCaption"
             required
-            id="studyLevel"
+            id="educationTypeCaption"
           />
-          <label className="inputBox__form--label" htmlFor="studyLevel">
-            مقطع تحصیلی
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="degreeTitle"
-          />
-          <label className="inputBox__form--label" htmlFor="degreeTitle">
+          <label
+            className="inputBox__form--label"
+            htmlFor="educationTypeCaption"
+          >
             عنوان مدرک
           </label>
         </div>
@@ -398,21 +444,13 @@ function CreateRelatedForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="uniUnit"
+            onChange={handleRealtedObjectChange}
+            value={relatedObject?.universityCaption}
+            name="universityCaption"
+            id="universityCaption"
           />
-          <label className="inputBox__form--label" htmlFor="uniUnit">
+          <label className="inputBox__form--label" htmlFor="universityCaption">
             واحد دانشگاهی
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="cutDate"
-          />
-          <label className="inputBox__form--label" htmlFor="cutDate">
-            تاریخ قطع
           </label>
         </div>
         <div className="inputBox__form">
@@ -421,7 +459,7 @@ function CreateRelatedForm() {
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
             name="personCellPhone"
-            value={convertToPersianNumber(relatedObject.personCellPhone)}
+            value={relatedObject?.personCellPhone}
             required
             id="personCellPhone1"
           />
@@ -436,7 +474,7 @@ function CreateRelatedForm() {
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
             name="personCellPhone2"
-            value={convertToPersianNumber(relatedObject.personCellPhone2)}
+            value={relatedObject?.personCellPhone2}
             required
             id="personCellPhone22"
           />
@@ -451,22 +489,11 @@ function CreateRelatedForm() {
             required
             onChange={handleRealtedObjectChange}
             name="personPhone"
-            value={convertToPersianNumber(relatedObject.personPhone)}
+            value={relatedObject?.personPhone}
             id="personPhone1"
           />
           <label className="inputBox__form--label" htmlFor="personPhone1">
-            تلفن ثابت ۱
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="sabetTell2"
-          />
-          <label className="inputBox__form--label" htmlFor="saetTell2">
-            تلفن ثابت ۲
+            تلفن ثابت
           </label>
         </div>
         <div className="inputBox__form">
@@ -476,7 +503,7 @@ function CreateRelatedForm() {
             required
             onChange={handleRealtedObjectChange}
             name="personRegion"
-            value={convertToPersianNumber(relatedObject.personRegion)}
+            value={relatedObject?.personRegion}
             id="personRegion1"
           />
           <label className="inputBox__form--label" htmlFor="personRegion1">
@@ -491,7 +518,7 @@ function CreateRelatedForm() {
             required
             onChange={handleRealtedObjectChange}
             name="personArea"
-            value={convertToPersianNumber(relatedObject.personArea)}
+            value={relatedObject?.personArea}
             id="personArea1"
           />
           <label className="inputBox__form--label" htmlFor="personArea1">
@@ -505,7 +532,7 @@ function CreateRelatedForm() {
             required
             onChange={handleRealtedObjectChange}
             name="personCountry"
-            value={relatedObject.personCountry}
+            value={relatedObject?.personCountry}
             id="personCountry1"
           />
           <label className="inputBox__form--label" htmlFor="personCountry1">
@@ -519,7 +546,7 @@ function CreateRelatedForm() {
             required
             onChange={handleRealtedObjectChange}
             name="personState"
-            value={relatedObject.personState}
+            value={relatedObject?.personState}
             id="personState1"
           />
           <label className="inputBox__form--label" htmlFor="personState1">
@@ -533,7 +560,7 @@ function CreateRelatedForm() {
             required
             onChange={handleRealtedObjectChange}
             name="personCity"
-            value={relatedObject.personCity}
+            value={relatedObject?.personCity}
             id="personCity1"
           />
           <label className="inputBox__form--label" htmlFor="personCity1">
@@ -548,29 +575,13 @@ function CreateRelatedForm() {
             required
             onChange={handleRealtedObjectChange}
             name="personPostalCode"
-            value={convertToPersianNumber(relatedObject.personPostalCode)}
+            value={relatedObject?.personPostalCode}
             id="personPostalCode1"
           />
           <label className="inputBox__form--label" htmlFor="personPostalCode1">
             کد پستی
           </label>
         </div>
-
-        <div className="inputBox__form col-span-3">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            onChange={handleRealtedObjectChange}
-            name="personAddress"
-            value={relatedObject.personAddress}
-            id="personAddress1"
-          />
-          <label className="inputBox__form--label" htmlFor="personAddress1">
-            نشانی
-          </label>
-        </div>
-
         <div className="inputBox__form">
           <input
             type="text"
@@ -578,7 +589,7 @@ function CreateRelatedForm() {
             required
             onChange={handleRealtedObjectChange}
             name="personSpecialDisease"
-            value={relatedObject.personSpecialDisease}
+            value={relatedObject?.personSpecialDisease}
             id="personSpecialDisease1"
           />
           <label
@@ -589,30 +600,33 @@ function CreateRelatedForm() {
           </label>
         </div>
 
-        <div className="inputBox__form col-span-3 row-span-2">
+        <div className="inputBox__form col-span-4">
+          <input
+            type="text"
+            className="inputBox__form--input"
+            required
+            onChange={handleRealtedObjectChange}
+            name="personAddress"
+            value={relatedObject?.personAddress}
+            id="personAddress1"
+          />
+          <label className="inputBox__form--label" htmlFor="personAddress1">
+            نشانی
+          </label>
+        </div>
+
+        <div className="inputBox__form col-span-4 row-span-2">
           <textarea
             type="text"
             className="inputBox__form--input"
             required
             onChange={handleRealtedObjectChange}
             name="personDescription"
-            value={relatedObject.personDescription}
+            value={relatedObject?.personDescription}
             id="personDescription1"
           ></textarea>
           <label className="inputBox__form--label" htmlFor="personDescription1">
             توضیحات
-          </label>
-        </div>
-
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="aghdDate"
-          />
-          <label className="inputBox__form--label" htmlFor="aghdDate">
-            تاریخ عقد
           </label>
         </div>
       </form>
@@ -623,47 +637,76 @@ function CreateRelatedForm() {
 
       <form method="POST" className="grid grid--col-4">
         <div className="inputBox__form col-span-2">
-          <select
+          <input
             type="text"
             className="inputBox__form--input"
             required
             onChange={handleRealtedObjectChange}
-            name="pensionaryIsActive"
-            value={relatedObject.pensionaryIsActive}
-            id="pensionaryIsActive1"
-          >
-            <option value=" ">انتخاب کنید</option>
-            <option value="true">فعال</option>
-            <option value="false">غیر فعال</option>
-          </select>
+            name="selfEmployeeTypeName"
+            value={relatedObject.selfEmployeeTypeName}
+            id="selfEmployeeTypeName"
+          />
           <label
             className="inputBox__form--label"
-            htmlFor="pensionaryIsActive1"
+            htmlFor="selfEmployeeTypeName"
           >
             وضعیت
           </label>
         </div>
 
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="startDate"
+          <InputDatePicker
+            value={selectedSelfEmployeeStartDate}
+            onChange={handleSelfEmployeeStartDateChange}
+            format={"jYYYY-jMM-jDD"}
+            onOpenChange={handleSelfEmployeeStartOpenChange}
+            suffixIcon={<CalenderIcon color="action" />}
+            open={isSelfEmployeeStartCalenderOpen}
+            style={{
+              border: "2px solid #cfcfcf",
+              borderRadius: "6px",
+              marginLeft: "0.5rem",
+            }}
+            wrapperStyle={{
+              border: "none",
+              cursor: "pointer",
+            }}
           />
-          <label className="inputBox__form--label" htmlFor="startDate">
-            تاریخ شروع
-          </label>
+          <div className="inputBox__form--readOnly-label">تاریخ شروع</div>
         </div>
         <div className="inputBox__form">
-          <input
+          <InputDatePicker
+            value={selectedSelfEmployeeEndDate}
+            onChange={handleSelfEmployeeEndDateChange}
+            format={"jYYYY-jMM-jDD"}
+            onOpenChange={handleSelfEmployeeEndOpenChange}
+            suffixIcon={<CalenderIcon color="action" />}
+            open={isSelfEmployeeEndCalenderOpen}
+            style={{
+              border: "2px solid #cfcfcf",
+              borderRadius: "6px",
+              marginLeft: "0.5rem",
+            }}
+            wrapperStyle={{
+              border: "none",
+              cursor: "pointer",
+            }}
+          />
+          <div className="inputBox__form--readOnly-label">تاریخ پایان</div>
+        </div>
+
+        <div className="inputBox__form col-span-4">
+          <textarea
             type="text"
             className="inputBox__form--input"
             required
-            id="endDate"
-          />
-          <label className="inputBox__form--label" htmlFor="endDate">
-            تاریخ پایان
+            onChange={handleRealtedObjectChange}
+            name="selfEmployeeDesc"
+            value={relatedObject?.selfEmployeeDesc}
+            id="selfEmployeeDesc"
+          ></textarea>
+          <label className="inputBox__form--label" htmlFor="selfEmployeeDesc">
+            توضیحات
           </label>
         </div>
       </form>
@@ -677,10 +720,13 @@ function CreateRelatedForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleRealtedObjectChange}
+            name="backupFirstName"
+            value={relatedObject?.backupFirstName}
             required
-            id="backupName"
+            id="backupFirstName1"
           />
-          <label className="inputBox__form--label" htmlFor="backupName">
+          <label className="inputBox__form--label" htmlFor="backupFirstName1">
             نام
           </label>
         </div>
@@ -688,10 +734,13 @@ function CreateRelatedForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleRealtedObjectChange}
+            name="backupLastName"
+            value={relatedObject?.backupLastName}
             required
-            id="BackupSurname"
+            id="backupLastName1"
           />
-          <label className="inputBox__form--label" htmlFor="BackupSurname">
+          <label className="inputBox__form--label" htmlFor="backupLastName1">
             نام خانوادگی
           </label>
         </div>
@@ -699,10 +748,13 @@ function CreateRelatedForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleRealtedObjectChange}
+            name="backupRelation"
+            value={relatedObject?.backupRelation}
             required
-            id="BackupRelation"
+            id="backupRelation"
           />
-          <label className="inputBox__form--label" htmlFor="BackupRelation">
+          <label className="inputBox__form--label" htmlFor="backupRelation">
             نسبت
           </label>
         </div>
@@ -710,10 +762,13 @@ function CreateRelatedForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleRealtedObjectChange}
+            name="backupPhone"
+            value={relatedObject?.backupPhone}
             required
-            id="BackupPhone"
+            id="backupPhone"
           />
-          <label className="inputBox__form--label" htmlFor="BackupPhone">
+          <label className="inputBox__form--label" htmlFor="backupPhone">
             تلفن ثابت
           </label>
         </div>
@@ -722,10 +777,13 @@ function CreateRelatedForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleRealtedObjectChange}
+            name="backupCellphone"
+            value={relatedObject?.backupCellphone}
             required
-            id="BackupCellPhone"
+            id="backupCellphone"
           />
-          <label className="inputBox__form--label" htmlFor="BackupCellPhone">
+          <label className="inputBox__form--label" htmlFor="backupCellphone">
             تلفن همراه
           </label>
         </div>
@@ -734,10 +792,13 @@ function CreateRelatedForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleRealtedObjectChange}
+            name="backupAddress"
+            value={relatedObject?.backupAddress}
             required
-            id="BackupAddress"
+            id="backupAddress"
           />
-          <label className="inputBox__form--label" htmlFor="BackupAddress">
+          <label className="inputBox__form--label" htmlFor="backupAddress">
             نشانی
           </label>
         </div>
