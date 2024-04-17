@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 // redux imports
 import { useSelector } from "react-redux";
 import { useInsertRelatedMutation } from "../slices/relatedApiSlice";
-import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
+import {
+  useGetLookupDataQuery,
+  useGetRelationshipQuery,
+} from "../slices/sharedApiSlice.js";
 
 // mui imports
 import { LoadingButton } from "@mui/lab";
@@ -21,8 +24,8 @@ import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
-function CreateRelatedForm() {
-  const { pensionaryID, personID, pensionaryStatusID } = useSelector(
+function CreateRelatedForm({ setShowCreateRelatedModal }) {
+  const { personID, pensionaryStatusID } = useSelector(
     (state) => state.retiredState
   );
 
@@ -52,7 +55,7 @@ function CreateRelatedForm() {
   const { token } = useSelector((state) => state.auth);
 
   const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
-    useGetLookupDataQuery({ token, lookUpType: "RelationshipType" });
+    useGetRelationshipQuery(token);
 
   const { data: maritialStatusComboItems, isSuccess: isMaritialComboSuccess } =
     useGetLookupDataQuery({ token, lookUpType: "MaritialStatus" });
@@ -66,6 +69,7 @@ function CreateRelatedForm() {
   useEffect(() => {
     if (isRelationComboSuccess) {
       setRelationCombo(relationComboItems.itemList);
+      console.log(relationComboItems);
     }
   }, [isRelationComboSuccess, relationComboItems]);
 
@@ -181,16 +185,26 @@ function CreateRelatedForm() {
         token,
         data: {
           ...relatedObject,
-          personID,
-          pensionaryID,
           pensionaryStatusID,
+          parentPersonID: personID,
+          personCertificatetNo: convertToEnglishNumber(
+            relatedObject.personCertificatetNo
+          ),
+          personNationalCode: convertToEnglishNumber(
+            relatedObject.personNationalCode
+          ),
+          relationshipWithParentID: convertToEnglishNumber(
+            relatedObject.relationshipWithParentID
+          ),
           personRegion:
-            parseInt(convertToEnglishNumber(relatedObject.personRegion)) || "",
+            parseInt(convertToEnglishNumber(relatedObject.personRegion)) ||
+            null,
           personArea:
-            parseInt(convertToEnglishNumber(relatedObject.personArea)) || "",
+            parseInt(convertToEnglishNumber(relatedObject.personArea)) || null,
         },
       }).unwrap();
       console.log(insertRes);
+      setShowCreateRelatedModal(false);
       toast.success(insertRes.message, {
         autoClose: 2000,
       });
@@ -216,8 +230,11 @@ function CreateRelatedForm() {
           >
             <option value=" ">انتخاب نسبت</option>
             {relationCombo.map((relation) => (
-              <option key={relation.lookUpID} value={relation.lookUpID}>
-                {relation.lookUpName}
+              <option
+                key={relation.relationshipID}
+                value={relation.relationshipID}
+              >
+                {relation.relationshipName}
               </option>
             ))}
           </select>
@@ -225,7 +242,7 @@ function CreateRelatedForm() {
             className="inputBox__form--label"
             htmlFor="relationshipWithParentID"
           >
-            نسبت
+            <span>*</span> نسبت
           </label>
         </div>
         <div className="inputBox__form">
@@ -239,7 +256,7 @@ function CreateRelatedForm() {
             id="personFirstName1"
           />
           <label className="inputBox__form--label" htmlFor="personFirstName1">
-            نام
+            <span>*</span> نام
           </label>
         </div>
         <div className="inputBox__form">
@@ -253,7 +270,7 @@ function CreateRelatedForm() {
             id="personLastName1"
           />
           <label className="inputBox__form--label" htmlFor="personLastName1">
-            نام خانوادگی
+            <span>*</span> نام خانوادگی
           </label>
         </div>
         <div className="inputBox__form">
@@ -270,7 +287,7 @@ function CreateRelatedForm() {
             className="inputBox__form--label"
             htmlFor="personNationalCode2"
           >
-            کد ملی
+            <span>*</span> کد ملی
           </label>
         </div>
 
@@ -288,7 +305,7 @@ function CreateRelatedForm() {
             className="inputBox__form--label"
             htmlFor="personCertificatetNo2"
           >
-            شماره شناسنامه
+            <span>*</span> شماره شناسنامه
           </label>
         </div>
         <div className="inputBox__form">
@@ -657,7 +674,7 @@ function CreateRelatedForm() {
             className="inputBox__form--label"
             htmlFor="selfEmployeeTypeName"
           >
-            وضعیت
+            <span>*</span> وضعیت
           </label>
         </div>
 

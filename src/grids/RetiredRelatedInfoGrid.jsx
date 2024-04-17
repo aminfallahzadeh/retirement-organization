@@ -291,7 +291,9 @@ function RetiredRelatedInfoGrid() {
               title={"ایجاد وابسته"}
               closeModal={() => setShowCreateRelatedModal(false)}
             >
-              <CreateRelatedForm />
+              <CreateRelatedForm
+                setShowCreateRelatedModal={setShowCreateRelatedModal}
+              />
             </Modal>
           ) : showEditRelatedModal ? (
             <Modal

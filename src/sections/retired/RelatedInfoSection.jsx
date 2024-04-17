@@ -60,9 +60,7 @@ function RelatedInfoSection() {
           sx={{
             padding: "0",
           }}
-        >
-          grid
-        </TabPanel>
+        ></TabPanel>
       </TabContext>
     </section>
   );

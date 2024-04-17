@@ -21,6 +21,15 @@ export const sharedApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+    getRelationship: builder.query({
+      query: (token) => ({
+        url: `${SHARED_URL_HTTPS}/GetRelationship`,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
     insertLookUp: builder.mutation({
       query: ({ token, data }) => ({
         url: `${SHARED_URL_HTTPS}/InsertLookUp`,
@@ -35,5 +44,8 @@ export const sharedApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetLookupDataQuery, useInsertLookUpMutation } =
-  sharedApiSlice;
+export const {
+  useGetLookupDataQuery,
+  useInsertLookUpMutation,
+  useGetRelationshipQuery,
+} = sharedApiSlice;
