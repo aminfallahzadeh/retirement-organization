@@ -12,8 +12,13 @@ import {
   createTheme,
   ThemeProvider,
 } from "@mui/material/styles";
-import { Box, Typography, Collapse } from "@mui/material";
-import { FolderRounded } from "@mui/icons-material";
+import { Box, Typography, Collapse, IconButton, Tooltip } from "@mui/material";
+import {
+  FolderRounded,
+  Add as AddIcon,
+  Remove as RemoveIcon,
+  EditOutlined as EditIcon,
+} from "@mui/icons-material";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem, treeItemClasses } from "@mui/x-tree-view/TreeItem";
 
@@ -226,6 +231,24 @@ function ArchiveTree() {
                 padding: "5px",
               }}
             >
+              <Tooltip title="اضافه کردن دسته جدید">
+                <IconButton aria-label="add" color="success">
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="حذف دسته">
+                <IconButton aria-label="delete" color="error">
+                  <RemoveIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="ویرایش نام">
+                <IconButton aria-label="edit" color="warning">
+                  <EditIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+
               {renderTreeItems(archiveStructureData, "0")}
             </SimpleTreeView>
           </ThemeProvider>
