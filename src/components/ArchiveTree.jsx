@@ -1,9 +1,15 @@
 // react imports
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { setArchiveStructureData } from "../slices/archiveDataSlice";
-import { useGetArchiveStructureQuery } from "../slices/archiveApiSlice";
+import {
+  setArchiveStructureData,
+  setSelectedArchiveData,
+} from "../slices/archiveDataSlice";
+import {
+  useGetArchiveStructureQuery,
+  useDeleteArchiveStructureMutation,
+} from "../slices/archiveApiSlice";
 
 // mui imports
 import {
@@ -12,15 +18,31 @@ import {
   createTheme,
   ThemeProvider,
 } from "@mui/material/styles";
-import { Box, Typography, Collapse, IconButton, Tooltip } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Collapse,
+  IconButton,
+  Tooltip,
+  CircularProgress,
+  Button,
+} from "@mui/material";
 import {
   FolderRounded,
   Add as AddIcon,
   Remove as RemoveIcon,
   EditOutlined as EditIcon,
+  Refresh as RefreshIcon,
+  Done as DoneIcon,
+  Close as CloseIcon,
 } from "@mui/icons-material";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem, treeItemClasses } from "@mui/x-tree-view/TreeItem";
+import { LoadingButton } from "@mui/lab";
+
+// components
+import Modal from "./Modal";
+import CreateArchiveStructureForm from "../forms/CreateArchiveStructureForm";
 
 // library imports
 import { toast } from "react-toastify";
@@ -29,6 +51,9 @@ import { prefixer } from "stylis";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { animated, useSpring } from "@react-spring/web";
+
+// helpers
+import { findById } from "../helper.js";
 
 function DotIcon() {
   return (
@@ -149,25 +174,81 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
 });
 
 function ArchiveTree() {
+  const [showNewArchiveModal, setShowNewArchiveModal] = useState(false);
+  const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false);
+
   const { token } = useSelector((state) => state.auth);
+  const { selectedArchiveData } = useSelector((state) => state.archiveData);
+
   const dispatch = useDispatch();
 
   const { archiveStructureData } = useSelector((state) => state.archiveData);
 
+  const [deleteArhiveStructure, { isLoading: isDeleting }] =
+    useDeleteArchiveStructureMutation();
+
   const {
     data: archiveStructure,
     isLoading,
+    isFetching,
     isSuccess,
     error,
     refetch,
   } = useGetArchiveStructureQuery(token);
+
+  const handleChangeSelectedItemParentID = (_, id) => {
+    const selectedArchive = findById(archiveStructureData, id);
+    dispatch(setSelectedArchiveData(selectedArchive));
+  };
+
+  const handleNewArchiveModalChange = () => {
+    setShowNewArchiveModal(true);
+  };
+
+  const handleDeleteArchiveModalChange = () => {
+    setShowDeleteArchiveModal(true);
+  };
+
+  const handleRefresh = () => {
+    refetch();
+  };
+
+  const handleDeleteStructure = async () => {
+    try {
+      const deleteRes = await deleteArhiveStructure({
+        token,
+        data: {
+          id: selectedArchiveData.id,
+          insertUserID: "",
+          name: "",
+          parentID: "",
+        },
+      }).unwrap();
+      setShowDeleteArchiveModal(false);
+      toast.success(deleteRes.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
 
   useEffect(() => {
     refetch();
     if (isSuccess) {
       dispatch(setArchiveStructureData(archiveStructure.itemList));
     }
-  }, [refetch, dispatch, archiveStructure, isSuccess]);
+  }, [
+    refetch,
+    dispatch,
+    archiveStructure,
+    isSuccess,
+    showNewArchiveModal,
+    showDeleteArchiveModal,
+  ]);
 
   useEffect(() => {
     if (error) {
@@ -191,6 +272,10 @@ function ArchiveTree() {
     stylisPlugins: [prefixer, rtlPlugin],
   });
 
+  const rootFolder = archiveStructureData?.find(
+    (item) => item.parentID === "0"
+  );
+
   useEffect(() => {
     console.log(archiveStructureData);
   }, [archiveStructureData]);
@@ -213,14 +298,14 @@ function ArchiveTree() {
   const content = (
     <>
       {isLoading ? (
-        <div>در حال بارگذاری</div>
+        <CircularProgress color="info" />
       ) : (
         <CacheProvider value={cacheRtl}>
           <ThemeProvider theme={theme}>
             <SimpleTreeView
+              // selectedItems={selectedArchiveParentID}
+              onSelectedItemsChange={handleChangeSelectedItemParentID}
               // aria-label="gmail"
-              // defaultExpandedItems={["97134493291b473f9b3bf8c4c15b27a0"]}
-              // defaultSelectedItems="3"
               sx={{
                 height: "fit-content",
                 flexGrow: 1,
@@ -231,14 +316,42 @@ function ArchiveTree() {
                 padding: "5px",
               }}
             >
+              {isFetching ? (
+                <IconButton aria-label="refresh" color="info" disabled>
+                  <CircularProgress size={20} value={100} />
+                </IconButton>
+              ) : (
+                <Tooltip title="بروزرسانی">
+                  <IconButton
+                    aria-label="refresh"
+                    color="info"
+                    onClick={handleRefresh}
+                  >
+                    <RefreshIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              )}
+
               <Tooltip title="اضافه کردن دسته جدید">
-                <IconButton aria-label="add" color="success">
+                <IconButton
+                  aria-label="add"
+                  color="success"
+                  onClick={handleNewArchiveModalChange}
+                >
                   <AddIcon />
                 </IconButton>
               </Tooltip>
 
               <Tooltip title="حذف دسته">
-                <IconButton aria-label="delete" color="error">
+                <IconButton
+                  aria-label="delete"
+                  color="error"
+                  onClick={handleDeleteArchiveModalChange}
+                  disabled={
+                    selectedArchiveData.parentID === "0" ||
+                    selectedArchiveData.length === 0
+                  }
+                >
                   <RemoveIcon />
                 </IconButton>
               </Tooltip>
@@ -253,6 +366,51 @@ function ArchiveTree() {
             </SimpleTreeView>
           </ThemeProvider>
         </CacheProvider>
+      )}
+
+      {showNewArchiveModal && (
+        <Modal
+          title="افزودن دسته جدید"
+          closeModal={() => setShowNewArchiveModal(false)}
+        >
+          <CreateArchiveStructureForm
+            setShowNewArchiveModal={setShowNewArchiveModal}
+          />
+        </Modal>
+      )}
+
+      {showDeleteArchiveModal && (
+        <Modal
+          title={"حذف گروه"}
+          closeModal={() => setShowDeleteArchiveModal(false)}
+        >
+          <p className="paragraph-primary">
+            آیا از حذف این گروه اطمینان دارید؟
+          </p>
+          <div className="flex-row flex-center">
+            <LoadingButton
+              dir="ltr"
+              endIcon={<DoneIcon />}
+              loading={isDeleting}
+              onClick={handleDeleteStructure}
+              variant="contained"
+              color="success"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>بله</span>
+            </LoadingButton>
+            <Button
+              dir="ltr"
+              endIcon={<CloseIcon />}
+              onClick={() => setShowDeleteArchiveModal(false)}
+              variant="contained"
+              color="error"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>خیر</span>
+            </Button>
+          </div>
+        </Modal>
       )}
     </>
   );

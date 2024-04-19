@@ -49,7 +49,7 @@ function GroupNameInput({ setShowEditModal }) {
 
   const content = (
     <section className="formContainer flex-col flex-center">
-      <form className="inputBox__form">
+      <form method="POST" className="inputBox__form">
         <input
           type="text"
           className="inputBox__form--input inputBox__form--input-height-40"

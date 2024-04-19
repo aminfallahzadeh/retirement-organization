@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   archiveStructureData: [],
+  selectedArchiveData: [],
 };
 
 const archiveDataSlice = createSlice({
@@ -11,9 +12,13 @@ const archiveDataSlice = createSlice({
     setArchiveStructureData: (state, action) => {
       state.archiveStructureData = action.payload;
     },
+    setSelectedArchiveData: (state, action) => {
+      state.selectedArchiveData = action.payload;
+    },
   },
 });
 
-export const { setArchiveStructureData } = archiveDataSlice.actions;
+export const { setArchiveStructureData, setSelectedArchiveData } =
+  archiveDataSlice.actions;
 
 export default archiveDataSlice.reducer;
