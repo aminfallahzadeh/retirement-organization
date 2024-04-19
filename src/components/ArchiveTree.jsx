@@ -43,6 +43,7 @@ import { LoadingButton } from "@mui/lab";
 // components
 import Modal from "./Modal";
 import CreateArchiveStructureForm from "../forms/CreateArchiveStructureForm";
+import EditArchiveStructureForm from "../forms/EditArchiveStructureForm";
 
 // library imports
 import { toast } from "react-toastify";
@@ -174,8 +175,12 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
 });
 
 function ArchiveTree() {
-  const [showNewArchiveModal, setShowNewArchiveModal] = useState(false);
-  const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false);
+  const [showCreateArchiveStructureModal, setShowCreateArchiveStructureModal] =
+    useState(false);
+  const [showDeleteArchiveStructureModal, setShowDeleteArchiveStructureModal] =
+    useState(false);
+  const [showEditArchiveStructureModal, setShowEditArchiveStructureModal] =
+    useState(false);
 
   const { token } = useSelector((state) => state.auth);
   const { selectedArchiveData } = useSelector((state) => state.archiveData);
@@ -201,12 +206,16 @@ function ArchiveTree() {
     dispatch(setSelectedArchiveData(selectedArchive));
   };
 
-  const handleNewArchiveModalChange = () => {
-    setShowNewArchiveModal(true);
+  const handleCreateArchiveStructureModalChange = () => {
+    setShowCreateArchiveStructureModal(true);
   };
 
-  const handleDeleteArchiveModalChange = () => {
-    setShowDeleteArchiveModal(true);
+  const handleDeleteArchiveStructureModalChange = () => {
+    setShowDeleteArchiveStructureModal(true);
+  };
+
+  const handleEditArchiveStructureModalChange = () => {
+    setShowEditArchiveStructureModal(true);
   };
 
   const handleRefresh = () => {
@@ -224,7 +233,7 @@ function ArchiveTree() {
           parentID: "",
         },
       }).unwrap();
-      setShowDeleteArchiveModal(false);
+      setShowDeleteArchiveStructureModal(false);
       toast.success(deleteRes.message, {
         autoClose: 2000,
       });
@@ -246,8 +255,8 @@ function ArchiveTree() {
     dispatch,
     archiveStructure,
     isSuccess,
-    showNewArchiveModal,
-    showDeleteArchiveModal,
+    showCreateArchiveStructureModal,
+    showDeleteArchiveStructureModal,
   ]);
 
   useEffect(() => {
@@ -336,7 +345,8 @@ function ArchiveTree() {
                 <IconButton
                   aria-label="add"
                   color="success"
-                  onClick={handleNewArchiveModalChange}
+                  disabled={selectedArchiveData.length === 0}
+                  onClick={handleCreateArchiveStructureModalChange}
                 >
                   <AddIcon />
                 </IconButton>
@@ -346,7 +356,7 @@ function ArchiveTree() {
                 <IconButton
                   aria-label="delete"
                   color="error"
-                  onClick={handleDeleteArchiveModalChange}
+                  onClick={handleDeleteArchiveStructureModalChange}
                   disabled={
                     selectedArchiveData.parentID === "0" ||
                     selectedArchiveData.length === 0
@@ -357,7 +367,15 @@ function ArchiveTree() {
               </Tooltip>
 
               <Tooltip title="ویرایش نام">
-                <IconButton aria-label="edit" color="warning">
+                <IconButton
+                  aria-label="edit"
+                  color="warning"
+                  onClick={handleEditArchiveStructureModalChange}
+                  disabled={
+                    selectedArchiveData.parentID === "0" ||
+                    selectedArchiveData.length === 0
+                  }
+                >
                   <EditIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
@@ -368,21 +386,21 @@ function ArchiveTree() {
         </CacheProvider>
       )}
 
-      {showNewArchiveModal && (
+      {showCreateArchiveStructureModal && (
         <Modal
           title="افزودن دسته جدید"
-          closeModal={() => setShowNewArchiveModal(false)}
+          closeModal={() => setShowCreateArchiveStructureModal(false)}
         >
           <CreateArchiveStructureForm
-            setShowNewArchiveModal={setShowNewArchiveModal}
+            setShowNewArchiveModal={setShowCreateArchiveStructureModal}
           />
         </Modal>
       )}
 
-      {showDeleteArchiveModal && (
+      {showDeleteArchiveStructureModal && (
         <Modal
           title={"حذف گروه"}
-          closeModal={() => setShowDeleteArchiveModal(false)}
+          closeModal={() => setShowDeleteArchiveStructureModal(false)}
         >
           <p className="paragraph-primary">
             آیا از حذف این گروه اطمینان دارید؟
@@ -402,7 +420,7 @@ function ArchiveTree() {
             <Button
               dir="ltr"
               endIcon={<CloseIcon />}
-              onClick={() => setShowDeleteArchiveModal(false)}
+              onClick={() => setShowDeleteArchiveStructureModal(false)}
               variant="contained"
               color="error"
               sx={{ fontFamily: "sahel" }}
@@ -410,6 +428,17 @@ function ArchiveTree() {
               <span>خیر</span>
             </Button>
           </div>
+        </Modal>
+      )}
+
+      {showEditArchiveStructureModal && (
+        <Modal
+          title="ویرایش نام"
+          closeModal={() => setShowEditArchiveStructureModal(false)}
+        >
+          <EditArchiveStructureForm
+            setShowEditArchiveStructureModal={setShowEditArchiveStructureModal}
+          />
         </Modal>
       )}
     </>
