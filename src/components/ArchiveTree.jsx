@@ -29,8 +29,10 @@ import {
 } from "@mui/material";
 import {
   FolderRounded,
-  Add as AddIcon,
-  Remove as RemoveIcon,
+  CreateNewFolderOutlined as AddFolderIcon,
+  AddPhotoAlternateOutlined as AddFileIcon,
+  HideImageOutlined as DeleteFileIcon,
+  FolderDeleteOutlined as DeleteFolderIcon,
   EditOutlined as EditIcon,
   Refresh as RefreshIcon,
   Done as DoneIcon,
@@ -257,6 +259,7 @@ function ArchiveTree() {
     isSuccess,
     showCreateArchiveStructureModal,
     showDeleteArchiveStructureModal,
+    showEditArchiveStructureModal,
   ]);
 
   useEffect(() => {
@@ -280,14 +283,6 @@ function ArchiveTree() {
     key: "muirtl",
     stylisPlugins: [prefixer, rtlPlugin],
   });
-
-  const rootFolder = archiveStructureData?.find(
-    (item) => item.parentID === "0"
-  );
-
-  useEffect(() => {
-    console.log(archiveStructureData);
-  }, [archiveStructureData]);
 
   const renderTreeItems = (items, parentID) => {
     return items
@@ -341,18 +336,18 @@ function ArchiveTree() {
                 </Tooltip>
               )}
 
-              <Tooltip title="اضافه کردن دسته جدید">
+              <Tooltip title="اضافه کردن پوشه">
                 <IconButton
-                  aria-label="add"
+                  aria-label="addFolder"
                   color="success"
                   disabled={selectedArchiveData.length === 0}
                   onClick={handleCreateArchiveStructureModalChange}
                 >
-                  <AddIcon />
+                  <AddFolderIcon />
                 </IconButton>
               </Tooltip>
 
-              <Tooltip title="حذف دسته">
+              <Tooltip title="حذف پوشه">
                 <IconButton
                   aria-label="delete"
                   color="error"
@@ -362,11 +357,23 @@ function ArchiveTree() {
                     selectedArchiveData.length === 0
                   }
                 >
-                  <RemoveIcon />
+                  <DeleteFolderIcon />
                 </IconButton>
               </Tooltip>
 
-              <Tooltip title="ویرایش نام">
+              <Tooltip title="اضافه کردن برگه">
+                <IconButton aria-label="addFile" color="success">
+                  <AddFileIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="حذف برگه">
+                <IconButton aria-label="delete" color="error">
+                  <DeleteFileIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="ویرایش نام پوشه">
                 <IconButton
                   aria-label="edit"
                   color="warning"
@@ -388,7 +395,7 @@ function ArchiveTree() {
 
       {showCreateArchiveStructureModal && (
         <Modal
-          title="افزودن دسته جدید"
+          title="افزودن پوشه جدید"
           closeModal={() => setShowCreateArchiveStructureModal(false)}
         >
           <CreateArchiveStructureForm
@@ -399,11 +406,12 @@ function ArchiveTree() {
 
       {showDeleteArchiveStructureModal && (
         <Modal
-          title={"حذف گروه"}
+          title={"حذف پوشه "}
           closeModal={() => setShowDeleteArchiveStructureModal(false)}
         >
           <p className="paragraph-primary">
-            آیا از حذف این گروه اطمینان دارید؟
+            آیا از حذف پوشه <strong>{selectedArchiveData.name}</strong> اطمینان
+            دارید؟
           </p>
           <div className="flex-row flex-center">
             <LoadingButton
@@ -433,7 +441,7 @@ function ArchiveTree() {
 
       {showEditArchiveStructureModal && (
         <Modal
-          title="ویرایش نام"
+          title="ویرایش نام پوشه"
           closeModal={() => setShowEditArchiveStructureModal(false)}
         >
           <EditArchiveStructureForm
@@ -445,84 +453,6 @@ function ArchiveTree() {
   );
 
   return content;
-  // const content = (
-  //   <>
-  //     {isLoading ? (
-  //       <div>در حال بارگذاری</div>
-  //     ) : (
-  //       <CacheProvider value={cacheRtl}>
-  //         <ThemeProvider theme={theme}>
-  //           <SimpleTreeView
-  //             // aria-label="gmail"
-  //             defaultExpandedItems={["1"]}
-  //             // defaultSelectedItems="3"
-  //             sx={{
-  //               height: "fit-content",
-  //               flexGrow: 1,
-  //               maxWidth: 400,
-  //               overflowY: "auto",
-  //               backgroundColor: "#cfcfcf",
-  //               borderRadius: "6px",
-  //               padding: "5px",
-  //             }}
-  //           >
-  //             <StyledTreeItem
-  //               itemId="1"
-  //               labelText="پرونده الکترونیک"
-  //               labelIcon={FolderRounded}
-  //             >
-  //               <StyledTreeItem
-  //                 itemId="5"
-  //                 labelText="احراز هویت"
-  //                 labelIcon={FolderRounded}
-  //               >
-  //                 <StyledTreeItem
-  //                   itemId="8"
-  //                   labelText="صفحه اول شناسنامه"
-  //                   labelIcon={DotIcon}
-  //                 />
-  //                 <StyledTreeItem
-  //                   itemId="9"
-  //                   labelText="صفحه دوم شناسنامه"
-  //                   labelIcon={DotIcon}
-  //                 />
-  //                 <StyledTreeItem
-  //                   itemId="10"
-  //                   labelText="تصویر کارت ملی"
-  //                   labelIcon={DotIcon}
-  //                 />
-  //               </StyledTreeItem>
-  //               <StyledTreeItem
-  //                 itemId="3"
-  //                 labelText="حکم حقوقی"
-  //                 labelIcon={FolderRounded}
-  //               >
-  //                 <StyledTreeItem
-  //                   itemId="12"
-  //                   labelText="تصویر حکم"
-  //                   labelIcon={DotIcon}
-  //                 />
-  //               </StyledTreeItem>
-  //               <StyledTreeItem
-  //                 itemId="4"
-  //                 labelText="فیش حقوقی"
-  //                 labelIcon={FolderRounded}
-  //               >
-  //                 <StyledTreeItem
-  //                   itemId="11"
-  //                   labelText="تصویر فیش حقوقی"
-  //                   labelIcon={DotIcon}
-  //                 />
-  //               </StyledTreeItem>
-  //             </StyledTreeItem>
-  //           </SimpleTreeView>
-  //         </ThemeProvider>
-  //       </CacheProvider>
-  //     )}
-  //   </>
-  // );
-
-  // return content;
 }
 
 export default ArchiveTree;

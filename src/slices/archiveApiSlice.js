@@ -48,6 +48,17 @@ export const archiveApiSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
+    insertArchive: builder.mutation({
+      query: ({ token, data }) => ({
+        url: `${USERS_URL_HTTPS}/InsertArchive`,
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -56,4 +67,5 @@ export const {
   useInsertArchiveStructureMutation,
   useDeleteArchiveStructureMutation,
   useUpdateArchiveStructureMutation,
+  useInsertArchiveMutation,
 } = archiveApiSlice;
