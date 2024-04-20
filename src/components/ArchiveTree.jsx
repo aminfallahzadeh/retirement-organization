@@ -12,6 +12,7 @@ import {
   useDeleteArchiveStructureMutation,
   useInsertArchiveMutation,
   useGetArchiveQuery,
+  useDeleteArchiveMutation,
 } from "../slices/archiveApiSlice";
 
 // mui imports
@@ -185,6 +186,7 @@ function ArchiveTree() {
   const inputFileRef = useRef(null);
   const [imageData, setImageData] = useState([]);
   const [image, setImage] = useState(null);
+  const [selectedImageData, setSelectedImageData] = useState([]);
 
   // modal states
   const [showCreateArchiveStructureModal, setShowCreateArchiveStructureModal] =
@@ -194,6 +196,7 @@ function ArchiveTree() {
   const [showEditArchiveStructureModal, setShowEditArchiveStructureModal] =
     useState(false);
   const [showAddImageModal, setShowAddImageModal] = useState(false);
+  const [showDeleteImageModal, setShowDeleteImageModal] = useState(false);
 
   const { token } = useSelector((state) => state.auth);
   const { personID } = useSelector((state) => state.retiredState);
@@ -209,6 +212,9 @@ function ArchiveTree() {
 
   const [insertArchive, { isLoading: isInsertingImage }] =
     useInsertArchiveMutation();
+
+  const [deleteArchive, { isLoading: isDeletingImage }] =
+    useDeleteArchiveMutation();
 
   // archive structure and archive images queries
   const {
@@ -237,7 +243,7 @@ function ArchiveTree() {
       dispatch(setSelectedArchiveData(selected));
     } else {
       const selectedImage = findById(imageData, id);
-      dispatch(setSelectedArchiveData(selectedImage));
+      setSelectedImageData(selectedImage);
     }
   };
 
@@ -260,6 +266,10 @@ function ArchiveTree() {
 
   const handleUploadButtonClick = () => {
     inputFileRef.current.click(); // Trigger the file input click event
+  };
+
+  const handleDeleteImageModalChange = () => {
+    setShowDeleteImageModal(true);
   };
 
   const handleRefresh = () => {
@@ -344,6 +354,32 @@ function ArchiveTree() {
     }
   };
 
+  // delete image handler
+  const handleDeleteImage = async () => {
+    try {
+      const deleteImgRes = await deleteArchive({
+        token,
+        data: {
+          id: selectedImageData.id,
+          attachment: "",
+          contentType: "",
+          archiveStructureID: "",
+          insertUserID: "",
+          personID: "",
+        },
+      }).unwrap();
+      setShowDeleteImageModal(false);
+      toast.success(deleteImgRes.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
   // fetch archive structure data
   useEffect(() => {
     refetch();
@@ -358,7 +394,6 @@ function ArchiveTree() {
     showCreateArchiveStructureModal,
     showDeleteArchiveStructureModal,
     showEditArchiveStructureModal,
-    showAddImageModal,
   ]);
 
   // handle error
@@ -376,8 +411,17 @@ function ArchiveTree() {
     imageRefetch();
     if (isImageSuccess) {
       setImageData(images.itemList);
+      console.log("images", imageData);
     }
-  }, [imageRefetch, isImageSuccess, dispatch, images]);
+  }, [
+    imageRefetch,
+    isImageSuccess,
+    dispatch,
+    images,
+    showAddImageModal,
+    showDeleteImageModal,
+    imageData,
+  ]);
 
   // handle error
   useEffect(() => {
@@ -421,7 +465,7 @@ function ArchiveTree() {
               <StyledTreeItem
                 key={image.id}
                 itemId={image.id}
-                labelText={"image"}
+                labelText={"برگه"}
                 labelIcon={DotIcon}
               />
             ))}
@@ -457,7 +501,7 @@ function ArchiveTree() {
                 padding: "5px",
               }}
             >
-              {isFetching || isImageFetching ? (
+              {isFetching || isImageFetching || isImageLoading ? (
                 <IconButton aria-label="refresh" color="info" disabled>
                   <CircularProgress size={20} value={100} />
                 </IconButton>
@@ -525,7 +569,8 @@ function ArchiveTree() {
                   <IconButton
                     aria-label="delete"
                     color="error"
-                    disabled={selectedArchiveData.length === 0}
+                    onClick={handleDeleteImageModalChange}
+                    disabled={selectedImageData.length === 0}
                   >
                     <DeleteFileIcon />
                   </IconButton>
@@ -540,7 +585,8 @@ function ArchiveTree() {
                     onClick={handleEditArchiveStructureModalChange}
                     disabled={
                       selectedArchiveData.parentID === "0" ||
-                      selectedArchiveData.length === 0
+                      selectedArchiveData.length === 0 ||
+                      selectedImageData.length > 0
                     }
                   >
                     <EditIcon fontSize="small" />
@@ -649,6 +695,38 @@ function ArchiveTree() {
             >
               <span>کامپیوتر</span>
             </LoadingButton>
+          </div>
+        </Modal>
+      )}
+
+      {showDeleteImageModal && (
+        <Modal
+          title="حذف برگه"
+          closeModal={() => setShowDeleteImageModal(false)}
+        >
+          <p className="paragraph-primary">آیا از حذف برگه اطمینان دارید؟</p>
+          <div className="flex-row flex-center">
+            <LoadingButton
+              dir="ltr"
+              endIcon={<DoneIcon />}
+              loading={isDeletingImage}
+              onClick={handleDeleteImage}
+              variant="contained"
+              color="success"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>بله</span>
+            </LoadingButton>
+            <Button
+              dir="ltr"
+              endIcon={<CloseIcon />}
+              onClick={() => setShowDeleteImageModal(false)}
+              variant="contained"
+              color="error"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>خیر</span>
+            </Button>
           </div>
         </Modal>
       )}
