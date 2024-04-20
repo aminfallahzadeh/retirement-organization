@@ -11,6 +11,7 @@ import {
   useGetArchiveStructureQuery,
   useDeleteArchiveStructureMutation,
   useInsertArchiveMutation,
+  useGetArchiveQuery,
 } from "../slices/archiveApiSlice";
 
 // mui imports
@@ -182,8 +183,10 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
 
 function ArchiveTree() {
   const inputFileRef = useRef(null);
+  const [imageData, setImageData] = useState([]);
   const [image, setImage] = useState(null);
 
+  // modal states
   const [showCreateArchiveStructureModal, setShowCreateArchiveStructureModal] =
     useState(false);
   const [showDeleteArchiveStructureModal, setShowDeleteArchiveStructureModal] =
@@ -194,6 +197,7 @@ function ArchiveTree() {
 
   const { token } = useSelector((state) => state.auth);
   const { personID } = useSelector((state) => state.retiredState);
+  const { selectedRequestData } = useSelector((state) => state.requestsData);
   const { selectedArchiveData } = useSelector((state) => state.archiveData);
 
   const dispatch = useDispatch();
@@ -206,6 +210,7 @@ function ArchiveTree() {
   const [insertArchive, { isLoading: isInsertingImage }] =
     useInsertArchiveMutation();
 
+  // archive structure and archive images queries
   const {
     data: archiveStructure,
     isLoading,
@@ -215,27 +220,28 @@ function ArchiveTree() {
     refetch,
   } = useGetArchiveStructureQuery(token);
 
+  const {
+    data: images,
+    isLoading: isImageLoading,
+    isFetching: isImageFetching,
+    isSuccess: isImageSuccess,
+    error: imageError,
+    refetch: imageRefetch,
+  } = useGetArchiveQuery({ token, personID: selectedRequestData.personId });
+
+  // handle selected tree item
   const handleChangeSelectedItemParentID = (_, id) => {
     const selected = findById(archiveStructureData, id);
-    // setSelectedArchive(selected);
-    dispatch(setSelectedArchiveData(selected));
+
+    if (selected) {
+      dispatch(setSelectedArchiveData(selected));
+    } else {
+      const selectedImage = findById(imageData, id);
+      dispatch(setSelectedArchiveData(selectedImage));
+    }
   };
 
-  useEffect(() => {
-    return () => {
-      dispatch(setSelectedArchiveData([]));
-    };
-  }, [dispatch]);
-
-  // useEffect(() => {
-  //   if (selectedArchive) {
-  //     dispatch(setSelectedArchiveData(selectedArchive));
-  //   }
-  //   return () => {
-  //     dispatch(setSelectedArchiveData([]));
-  //   };
-  // }, [dispatch, selectedArchive]);
-
+  // all handlers
   const handleCreateArchiveStructureModalChange = () => {
     setShowCreateArchiveStructureModal(true);
   };
@@ -256,6 +262,12 @@ function ArchiveTree() {
     inputFileRef.current.click(); // Trigger the file input click event
   };
 
+  const handleRefresh = () => {
+    imageRefetch();
+    refetch();
+  };
+
+  // insert image post request handler
   const handleInsertImage = async () => {
     try {
       const insertImageres = await insertArchive({
@@ -281,17 +293,26 @@ function ArchiveTree() {
     }
   };
 
+  // handle user image selection
+  // convert to base64 format
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
 
     reader.onloadend = () => {
-      // Set the image state to the base64 string
-      setImage(reader.result);
+      // Get the base64 string
+      const base64String = reader.result;
+
+      // Remove the prefix(data:image/png;base64)
+      const base64Data = base64String.split(",")[1];
+
+      // Set the image state to the base64 data
+      setImage(base64Data);
     };
     reader.readAsDataURL(file);
   };
 
+  // check if the image is not null then send the post request
   useEffect(() => {
     if (image !== null) {
       handleInsertImage();
@@ -299,10 +320,7 @@ function ArchiveTree() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [image]);
 
-  const handleRefresh = () => {
-    refetch();
-  };
-
+  // delete archive structure handler
   const handleDeleteStructure = async () => {
     try {
       const deleteRes = await deleteArhiveStructure({
@@ -326,6 +344,7 @@ function ArchiveTree() {
     }
   };
 
+  // fetch archive structure data
   useEffect(() => {
     refetch();
     if (isSuccess) {
@@ -342,6 +361,7 @@ function ArchiveTree() {
     showAddImageModal,
   ]);
 
+  // handle error
   useEffect(() => {
     if (error) {
       console.log(error);
@@ -351,6 +371,25 @@ function ArchiveTree() {
     }
   }, [error]);
 
+  // fetch images data
+  useEffect(() => {
+    imageRefetch();
+    if (isImageSuccess) {
+      setImageData(images.itemList);
+    }
+  }, [imageRefetch, isImageSuccess, dispatch, images]);
+
+  // handle error
+  useEffect(() => {
+    if (imageError) {
+      console.log(imageError);
+      toast.error(imageError?.data?.message || imageError.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [imageError]);
+
+  // mui styles for rtl support
   const theme = (outerTheme) =>
     createTheme({
       direction: "rtl",
@@ -364,7 +403,8 @@ function ArchiveTree() {
     stylisPlugins: [prefixer, rtlPlugin],
   });
 
-  const renderTreeItems = (items, parentID) => {
+  // function to render tree items recursively
+  const renderTreeItems = (items, images, parentID) => {
     return items
       .filter((item) => item.parentID === parentID)
       .map((item) => (
@@ -374,10 +414,27 @@ function ArchiveTree() {
           labelText={item.name}
           labelIcon={FolderRounded}
         >
-          {renderTreeItems(items, item.id)}
+          {renderTreeItems(items, images, item.id)}
+          {images
+            .filter((image) => image.archiveStructureID === item.id)
+            .map((image) => (
+              <StyledTreeItem
+                key={image.id}
+                itemId={image.id}
+                labelText={"image"}
+                labelIcon={DotIcon}
+              />
+            ))}
         </StyledTreeItem>
       ));
   };
+
+  // clear data after component dismounts
+  useEffect(() => {
+    return () => {
+      dispatch(setSelectedArchiveData([]));
+    };
+  }, [dispatch]);
 
   const content = (
     <>
@@ -400,7 +457,7 @@ function ArchiveTree() {
                 padding: "5px",
               }}
             >
-              {isFetching ? (
+              {isFetching || isImageFetching ? (
                 <IconButton aria-label="refresh" color="info" disabled>
                   <CircularProgress size={20} value={100} />
                 </IconButton>
@@ -491,7 +548,7 @@ function ArchiveTree() {
                 </span>
               </Tooltip>
 
-              {renderTreeItems(archiveStructureData, "0")}
+              {renderTreeItems(archiveStructureData, imageData, "0")}
             </SimpleTreeView>
           </ThemeProvider>
         </CacheProvider>
@@ -562,15 +619,16 @@ function ArchiveTree() {
           <p className="paragraph-primary">روش بارگزاری را انتخاب کنید</p>
 
           <div className="flex-row flex-center">
-            <Button
+            <LoadingButton
               dir="ltr"
               endIcon={<ScanIcon />}
+              loading={isInsertingImage}
               variant="contained"
               color="primary"
               sx={{ fontFamily: "sahel" }}
             >
               <span>اسکن</span>
-            </Button>
+            </LoadingButton>
 
             <input
               type="file"
@@ -579,9 +637,10 @@ function ArchiveTree() {
               onChange={handleImageChange}
             />
 
-            <Button
+            <LoadingButton
               dir="ltr"
               endIcon={<UploadIcon />}
+              loading={isInsertingImage}
               aria-label="upload"
               onClick={handleUploadButtonClick}
               variant="contained"
@@ -589,7 +648,7 @@ function ArchiveTree() {
               sx={{ fontFamily: "sahel" }}
             >
               <span>کامپیوتر</span>
-            </Button>
+            </LoadingButton>
           </div>
         </Modal>
       )}

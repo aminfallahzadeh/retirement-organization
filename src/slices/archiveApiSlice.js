@@ -70,6 +70,15 @@ export const archiveApiSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
+    getArchive: builder.query({
+      query: ({ token, personID }) => ({
+        url: `${USERS_URL_HTTPS}/GetArchive?personID=${personID}`,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -80,4 +89,5 @@ export const {
   useUpdateArchiveStructureMutation,
   useInsertArchiveMutation,
   useDeleteArchiveMutation,
+  useGetArchiveQuery,
 } = archiveApiSlice;
