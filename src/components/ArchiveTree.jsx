@@ -1,5 +1,6 @@
 // react imports
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -9,6 +10,7 @@ import {
 import {
   useGetArchiveStructureQuery,
   useDeleteArchiveStructureMutation,
+  useInsertArchiveMutation,
 } from "../slices/archiveApiSlice";
 
 // mui imports
@@ -37,6 +39,8 @@ import {
   Refresh as RefreshIcon,
   Done as DoneIcon,
   Close as CloseIcon,
+  AdfScannerOutlined as ScanIcon,
+  DriveFolderUploadOutlined as UploadIcon,
 } from "@mui/icons-material";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem, treeItemClasses } from "@mui/x-tree-view/TreeItem";
@@ -177,22 +181,30 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
 });
 
 function ArchiveTree() {
+  const inputFileRef = useRef(null);
+  const [image, setImage] = useState(null);
+
   const [showCreateArchiveStructureModal, setShowCreateArchiveStructureModal] =
     useState(false);
   const [showDeleteArchiveStructureModal, setShowDeleteArchiveStructureModal] =
     useState(false);
   const [showEditArchiveStructureModal, setShowEditArchiveStructureModal] =
     useState(false);
+  const [showAddImageModal, setShowAddImageModal] = useState(false);
 
   const { token } = useSelector((state) => state.auth);
+  const { personID } = useSelector((state) => state.retiredState);
   const { selectedArchiveData } = useSelector((state) => state.archiveData);
 
   const dispatch = useDispatch();
 
   const { archiveStructureData } = useSelector((state) => state.archiveData);
 
-  const [deleteArhiveStructure, { isLoading: isDeleting }] =
+  const [deleteArhiveStructure, { isLoading: isDeletingStructure }] =
     useDeleteArchiveStructureMutation();
+
+  const [insertArchive, { isLoading: isInsertingImage }] =
+    useInsertArchiveMutation();
 
   const {
     data: archiveStructure,
@@ -204,9 +216,25 @@ function ArchiveTree() {
   } = useGetArchiveStructureQuery(token);
 
   const handleChangeSelectedItemParentID = (_, id) => {
-    const selectedArchive = findById(archiveStructureData, id);
-    dispatch(setSelectedArchiveData(selectedArchive));
+    const selected = findById(archiveStructureData, id);
+    // setSelectedArchive(selected);
+    dispatch(setSelectedArchiveData(selected));
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(setSelectedArchiveData([]));
+    };
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (selectedArchive) {
+  //     dispatch(setSelectedArchiveData(selectedArchive));
+  //   }
+  //   return () => {
+  //     dispatch(setSelectedArchiveData([]));
+  //   };
+  // }, [dispatch, selectedArchive]);
 
   const handleCreateArchiveStructureModalChange = () => {
     setShowCreateArchiveStructureModal(true);
@@ -219,6 +247,57 @@ function ArchiveTree() {
   const handleEditArchiveStructureModalChange = () => {
     setShowEditArchiveStructureModal(true);
   };
+
+  const handleAddImageModalChange = () => {
+    setShowAddImageModal(true);
+  };
+
+  const handleUploadButtonClick = () => {
+    inputFileRef.current.click(); // Trigger the file input click event
+  };
+
+  const handleInsertImage = async () => {
+    try {
+      const insertImageres = await insertArchive({
+        token,
+        data: {
+          id: "",
+          personID,
+          insertUserID: "",
+          contentType: "",
+          archiveStructureID: selectedArchiveData?.id,
+          attachment: image,
+        },
+      }).unwrap();
+      setShowAddImageModal(false);
+      toast.success(insertImageres.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      // Set the image state to the base64 string
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  useEffect(() => {
+    if (image !== null) {
+      handleInsertImage();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [image]);
 
   const handleRefresh = () => {
     refetch();
@@ -260,6 +339,7 @@ function ArchiveTree() {
     showCreateArchiveStructureModal,
     showDeleteArchiveStructureModal,
     showEditArchiveStructureModal,
+    showAddImageModal,
   ]);
 
   useEffect(() => {
@@ -326,65 +406,89 @@ function ArchiveTree() {
                 </IconButton>
               ) : (
                 <Tooltip title="بروزرسانی">
-                  <IconButton
-                    aria-label="refresh"
-                    color="info"
-                    onClick={handleRefresh}
-                  >
-                    <RefreshIcon fontSize="small" />
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      aria-label="refresh"
+                      color="info"
+                      onClick={handleRefresh}
+                    >
+                      <RefreshIcon fontSize="small" />
+                    </IconButton>
+                  </span>
                 </Tooltip>
               )}
 
               <Tooltip title="اضافه کردن پوشه">
-                <IconButton
-                  aria-label="addFolder"
-                  color="success"
-                  disabled={selectedArchiveData.length === 0}
-                  onClick={handleCreateArchiveStructureModalChange}
-                >
-                  <AddFolderIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    aria-label="addFolder"
+                    color="success"
+                    disabled={selectedArchiveData.length === 0}
+                    onClick={handleCreateArchiveStructureModalChange}
+                  >
+                    <AddFolderIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="حذف پوشه">
-                <IconButton
-                  aria-label="delete"
-                  color="error"
-                  onClick={handleDeleteArchiveStructureModalChange}
-                  disabled={
-                    selectedArchiveData.parentID === "0" ||
-                    selectedArchiveData.length === 0
-                  }
-                >
-                  <DeleteFolderIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    aria-label="delete"
+                    color="error"
+                    onClick={handleDeleteArchiveStructureModalChange}
+                    disabled={
+                      selectedArchiveData.parentID === "0" ||
+                      selectedArchiveData.length === 0
+                    }
+                  >
+                    <DeleteFolderIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="اضافه کردن برگه">
-                <IconButton aria-label="addFile" color="success">
-                  <AddFileIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    aria-label="addFile"
+                    color="success"
+                    onClick={handleAddImageModalChange}
+                    disabled={
+                      selectedArchiveData.parentID === "0" ||
+                      selectedArchiveData.length === 0
+                    }
+                  >
+                    <AddFileIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="حذف برگه">
-                <IconButton aria-label="delete" color="error">
-                  <DeleteFileIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    aria-label="delete"
+                    color="error"
+                    disabled={selectedArchiveData.length === 0}
+                  >
+                    <DeleteFileIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="ویرایش نام پوشه">
-                <IconButton
-                  aria-label="edit"
-                  color="warning"
-                  onClick={handleEditArchiveStructureModalChange}
-                  disabled={
-                    selectedArchiveData.parentID === "0" ||
-                    selectedArchiveData.length === 0
-                  }
-                >
-                  <EditIcon fontSize="small" />
-                </IconButton>
+                <span>
+                  <IconButton
+                    aria-label="edit"
+                    color="warning"
+                    onClick={handleEditArchiveStructureModalChange}
+                    disabled={
+                      selectedArchiveData.parentID === "0" ||
+                      selectedArchiveData.length === 0
+                    }
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               {renderTreeItems(archiveStructureData, "0")}
@@ -417,7 +521,7 @@ function ArchiveTree() {
             <LoadingButton
               dir="ltr"
               endIcon={<DoneIcon />}
-              loading={isDeleting}
+              loading={isDeletingStructure}
               onClick={handleDeleteStructure}
               variant="contained"
               color="success"
@@ -447,6 +551,46 @@ function ArchiveTree() {
           <EditArchiveStructureForm
             setShowEditArchiveStructureModal={setShowEditArchiveStructureModal}
           />
+        </Modal>
+      )}
+
+      {showAddImageModal && (
+        <Modal
+          title="افزودن برگه جدید"
+          closeModal={() => setShowAddImageModal(false)}
+        >
+          <p className="paragraph-primary">روش بارگزاری را انتخاب کنید</p>
+
+          <div className="flex-row flex-center">
+            <Button
+              dir="ltr"
+              endIcon={<ScanIcon />}
+              variant="contained"
+              color="primary"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>اسکن</span>
+            </Button>
+
+            <input
+              type="file"
+              ref={inputFileRef}
+              style={{ display: "none" }}
+              onChange={handleImageChange}
+            />
+
+            <Button
+              dir="ltr"
+              endIcon={<UploadIcon />}
+              aria-label="upload"
+              onClick={handleUploadButtonClick}
+              variant="contained"
+              color="primary"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>کامپیوتر</span>
+            </Button>
+          </div>
         </Modal>
       )}
     </>
