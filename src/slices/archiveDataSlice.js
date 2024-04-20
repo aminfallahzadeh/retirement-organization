@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   archiveStructureData: [],
   selectedArchiveData: [],
+  selectedImageData: [],
 };
 
 const archiveDataSlice = createSlice({
@@ -15,10 +16,16 @@ const archiveDataSlice = createSlice({
     setSelectedArchiveData: (state, action) => {
       state.selectedArchiveData = action.payload;
     },
+    setSelectedImageData: (state, action) => {
+      state.selectedImageData = action.payload;
+    },
   },
 });
 
-export const { setArchiveStructureData, setSelectedArchiveData } =
-  archiveDataSlice.actions;
+export const {
+  setArchiveStructureData,
+  setSelectedArchiveData,
+  setSelectedImageData,
+} = archiveDataSlice.actions;
 
 export default archiveDataSlice.reducer;

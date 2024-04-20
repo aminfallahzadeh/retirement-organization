@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setArchiveStructureData,
   setSelectedArchiveData,
+  setSelectedImageData,
 } from "../slices/archiveDataSlice";
 import {
   useGetArchiveStructureQuery,
@@ -186,7 +187,7 @@ function ArchiveTree() {
   const inputFileRef = useRef(null);
   const [imageData, setImageData] = useState([]);
   const [image, setImage] = useState(null);
-  const [selectedImageData, setSelectedImageData] = useState([]);
+  // const [selectedImageData, setSelectedImageData] = useState([]);
 
   // modal states
   const [showCreateArchiveStructureModal, setShowCreateArchiveStructureModal] =
@@ -201,7 +202,9 @@ function ArchiveTree() {
   const { token } = useSelector((state) => state.auth);
   const { personID } = useSelector((state) => state.retiredState);
   const { selectedRequestData } = useSelector((state) => state.requestsData);
-  const { selectedArchiveData } = useSelector((state) => state.archiveData);
+  const { selectedArchiveData, selectedImageData } = useSelector(
+    (state) => state.archiveData
+  );
 
   const dispatch = useDispatch();
 
@@ -241,10 +244,10 @@ function ArchiveTree() {
 
     if (selected) {
       dispatch(setSelectedArchiveData(selected));
-      setSelectedImageData([]);
+      dispatch(setSelectedImageData([]));
     } else {
       const selectedImage = findById(imageData, id);
-      setSelectedImageData(selectedImage);
+      dispatch(setSelectedImageData(selectedImage));
       dispatch(setSelectedArchiveData([]));
     }
   };
@@ -478,6 +481,7 @@ function ArchiveTree() {
   useEffect(() => {
     return () => {
       dispatch(setSelectedArchiveData([]));
+      dispatch(setSelectedImageData([]));
     };
   }, [dispatch]);
 

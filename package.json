@@ -23,6 +23,7 @@
     "@react-spring/web": "^9.7.3",
     "@reduxjs/toolkit": "^2.2.0",
     "async-mutex": "^0.5.0",
+    "image-type": "^5.2.0",
     "jalaali-react-date-picker": "^1.0.17",
     "jwt-decode": "^4.0.0",
     "material-react-table": "^2.12.1",
