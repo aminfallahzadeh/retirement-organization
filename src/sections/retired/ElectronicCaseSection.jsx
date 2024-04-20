@@ -6,7 +6,6 @@ function ElectronicCaseSection() {
     <section className="flex-col">
       <div className="flex-row">
         <ArchiveTree />
-        <img src="./images/sample-statement.png" />
       </div>
     </section>
   );

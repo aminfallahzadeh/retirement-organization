@@ -241,9 +241,11 @@ function ArchiveTree() {
 
     if (selected) {
       dispatch(setSelectedArchiveData(selected));
+      setSelectedImageData([]);
     } else {
       const selectedImage = findById(imageData, id);
       setSelectedImageData(selectedImage);
+      dispatch(setSelectedArchiveData([]));
     }
   };
 
@@ -411,7 +413,6 @@ function ArchiveTree() {
     imageRefetch();
     if (isImageSuccess) {
       setImageData(images.itemList);
-      console.log("images", imageData);
     }
   }, [
     imageRefetch,
