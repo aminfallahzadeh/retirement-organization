@@ -9,7 +9,7 @@ import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 // component imports
-import RetiredRelatedInfoGrid from "../../grids/RetiredRelatedInfoGrid";
+import RetiredRelatedGrid from "../../grids/RetiredRelatedGrid";
 import RetiredStatementsGrid from "../../grids/RetiredStatementsGrid";
 import RetiredHeirGrid from "../../grids/RetiredHeirGrid";
 
@@ -45,7 +45,7 @@ function RelatedInfoSection() {
             padding: "0",
           }}
         >
-          {death ? <RetiredHeirGrid /> : <RetiredRelatedInfoGrid />}
+          {death ? <RetiredHeirGrid /> : <RetiredRelatedGrid />}
         </TabPanel>
         <TabPanel
           value="2"

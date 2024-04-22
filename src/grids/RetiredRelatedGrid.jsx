@@ -3,7 +3,10 @@ import { useMemo, useState, useEffect } from "react";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { useGetRelatedListByParentPersonIDQuery } from "../slices/relatedApiSlice";
+import {
+  useGetRelatedListByParentPersonIDQuery,
+  useRemoveRelatedMutation,
+} from "../slices/relatedApiSlice";
 import {
   setRelatedTableData,
   setSelectedRelatedData,
@@ -53,13 +56,16 @@ import {
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-function RetiredRelatedInfoGrid() {
+function RetiredRelatedGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const [showCreateRelatedModal, setShowCreateRelatedModal] = useState(false);
   const [showEditRelatedModal, setShowEditRelatedModal] = useState(false);
   const [showDeleteRelatedModal, setShowDeleteRelatedModal] = useState(false);
 
   const { token } = useSelector((state) => state.auth);
+  const { selectedRelatedData } = useSelector((state) => state.relatedData);
+
+  const [removeRelated, { isLoading: isDeleting }] = useRemoveRelatedMutation();
 
   const dispatch = useDispatch();
 
@@ -93,6 +99,25 @@ function RetiredRelatedInfoGrid() {
 
   const handleRefresh = () => {
     refetch();
+  };
+
+  const handleRemoveRelated = async () => {
+    try {
+      const deleteRes = await removeRelated({
+        token,
+        pensionaryID: selectedRelatedData?.pensionaryID,
+      }).unwrap();
+      setShowDeleteRelatedModal(false);
+      refetch();
+      toast.success(deleteRes.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
   };
 
   useEffect(() => {
@@ -314,6 +339,8 @@ function RetiredRelatedInfoGrid() {
                 <LoadingButton
                   dir="ltr"
                   endIcon={<DoneIcon />}
+                  onClick={handleRemoveRelated}
+                  loading={isDeleting}
                   variant="contained"
                   color="success"
                   sx={{ fontFamily: "sahel" }}
@@ -343,4 +370,4 @@ function RetiredRelatedInfoGrid() {
   return content;
 }
 
-export default RetiredRelatedInfoGrid;
+export default RetiredRelatedGrid;
