@@ -25,6 +25,8 @@ function SidebarNav() {
   const batchStatementsPath =
     location.pathname === "/retirement-organization/batch-statements";
   const slipsPath = location.pathname === "/retirement-organization/slips";
+  const staffStatementsPath =
+    location.pathname === "/retirement-organization/staff-statements";
 
   const content = (
     <Sidebar rtl={true}>
@@ -49,7 +51,14 @@ function SidebarNav() {
           label={<span> امور مشترکین</span>}
           icon={<GroupOutlinedIcon sx={{ color: "#ff6700" }} />}
         >
-          <MenuItem>احکام کارمندان</MenuItem>
+          <MenuItem
+            component={
+              <Link to={"/retirement-organization/staff-statements"} />
+            }
+            active={staffStatementsPath}
+          >
+            احکام کارمندان
+          </MenuItem>
           <MenuItem>تعرفه خدمتی کارمندان</MenuItem>
           <MenuItem>انتقال کسور</MenuItem>
           <MenuItem>تسویه کسور</MenuItem>

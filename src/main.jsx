@@ -28,12 +28,13 @@ import Error from "./pages/Error";
 // screens
 import CreateGroupScreen from "./screens/CreateGroupScreen";
 import CreateUserScreen from "./screens/CreateUserScreen";
-import RetiredScreen from "./screens/RetiredScreen.jsx";
+import RetiredScreen from "./screens/RetiredScreen";
 import GroupsScreen from "./screens/GroupsScreen";
 import UsersScreen from "./screens/UsersScreen";
-import RequestScreen from "./screens/RequestScreen.jsx";
-import BatchStatementsScreen from "./screens/BatchStatementsScreen.jsx";
-import SlipsScreen from "./screens/SlipsScreen.jsx";
+import RequestScreen from "./screens/RequestScreen";
+import BatchStatementsScreen from "./screens/BatchStatementsScreen";
+import SlipsScreen from "./screens/SlipsScreen";
+import StaffStatementsScreen from "./screens/StaffStatementsScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -84,6 +85,11 @@ const router = createBrowserRouter(
         <Route
           path="/retirement-organization/slips"
           element={<SlipsScreen />}
+        />
+
+        <Route
+          path="/retirement-organization/staff-statements"
+          element={<StaffStatementsScreen />}
         />
       </Route>
       <Route path="*" element={<Error />} />
