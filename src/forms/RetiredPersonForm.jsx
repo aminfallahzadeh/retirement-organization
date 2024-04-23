@@ -67,9 +67,12 @@ function RetiredPersonForm({ personID }) {
     return () => {
       dispatch(setPersonDeathDate(null));
     };
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, retiredPersonData?.itemList]);
+
+  useEffect(() => {
+    console.log(personData);
+  }, [personData]);
 
   // handle error
   useEffect(() => {
@@ -110,7 +113,7 @@ function RetiredPersonForm({ personID }) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedBirthDate, dispatch]);
+  }, [selectedBirthDate]);
 
   useEffect(() => {
     if (selectedDeathDate) {
@@ -120,7 +123,7 @@ function RetiredPersonForm({ personID }) {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDeathDate, dispatch]);
+  }, [selectedDeathDate]);
 
   // handle dates
   useEffect(() => {
