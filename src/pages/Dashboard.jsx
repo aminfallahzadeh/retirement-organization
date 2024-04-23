@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 // redux imports
-import { useSelector } from "react-redux";
 import { useGetRoleQuery } from "../slices/requestApiSlice";
 
 // component imports
@@ -13,13 +12,12 @@ import CartableGrid from "../grids/CartableGrid";
 import RoleSelectionForm from "../forms/RoleSelectionForm";
 
 function Dashboard() {
-  const { token } = useSelector((state) => state.auth);
   const {
     data: roles,
     isLoading,
     error,
     isSuccess: isRolesSuccess,
-  } = useGetRoleQuery(token);
+  } = useGetRoleQuery();
 
   const [selectedRole, setSelectedRole] = useState(null);
 

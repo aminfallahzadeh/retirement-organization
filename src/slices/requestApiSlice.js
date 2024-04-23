@@ -7,27 +7,18 @@ import { apiSlice } from "./apiSlice";
 export const requestApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getRole: builder.query({
-      query: (token) => ({
+      query: () => ({
         url: `${REQUEST_URL_HTTPS}/GetRole`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     getExpert: builder.query({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${REQUEST_URL_HTTPS}/GetExpert`,
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     getRequest: builder.query({
       query: ({
-        token,
         role,
         personID,
         requestID,
@@ -51,42 +42,26 @@ export const requestApiSlice = apiSlice.injectEndpoints({
 
         return {
           url,
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
         };
       },
     }),
     insertRequest: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${REQUEST_URL_HTTPS}/InsertRequest`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     sendRequestToNextState: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${REQUEST_URL_HTTPS}/SendRequestToNextState`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     getRequestType: builder.query({
-      query: (token) => ({
+      query: () => ({
         url: `${REQUEST_URL_HTTPS}/GetRequestType`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
   }),

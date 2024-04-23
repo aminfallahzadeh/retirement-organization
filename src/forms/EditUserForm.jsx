@@ -33,7 +33,6 @@ function UserEditForm({ setShowEditUserModal }) {
   };
 
   const [updateUser, { isLoading }] = useUpdateUserMutation();
-  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
     console.log("userObject", userObject);
@@ -42,18 +41,15 @@ function UserEditForm({ setShowEditUserModal }) {
   const updateUserHandler = async () => {
     try {
       const res = await updateUser({
-        token,
-        data: {
-          ...userObject,
-          "sex": userObject.sex === "true" ? true : false,
-          "isActive": userObject.isActive === "true" ? true : false,
-          "editDate": "string",
-          "editUser": "string",
-          "refreshToken": "string",
-          "createDate": "string",
-          "createUser": "string",
-          "isDelete": 0,
-        },
+        ...userObject,
+        "sex": userObject.sex === "true" ? true : false,
+        "isActive": userObject.isActive === "true" ? true : false,
+        "editDate": "string",
+        "editUser": "string",
+        "refreshToken": "string",
+        "createDate": "string",
+        "createUser": "string",
+        "isDelete": 0,
       }).unwrap();
       setShowEditUserModal(false);
       toast.success(res.message, {

@@ -34,7 +34,6 @@ import { findById } from "../helper.js";
 
 function CartableGrid({ selectedRole }) {
   const [rowSelection, setRowSelection] = useState({});
-  const { token } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -47,7 +46,7 @@ function CartableGrid({ selectedRole }) {
     isLoading,
     error,
     refetch,
-  } = useGetRequestQuery({ token, role: selectedRole });
+  } = useGetRequestQuery({ role: selectedRole });
 
   let navigateHandler;
 
@@ -63,7 +62,6 @@ function CartableGrid({ selectedRole }) {
         body: item.requestText,
       }));
 
-      console.log("requests", requests);
       dispatch(setRequestTableData(data));
       sessionStorage.setItem("requests", JSON.stringify(data));
     }

@@ -7,52 +7,32 @@ import { apiSlice } from "./apiSlice";
 export const retiredApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getRetiredPerson: builder.query({
-      query: ({ token, personID }) => ({
+      query: (personID) => ({
         url: `${RETIRED_URL_HTTPS}/GetRetiredPerson?personID=${personID}`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     updateRetiredPerson: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${RETIRED_URL_HTTPS}/UpdateRetiredPerson`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     getRetiredPensionary: builder.query({
-      query: ({ token, personID }) => ({
+      query: (personID) => ({
         url: `${RETIRED_URL_HTTPS}/GetRetiredPensionary?personID=${personID}`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     getRetiredAccount: builder.query({
-      query: ({ token, personID }) => ({
+      query: (personID) => ({
         url: `${RETIRED_URL_HTTPS}/GetRetiredAccount?personID=${personID}`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     updateRetiredPensionary: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${RETIRED_URL_HTTPS}/UpdateRetiredPensionary`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     updateRetired: builder.mutation({
@@ -67,14 +47,10 @@ export const retiredApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     updateRetiredAccount: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${RETIRED_URL_HTTPS}/UpdateRetiredAccount`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
   }),

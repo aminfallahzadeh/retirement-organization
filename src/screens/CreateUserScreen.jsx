@@ -1,5 +1,5 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // components
 import GroupsCreateUserGrid from "../grids/GroupsCreateUserGrid";
@@ -28,10 +28,6 @@ function CreateUserScreen() {
     const { name, value } = e.target;
     setUserObject({ ...userObject, [name]: value });
   };
-
-  useEffect(() => {
-    console.log("userObject", userObject);
-  }, [userObject]);
 
   const content = (
     <section className="main">

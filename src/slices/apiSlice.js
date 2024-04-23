@@ -7,17 +7,19 @@ import { Mutex } from "async-mutex";
 import { BASE_URL, USERS_URL_HTTPS } from "../constants";
 
 const mutex = new Mutex();
+let isRefreshingToken = false;
+
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
   credentials: "same-origin",
-  // prepareHeaders: (headers, { getState }) => {
-  //   const token = getState().auth.token;
-  //   if (token) {
-  //     headers.set("Authorization", `Bearer ${token}`);
-  //     headers.set("Content-Type", "application/json");
-  //   }
-  //   return headers;
-  // },
+  prepareHeaders: (headers, { getState, endpoint }) => {
+    const token = getState().auth.token;
+    if (token && !isRefreshingToken && endpoint !== "login") {
+      headers.set("Authorization", `Bearer ${token}`);
+      headers.set("Content-Type", "application/json");
+    }
+    return headers;
+  },
 });
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
@@ -31,6 +33,8 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
         console.log("sending refresh token");
         const refreshToken = api.getState().auth.refreshToken;
         const expiredate = api.getState().auth.expiredate;
+        isRefreshingToken = true;
+
         const refreshResult = await baseQuery(
           {
             url: `${USERS_URL_HTTPS}/RefreshToken`,
@@ -45,6 +49,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
           api,
           extraOptions
         );
+        isRefreshingToken = false;
         if (refreshResult.data) {
           api.dispatch(setNewCredentials({ ...refreshResult.data }));
           result = await baseQuery(

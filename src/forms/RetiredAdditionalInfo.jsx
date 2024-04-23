@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 
 // redux imports
-import { useSelector } from "react-redux";
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import { useGetRetiredAccountQuery } from "../slices/retiredApiSlice";
 import { useUpdateRetiredAccountMutation } from "../slices/retiredApiSlice";
@@ -26,7 +25,6 @@ function RetiredAdditionalInfo({ personID }) {
   const [bankCombo, setBankCombo] = useState([]);
   const [bankBranchCombo, setBankBranchCombo] = useState([]);
   const [accountData, setAccountData] = useState({});
-  const { token } = useSelector((state) => state.auth);
 
   const [updateRetiredAccount, { isLoading: isUpdating }] =
     useUpdateRetiredAccountMutation();
@@ -36,10 +34,7 @@ function RetiredAdditionalInfo({ personID }) {
     isSuccess,
     isLoading,
     error,
-  } = useGetRetiredAccountQuery({
-    token,
-    personID,
-  });
+  } = useGetRetiredAccountQuery(personID);
 
   const handleEditable = () => {
     setEditable(true);
@@ -70,7 +65,6 @@ function RetiredAdditionalInfo({ personID }) {
     isLoading: isBankComboLoading,
     error: bankComboError,
   } = useGetLookupDataQuery({
-    token,
     lookUpType: "Bank",
     lookUpId: accountData.bankID,
   });
@@ -81,7 +75,6 @@ function RetiredAdditionalInfo({ personID }) {
     isLoading: isBankBranchComboLoading,
     error: bankBranchComboError,
   } = useGetLookupDataQuery({
-    token,
     lookUpType: "BankBranch",
     // lookUpId: accountData.bankBranchID,
   });
@@ -120,18 +113,15 @@ function RetiredAdditionalInfo({ personID }) {
   const handleUpdateRetiredAccount = async () => {
     try {
       const updateRes = await updateRetiredAccount({
-        token,
-        data: {
-          ...accountData,
-          ledgerCode: parseInt(accountData.ledgerCode),
-          insuranceAmount: parseInt(
-            convertToEnglishNumber(accountData.insuranceAmount)
-          ),
-          insuranceCoef: parseFloat(
-            convertToEnglishNumber(accountData.insuranceCoef)
-          ),
-          accountNo: convertToEnglishNumber(accountData.accountNo),
-        },
+        ...accountData,
+        ledgerCode: parseInt(accountData.ledgerCode),
+        insuranceAmount: parseInt(
+          convertToEnglishNumber(accountData.insuranceAmount)
+        ),
+        insuranceCoef: parseFloat(
+          convertToEnglishNumber(accountData.insuranceCoef)
+        ),
+        accountNo: convertToEnglishNumber(accountData.accountNo),
       }).unwrap();
       setEditable(false);
       toast.success(updateRes.message, {

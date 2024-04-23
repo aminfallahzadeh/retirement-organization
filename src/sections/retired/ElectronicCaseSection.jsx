@@ -7,7 +7,7 @@ import ArchiveTree from "../../components/ArchiveTree";
 // redux imports
 import { useSelector } from "react-redux";
 
-function ElectronicCaseSection() {
+function ElectronicCaseSection({ personID }) {
   const [previewImage, setPreviewImage] = useState(null);
   const { selectedImageData } = useSelector((state) => state.archiveData);
 
@@ -53,7 +53,7 @@ function ElectronicCaseSection() {
   const content = (
     <section className="flex-col">
       <div className="flex-row">
-        <ArchiveTree />
+        <ArchiveTree personID={personID} />
         {previewImage && (
           <img src={previewImage} alt="پیش نمایش" style={{ width: "400px" }} />
         )}

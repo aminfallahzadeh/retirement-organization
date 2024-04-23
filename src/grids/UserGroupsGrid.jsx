@@ -31,11 +31,12 @@ function UserGroupsGrid() {
   const dispatch = useDispatch();
 
   // access selected row info
-  const { token } = useSelector((state) => state.auth);
   const { selectedUserData } = useSelector((state) => state.usersData);
 
   // access the data from redux store
   const { userGroupsTableData } = useSelector((state) => state.userGroupsData);
+
+  const userID = selectedUserData?.id;
 
   // fetch data from the API
   const {
@@ -44,7 +45,7 @@ function UserGroupsGrid() {
     isLoading,
     error,
     refetch,
-  } = useGetUserGroupsQuery({ token, userId: selectedUserData?.id });
+  } = useGetUserGroupsQuery(userID);
 
   // trigger the fetch
   useEffect(() => {

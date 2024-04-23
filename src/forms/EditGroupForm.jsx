@@ -17,7 +17,6 @@ function GroupNameInput({ setShowEditModal }) {
   const [groupName, setGroupName] = useState(selectedGroupData?.name || "");
 
   const [updateGroup, { isLoading }] = useUpdateGroupMutation();
-  const { token } = useSelector((state) => state.auth);
 
   const handleGroupNameChange = (e) => {
     setGroupName(e.target.value);
@@ -26,11 +25,8 @@ function GroupNameInput({ setShowEditModal }) {
   const updateGroupHandler = async () => {
     try {
       const res = await updateGroup({
-        token,
-        data: {
-          "id": selectedGroupData?.id,
-          "groupName": groupName,
-        },
+        "id": selectedGroupData?.id,
+        "groupName": groupName,
       }).unwrap();
       setShowEditModal(false);
       toast.success(res.message, {

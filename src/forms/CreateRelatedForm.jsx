@@ -52,24 +52,21 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
 
   const [insertRelated, { isLoading }] = useInsertRelatedMutation();
 
-  const { token } = useSelector((state) => state.auth);
-
   const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
-    useGetRelationshipQuery(token);
+    useGetRelationshipQuery();
 
   const { data: maritialStatusComboItems, isSuccess: isMaritialComboSuccess } =
-    useGetLookupDataQuery({ token, lookUpType: "MaritialStatus" });
+    useGetLookupDataQuery({ lookUpType: "MaritialStatus" });
 
   const { data: educationComboItems, isSuccess: isEducationComboSuccess } =
-    useGetLookupDataQuery({ token, lookUpType: "EducationType" });
+    useGetLookupDataQuery({ lookUpType: "EducationType" });
 
   const { data: universityComboItems, isSuccess: isUniversityComboSuccess } =
-    useGetLookupDataQuery({ token, lookUpType: "UniversityType" });
+    useGetLookupDataQuery({ lookUpType: "UniversityType" });
 
   useEffect(() => {
     if (isRelationComboSuccess) {
       setRelationCombo(relationComboItems.itemList);
-      console.log(relationComboItems);
     }
   }, [isRelationComboSuccess, relationComboItems]);
 
@@ -182,26 +179,22 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   const handleInsertRelated = async () => {
     try {
       const insertRes = await insertRelated({
-        token,
-        data: {
-          ...relatedObject,
-          pensionaryStatusID,
-          parentPersonID: personID,
-          personCertificatetNo: convertToEnglishNumber(
-            relatedObject.personCertificatetNo
-          ),
-          personNationalCode: convertToEnglishNumber(
-            relatedObject.personNationalCode
-          ),
-          relationshipWithParentID: convertToEnglishNumber(
-            relatedObject.relationshipWithParentID
-          ),
-          personRegion:
-            parseInt(convertToEnglishNumber(relatedObject.personRegion)) ||
-            null,
-          personArea:
-            parseInt(convertToEnglishNumber(relatedObject.personArea)) || null,
-        },
+        ...relatedObject,
+        pensionaryStatusID,
+        parentPersonID: personID,
+        personCertificatetNo: convertToEnglishNumber(
+          relatedObject.personCertificatetNo
+        ),
+        personNationalCode: convertToEnglishNumber(
+          relatedObject.personNationalCode
+        ),
+        relationshipWithParentID: convertToEnglishNumber(
+          relatedObject.relationshipWithParentID
+        ),
+        personRegion:
+          parseInt(convertToEnglishNumber(relatedObject.personRegion)) || null,
+        personArea:
+          parseInt(convertToEnglishNumber(relatedObject.personArea)) || null,
       }).unwrap();
       console.log(insertRes);
       setShowCreateRelatedModal(false);

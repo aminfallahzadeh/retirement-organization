@@ -28,7 +28,6 @@ import { defaultTableOptions } from "../utils.js";
 
 function GroupsGridUser() {
   const [rowSelection, setRowSelection] = useState({});
-  const { token } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
@@ -42,7 +41,7 @@ function GroupsGridUser() {
     isSuccess,
     error,
     refetch,
-  } = useGetGroupQuery(token);
+  } = useGetGroupQuery();
 
   useEffect(() => {
     refetch();

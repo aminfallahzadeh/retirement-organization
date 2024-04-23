@@ -25,8 +25,6 @@ import {
 } from "material-react-table";
 
 function ItemsGrid() {
-  const { token } = useSelector((state) => state.auth);
-
   // access the data from redux store
   const { itemsTableData } = useSelector((state) => state.itemsData);
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
@@ -41,7 +39,7 @@ function ItemsGrid() {
     isSuccess,
     error,
     refetch,
-  } = useGetItemsQuery(token);
+  } = useGetItemsQuery();
 
   useEffect(() => {
     refetch();

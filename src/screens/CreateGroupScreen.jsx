@@ -5,7 +5,12 @@ import { useState } from "react";
 import ItemsCreateGroupGrid from "../grids/ItemsCreateGroupGrid";
 
 function CreateGroupScreen() {
-  const [groupName, setGroupName] = useState("");
+  const [groupObject, setGroupObject] = useState({ groupName: "" });
+
+  const handleGroupObjectChange = (e) => {
+    const { name, value } = e.target;
+    setGroupObject({ ...groupObject, [name]: value });
+  };
 
   const content = (
     <section className="main">
@@ -15,17 +20,17 @@ function CreateGroupScreen() {
             type="text"
             className="inputBox__form--input inputBox__form--input-height-40"
             required
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-            id="groupName"
+            name="groupName"
+            onChange={handleGroupObjectChange}
+            id="groupNameCreate"
           />
-          <label className="inputBox__form--label" htmlFor="groupName">
+          <label className="inputBox__form--label" htmlFor="groupNameCreate">
             نام گروه
           </label>
         </form>
       </div>
 
-      <ItemsCreateGroupGrid groupName={groupName} />
+      <ItemsCreateGroupGrid groupObject={groupObject} />
     </section>
   );
 

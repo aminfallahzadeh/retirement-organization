@@ -183,7 +183,7 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
   );
 });
 
-function ArchiveTree() {
+function ArchiveTree({ personID }) {
   const inputFileRef = useRef(null);
   const [imageData, setImageData] = useState([]);
   const [image, setImage] = useState(null);
@@ -199,9 +199,6 @@ function ArchiveTree() {
   const [showAddImageModal, setShowAddImageModal] = useState(false);
   const [showDeleteImageModal, setShowDeleteImageModal] = useState(false);
 
-  const { token } = useSelector((state) => state.auth);
-  const { personID } = useSelector((state) => state.retiredState);
-  const { selectedRequestData } = useSelector((state) => state.requestsData);
   const { selectedArchiveData, selectedImageData } = useSelector(
     (state) => state.archiveData
   );
@@ -227,7 +224,7 @@ function ArchiveTree() {
     isSuccess,
     error,
     refetch,
-  } = useGetArchiveStructureQuery(token);
+  } = useGetArchiveStructureQuery();
 
   const {
     data: images,
@@ -236,7 +233,7 @@ function ArchiveTree() {
     isSuccess: isImageSuccess,
     error: imageError,
     refetch: imageRefetch,
-  } = useGetArchiveQuery({ token, personID: selectedRequestData.personId });
+  } = useGetArchiveQuery(personID);
 
   // handle selected tree item
   const handleChangeSelectedItemParentID = (_, id) => {
@@ -285,19 +282,16 @@ function ArchiveTree() {
   // insert image post request handler
   const handleInsertImage = async () => {
     try {
-      const insertImageres = await insertArchive({
-        token,
-        data: {
-          id: "",
-          personID,
-          insertUserID: "",
-          contentType: "",
-          archiveStructureID: selectedArchiveData?.id,
-          attachment: image,
-        },
+      const insertImageRes = await insertArchive({
+        id: "",
+        personID,
+        insertUserID: "",
+        contentType: "",
+        archiveStructureID: selectedArchiveData?.id,
+        attachment: image,
       }).unwrap();
       setShowAddImageModal(false);
-      toast.success(insertImageres.message, {
+      toast.success(insertImageRes.message, {
         autoClose: 2000,
       });
     } catch (err) {
@@ -339,13 +333,10 @@ function ArchiveTree() {
   const handleDeleteStructure = async () => {
     try {
       const deleteRes = await deleteArhiveStructure({
-        token,
-        data: {
-          id: selectedArchiveData.id,
-          insertUserID: "",
-          name: "",
-          parentID: "",
-        },
+        id: selectedArchiveData.id,
+        insertUserID: "",
+        name: "",
+        parentID: "",
       }).unwrap();
       setShowDeleteArchiveStructureModal(false);
       toast.success(deleteRes.message, {
@@ -363,15 +354,12 @@ function ArchiveTree() {
   const handleDeleteImage = async () => {
     try {
       const deleteImgRes = await deleteArchive({
-        token,
-        data: {
-          id: selectedImageData.id,
-          attachment: "",
-          contentType: "",
-          archiveStructureID: "",
-          insertUserID: "",
-          personID: "",
-        },
+        id: selectedImageData.id,
+        attachment: "",
+        contentType: "",
+        archiveStructureID: "",
+        insertUserID: "",
+        personID: "",
       }).unwrap();
       setShowDeleteImageModal(false);
       toast.success(deleteImgRes.message, {

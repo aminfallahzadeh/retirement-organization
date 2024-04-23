@@ -11,150 +11,87 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         url: `${USERS_URL_HTTPS}/Login`,
         method: "POST",
         body: data,
-        headers: { "Content-Type": "application/json" },
       }),
     }),
     getGroup: builder.query({
-      query: (token) => ({
+      query: () => ({
         url: `${USERS_URL_HTTPS}/GetGroup`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     insertGroup: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${USERS_URL_HTTPS}/InsertGroup`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     deleteGroup: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${USERS_URL_HTTPS}/DeleteGroup`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     updateGroup: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${USERS_URL_HTTPS}/UpdateGroup`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     getUser: builder.query({
-      query: (token) => ({
+      query: () => ({
         url: `${USERS_URL_HTTPS}/GetUser`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     updateUser: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${USERS_URL_HTTPS}/UpdateUser`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     insertUser: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${USERS_URL_HTTPS}/InsertUser`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     getUserGroups: builder.query({
-      query: ({ token, userId }) => ({
-        url: `${USERS_URL_HTTPS}/GetGroupUser?userID=${userId}`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
+      query: (userID) => ({
+        url: `${USERS_URL_HTTPS}/GetGroupUser?userID=${userID}`,
       }),
     }),
     insertGroupUsers: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${USERS_URL_HTTPS}/InsertGroupUser`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     getItems: builder.query({
-      query: (token) => ({
+      query: () => ({
         url: `${USERS_URL_HTTPS}/GetItem`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     getGroupItems: builder.query({
-      query: ({ token, groupId }) => ({
-        url: `${USERS_URL_HTTPS}/GetGroupItem?groupID=${groupId}`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
+      query: (groupID) => ({
+        url: `${USERS_URL_HTTPS}/GetGroupItem?groupID=${groupID}`,
       }),
     }),
     insertGroupItem: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${USERS_URL_HTTPS}/InsertGroupItem`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     logout: builder.mutation({
-      query: ({ data, token }) => ({
+      query: (data) => ({
         url: `${USERS_URL_HTTPS}/Logout`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      }),
-    }),
-    deleteUser: builder.mutation({
-      query: ({ token, id }) => ({
-        url: `${USERS_URL_HTTPS}/DeleteUser?id=${id}`,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
   }),
@@ -175,5 +112,4 @@ export const {
   useGetGroupItemsQuery,
   useGetUserGroupsQuery,
   useInsertGroupUsersMutation,
-  useDeleteUserMutation,
 } = usersApiSlice;

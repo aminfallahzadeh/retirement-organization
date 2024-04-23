@@ -52,7 +52,6 @@ import { toast } from "react-toastify";
 
 function GroupsGrid() {
   const [rowSelection, setRowSelection] = useState({});
-  const { token } = useSelector((state) => state.auth);
 
   const [showEditNameModal, setShowEditNameModal] = useState(false);
   const [showEditItemsModal, setShowEditItemsModal] = useState(false);
@@ -74,7 +73,7 @@ function GroupsGrid() {
     isSuccess,
     error,
     refetch,
-  } = useGetGroupQuery(token);
+  } = useGetGroupQuery();
 
   const handleShowEditNameModal = () => {
     setShowEditNameModal(true);
@@ -95,7 +94,6 @@ function GroupsGrid() {
   const deleteGroupHandler = async () => {
     try {
       const res = await deleteGroup({
-        token,
         data: {
           "id": selectedGroupData?.id,
           "groupName": selectedGroupData?.name,

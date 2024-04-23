@@ -38,10 +38,9 @@ import { faIR } from "@mui/material/locale";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-function ItemsCreateGroupGrid({ groupName }) {
+function ItemsCreateGroupGrid({ groupObject }) {
   const theme = useTheme();
   const [addedItems, setAddedItems] = useState([]);
-  const { token } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -62,17 +61,14 @@ function ItemsCreateGroupGrid({ groupName }) {
     isSuccess,
     refetch,
     error,
-  } = useGetItemsQuery(token);
+  } = useGetItemsQuery();
 
   const handleCreateGroup = async () => {
     try {
       const createGroupRes = await insertGroup({
-        token,
-        data: {
-          "id": "",
-          groupName,
-          "isdeleted": false,
-        },
+        "id": "",
+        "groupName": groupObject.groupName,
+        "isdeleted": false,
       }).unwrap();
       try {
         const groupID = createGroupRes.itemList[0].id;
@@ -82,10 +78,7 @@ function ItemsCreateGroupGrid({ groupName }) {
           "itemName": "",
           groupID,
         }));
-        const insertRes = await insertGroupItem({
-          token,
-          data,
-        }).unwrap();
+        const insertRes = await insertGroupItem(data).unwrap();
         console.log(insertRes);
         toast.success(insertRes.message, {
           autoClose: 2000,

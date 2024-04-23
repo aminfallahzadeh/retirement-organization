@@ -47,7 +47,6 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 function UsersGrid() {
   const [rowSelection, setRowSelection] = useState({});
-  const { token } = useSelector((state) => state.auth);
 
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [showEditUserGroupsModal, setShowEditUserGroupsModal] = useState(false);
@@ -64,7 +63,7 @@ function UsersGrid() {
     isSuccess,
     error,
     refetch,
-  } = useGetUserQuery(token);
+  } = useGetUserQuery();
 
   const handleShowEditNameModal = () => {
     setShowEditUserModal(true);

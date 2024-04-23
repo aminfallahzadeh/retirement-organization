@@ -27,14 +27,10 @@ export const archiveApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     deleteArchiveStructure: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${USERS_URL_HTTPS}/DeleteArchiveStructure`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     updateArchiveStructure: builder.mutation({
@@ -49,34 +45,22 @@ export const archiveApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     insertArchive: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${USERS_URL_HTTPS}/InsertArchive`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     deleteArchive: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${USERS_URL_HTTPS}/DeleteArchive`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     getArchive: builder.query({
-      query: ({ token, personID }) => ({
+      query: (personID) => ({
         url: `${USERS_URL_HTTPS}/GetArchive?personID=${personID}`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
   }),

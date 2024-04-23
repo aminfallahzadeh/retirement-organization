@@ -43,7 +43,6 @@ function GriyosCreateUserGrid({ userObject }) {
   const [rowSelection, setRowSelection] = useState({});
 
   const [addedGroups, setAddedGroups] = useState([]);
-  const { token } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,11 +56,7 @@ function GriyosCreateUserGrid({ userObject }) {
     isSuccess,
     error,
     refetch,
-  } = useGetGroupQuery(token);
-
-  useEffect(() => {
-    console.log("userObject 2", userObject);
-  }, [userObject]);
+  } = useGetGroupQuery();
 
   const [insertUser, { isLoading: isCreating }] = useInsertUserMutation();
   const [insertGroupUsers, { isLoading: isInserting }] =
@@ -70,12 +65,9 @@ function GriyosCreateUserGrid({ userObject }) {
   const handleCreateUser = async () => {
     try {
       const createUserRes = await insertUser({
-        token,
-        data: {
-          ...userObject,
-          "sex": userObject.sex === "true" ? true : false,
-          "isActive": userObject.isActive === "true" ? true : false,
-        },
+        ...userObject,
+        "sex": userObject.sex === "true" ? true : false,
+        "isActive": userObject.isActive === "true" ? true : false,
       }).unwrap();
       try {
         const userID = createUserRes.itemList[0].id;
@@ -85,10 +77,7 @@ function GriyosCreateUserGrid({ userObject }) {
           "groupID": item.id,
           "groupName": "",
         }));
-        const insertRes = await insertGroupUsers({
-          token,
-          data,
-        }).unwrap();
+        const insertRes = await insertGroupUsers(data).unwrap();
         console.log(insertRes);
         toast.success(insertRes.message, {
           autoClose: 2000,

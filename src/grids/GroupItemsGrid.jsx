@@ -32,10 +32,11 @@ function GroupItemGrid() {
 
   // access selected row info
   const { selectedGroupData } = useSelector((state) => state.groupsData);
-  const { token } = useSelector((state) => state.auth);
 
   // access the data from redux store
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
+
+  const groupID = selectedGroupData?.id;
 
   // fetch data from the API
   const {
@@ -44,7 +45,7 @@ function GroupItemGrid() {
     isLoading,
     error,
     refetch,
-  } = useGetGroupItemsQuery({ token, groupId: selectedGroupData?.id });
+  } = useGetGroupItemsQuery(groupID);
 
   // trigger the fetch
   useEffect(() => {
