@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   relatedTableData: [],
-  selectedRelatedData: [],
+  selectedRelatedData: null,
 };
 
 const relatedDataSlice = createSlice({

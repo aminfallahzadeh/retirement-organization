@@ -184,16 +184,11 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
     });
   };
 
-  useEffect(() => {
-    console.log(relatedObject);
-  }, [relatedObject]);
-
   const handleInsertRelated = async () => {
     try {
       const insertRes = await insertRelated({
         ...relatedObject,
         parentPersonID: personID,
-        personID,
         pensionaryStatusID: convertToEnglishNumber(
           relatedObject.pensionaryStatusID
         ),
@@ -224,7 +219,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
     }
   };
 
-  return (
+  const content = (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-4">
         <div className="inputBox__form">
@@ -873,6 +868,8 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
       </div>
     </section>
   );
+
+  return content;
 }
 
 export default CreateRelatedForm;

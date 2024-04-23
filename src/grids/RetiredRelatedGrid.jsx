@@ -38,8 +38,8 @@ import {
 
 // components
 import Modal from "../components/Modal";
-import RetiredRelatedInfoForm from "../forms/RetiredRelatedInfoForm";
-import CreateRelatedForm from "../forms/CreateRelatedForm.jsx";
+import CreateRelatedForm from "../forms/CreateRelatedForm";
+import EditRelatedForm from "../forms/EditRelatedForm";
 
 // library imports
 import Skeleton from "react-loading-skeleton";
@@ -283,10 +283,10 @@ function RetiredRelatedGrid() {
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedGroup = findById(relatedTableData, id);
+    const selectedRelated = findById(relatedTableData, id);
 
     if (id) {
-      dispatch(setSelectedRelatedData(selectedGroup));
+      dispatch(setSelectedRelatedData(selectedRelated));
     } else {
       dispatch(setSelectedRelatedData([]));
     }
@@ -325,7 +325,7 @@ function RetiredRelatedGrid() {
               title={"ویرایش اطلاعات وابسته"}
               closeModal={() => setShowEditRelatedModal(false)}
             >
-              <RetiredRelatedInfoForm />
+              <EditRelatedForm />
             </Modal>
           ) : showDeleteRelatedModal ? (
             <Modal

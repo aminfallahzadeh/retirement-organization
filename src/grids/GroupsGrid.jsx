@@ -141,6 +141,7 @@ function GroupsGrid() {
     showEditItemsModal,
   ]);
 
+  // handle errors
   useEffect(() => {
     if (error) {
       console.log(error);

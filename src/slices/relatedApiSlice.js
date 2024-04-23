@@ -16,12 +16,8 @@ export const relatedApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getRelated: builder.query({
-      query: ({ token, personID }) => ({
-        url: `${RELATED_URL_HTTPS}/GetRelated?parentPersonID=${personID}`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
+      query: (personID) => ({
+        url: `${RELATED_URL_HTTPS}/GetRelated?personID=${personID}`,
       }),
     }),
     insertRelated: builder.mutation({
