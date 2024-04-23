@@ -54,6 +54,10 @@ function RetiredPensionaryForm({ personID }) {
     if (isPensionarySuccess) {
       setPensionaryData(pensionary?.itemList[0]);
     }
+
+    return () => {
+      setPensionaryData({});
+    };
   }, [isPensionarySuccess, pensionary, dispatch]);
 
   // handle error

@@ -63,7 +63,13 @@ function RetiredPersonForm({ personID }) {
         setPersonDeathDate(retiredPersonData?.itemList[0]?.personDeathDate)
       );
     }
-  }, [isSuccess, retiredPersonData, dispatch]);
+
+    return () => {
+      dispatch(setPersonDeathDate(null));
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, retiredPersonData?.itemList]);
 
   // handle error
   useEffect(() => {
@@ -95,15 +101,6 @@ function RetiredPersonForm({ personID }) {
       lookUpType: "MaritialStatus",
     });
 
-  // handle dates
-  useEffect(() => {
-    setSelectedBirthDate(convertToPersianDate(personData?.personBirthDate));
-  }, [personData?.personBirthDate]);
-
-  useEffect(() => {
-    setSelectedDeathDate(convertToPersianDate(personData?.personDeathDate));
-  }, [personData?.personDeathDate]);
-
   useEffect(() => {
     if (selectedBirthDate) {
       setPersonData({
@@ -111,6 +108,7 @@ function RetiredPersonForm({ personID }) {
         personBirthDate: selectedBirthDate.toISOString(),
       });
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBirthDate, dispatch]);
 
@@ -123,6 +121,15 @@ function RetiredPersonForm({ personID }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDeathDate, dispatch]);
+
+  // handle dates
+  useEffect(() => {
+    setSelectedBirthDate(convertToPersianDate(personData?.personBirthDate));
+  }, [personData?.personBirthDate]);
+
+  useEffect(() => {
+    setSelectedDeathDate(convertToPersianDate(personData?.personDeathDate));
+  }, [personData?.personDeathDate]);
 
   // fetch combo data
   useEffect(() => {
