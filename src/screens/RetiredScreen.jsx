@@ -5,7 +5,8 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // redux imports
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setPersonID } from "../slices/retiredStateSlice";
 
 // components
 import IndividualInfoSection from "../sections/retired/IndividualInfoSection";
@@ -13,7 +14,16 @@ import RelatedInfoSection from "../sections/retired/RelatedInfoSection";
 
 function RetiredScreen() {
   const { selectedRequestData } = useSelector((state) => state.requestsData);
+  const personID = selectedRequestData?.personId;
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (selectedRequestData) {
+      dispatch(setPersonID(selectedRequestData.personId));
+    }
+  }, [selectedRequestData, dispatch]);
 
   useEffect(() => {
     if (selectedRequestData.length === 0) {
@@ -23,7 +33,7 @@ function RetiredScreen() {
 
   return (
     <div className="main">
-      <IndividualInfoSection />
+      <IndividualInfoSection personID={personID} />
       <RelatedInfoSection />
     </div>
   );

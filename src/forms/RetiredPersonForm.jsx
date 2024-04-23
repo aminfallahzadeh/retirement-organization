@@ -7,6 +7,7 @@ import {
   useUpdateRetiredPersonMutation,
   useGetRetiredPersonQuery,
 } from "../slices/retiredApiSlice.js";
+import { setPersonDeathDate } from "../slices/retiredStateSlice.js";
 import { useDispatch } from "react-redux";
 
 // mui imports
@@ -58,8 +59,11 @@ function RetiredPersonForm({ personID }) {
   useEffect(() => {
     if (isSuccess) {
       setPersonData(retiredPersonData?.itemList[0]);
+      dispatch(
+        setPersonDeathDate(retiredPersonData?.itemList[0]?.personDeathDate)
+      );
     }
-  }, [isSuccess, retiredPersonData]);
+  }, [isSuccess, retiredPersonData, dispatch]);
 
   // handle error
   useEffect(() => {
@@ -93,12 +97,12 @@ function RetiredPersonForm({ personID }) {
 
   // handle dates
   useEffect(() => {
-    setSelectedBirthDate(convertToPersianDate(personData.personBirthDate));
-  }, [personData.personBirthDate]);
+    setSelectedBirthDate(convertToPersianDate(personData?.personBirthDate));
+  }, [personData?.personBirthDate]);
 
   useEffect(() => {
-    setSelectedDeathDate(convertToPersianDate(personData.personDeathDate));
-  }, [personData.personDeathDate]);
+    setSelectedDeathDate(convertToPersianDate(personData?.personDeathDate));
+  }, [personData?.personDeathDate]);
 
   useEffect(() => {
     if (selectedBirthDate) {
@@ -232,7 +236,7 @@ function RetiredPersonForm({ personID }) {
                 name="personFirstName"
                 id="personFirstName"
                 className="inputBox__form--input"
-                value={personData.personFirstName || ""}
+                value={personData?.personFirstName || ""}
                 onChange={handlePersonDataChange}
                 required
               />

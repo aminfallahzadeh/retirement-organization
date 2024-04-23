@@ -1,16 +1,9 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
-// rrd imports
-import { useNavigate } from "react-router-dom";
-
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import {
-  useGetItemsQuery,
-  useInsertGroupMutation,
-  useInsertGroupItemMutation,
-} from "../slices/usersApiSlice";
+import { useGetItemsQuery } from "../slices/usersApiSlice";
 import { setItemsTableData } from "../slices/itemsDataSlice";
 
 // library imports
@@ -19,40 +12,25 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 // mui imports
-import {
-  Box,
-  Button,
-  createTheme,
-  ThemeProvider,
-  useTheme,
-} from "@mui/material";
-import { LoadingButton } from "@mui/lab";
+import { createTheme, ThemeProvider, useTheme } from "@mui/material";
 import {
   MaterialReactTable,
   useMaterialReactTable,
   getMRT_RowSelectionHandler,
 } from "material-react-table";
-import { Save as SaveIcon, ArrowBack as BackIcon } from "@mui/icons-material";
 import { faIR } from "@mui/material/locale";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-function ItemsCreateGroupGrid({ groupObject }) {
+function ItemsCreateGroupGrid({ setAddedItems }) {
   const theme = useTheme();
-  const [addedItems, setAddedItems] = useState([]);
+  const [rowSelection, setRowSelection] = useState({});
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const [insertGroup, { isLoading: isCreating }] = useInsertGroupMutation();
-  const [insertGroupItem, { isLoading: isInserting }] =
-    useInsertGroupItemMutation();
 
   // access the data from redux store
   const { itemsTableData } = useSelector((state) => state.itemsData);
-
-  const [rowSelection, setRowSelection] = useState({});
 
   const {
     data: items,
@@ -63,38 +41,7 @@ function ItemsCreateGroupGrid({ groupObject }) {
     error,
   } = useGetItemsQuery();
 
-  const handleCreateGroup = async () => {
-    try {
-      const createGroupRes = await insertGroup({
-        "id": "",
-        "groupName": groupObject.groupName,
-        "isdeleted": false,
-      }).unwrap();
-      try {
-        const groupID = createGroupRes.itemList[0].id;
-        const data = addedItems.map((item) => ({
-          "id": "",
-          "itemID": item.id,
-          "itemName": "",
-          groupID,
-        }));
-        const insertRes = await insertGroupItem(data).unwrap();
-        console.log(insertRes);
-        toast.success(insertRes.message, {
-          autoClose: 2000,
-        });
-        navigate("/retirement-organization/groups");
-      } catch (err) {
-        console.log(err);
-        toast.error(err?.data?.message || err.error, {
-          autoClose: 2000,
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
+  // fetch data
   useEffect(() => {
     refetch();
     if (isSuccess) {
@@ -102,20 +49,20 @@ function ItemsCreateGroupGrid({ groupObject }) {
         id: item.id,
         name: item.itemName,
       }));
-
       dispatch(setItemsTableData(data));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    return () => {
+      dispatch(setItemsTableData([]));
+    };
   }, [items, isSuccess, dispatch, refetch]);
 
+  // hadnle error
   useEffect(() => {
     if (error) {
       console.log(error);
       toast.error(error?.data?.message || error.error, {
         autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
       });
     }
   }, [error]);
@@ -124,7 +71,7 @@ function ItemsCreateGroupGrid({ groupObject }) {
     () => [
       {
         accessorKey: "name",
-        header: "نام آیتم",
+        header: "نام دسترسی",
         size: 800,
       },
     ],
@@ -144,45 +91,21 @@ function ItemsCreateGroupGrid({ groupObject }) {
         getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
       sx: { cursor: "pointer" },
     }),
-    renderTopToolbarCustomActions: () => (
-      <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
-      >
-        <LoadingButton
-          dir="ltr"
-          endIcon={<SaveIcon />}
-          loading={isCreating || isInserting}
-          onClick={handleCreateGroup}
-          variant="contained"
-          color="success"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>ذخیره</span>
-        </LoadingButton>
-
-        <Button
-          dir="ltr"
-          endIcon={<BackIcon />}
-          onClick={() => navigate("/retirement-organization/groups")}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>بازگشت</span>
-        </Button>
-      </Box>
-    ),
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
 
   useEffect(() => {
+    console.log(rowSelection);
+  }, [rowSelection]);
+
+  useEffect(() => {
     const selectedRows = table.getSelectedRowModel().rows;
     setAddedItems(selectedRows.map((row) => row.original));
-  }, [table, rowSelection]);
+  }, [table, rowSelection, setAddedItems]);
 
-  return (
+  const content = (
     <>
       {isLoading || isFetching ? (
         <div className="skeleton-lg">
@@ -198,13 +121,15 @@ function ItemsCreateGroupGrid({ groupObject }) {
         <ThemeProvider
           theme={createTheme({ ...theme, direction: "rtl" }, faIR)}
         >
-          <div style={{ direction: "rtl" }}>
+          <div style={{ direction: "rtl" }} className="u-margin-bottom-md">
             <MaterialReactTable table={table} />
           </div>
         </ThemeProvider>
       )}
     </>
   );
+
+  return content;
 }
 
 export default ItemsCreateGroupGrid;

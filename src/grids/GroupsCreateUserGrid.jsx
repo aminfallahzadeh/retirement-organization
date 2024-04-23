@@ -41,11 +41,15 @@ import { defaultTableOptions } from "../utils.js";
 function GriyosCreateUserGrid({ userObject }) {
   const theme = useTheme();
   const [rowSelection, setRowSelection] = useState({});
-
   const [addedGroups, setAddedGroups] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // recive api reducers
+  const [insertUser, { isLoading: isCreating }] = useInsertUserMutation();
+  const [insertGroupUsers, { isLoading: isInserting }] =
+    useInsertGroupUsersMutation();
 
   // access the data from redux store
   const { groupsTableData } = useSelector((state) => state.groupsData);
@@ -58,10 +62,33 @@ function GriyosCreateUserGrid({ userObject }) {
     refetch,
   } = useGetGroupQuery();
 
-  const [insertUser, { isLoading: isCreating }] = useInsertUserMutation();
-  const [insertGroupUsers, { isLoading: isInserting }] =
-    useInsertGroupUsersMutation();
+  // fetch data
+  useEffect(() => {
+    refetch();
+    if (isSuccess) {
+      const data = groups.itemList.map((group) => ({
+        id: group.id,
+        name: group.groupName,
+      }));
+      dispatch(setGroupsTableData(data));
+    }
 
+    return () => {
+      dispatch(setGroupsTableData([]));
+    };
+  }, [groups, isSuccess, dispatch, refetch]);
+
+  // handle error
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
+
+  // handle create user
   const handleCreateUser = async () => {
     try {
       const createUserRes = await insertUser({
@@ -97,33 +124,6 @@ function GriyosCreateUserGrid({ userObject }) {
     }
   };
 
-  useEffect(() => {
-    refetch();
-    if (isSuccess) {
-      const data = groups.itemList.map((group) => ({
-        id: group.id,
-        name: group.groupName,
-      }));
-      dispatch(setGroupsTableData(data));
-    }
-
-    return () => {
-      dispatch(setGroupsTableData([]));
-    };
-  }, [groups, isSuccess, dispatch, refetch]);
-
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-      toast.error(error?.data?.message || error.error, {
-        autoClose: 2000,
-        style: {
-          fontSize: "18px",
-        },
-      });
-    }
-  }, [error]);
-
   const columns = useMemo(
     () => [
       {
@@ -148,11 +148,6 @@ function GriyosCreateUserGrid({ userObject }) {
         getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
       sx: { cursor: "pointer" },
     }),
-    initialState: {
-      density: "compact",
-      pagination: { pageIndex: 0, pageSize: 7 },
-    },
-
     renderTopToolbarCustomActions: () => (
       <Box
         sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}

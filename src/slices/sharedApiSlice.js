@@ -22,8 +22,16 @@ export const sharedApiSlice = apiSlice.injectEndpoints({
         url: `${SHARED_URL_HTTPS}/GetRelationship`,
       }),
     }),
+    getPensionaryStatus: builder.query({
+      query: ({ pensionaryStatusCategory }) => ({
+        url: `${SHARED_URL_HTTPS}/GetPensionaryStatus?pensionaryStatusCategory=${pensionaryStatusCategory}`,
+      }),
+    }),
   }),
 });
 
-export const { useGetLookupDataQuery, useGetRelationshipQuery } =
-  sharedApiSlice;
+export const {
+  useGetLookupDataQuery,
+  useGetRelationshipQuery,
+  useGetPensionaryStatusQuery,
+} = sharedApiSlice;

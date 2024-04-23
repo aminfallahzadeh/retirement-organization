@@ -1,25 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  pensionaryObject: [],
-  pensionaryStatusID: "",
+  personDeathDate: null,
+  personID: "",
 };
 
 const retiredStateSlice = createSlice({
   name: "retiredState",
   initialState,
   reducers: {
-    setPensionaryObject: (state, action) => {
-      state.pensionaryObject = action.payload;
+    setPersonDeathDate: (state, action) => {
+      state.personDeathDate = action.payload;
     },
-
-    setPensionaryStatusID: (state, action) => {
-      state.pensionaryStatusID = action.payload;
+    setPersonID: (state, action) => {
+      state.personID = action.payload;
     },
   },
 });
 
-export const { setPensionaryObject, setPensionaryStatusID } =
-  retiredStateSlice.actions;
+export const { setPersonDeathDate, setPersonID } = retiredStateSlice.actions;
 
 export default retiredStateSlice.reducer;

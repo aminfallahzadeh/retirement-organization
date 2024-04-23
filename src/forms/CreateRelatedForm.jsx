@@ -7,6 +7,7 @@ import { useInsertRelatedMutation } from "../slices/relatedApiSlice";
 import {
   useGetLookupDataQuery,
   useGetRelationshipQuery,
+  useGetPensionaryStatusQuery,
 } from "../slices/sharedApiSlice.js";
 
 // mui imports
@@ -25,14 +26,14 @@ import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
 function CreateRelatedForm({ setShowCreateRelatedModal }) {
-  const { personID, pensionaryStatusID } = useSelector(
-    (state) => state.retiredState
-  );
+  const { selectedRequestData } = useSelector((state) => state.requestsData);
+  const personID = selectedRequestData?.personId;
 
   const [relationCombo, setRelationCombo] = useState([]);
   const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);
   const [educationCombo, setEducationCombo] = useState([]);
   const [universityCombo, setUniversityCombo] = useState([]);
+  const [pensionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
 
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
   const [selectedMritialDate, setSelectedMritialDate] = useState(null);
@@ -64,6 +65,11 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   const { data: universityComboItems, isSuccess: isUniversityComboSuccess } =
     useGetLookupDataQuery({ lookUpType: "UniversityType" });
 
+  const {
+    data: pensionaryStatusComboItems,
+    isSuccess: isPensionaryStatusComboSuccess,
+  } = useGetPensionaryStatusQuery({ pensionaryStatusCategory: "L" });
+
   useEffect(() => {
     if (isRelationComboSuccess) {
       setRelationCombo(relationComboItems.itemList);
@@ -87,6 +93,12 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
       setUniversityCombo(universityComboItems.itemList);
     }
   }, [isUniversityComboSuccess, universityComboItems]);
+
+  useEffect(() => {
+    if (isPensionaryStatusComboSuccess) {
+      setPensionaryStatusCombo(pensionaryStatusComboItems.itemList);
+    }
+  }, [isPensionaryStatusComboSuccess, pensionaryStatusComboItems]);
 
   const handleBirthDateChange = (date) => {
     setSelectedBirthDate(date);
@@ -180,8 +192,11 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
     try {
       const insertRes = await insertRelated({
         ...relatedObject,
-        pensionaryStatusID,
         parentPersonID: personID,
+        personID,
+        pensionaryStatusID: convertToEnglishNumber(
+          relatedObject.pensionaryStatusID
+        ),
         personCertificatetNo: convertToEnglishNumber(
           relatedObject.personCertificatetNo
         ),
@@ -373,7 +388,29 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
 
         <div className="inputBox__form">
           <select
-            type="text"
+            className="inputBox__form--input"
+            onChange={handleRealtedObjectChange}
+            name="pensionaryStatusID"
+            required
+            id="pensionaryStatusID"
+          >
+            <option value=" ">انتخاب کنید</option>
+            {pensionaryStatusCombo.map((status) => (
+              <option
+                key={status.pensionaryStatusID}
+                value={status.pensionaryStatusID}
+              >
+                {status.pensionaryStatusName}
+              </option>
+            ))}
+          </select>
+          <label className="inputBox__form--label" htmlFor="pensionaryStatusID">
+            <span>*</span> وضعیت وابسته
+          </label>
+        </div>
+
+        <div className="inputBox__form">
+          <select
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
             name="maritalStatusID"

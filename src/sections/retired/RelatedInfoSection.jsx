@@ -16,8 +16,7 @@ import RetiredHeirGrid from "../../grids/RetiredHeirGrid";
 function RelatedInfoSection() {
   const [value, setValue] = useState("1");
 
-  const { personObject } = useSelector((state) => state.retiredState);
-  const death = personObject?.personDeathDate;
+  const { personDeathDate } = useSelector((state) => state.retiredState);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -32,7 +31,7 @@ function RelatedInfoSection() {
             aria-label="tabs"
             variant="fullWidth"
           >
-            <Tab label={death ? "موظفین" : "وابستگان"} value="1" />
+            <Tab label={personDeathDate ? "موظفین" : "وابستگان"} value="1" />
             <Tab label="احکام" value="2" />
             <Tab label="فیش حقوقی" value="3" />
             <Tab label="رفاهی" value="4" />
@@ -45,7 +44,7 @@ function RelatedInfoSection() {
             padding: "0",
           }}
         >
-          {death ? <RetiredHeirGrid /> : <RetiredRelatedGrid />}
+          {personDeathDate ? <RetiredHeirGrid /> : <RetiredRelatedGrid />}
         </TabPanel>
         <TabPanel
           value="2"

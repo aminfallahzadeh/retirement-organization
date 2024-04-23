@@ -4,16 +4,13 @@ import RetiredPensionaryForm from "../../forms/RetiredPensionaryForm";
 import RetiredPersonForm from "../../forms/RetiredPersonForm";
 import ElectronicCaseSection from "./ElectronicCaseSection";
 
-// redux imports
-import { useSelector } from "react-redux";
-
 // mui imports
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material";
 
-function IndividualInfoSection() {
-  const { selectedRequestData } = useSelector((state) => state.requestsData);
-  const personID = selectedRequestData?.personId;
+function IndividualInfoSection({ personID }) {
+  // const { selectedRequestData } = useSelector((state) => state.requestsData);
+  // const personID = selectedRequestData?.personId;
 
   const content = (
     <section className="pensionersAffairs">
@@ -85,7 +82,7 @@ function IndividualInfoSection() {
           پرونده الکترونیک
         </AccordionSummary>
         <AccordionDetails>
-          <ElectronicCaseSection personID={selectedRequestData?.personId} />
+          <ElectronicCaseSection personID={personID} />
         </AccordionDetails>
       </Accordion>
     </section>

@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 // redux imports
 import { useDispatch } from "react-redux";
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
-import { setPensionaryStatusID } from "../slices/retiredStateSlice.js";
 import {
   useUpdateRetiredPensionaryMutation,
   useGetRetiredPensionaryQuery,
@@ -54,9 +53,6 @@ function RetiredPensionaryForm({ personID }) {
   useEffect(() => {
     if (isPensionarySuccess) {
       setPensionaryData(pensionary?.itemList[0]);
-      dispatch(
-        setPensionaryStatusID(pensionary?.itemList[0]?.pensionaryStatusID)
-      );
     }
   }, [isPensionarySuccess, pensionary, dispatch]);
 

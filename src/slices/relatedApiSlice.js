@@ -25,14 +25,10 @@ export const relatedApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     insertRelated: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${RELATED_URL_HTTPS}/InsertRelated`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     updateRelated: builder.mutation({
