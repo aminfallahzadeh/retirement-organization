@@ -3,6 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   requestTableData: [],
   selectedRequestData: [],
+  allRequestTableData: [],
+  selectedRequestAllRequests: [],
+  selectedRole: "",
 };
 
 const requestsDataSlice = createSlice({
@@ -16,10 +19,27 @@ const requestsDataSlice = createSlice({
     setSelectedRequestData: (state, action) => {
       state.selectedRequestData = action.payload;
     },
+
+    setSelectedRole: (state, action) => {
+      state.selectedRole = action.payload;
+    },
+
+    setAllRequestTableData: (state, action) => {
+      state.allRequestTableData = action.payload;
+    },
+
+    setSelectedRequestAllRequests: (state, action) => {
+      state.selectedRequestAllRequests = action.payload;
+    },
   },
 });
 
-export const { setRequestTableData, setSelectedRequestData } =
-  requestsDataSlice.actions;
+export const {
+  setRequestTableData,
+  setSelectedRequestData,
+  setSelectedRole,
+  setAllRequestTableData,
+  setSelectedRequestAllRequests,
+} = requestsDataSlice.actions;
 
 export default requestsDataSlice.reducer;

@@ -32,8 +32,9 @@ import { defaultTableOptions } from "../utils.js";
 // hjelpers
 import { findById } from "../helper.js";
 
-function CartableGrid({ selectedRole }) {
+function RequestsGrid() {
   const [rowSelection, setRowSelection] = useState({});
+  const { selectedRole } = useSelector((state) => state.requestsData);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -189,4 +190,4 @@ function CartableGrid({ selectedRole }) {
   return content;
 }
 
-export default CartableGrid;
+export default RequestsGrid;

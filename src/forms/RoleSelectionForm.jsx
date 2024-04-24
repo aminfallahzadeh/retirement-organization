@@ -1,7 +1,14 @@
-function RoleSelectionForm({ setSelectedRole, isLoading, roles }) {
+// redux imports
+import { setSelectedRole } from "../slices/requestsDataSlice";
+import { useDispatch } from "react-redux";
+
+function RoleSelectionForm({ isLoading, roles }) {
+  const dispatch = useDispatch();
+
   const handleRoleSelection = (e) => {
-    setSelectedRole(e.target.value);
+    dispatch(setSelectedRole(e.target.value));
   };
+
   return (
     <div className="formCOntainer">
       <form className="grid grid--col-4">

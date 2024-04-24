@@ -1,25 +1,29 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 // library imports
 import { toast } from "react-toastify";
 
 // redux imports
+import { setSelectedRole } from "../slices/requestsDataSlice";
 import { useGetRoleQuery } from "../slices/requestApiSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 // component imports
-import CartableGrid from "../grids/CartableGrid";
+import RequestsGrid from "../grids/RequestsGrid";
 import RoleSelectionForm from "../forms/RoleSelectionForm";
 
 function Dashboard() {
+  const { selectedRole } = useSelector((state) => state.requestsData);
+
+  const dispatch = useDispatch();
+
   const {
     data: roles,
     isLoading,
     error,
     isSuccess: isRolesSuccess,
   } = useGetRoleQuery();
-
-  const [selectedRole, setSelectedRole] = useState(null);
 
   useEffect(() => {
     if (error) {
@@ -30,25 +34,20 @@ function Dashboard() {
     }
   }, [error]);
 
+  // set selected role default to first role
   useEffect(() => {
     if (isRolesSuccess) {
-      setSelectedRole(roles?.itemList[0].url);
+      dispatch(setSelectedRole(roles?.itemList[0].url));
     }
-  }, [isRolesSuccess, roles, setSelectedRole]);
+  }, [isRolesSuccess, dispatch, roles]);
 
   return (
     <section className="main flex-col">
       <div className="flex-row flex-row--grow">
         <h4 className="title-primary">کارتابل</h4>
-        <RoleSelectionForm
-          setSelectedRole={setSelectedRole}
-          isLoading={isLoading}
-          roles={roles}
-        />
+        <RoleSelectionForm isLoading={isLoading} roles={roles} />
       </div>
-      {isRolesSuccess && selectedRole && (
-        <CartableGrid selectedRole={selectedRole} />
-      )}
+      {isRolesSuccess && selectedRole && <RequestsGrid />}
     </section>
   );
 }

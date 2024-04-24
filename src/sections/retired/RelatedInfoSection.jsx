@@ -12,6 +12,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import RetiredRelatedGrid from "../../grids/RetiredRelatedGrid";
 import RetiredStatementsGrid from "../../grids/RetiredStatementsGrid";
 import RetiredHeirGrid from "../../grids/RetiredHeirGrid";
+import AllRequestsGrid from "../../grids/AllRequestsGrid";
 
 function RelatedInfoSection() {
   const [value, setValue] = useState("1");
@@ -34,7 +35,7 @@ function RelatedInfoSection() {
             <Tab label={personDeathDate ? "موظفین" : "وابستگان"} value="1" />
             <Tab label="احکام" value="2" />
             <Tab label="فیش حقوقی" value="3" />
-            <Tab label="رفاهی" value="4" />
+            <Tab label="درخواست ها" value="4" />
             <Tab label="مالی" value="5" />
           </TabList>
         </Box>
@@ -60,6 +61,22 @@ function RelatedInfoSection() {
             padding: "0",
           }}
         ></TabPanel>
+        <TabPanel
+          value="4"
+          sx={{
+            padding: "0",
+          }}
+        >
+          <AllRequestsGrid />
+        </TabPanel>
+        <TabPanel
+          value="5"
+          sx={{
+            padding: "0",
+          }}
+        >
+          mali
+        </TabPanel>
       </TabContext>
     </section>
   );
