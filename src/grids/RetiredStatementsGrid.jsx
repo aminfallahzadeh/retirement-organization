@@ -12,7 +12,7 @@ import {
 // mui imports
 import { IconButton, Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -22,6 +22,7 @@ import {
   Add as AddIcon,
   Close as CloseIcon,
   Done as DoneIcon,
+  RemoveRedEye as RemoveRedEyeIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -75,10 +76,6 @@ function RetiredStatementsGrid() {
 
   const handleShowStatementModal = () => {
     setShowStatementModal(true);
-  };
-
-  const handleShowDeleteStatementModal = () => {
-    setShowDeleteStatementModal(true);
   };
 
   useEffect(() => {
@@ -169,14 +166,14 @@ function RetiredStatementsGrid() {
         ),
       },
       {
-        accessorKey: "deleteStatementAction",
-        header: "حذف",
+        accessorKey: "observeStatement",
+        header: "مشاهده حکم",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="error" onClick={handleShowDeleteStatementModal}>
-            <DeleteIcon />
+          <IconButton color="primary">
+            <RemoveRedEyeIcon />
           </IconButton>
         ),
       },

@@ -31,7 +31,7 @@ import {
 
 // components
 import Modal from "../components/Modal";
-import RetiredRelatedInfoForm from "../forms/RetiredRelatedInfoForm";
+import EditHeirForm from "../forms/EditHeirForm";
 
 // library imports
 import Skeleton from "react-loading-skeleton";
@@ -263,18 +263,18 @@ function RetiredHeirGrid() {
         <>
           {showEditHeirModal ? (
             <Modal
-              title={"اطلاعات فرد وابسته"}
+              title={"ویرایش اطلاعات موظف"}
               closeModal={() => setShowEditHeirModal(false)}
             >
-              <RetiredRelatedInfoForm />
+              <EditHeirForm />
             </Modal>
           ) : showDeleteHeirModal ? (
             <Modal
-              title={"حذف وابسته"}
+              title={"حذف موظف"}
               closeModal={() => setShowDeleteHeirModal(false)}
             >
               <p className="paragraph-primary">
-                آیا از حذف این وابسته اطمینان دارید؟
+                آیا از حذف این موظف اطمینان دارید؟
               </p>
               <div className="flex-row flex-center">
                 <LoadingButton

@@ -105,15 +105,15 @@ function RetiredPensionaryForm({ personID }) {
     );
   }, [pensionaryData?.retirementDate]);
 
-  useEffect(() => {
-    if (selectedRetriementDate) {
-      setPensionaryData({
-        ...pensionaryData,
-        retirementDate: selectedRetriementDate.toISOString(),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRetriementDate]);
+  // useEffect(() => {
+  //   if (selectedRetriementDate) {
+  //     setPensionaryData({
+  //       ...pensionaryData,
+  //       retirementDate: selectedRetriementDate.toISOString(),
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedRetriementDate]);
 
   // other handlers
   const handleEditable = () => {

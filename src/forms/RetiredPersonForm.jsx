@@ -70,10 +70,6 @@ function RetiredPersonForm({ personID }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, retiredPersonData?.itemList]);
 
-  useEffect(() => {
-    console.log(personData);
-  }, [personData]);
-
   // handle error
   useEffect(() => {
     if (error) {
@@ -104,26 +100,26 @@ function RetiredPersonForm({ personID }) {
       lookUpType: "MaritialStatus",
     });
 
-  useEffect(() => {
-    if (selectedBirthDate) {
-      setPersonData({
-        ...personData,
-        personBirthDate: selectedBirthDate.toISOString(),
-      });
-    }
+  // useEffect(() => {
+  //   if (selectedBirthDate) {
+  //     setPersonData({
+  //       ...personData,
+  //       personBirthDate: selectedBirthDate.toISOString(),
+  //     });
+  //   }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedBirthDate]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedBirthDate]);
 
-  useEffect(() => {
-    if (selectedDeathDate) {
-      setPersonData({
-        ...personData,
-        personDeathDate: selectedDeathDate.toISOString(),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDeathDate]);
+  // useEffect(() => {
+  //   if (selectedDeathDate) {
+  //     setPersonData({
+  //       ...personData,
+  //       personDeathDate: selectedDeathDate.toISOString(),
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedDeathDate]);
 
   // handle dates
   useEffect(() => {
