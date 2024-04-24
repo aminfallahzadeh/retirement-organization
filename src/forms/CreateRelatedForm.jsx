@@ -220,8 +220,8 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   };
 
   const content = (
-    <section className="formContainer flex-col">
-      <form method="POST" className="grid grid--col-4">
+    <section className="formContainer formContainer--width-lg flex-col">
+      <form method="POST" className="grid grid--col-3" noValidate>
         <div className="inputBox__form">
           <select
             type="text"
@@ -649,7 +649,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           </label>
         </div>
 
-        <div className="inputBox__form col-span-4">
+        <div className="inputBox__form col-span-3">
           <input
             type="text"
             className="inputBox__form--input"
@@ -664,7 +664,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           </label>
         </div>
 
-        <div className="inputBox__form col-span-4 row-span-2">
+        <div className="inputBox__form col-span-3 row-span-2">
           <textarea
             type="text"
             className="inputBox__form--input"

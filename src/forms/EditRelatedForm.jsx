@@ -24,7 +24,6 @@ import { convertToPersianNumber, convertToPersianDate } from "../helper.js";
 import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
-import { setPersonDeathDate } from "../slices/retiredStateSlice.js";
 
 function EditRelatedForm() {
   const { selectedRelatedData } = useSelector((state) => state.relatedData);
@@ -57,11 +56,13 @@ function EditRelatedForm() {
     isSuccess,
     isFetching,
     isLoading,
+    refetch,
     error,
   } = useGetRelatedQuery(personID);
 
   // fetch data
   useEffect(() => {
+    refetch();
     if (isSuccess) {
       setRelatedObject(related);
     }
@@ -69,7 +70,7 @@ function EditRelatedForm() {
     return () => {
       setRelatedObject({});
     };
-  }, [isSuccess, related]);
+  }, [isSuccess, related, refetch]);
 
   // handle error
   useEffect(() => {
@@ -164,59 +165,63 @@ function EditRelatedForm() {
   };
 
   useEffect(() => {
-    if (selectedBirthDate) {
-      setRelatedObject({
-        ...relatedObject,
-        personBirthhDate: selectedBirthDate.toISOString(),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    console.log(selectedBirthDate?.toISOString());
   }, [selectedBirthDate]);
 
   useEffect(() => {
-    if (selectedMritialDate) {
-      setRelatedObject({
-        ...relatedObject,
-        personMaritalDate: selectedMritialDate.toISOString(),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMritialDate]);
+    console.log("realtedObject", relatedObject);
+  }, [relatedObject]);
 
-  useEffect(() => {
-    if (selectedSelfEmployeeStartDate) {
-      setRelatedObject({
-        ...relatedObject,
-        selfEmployeeStartDate: selectedSelfEmployeeStartDate.toISOString(),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedSelfEmployeeStartDate]);
+  // useEffect(() => {
+  //   if (selectedBirthDate) {
+  //     setRelatedObject({
+  //       ...relatedObject,
+  //       personBirthhDate: selectedBirthDate.toISOString(),
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedBirthDate]);
 
-  useEffect(() => {
-    if (selectedSelfEmployeeEndDate) {
-      setRelatedObject({
-        ...relatedObject,
-        selfEmployeeEndDate: selectedSelfEmployeeEndDate.toISOString(),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedSelfEmployeeEndDate]);
+  // useEffect(() => {
+  //   if (selectedMritialDate) {
+  //     setRelatedObject({
+  //       ...relatedObject,
+  //       personMaritalDate: selectedMritialDate.toISOString(),
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedMritialDate]);
+
+  // useEffect(() => {
+  //   if (selectedSelfEmployeeStartDate) {
+  //     setRelatedObject({
+  //       ...relatedObject,
+  //       selfEmployeeStartDate: selectedSelfEmployeeStartDate.toISOString(),
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedSelfEmployeeStartDate]);
+
+  // useEffect(() => {
+  //   if (selectedSelfEmployeeEndDate) {
+  //     setRelatedObject({
+  //       ...relatedObject,
+  //       selfEmployeeEndDate: selectedSelfEmployeeEndDate.toISOString(),
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedSelfEmployeeEndDate]);
 
   // handle initial dates
   useEffect(() => {
     setSelectedBirthDate(convertToPersianDate(relatedObject?.personBirthhDate));
-  }, [relatedObject?.personBirthhDate]);
-
-  useEffect(() => {
-    setPersonDeathDate(convertToPersianDate(relatedObject?.personDeathDate));
-  }, [relatedObject?.personDeathDate]);
+  }, [relatedObject]);
 
   useEffect(() => {
     setSelectedMritialDate(
       convertToPersianDate(relatedObject?.personMaritalDate)
     );
-  }, [relatedObject?.personMaritalDate]);
+  }, [relatedObject]);
 
   const handleRelatedObjectChange = (e) => {
     const { name, value } = e.target;
@@ -231,8 +236,8 @@ function EditRelatedForm() {
       {isLoading || isFetching ? (
         <div>در حال بارگذاری</div>
       ) : (
-        <section className="formContainer flex-col">
-          <form method="POST" className="grid grid--col-4">
+        <section className="formContainer formContainer--width-lg flex-col">
+          <form method="POST" className="grid grid--col-3">
             <div className="inputBox__form">
               <select
                 type="text"
@@ -349,7 +354,7 @@ function EditRelatedForm() {
             </div>
             <div className="inputBox__form">
               <InputDatePicker
-                value={selectedBirthDate}
+                value={convertToPersianDate(selectedBirthDate)}
                 onChange={handleBirthDateChange}
                 format={"jYYYY-jMM-jDD"}
                 onOpenChange={handleBirthOpenChange}
@@ -695,7 +700,7 @@ function EditRelatedForm() {
               </label>
             </div>
 
-            <div className="inputBox__form col-span-4">
+            <div className="inputBox__form col-span-3">
               <input
                 type="text"
                 className="inputBox__form--input"
@@ -710,7 +715,7 @@ function EditRelatedForm() {
               </label>
             </div>
 
-            <div className="inputBox__form col-span-4 row-span-2">
+            <div className="inputBox__form col-span-3 row-span-2">
               <textarea
                 type="text"
                 className="inputBox__form--input"

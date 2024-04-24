@@ -61,11 +61,8 @@ export const generateCaptcha = (len) => {
 
 // change date to persian date
 export const convertToPersianDate = (date) => {
-  if (date) {
-    const result = momentj(date);
-    return result;
-  }
-  return;
+  const result = momentj(date);
+  return result;
 };
 
 export const convertToPersianDateFormatted = (data) => {
