@@ -27,6 +27,8 @@ function SidebarNav() {
   const slipsPath = location.pathname === "/retirement-organization/slips";
   const staffStatementsPath =
     location.pathname === "/retirement-organization/staff-statements";
+  const electronicStatementPath =
+    location.pathname === "/retirement-organization/electronic-statement";
 
   const content = (
     <Sidebar rtl={true}>
@@ -112,6 +114,14 @@ function SidebarNav() {
             active={userPath}
           >
             کاربران
+          </MenuItem>
+          <MenuItem
+            component={
+              <Link to="/retirement-organization/electronic-statement" />
+            }
+            active={electronicStatementPath}
+          >
+            پرونده الکترونیک
           </MenuItem>
         </SubMenu>
 
