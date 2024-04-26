@@ -20,7 +20,7 @@ Forms:
   [+] implement the text areas @done(24-03-18 19:00)
   [+] work on respnsiveness for demonstration @done(24-03-18 19:00)
   [+] add stars for required fields @done(24-03-18 19:00)
-  [ ] transfer all forms into react-hook-form
+  [ ] transfer all forms into react-hook-form (form control)
 
 Grids:
   [+] implement the user page grids @done(24-03-18 19:01)
@@ -28,8 +28,8 @@ Grids:
   [+] complete the move functionality in groups grids page @done(24-03-18 19:01)
   [+] remove circle selections on top grids @done(24-03-18 19:01)
   [ ] add multiselection on bottom grids
-  [ ] replace pagination with scrolling
-  [ ] implement multi selection for sub grids
+  [+] replace pagination with scrolling @done(24-04-26 14:13)
+  [+] implement multi selection for sub grids @done(24-04-26 14:13)
   [ ] change grids theme
   [+] move all grids from components folder to grids folder @done(24-03-28 19:48)
 
@@ -43,7 +43,7 @@ Users Screen:
   [+] implement create new user screen @done(24-03-28 19:49)
 
 Retired Screen:
-  [ ] add request tab for other retired requests
+  [+] add request tab for other retired requests @done(24-04-26 14:13)
 
 Queries:
   [-] split queries in relavant files @cancelled(24-03-18 19:01)
@@ -65,7 +65,8 @@ UI:
   [+] change bootstrap button with mui buttons @done(24-04-01 19:13)
   [+] remove bootstrap css and library completely @done(24-04-01 19:13)
   [-] apply 62.5% font size to html globally and fix all the font sizes @cancelled(24-04-02 02:59)
-  [ ] find and replace modern color palette
+  [+] find and replace modern color palette @done(24-04-26 14:13)
 
 Refacoring:
   [+] refactor code imports @done(24-04-02 02:59)
+  [ ] move personID and pensionaryID to params in retired screen

@@ -11,7 +11,6 @@ import {
 
 // mui imports
 import { IconButton, Button } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
 import { Edit as EditIcon } from "@mui/icons-material";
 import { PaginationItem } from "@mui/material";
 import {
@@ -20,8 +19,6 @@ import {
   FirstPage,
   LastPage,
   Add as AddIcon,
-  Close as CloseIcon,
-  Done as DoneIcon,
   RemoveRedEye as RemoveRedEyeIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -33,6 +30,7 @@ import {
 // components
 import Modal from "../components/Modal";
 import RetiredStatementInfoForm from "../forms/RetiredStatementInfoForm";
+import GenerateStatementForm from "../forms/GenerateStatementForm.jsx";
 
 // library imports
 import Skeleton from "react-loading-skeleton";
@@ -51,11 +49,9 @@ import { defaultTableOptions } from "../utils.js";
 
 function RetiredStatementsGrid() {
   const [rowSelection, setRowSelection] = useState({});
-  const [showStatementModal, setShowStatementModal] = useState(false);
-  const [showDeleteStatementModal, setShowDeleteStatementModal] =
+  const [showGenerateStatementModal, setShowGenerateStatementModal] =
     useState(false);
-
-  const { token } = useSelector((state) => state.auth);
+  const [showEditStatementModal, setShowEditStatementModal] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -63,19 +59,23 @@ function RetiredStatementsGrid() {
   const { statementTableData } = useSelector((state) => state.statementData);
   const { selectedRequestData } = useSelector((state) => state.requestsData);
 
+  const personID = selectedRequestData?.personId;
+
   const {
     data: statements,
     isSuccess,
     isLoading,
     error,
     refetch,
-  } = useGetListOfRetirementStatementsQuery({
-    token,
-    personID: selectedRequestData?.personId,
-  });
+  } = useGetListOfRetirementStatementsQuery(personID);
 
-  const handleShowStatementModal = () => {
-    setShowStatementModal(true);
+  // handlers
+  const handleEditShowStatementModal = () => {
+    setShowEditStatementModal(true);
+  };
+
+  const handleGenerateStatementModalChange = () => {
+    setShowGenerateStatementModal(true);
   };
 
   useEffect(() => {
@@ -96,14 +96,7 @@ function RetiredStatementsGrid() {
     return () => {
       dispatch(setStatementTableData([]));
     };
-  }, [
-    isSuccess,
-    refetch,
-    dispatch,
-    statements,
-    showStatementModal,
-    showDeleteStatementModal,
-  ]);
+  }, [isSuccess, refetch, dispatch, statements, showEditStatementModal]);
 
   useEffect(() => {
     if (error) {
@@ -160,7 +153,7 @@ function RetiredStatementsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="success" onClick={handleShowStatementModal}>
+          <IconButton color="success" onClick={handleEditShowStatementModal}>
             <EditIcon />
           </IconButton>
         ),
@@ -201,6 +194,7 @@ function RetiredStatementsGrid() {
         dir="ltr"
         endIcon={<AddIcon />}
         variant="contained"
+        onClick={handleGenerateStatementModalChange}
         color="primary"
         sx={{ fontFamily: "sahel" }}
       >
@@ -259,43 +253,19 @@ function RetiredStatementsGrid() {
         </div>
       ) : (
         <>
-          {showStatementModal ? (
+          {showEditStatementModal ? (
             <Modal
               title={"حکم بازنشسته"}
-              closeModal={() => setShowStatementModal(false)}
+              closeModal={() => setShowEditStatementModal(false)}
             >
               <RetiredStatementInfoForm />
             </Modal>
-          ) : showDeleteStatementModal ? (
+          ) : showGenerateStatementModal ? (
             <Modal
-              title={"حذف حکم"}
-              closeModal={() => setShowDeleteStatementModal(false)}
+              title={"ایجاد حکم بازنشسته"}
+              closeModal={() => setShowGenerateStatementModal(false)}
             >
-              <p className="paragraph-primary">
-                آیا از حذف این حکم اطمینان دارید؟
-              </p>
-              <div className="flex-row flex-center">
-                <LoadingButton
-                  dir="ltr"
-                  endIcon={<DoneIcon />}
-                  variant="contained"
-                  color="success"
-                  sx={{ fontFamily: "sahel" }}
-                >
-                  <span>بله</span>
-                </LoadingButton>
-
-                <Button
-                  dir="ltr"
-                  endIcon={<CloseIcon />}
-                  onClick={() => setShowDeleteStatementModal(false)}
-                  variant="contained"
-                  color="error"
-                  sx={{ fontFamily: "sahel" }}
-                >
-                  <span>خیر</span>
-                </Button>
-              </div>
+              <GenerateStatementForm />
             </Modal>
           ) : null}
           <MaterialReactTable table={table} />
