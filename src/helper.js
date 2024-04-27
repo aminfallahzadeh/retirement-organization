@@ -1,5 +1,6 @@
 // library imports
 import momentj from "moment-jalaali";
+import moment from "moment";
 
 // convert to persian number
 export const convertToPersianNumber = (num) => {
@@ -72,4 +73,17 @@ export const convertToPersianDateFormatted = (date) => {
   }
 
   return "-";
+};
+
+export const convertToEnglishDateObject = (date) => {
+  if (date) {
+    const result = momentj(date, "jYYYY/jM/jD");
+    return result;
+  }
+  return null;
+};
+
+export const convertObjectToPersianDate = (obj) => {
+  const result = momentj(obj).format("jYYYY/jMM/jDD");
+  return result;
 };

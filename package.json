@@ -26,6 +26,7 @@
     "jalaali-react-date-picker": "^1.0.17",
     "jwt-decode": "^4.0.0",
     "material-react-table": "^2.12.1",
+    "moment": "^2.30.1",
     "moment-jalaali": "^0.10.0",
     "react": "^18.2.0",
     "react-clock": "^4.6.0",

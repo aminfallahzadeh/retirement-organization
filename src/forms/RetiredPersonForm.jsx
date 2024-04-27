@@ -27,9 +27,10 @@ import { InputDatePicker } from "jalaali-react-date-picker";
 
 // helpers
 import {
-  convertToPersianDate,
   convertToPersianNumber,
   convertToEnglishNumber,
+  convertToEnglishDateObject,
+  convertObjectToPersianDate,
 } from "../helper.js";
 
 function RetiredPersonForm({ personID }) {
@@ -79,6 +80,10 @@ function RetiredPersonForm({ personID }) {
     }
   }, [error]);
 
+  useEffect(() => {
+    console.log(selectedBirthDate);
+  }, [selectedBirthDate]);
+
   // lookup data
   const { data: genderComboItems, isSuccess: isGenderComboSuccess } =
     useGetLookupDataQuery({
@@ -100,34 +105,17 @@ function RetiredPersonForm({ personID }) {
       lookUpType: "MaritialStatus",
     });
 
-  // useEffect(() => {
-  //   if (selectedBirthDate) {
-  //     setPersonData({
-  //       ...personData,
-  //       personBirthDate: selectedBirthDate.toISOString(),
-  //     });
-  //   }
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectedBirthDate]);
-
-  // useEffect(() => {
-  //   if (selectedDeathDate) {
-  //     setPersonData({
-  //       ...personData,
-  //       personDeathDate: selectedDeathDate.toISOString(),
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectedDeathDate]);
-
   // handle dates
   useEffect(() => {
-    setSelectedBirthDate(convertToPersianDate(personData?.personBirthDate));
+    setSelectedBirthDate(
+      convertToEnglishDateObject(personData?.personBirthDate)
+    );
   }, [personData?.personBirthDate]);
 
   useEffect(() => {
-    setSelectedDeathDate(convertToPersianDate(personData?.personDeathDate));
+    setSelectedDeathDate(
+      convertToEnglishDateObject(personData?.personDeathDate)
+    );
   }, [personData?.personDeathDate]);
 
   // fetch combo data
@@ -213,6 +201,8 @@ function RetiredPersonForm({ personID }) {
         personRegion: parseInt(convertToEnglishNumber(personData.personRegion)),
         personArea: parseInt(convertToEnglishNumber(personData.personArea)),
         personPostalCode: convertToEnglishNumber(personData.personPostalCode),
+        personBirthDate: convertObjectToPersianDate(selectedBirthDate),
+        personDeathDate: convertObjectToPersianDate(selectedDeathDate),
       }).unwrap();
       toast.success(updateRes.message, {
         autoClose: 2000,
@@ -351,8 +341,8 @@ function RetiredPersonForm({ personID }) {
           <InputDatePicker
             disabled={!editable}
             value={selectedBirthDate}
+            defaultValue={null}
             onChange={handleBirthDateChange}
-            format={"jYYYY-jMM-jDD"}
             onOpenChange={handleBirthOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isBirthCalenderOpen}
@@ -816,7 +806,6 @@ function RetiredPersonForm({ personID }) {
             disabled={!editable}
             value={selectedDeathDate}
             onChange={handleDeathDateChange}
-            format={"jYYYY-jMM-jDD"}
             onOpenChange={handleDeathOpenChange}
             open={isDeathCalenderOpen}
             suffixIcon={<CalenderIcon color="action" />}

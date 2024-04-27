@@ -20,7 +20,8 @@ import {
 
 // helpers
 import {
-  convertToPersianDate,
+  convertToEnglishDateObject,
+  convertObjectToPersianDate,
   convertToPersianNumber,
   convertToEnglishNumber,
 } from "../helper.js";
@@ -101,19 +102,9 @@ function RetiredPensionaryForm({ personID }) {
   // handle dates
   useEffect(() => {
     setSelectedRetriementDate(
-      convertToPersianDate(pensionaryData?.retirementDate)
+      convertToEnglishDateObject(pensionaryData?.retirementDate)
     );
   }, [pensionaryData?.retirementDate]);
-
-  // useEffect(() => {
-  //   if (selectedRetriementDate) {
-  //     setPensionaryData({
-  //       ...pensionaryData,
-  //       retirementDate: selectedRetriementDate.toISOString(),
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectedRetriementDate]);
 
   // other handlers
   const handleEditable = () => {
@@ -157,6 +148,7 @@ function RetiredPensionaryForm({ personID }) {
         retiredGrantDuration: parseInt(
           convertToEnglishNumber(pensionaryData.retiredGrantDuration)
         ),
+        retirementDate: convertObjectToPersianDate(selectedRetriementDate),
       }).unwrap();
       setEditable(false);
       toast.success(updateRes.message, {
