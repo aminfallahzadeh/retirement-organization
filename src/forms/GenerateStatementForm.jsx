@@ -1,32 +1,141 @@
+// react imports
+import { useEffect, useState } from "react";
+
+// redux imports
+import { useSelector } from "react-redux";
+import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
+import { useGenerateNewRetirementStatementMutation } from "../slices/retirementStatementApiSlice.js";
+
 // mui imports
 import { LoadingButton } from "@mui/lab";
-import { Save as SaveIcon } from "@mui/icons-material";
+import {
+  Save as SaveIcon,
+  CalendarTodayOutlined as CalenderIcon,
+} from "@mui/icons-material";
 
-function GenerateStatementForm() {
+// libary imports
+import { toast } from "react-toastify";
+import "jalaali-react-date-picker/lib/styles/index.css";
+import { InputDatePicker } from "jalaali-react-date-picker";
+
+function GenerateStatementForm({ setShowGenerateStatementModal }) {
+  const { selectedRequestData } = useSelector((state) => state.requestsData);
+  const personID = selectedRequestData?.personId;
+  const { pensionaryID } = useSelector((state) => state.retiredState);
+
+  const [slectedRunDate, setSelectedRunDate] = useState(null);
+  const [isRunDateCalenderOpen, setIsRunDateCalenderOpen] = useState(false);
+
+  const [statementTypeCombo, setStatementTypeCombo] = useState([]);
+
+  const [statementObject, setStatementObject] = useState({});
+
+  const [generateNewRetirementStatement, { isLoading }] =
+    useGenerateNewRetirementStatementMutation();
+
+  const { data: retirementStatementTypesComboItems, isSuccess } =
+    useGetRetirementStatementTypeQuery();
+
+  useEffect(() => {
+    if (isSuccess) {
+      setStatementTypeCombo(retirementStatementTypesComboItems.itemList);
+    }
+  }, [isSuccess, retirementStatementTypesComboItems]);
+
+  // CHANGE HANDLERS
+  const handleRunDateOpenChange = (open) => {
+    setIsRunDateCalenderOpen(open);
+  };
+
+  const handleStatementDataChange = (e) => {
+    const { name, value } = e.target;
+    setStatementObject((statementObject) => ({
+      ...statementObject,
+      [name]: value,
+    }));
+  };
+
+  const handleRunDateChange = (date) => {
+    setSelectedRunDate(date);
+    setIsRunDateCalenderOpen(false);
+  };
+
+  const handleGenerateStatement = async () => {
+    try {
+      // Adjusting for timezone difference
+      const retirementStatementRunDate = new Date(slectedRunDate);
+      retirementStatementRunDate.setMinutes(
+        retirementStatementRunDate.getMinutes() -
+          retirementStatementRunDate.getTimezoneOffset()
+      );
+      const generateRes = await generateNewRetirementStatement({
+        ...statementObject,
+        retirementStatementRunDate,
+        personID,
+        pensionaryID,
+      }).unwrap();
+      console.log(generateRes);
+      setShowGenerateStatementModal(false);
+      toast.success(generateRes.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
   return (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-2">
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            name="runDate"
-            required
-            id="runDate"
+          <InputDatePicker
+            value={slectedRunDate}
+            defaultValue={null}
+            onChange={handleRunDateChange}
+            onOpenChange={handleRunDateOpenChange}
+            suffixIcon={<CalenderIcon color="action" />}
+            open={isRunDateCalenderOpen}
+            style={{
+              border: "2px solid #cfcfcf",
+              borderRadius: "6px",
+              marginLeft: "0.5rem",
+            }}
+            wrapperStyle={{
+              border: "none",
+              cursor: "pointer",
+            }}
           />
-          <label className="inputBox__form--label" htmlFor="runDate">
+          <div className="inputBox__form--readOnly-label">
             <span>*</span> تاریخ اجرا
-          </label>
+          </div>
         </div>
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
             className="inputBox__form--input"
-            name="hokmType"
+            name="retirementStatementTypeID"
+            onChange={handleStatementDataChange}
+            value={statementObject?.retirementStatementTypeID}
             required
-            id="hokmType"
-          />
-          <label className="inputBox__form--label" htmlFor="hokmType">
+            id="retirementStatementTypeID"
+          >
+            <option value=" ">انتخاب نوع حکم</option>
+            {statementTypeCombo?.map((type) => (
+              <option
+                value={type.retirementStatementTypeID}
+                key={type.retirementStatementTypeID}
+              >
+                {type.retirementStatementTypeName}
+              </option>
+            ))}
+          </select>
+          <label
+            className="inputBox__form--label"
+            htmlFor="retirementStatementTypeID"
+          >
             <span>*</span> نوع حکم
           </label>
         </div>
@@ -35,11 +144,16 @@ function GenerateStatementForm() {
           <textarea
             type="text"
             className="inputBox__form--input"
+            value={statementObject?.retirementStatementDesc}
+            name="retirementStatementDesc"
+            onChange={handleStatementDataChange}
             required
-            name="hokmDesc"
-            id="hokmDesc"
+            id="retirementStatementDesc"
           ></textarea>
-          <label className="inputBox__form--label" htmlFor="hokmDesc">
+          <label
+            className="inputBox__form--label"
+            htmlFor="retirementStatementDesc"
+          >
             شرح حکم
           </label>
         </div>
@@ -49,6 +163,8 @@ function GenerateStatementForm() {
         <LoadingButton
           dir="ltr"
           endIcon={<SaveIcon />}
+          onClick={handleGenerateStatement}
+          loading={isLoading}
           variant="contained"
           color="success"
           sx={{ fontFamily: "sahel" }}

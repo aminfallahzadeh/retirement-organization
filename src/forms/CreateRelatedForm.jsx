@@ -53,6 +53,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
 
   const [insertRelated, { isLoading }] = useInsertRelatedMutation();
 
+  // GET LOOKUP DATA
   const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
     useGetRelationshipQuery();
 
@@ -70,6 +71,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
     isSuccess: isPensionaryStatusComboSuccess,
   } = useGetPensionaryStatusQuery({ pensionaryStatusCategory: "L" });
 
+  // HANDLE LOOKUP DATA
   useEffect(() => {
     if (isRelationComboSuccess) {
       setRelationCombo(relationComboItems.itemList);
@@ -100,6 +102,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
     }
   }, [isPensionaryStatusComboSuccess, pensionaryStatusComboItems]);
 
+  // CHANGE HANDLERS
   const handleBirthDateChange = (date) => {
     setSelectedBirthDate(date);
     setIsBirthCalenderOpen(false);
@@ -136,46 +139,6 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
     setIsSelfEmployeeEndCalenderOpen(open);
   };
 
-  useEffect(() => {
-    if (selectedBirthDate) {
-      setRelatedObject({
-        ...relatedObject,
-        personBirthhDate: selectedBirthDate.toISOString(),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedBirthDate]);
-
-  useEffect(() => {
-    if (selectedMritialDate) {
-      setRelatedObject({
-        ...relatedObject,
-        personMaritalDate: selectedMritialDate.toISOString(),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMritialDate]);
-
-  useEffect(() => {
-    if (selectedSelfEmployeeStartDate) {
-      setRelatedObject({
-        ...relatedObject,
-        selfEmployeeStartDate: selectedSelfEmployeeStartDate.toISOString(),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedSelfEmployeeStartDate]);
-
-  useEffect(() => {
-    if (selectedSelfEmployeeEndDate) {
-      setRelatedObject({
-        ...relatedObject,
-        selfEmployeeEndDate: selectedSelfEmployeeEndDate.toISOString(),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedSelfEmployeeEndDate]);
-
   const handleRealtedObjectChange = (e) => {
     const { name, value } = e.target;
     setRelatedObject({
@@ -186,6 +149,26 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
 
   const handleInsertRelated = async () => {
     try {
+      // Adjusting for timezone difference
+      const personBirthDate = new Date(selectedBirthDate);
+      personBirthDate.setMinutes(
+        personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
+      );
+      const personMaritalDate = new Date(selectedMritialDate);
+      personMaritalDate.setMinutes(
+        personMaritalDate.getMinutes() - personMaritalDate.getTimezoneOffset()
+      );
+      const selfEmployeeStartDate = new Date(selectedSelfEmployeeStartDate);
+      selfEmployeeStartDate.setMinutes(
+        selfEmployeeStartDate.getMinutes() -
+          selfEmployeeStartDate.getTimezoneOffset()
+      );
+      const selfEmployeeEndDate = new Date(selectedSelfEmployeeEndDate);
+      selfEmployeeEndDate.setMinutes(
+        selfEmployeeEndDate.getMinutes() -
+          selfEmployeeEndDate.getTimezoneOffset()
+      );
+
       const insertRes = await insertRelated({
         ...relatedObject,
         parentPersonID: personID,
@@ -205,6 +188,10 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           parseInt(convertToEnglishNumber(relatedObject.personRegion)) || null,
         personArea:
           parseInt(convertToEnglishNumber(relatedObject.personArea)) || null,
+        personBirthDate,
+        personMaritalDate,
+        selfEmployeeStartDate,
+        selfEmployeeEndDate,
       }).unwrap();
       console.log(insertRes);
       setShowCreateRelatedModal(false);

@@ -20,8 +20,7 @@ import {
 
 // helpers
 import {
-  convertToEnglishDateObject,
-  convertObjectToPersianDate,
+  convertToPersianDate,
   convertToPersianNumber,
   convertToEnglishNumber,
 } from "../helper.js";
@@ -48,6 +47,7 @@ function RetiredPensionaryForm({ personID }) {
     data: pensionary,
     isSuccess: isPensionarySuccess,
     error: pensionaryError,
+    refetch: refetchPensionary,
   } = useGetRetiredPensionaryQuery(personID);
 
   // fetch data
@@ -102,7 +102,7 @@ function RetiredPensionaryForm({ personID }) {
   // handle dates
   useEffect(() => {
     setSelectedRetriementDate(
-      convertToEnglishDateObject(pensionaryData?.retirementDate)
+      convertToPersianDate(pensionaryData?.retirementDate)
     );
   }, [pensionaryData?.retirementDate]);
 
@@ -129,6 +129,12 @@ function RetiredPensionaryForm({ personID }) {
   // hanlde update retired pensionary
   const handleUpdateRetiredPensionary = async () => {
     try {
+      // Adjusting for timezone difference
+      const retirementDate = new Date(selectedRetriementDate);
+      retirementDate.setMinutes(
+        retirementDate.getMinutes() - retirementDate.getTimezoneOffset()
+      );
+
       const updateRes = await updateRetiredPensionary({
         ...pensionaryData,
         retiredGroup: parseInt(
@@ -148,8 +154,9 @@ function RetiredPensionaryForm({ personID }) {
         retiredGrantDuration: parseInt(
           convertToEnglishNumber(pensionaryData.retiredGrantDuration)
         ),
-        retirementDate: convertObjectToPersianDate(selectedRetriementDate),
+        retirementDate,
       }).unwrap();
+      refetchPensionary();
       setEditable(false);
       toast.success(updateRes.message, {
         autoClose: 2000,

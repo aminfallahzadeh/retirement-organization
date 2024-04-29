@@ -164,64 +164,28 @@ function EditRelatedForm() {
     setIsSelfEmployeeEndCalenderOpen(open);
   };
 
+  // handle dates
   useEffect(() => {
-    console.log(selectedBirthDate?.toISOString());
-  }, [selectedBirthDate]);
-
-  useEffect(() => {
-    console.log("realtedObject", relatedObject);
-  }, [relatedObject]);
-
-  // useEffect(() => {
-  //   if (selectedBirthDate) {
-  //     setRelatedObject({
-  //       ...relatedObject,
-  //       personBirthhDate: selectedBirthDate.toISOString(),
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectedBirthDate]);
-
-  // useEffect(() => {
-  //   if (selectedMritialDate) {
-  //     setRelatedObject({
-  //       ...relatedObject,
-  //       personMaritalDate: selectedMritialDate.toISOString(),
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectedMritialDate]);
-
-  // useEffect(() => {
-  //   if (selectedSelfEmployeeStartDate) {
-  //     setRelatedObject({
-  //       ...relatedObject,
-  //       selfEmployeeStartDate: selectedSelfEmployeeStartDate.toISOString(),
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectedSelfEmployeeStartDate]);
-
-  // useEffect(() => {
-  //   if (selectedSelfEmployeeEndDate) {
-  //     setRelatedObject({
-  //       ...relatedObject,
-  //       selfEmployeeEndDate: selectedSelfEmployeeEndDate.toISOString(),
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectedSelfEmployeeEndDate]);
-
-  // handle initial dates
-  useEffect(() => {
-    setSelectedBirthDate(convertToPersianDate(relatedObject?.personBirthhDate));
-  }, [relatedObject]);
+    setSelectedBirthDate(convertToPersianDate(relatedObject?.personBirthDate));
+  }, [relatedObject?.personBirthDate]);
 
   useEffect(() => {
     setSelectedMritialDate(
       convertToPersianDate(relatedObject?.personMaritalDate)
     );
-  }, [relatedObject]);
+  }, [relatedObject?.personMaritalDate]);
+
+  useEffect(() => {
+    setSelectedSelfEmployeeStartDate(
+      convertToPersianDate(relatedObject?.selfEmployeeStartDate)
+    );
+  }, [relatedObject?.selfEmployeeStartDate]);
+
+  useEffect(() => {
+    setSelectedSelfEmployeeEndDate(
+      convertToPersianDate(relatedObject?.selfEmployeeEndDate)
+    );
+  }, [relatedObject?.selfEmployeeEndDate]);
 
   const handleRelatedObjectChange = (e) => {
     const { name, value } = e.target;

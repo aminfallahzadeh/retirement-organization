@@ -265,7 +265,9 @@ function RetiredStatementsGrid() {
               title={"ایجاد حکم بازنشسته"}
               closeModal={() => setShowGenerateStatementModal(false)}
             >
-              <GenerateStatementForm />
+              <GenerateStatementForm
+                setShowGenerateStatementModal={setShowGenerateStatementModal}
+              />
             </Modal>
           ) : null}
           <MaterialReactTable table={table} />

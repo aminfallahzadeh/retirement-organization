@@ -11,9 +11,11 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
         url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GetListOfRetirementStatements?personID=${personID}`,
       }),
     }),
-    generateNewRetirementStatement: builder.query({
-      query: () => ({
+    generateNewRetirementStatement: builder.mutation({
+      query: (data) => ({
         url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GenerateNewRetirementStatement`,
+        method: "POST",
+        body: data,
       }),
     }),
     insertRetirementStatement: builder.mutation({
@@ -63,7 +65,7 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetListOfRetirementStatementsQuery,
-  useGenerateNewRetirementStatementQuery,
+  useGenerateNewRetirementStatementMutation,
   useInsertRetirementStatementMutation,
   useUpdateRetirementStatementMutation,
   useAddRetiremnetStatementAmountMutation,

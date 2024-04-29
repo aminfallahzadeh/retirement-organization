@@ -9,6 +9,7 @@ import {
 } from "../slices/retiredApiSlice.js";
 import { setPersonDeathDate } from "../slices/retiredStateSlice.js";
 import { useDispatch } from "react-redux";
+import { setPensionaryID } from "../slices/retiredStateSlice.js";
 
 // mui imports
 import { Button } from "@mui/material";
@@ -29,8 +30,7 @@ import { InputDatePicker } from "jalaali-react-date-picker";
 import {
   convertToPersianNumber,
   convertToEnglishNumber,
-  convertToEnglishDateObject,
-  convertObjectToPersianDate,
+  convertToPersianDate,
 } from "../helper.js";
 
 function RetiredPersonForm({ personID }) {
@@ -54,12 +54,14 @@ function RetiredPersonForm({ personID }) {
     data: retiredPersonData,
     isSuccess,
     error,
+    refetch,
   } = useGetRetiredPersonQuery(personID);
 
   // fetch data
   useEffect(() => {
     if (isSuccess) {
       setPersonData(retiredPersonData?.itemList[0]);
+      dispatch(setPensionaryID(retiredPersonData?.itemList[0]?.pensionaryID));
       dispatch(
         setPersonDeathDate(retiredPersonData?.itemList[0]?.personDeathDate)
       );
@@ -79,10 +81,6 @@ function RetiredPersonForm({ personID }) {
       });
     }
   }, [error]);
-
-  useEffect(() => {
-    console.log(selectedBirthDate);
-  }, [selectedBirthDate]);
 
   // lookup data
   const { data: genderComboItems, isSuccess: isGenderComboSuccess } =
@@ -107,15 +105,11 @@ function RetiredPersonForm({ personID }) {
 
   // handle dates
   useEffect(() => {
-    setSelectedBirthDate(
-      convertToEnglishDateObject(personData?.personBirthDate)
-    );
+    setSelectedBirthDate(convertToPersianDate(personData?.personBirthDate));
   }, [personData?.personBirthDate]);
 
   useEffect(() => {
-    setSelectedDeathDate(
-      convertToEnglishDateObject(personData?.personDeathDate)
-    );
+    setSelectedDeathDate(convertToPersianDate(personData?.personDeathDate));
   }, [personData?.personDeathDate]);
 
   // fetch combo data
@@ -187,6 +181,16 @@ function RetiredPersonForm({ personID }) {
   // handle update retired person
   const handleUpdateRetired = async () => {
     try {
+      // Adjusting for timezone difference
+      const personBirthDate = new Date(selectedBirthDate);
+      personBirthDate.setMinutes(
+        personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
+      );
+      const personDeathDate = new Date(selectedDeathDate);
+      personDeathDate.setMinutes(
+        personDeathDate.getMinutes() - personDeathDate.getTimezoneOffset()
+      );
+
       const updateRes = await updateRetiredPerson({
         ...personData,
         personNationalCode: convertToEnglishNumber(
@@ -201,13 +205,14 @@ function RetiredPersonForm({ personID }) {
         personRegion: parseInt(convertToEnglishNumber(personData.personRegion)),
         personArea: parseInt(convertToEnglishNumber(personData.personArea)),
         personPostalCode: convertToEnglishNumber(personData.personPostalCode),
-        personBirthDate: convertObjectToPersianDate(selectedBirthDate),
-        personDeathDate: convertObjectToPersianDate(selectedDeathDate),
+        personBirthDate,
+        personDeathDate,
       }).unwrap();
+      refetch();
+      setEditable(false);
       toast.success(updateRes.message, {
         autoClose: 2000,
       });
-      setEditable(false);
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {

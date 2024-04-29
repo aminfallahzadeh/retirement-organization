@@ -1,6 +1,5 @@
 // library imports
 import momentj from "moment-jalaali";
-import moment from "moment";
 
 // convert to persian number
 export const convertToPersianNumber = (num) => {
@@ -62,8 +61,11 @@ export const generateCaptcha = (len) => {
 
 // change date to persian date
 export const convertToPersianDate = (date) => {
-  const result = momentj(date);
-  return result;
+  if (date) {
+    const result = momentj(date);
+    return result;
+  }
+  return null;
 };
 
 export const convertToPersianDateFormatted = (date) => {
