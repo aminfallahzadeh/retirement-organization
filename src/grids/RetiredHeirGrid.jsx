@@ -13,7 +13,7 @@ import {
 } from "../slices/heirDataSlice.js";
 
 // mui imports
-import { IconButton, Button } from "@mui/material";
+import { IconButton, Button, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { PaginationItem } from "@mui/material";
@@ -25,6 +25,7 @@ import {
   Add as AddIcon,
   Close as CloseIcon,
   Done as DoneIcon,
+  Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -35,6 +36,7 @@ import {
 // components
 import Modal from "../components/Modal";
 import EditHeirForm from "../forms/EditHeirForm";
+import CreateHeirForm from "../forms/CreateHeirForm";
 
 // library imports
 import Skeleton from "react-loading-skeleton";
@@ -54,6 +56,7 @@ import { defaultTableOptions } from "../utils.js";
 function RetiredHeirGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const [showEditHeirModal, setShowEditHeirModal] = useState(false);
+  const [showCreateHeirModal, setShowCreateHeirModal] = useState(false);
   const [showDeleteHeirModal, setShowDeleteHeirModal] = useState(false);
 
   const { token } = useSelector((state) => state.auth);
@@ -71,6 +74,7 @@ function RetiredHeirGrid() {
     data: heirs,
     isSuccess,
     isLoading,
+    isFetching,
     error,
     refetch,
   } = useGetHeirListByParentPersonIDQuery({
@@ -78,12 +82,20 @@ function RetiredHeirGrid() {
     parentPersonID: personID,
   });
 
+  const handleShowCreateHeirModal = () => {
+    setShowCreateHeirModal(true);
+  };
+
   const handleShowRelatedModal = () => {
     setShowEditHeirModal(true);
   };
 
   const handleShowDeleteRelatedModal = () => {
     setShowDeleteHeirModal(true);
+  };
+
+  const handleRefresh = () => {
+    refetch();
   };
 
   useEffect(() => {
@@ -111,6 +123,7 @@ function RetiredHeirGrid() {
     dispatch,
     showEditHeirModal,
     showDeleteHeirModal,
+    showCreateHeirModal,
   ]);
 
   useEffect(() => {
@@ -205,15 +218,32 @@ function RetiredHeirGrid() {
       },
     }),
     renderTopToolbarCustomActions: () => (
-      <Button
-        dir="ltr"
-        endIcon={<AddIcon />}
-        variant="contained"
-        color="primary"
-        sx={{ fontFamily: "sahel" }}
+      <Box
+        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
       >
-        <span>ایجاد</span>
-      </Button>
+        <Button
+          dir="ltr"
+          endIcon={<AddIcon />}
+          onClick={handleShowCreateHeirModal}
+          variant="contained"
+          color="primary"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>ایجاد</span>
+        </Button>
+
+        <LoadingButton
+          dir="ltr"
+          endIcon={<RefreshIcon />}
+          loading={isFetching}
+          onClick={handleRefresh}
+          variant="contained"
+          color="primary"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>بروز رسانی</span>
+        </LoadingButton>
+      </Box>
     ),
     muiPaginationProps: {
       color: "success",
@@ -304,6 +334,13 @@ function RetiredHeirGrid() {
                   <span>خیر</span>
                 </Button>
               </div>
+            </Modal>
+          ) : showCreateHeirModal ? (
+            <Modal
+              title={"ایجاد موظف"}
+              closeModal={() => setShowCreateHeirModal(false)}
+            >
+              <CreateHeirForm />
             </Modal>
           ) : null}
           <MaterialReactTable table={table} />
