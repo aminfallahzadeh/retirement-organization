@@ -1,6 +1,9 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -16,12 +19,6 @@ import {
 import { IconButton, Button, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Refresh as RefreshIcon,
-} from "@mui/icons-material";
-import { PaginationItem } from "@mui/material";
-import {
   ChevronLeft,
   ChevronRight,
   FirstPage,
@@ -29,7 +26,11 @@ import {
   Add as AddIcon,
   Close as CloseIcon,
   Done as DoneIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Refresh as RefreshIcon,
 } from "@mui/icons-material";
+import { PaginationItem } from "@mui/material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
@@ -39,7 +40,7 @@ import {
 // components
 import Modal from "../components/Modal";
 import CreateRelatedForm from "../forms/CreateRelatedForm";
-import EditRelatedForm from "../forms/EditRelatedForm";
+import UpdateRelatedForm from "../forms/UpdateRelatedForm";
 
 // library imports
 import Skeleton from "react-loading-skeleton";
@@ -62,16 +63,18 @@ function RetiredRelatedGrid() {
   const [showEditRelatedModal, setShowEditRelatedModal] = useState(false);
   const [showDeleteRelatedModal, setShowDeleteRelatedModal] = useState(false);
 
-  const { token } = useSelector((state) => state.auth);
   const { selectedRelatedData } = useSelector((state) => state.relatedData);
 
   const [removeRelated, { isLoading: isDeleting }] = useRemoveRelatedMutation();
 
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const parentPersonID = searchParams.get("personID");
 
   // access the data from redux store
   const { relatedTableData } = useSelector((state) => state.relatedData);
-  const { selectedRequestData } = useSelector((state) => state.requestsData);
 
   const {
     data: relateds,
@@ -80,10 +83,7 @@ function RetiredRelatedGrid() {
     isFetching,
     error,
     refetch,
-  } = useGetRelatedListByParentPersonIDQuery({
-    token,
-    parentPersonID: selectedRequestData?.personId,
-  });
+  } = useGetRelatedListByParentPersonIDQuery(parentPersonID);
 
   const handleShowCreateRelatedModal = () => {
     setShowCreateRelatedModal(true);
@@ -104,7 +104,6 @@ function RetiredRelatedGrid() {
   const handleRemoveRelated = async () => {
     try {
       const deleteRes = await removeRelated({
-        token,
         pensionaryID: selectedRelatedData?.pensionaryID,
       }).unwrap();
       setShowDeleteRelatedModal(false);
@@ -325,7 +324,9 @@ function RetiredRelatedGrid() {
               title={"ویرایش اطلاعات وابسته"}
               closeModal={() => setShowEditRelatedModal(false)}
             >
-              <EditRelatedForm />
+              <UpdateRelatedForm
+                setShowEditRelatedModal={setShowEditRelatedModal}
+              />
             </Modal>
           ) : showDeleteRelatedModal ? (
             <Modal

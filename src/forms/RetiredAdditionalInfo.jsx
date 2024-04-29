@@ -1,6 +1,9 @@
 // react imports
 import { useState, useEffect } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import { useGetRetiredAccountQuery } from "../slices/retiredApiSlice";
@@ -20,11 +23,16 @@ import { toast } from "react-toastify";
 // helpers
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
-function RetiredAdditionalInfo({ personID }) {
+function RetiredAdditionalInfo() {
   const [editable, setEditable] = useState(false);
   const [bankCombo, setBankCombo] = useState([]);
   const [bankBranchCombo, setBankBranchCombo] = useState([]);
   const [accountData, setAccountData] = useState({});
+
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
 
   const [updateRetiredAccount, { isLoading: isUpdating }] =
     useUpdateRetiredAccountMutation();

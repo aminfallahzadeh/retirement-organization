@@ -8,10 +8,7 @@ import ElectronicCaseSection from "./ElectronicCaseSection";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material";
 
-function IndividualInfoSection({ personID }) {
-  // const { selectedRequestData } = useSelector((state) => state.requestsData);
-  // const personID = selectedRequestData?.personId;
-
+function IndividualInfoSection() {
   const content = (
     <section className="pensionersAffairs">
       <Accordion
@@ -28,7 +25,7 @@ function IndividualInfoSection({ personID }) {
           اطلاعات فردی بازنشسته
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredPersonForm personID={personID} />
+          <RetiredPersonForm />
         </AccordionDetails>
       </Accordion>
 
@@ -46,7 +43,7 @@ function IndividualInfoSection({ personID }) {
           اطلاعات پرسنلی
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredPensionaryForm personID={personID} />
+          <RetiredPensionaryForm />
         </AccordionDetails>
       </Accordion>
 
@@ -64,7 +61,7 @@ function IndividualInfoSection({ personID }) {
           اطلاعات تکمیلی
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredAdditionalInfo personID={personID} />
+          <RetiredAdditionalInfo />
         </AccordionDetails>
       </Accordion>
 
@@ -82,7 +79,7 @@ function IndividualInfoSection({ personID }) {
           پرونده الکترونیک
         </AccordionSummary>
         <AccordionDetails>
-          <ElectronicCaseSection personID={personID} />
+          <ElectronicCaseSection />
         </AccordionDetails>
       </Accordion>
     </section>

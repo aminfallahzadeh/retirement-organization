@@ -1,6 +1,9 @@
 // react imports
 import { useEffect, useMemo, useState } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetListOfRetirementStatementsQuery } from "../slices/retirementStatementApiSlice.js";
@@ -10,7 +13,8 @@ import {
 } from "../slices/statementDataSlice.js";
 
 // mui imports
-import { IconButton, Button } from "@mui/material";
+import { IconButton, Button, Box } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { Edit as EditIcon } from "@mui/icons-material";
 import { PaginationItem } from "@mui/material";
 import {
@@ -20,6 +24,7 @@ import {
   LastPage,
   Add as AddIcon,
   RemoveRedEye as RemoveRedEyeIcon,
+  Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -54,17 +59,19 @@ function RetiredStatementsGrid() {
   const [showEditStatementModal, setShowEditStatementModal] = useState(false);
 
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
 
   // access the data from redux store
   const { statementTableData } = useSelector((state) => state.statementData);
-  const { selectedRequestData } = useSelector((state) => state.requestsData);
-
-  const personID = selectedRequestData?.personId;
 
   const {
     data: statements,
     isSuccess,
     isLoading,
+    isFetching,
     error,
     refetch,
   } = useGetListOfRetirementStatementsQuery(personID);
@@ -76,6 +83,10 @@ function RetiredStatementsGrid() {
 
   const handleGenerateStatementModalChange = () => {
     setShowGenerateStatementModal(true);
+  };
+
+  const handleRefresh = () => {
+    refetch();
   };
 
   useEffect(() => {
@@ -190,16 +201,32 @@ function RetiredStatementsGrid() {
       },
     }),
     renderTopToolbarCustomActions: () => (
-      <Button
-        dir="ltr"
-        endIcon={<AddIcon />}
-        variant="contained"
-        onClick={handleGenerateStatementModalChange}
-        color="primary"
-        sx={{ fontFamily: "sahel" }}
+      <Box
+        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
       >
-        <span>ایجاد</span>
-      </Button>
+        <Button
+          dir="ltr"
+          endIcon={<AddIcon />}
+          variant="contained"
+          onClick={handleGenerateStatementModalChange}
+          color="primary"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>ایجاد</span>
+        </Button>
+
+        <LoadingButton
+          dir="ltr"
+          endIcon={<RefreshIcon />}
+          loading={isFetching}
+          onClick={handleRefresh}
+          variant="contained"
+          color="primary"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>بروز رسانی</span>
+        </LoadingButton>
+      </Box>
     ),
     muiPaginationProps: {
       color: "success",

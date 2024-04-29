@@ -1,6 +1,9 @@
 // react imports
 import { useState, useEffect } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // reduxt imports
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import {
@@ -33,7 +36,7 @@ import {
   convertToPersianDate,
 } from "../helper.js";
 
-function RetiredPersonForm({ personID }) {
+function RetiredPersonForm() {
   const [editable, setEditable] = useState(false);
   const [genderCombo, setGenderCombo] = useState([]);
   const [educationCombo, setEducationCombo] = useState([]);
@@ -46,6 +49,10 @@ function RetiredPersonForm({ personID }) {
   const [personData, setPersonData] = useState({});
 
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
 
   const [updateRetiredPerson, { isLoading: isUpdating }] =
     useUpdateRetiredPersonMutation();

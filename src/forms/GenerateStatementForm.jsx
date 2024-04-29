@@ -1,6 +1,9 @@
 // react imports
 import { useEffect, useState } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
 import { useSelector } from "react-redux";
 import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
@@ -19,8 +22,6 @@ import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
 function GenerateStatementForm({ setShowGenerateStatementModal }) {
-  const { selectedRequestData } = useSelector((state) => state.requestsData);
-  const personID = selectedRequestData?.personId;
   const { pensionaryID } = useSelector((state) => state.retiredState);
 
   const [slectedRunDate, setSelectedRunDate] = useState(null);
@@ -29,6 +30,11 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
   const [statementTypeCombo, setStatementTypeCombo] = useState([]);
 
   const [statementObject, setStatementObject] = useState({});
+
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
 
   const [generateNewRetirementStatement, { isLoading }] =
     useGenerateNewRetirementStatementMutation();

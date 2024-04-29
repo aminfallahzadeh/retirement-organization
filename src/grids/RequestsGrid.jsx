@@ -56,7 +56,7 @@ function RequestsGrid() {
     if (isSuccess) {
       const data = requests.itemList.map((item) => ({
         id: item.id,
-        personId: item.personID,
+        personID: item.personID,
         requestTypeNameFa: item.requestTypeNameFa,
         sender: item.requestFrom,
         date: item.requestDate,
@@ -103,10 +103,14 @@ function RequestsGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <IconButton color="primary" onClick={navigateHandler}>
-            <FeedIcon />
-          </IconButton>
+        Cell: ({ row }) => (
+          <Link
+            to={`/retirement-organization/retired?personID=${row.original.personID}`}
+          >
+            <IconButton color="primary">
+              <FeedIcon />
+            </IconButton>
+          </Link>
         ),
       },
       {
@@ -124,7 +128,7 @@ function RequestsGrid() {
         ),
       },
     ],
-    [navigateHandler]
+    []
   );
 
   const table = useMaterialReactTable({

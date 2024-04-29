@@ -7,12 +7,8 @@ import { apiSlice } from "./apiSlice";
 export const relatedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getRelatedListByParentPersonID: builder.query({
-      query: ({ token, parentPersonID }) => ({
+      query: (parentPersonID) => ({
         url: `${RELATED_URL_HTTPS}/GetRelatedListByParentPersonID?parentPersonID=${parentPersonID}`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     getRelated: builder.query({
@@ -28,24 +24,16 @@ export const relatedApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     updateRelated: builder.mutation({
-      query: ({ token, data }) => ({
+      query: (data) => ({
         url: `${RELATED_URL_HTTPS}/UpdateRelated`,
         method: "POST",
         body: data,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
     removeRelated: builder.mutation({
-      query: ({ token, pensionaryID }) => ({
+      query: (pensionaryID) => ({
         url: `${RELATED_URL_HTTPS}/RemoveRelated?pensionaryID=${pensionaryID}`,
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       }),
     }),
   }),

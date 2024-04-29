@@ -1,6 +1,9 @@
 // react imports
 import { useState, useEffect } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
 import { useDispatch } from "react-redux";
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
@@ -30,7 +33,7 @@ import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
-function RetiredPensionaryForm({ personID }) {
+function RetiredPensionaryForm() {
   const [editable, setEditable] = useState(false);
   const [employmentTypeCombo, setEmploymentTypeCombo] = useState([]);
   const [selectedRetriementDate, setSelectedRetriementDate] = useState(null);
@@ -42,6 +45,10 @@ function RetiredPensionaryForm({ personID }) {
     useUpdateRetiredPensionaryMutation();
 
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
 
   const {
     data: pensionary,

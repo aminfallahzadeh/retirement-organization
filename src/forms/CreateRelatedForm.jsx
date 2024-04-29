@@ -1,8 +1,10 @@
 // react imports
 import { useEffect, useState } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
-import { useSelector } from "react-redux";
 import { useInsertRelatedMutation } from "../slices/relatedApiSlice";
 import {
   useGetLookupDataQuery,
@@ -26,9 +28,6 @@ import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
 function CreateRelatedForm({ setShowCreateRelatedModal }) {
-  const { selectedRequestData } = useSelector((state) => state.requestsData);
-  const personID = selectedRequestData?.personId;
-
   const [relationCombo, setRelationCombo] = useState([]);
   const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);
   const [educationCombo, setEducationCombo] = useState([]);
@@ -52,6 +51,11 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   const [relatedObject, setRelatedObject] = useState({});
 
   const [insertRelated, { isLoading }] = useInsertRelatedMutation();
+
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
 
   // GET LOOKUP DATA
   const { data: relationComboItems, isSuccess: isRelationComboSuccess } =

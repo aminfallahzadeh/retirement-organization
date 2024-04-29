@@ -1,6 +1,9 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useGetHeirListByParentPersonIDQuery } from "../slices/heirApiSlice";
@@ -56,10 +59,13 @@ function RetiredHeirGrid() {
   const { token } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
 
   // access the data from redux store
   const { heirTableData } = useSelector((state) => state.heirData);
-  const { selectedRequestData } = useSelector((state) => state.requestsData);
 
   const {
     data: heirs,
@@ -69,7 +75,7 @@ function RetiredHeirGrid() {
     refetch,
   } = useGetHeirListByParentPersonIDQuery({
     token,
-    parentPersonID: selectedRequestData?.personId,
+    parentPersonID: personID,
   });
 
   const handleShowRelatedModal = () => {

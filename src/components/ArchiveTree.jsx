@@ -1,6 +1,9 @@
 // react imports
 import React, { useEffect, useState, useRef } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -183,7 +186,7 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
   );
 });
 
-function ArchiveTree({ personID }) {
+function ArchiveTree() {
   const inputFileRef = useRef(null);
   const [imageData, setImageData] = useState([]);
   const [image, setImage] = useState(null);
@@ -204,6 +207,10 @@ function ArchiveTree({ personID }) {
   );
 
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
 
   const { archiveStructureData } = useSelector((state) => state.archiveData);
 

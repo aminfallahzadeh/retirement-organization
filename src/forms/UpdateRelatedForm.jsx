@@ -1,9 +1,15 @@
 // react imports
 import { useState, useEffect } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
 import { useSelector } from "react-redux";
-import { useGetRelatedQuery } from "../slices/relatedApiSlice.js";
+import {
+  useGetRelatedQuery,
+  useUpdateRelatedMutation,
+} from "../slices/relatedApiSlice.js";
 import {
   useGetLookupDataQuery,
   useGetRelationshipQuery,
@@ -18,14 +24,18 @@ import {
 } from "@mui/icons-material";
 
 // helpers
-import { convertToPersianNumber, convertToPersianDate } from "../helper.js";
+import {
+  convertToPersianNumber,
+  convertToPersianDate,
+  convertToEnglishNumber,
+} from "../helper.js";
 
 // libary imports
 import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
-function EditRelatedForm() {
+function UpdateRelatedForm({ setShowEditRelatedModal }) {
   const { selectedRelatedData } = useSelector((state) => state.relatedData);
   const personID = selectedRelatedData?.id;
 
@@ -50,6 +60,13 @@ function EditRelatedForm() {
     useState(false);
 
   const [relatedObject, setRelatedObject] = useState({});
+
+  const [updateRelated, { isLoading: isUpdating }] = useUpdateRelatedMutation();
+
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const parentPersonID = searchParams.get("personID");
 
   const {
     data: related,
@@ -193,6 +210,70 @@ function EditRelatedForm() {
       ...relatedObject,
       [name]: convertToPersianNumber(value),
     });
+  };
+
+  useEffect(() => {
+    console.log(relatedObject);
+    console.log(selectedBirthDate);
+  }, [relatedObject, selectedBirthDate]);
+
+  const handleUpdateRelated = async () => {
+    try {
+      // Adjusting for timezone difference
+      const personBirthDate = new Date(selectedBirthDate);
+      personBirthDate.setMinutes(
+        personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
+      );
+      const personMaritalDate = new Date(selectedMritialDate);
+      personMaritalDate.setMinutes(
+        personMaritalDate.getMinutes() - personMaritalDate.getTimezoneOffset()
+      );
+      const selfEmployeeStartDate = new Date(selectedSelfEmployeeStartDate);
+      selfEmployeeStartDate.setMinutes(
+        selfEmployeeStartDate.getMinutes() -
+          selfEmployeeStartDate.getTimezoneOffset()
+      );
+      const selfEmployeeEndDate = new Date(selectedSelfEmployeeEndDate);
+      selfEmployeeEndDate.setMinutes(
+        selfEmployeeEndDate.getMinutes() -
+          selfEmployeeEndDate.getTimezoneOffset()
+      );
+
+      const updateRes = await updateRelated({
+        ...relatedObject,
+        pensionaryStatusID: convertToEnglishNumber(
+          relatedObject.pensionaryStatusID
+        ),
+        personCertificatetNo: convertToEnglishNumber(
+          relatedObject.personCertificatetNo
+        ),
+        personNationalCode: convertToEnglishNumber(
+          relatedObject.personNationalCode
+        ),
+        relationshipWithParentID: convertToEnglishNumber(
+          relatedObject.relationshipWithParentID
+        ),
+        personRegion:
+          parseInt(convertToEnglishNumber(relatedObject.personRegion)) || null,
+        personArea:
+          parseInt(convertToEnglishNumber(relatedObject.personArea)) || null,
+        parentPersonID,
+        personBirthDate,
+        personMaritalDate,
+        selfEmployeeStartDate,
+        selfEmployeeEndDate,
+      }).unwrap();
+      console.log(updateRes);
+      setShowEditRelatedModal(false);
+      toast.success(updateRes.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
   };
 
   const content = (
@@ -888,6 +969,8 @@ function EditRelatedForm() {
               dir="ltr"
               endIcon={<SaveIcon />}
               variant="contained"
+              onClick={handleUpdateRelated}
+              loading={isUpdating}
               color="success"
               sx={{ fontFamily: "sahel" }}
             >
@@ -901,4 +984,4 @@ function EditRelatedForm() {
   return content;
 }
 
-export default EditRelatedForm;
+export default UpdateRelatedForm;
