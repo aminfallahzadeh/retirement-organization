@@ -80,9 +80,8 @@ function UsersGrid() {
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      console.log("users", users);
       const data = users.itemList.map((user) => ({
-        id: user.id,
+        id: user.userID,
         isActive: user.isActive ? "فعال" : "غیر فعال",
         lastName: user.lastName,
         firstName: user.firstName,

@@ -6,7 +6,7 @@ import GroupsCreateUserGrid from "../grids/GroupsCreateUserGrid";
 
 function CreateUserScreen() {
   const [userObject, setUserObject] = useState({
-    id: "",
+    userID: "",
     username: "",
     password: "",
     isActive: "",

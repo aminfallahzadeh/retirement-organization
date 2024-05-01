@@ -38,7 +38,7 @@ import { faIR } from "@mui/material/locale";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-function GriyosCreateUserGrid({ userObject }) {
+function GroupsCreateUserGrid({ userObject }) {
   const theme = useTheme();
   const [rowSelection, setRowSelection] = useState({});
   const [addedGroups, setAddedGroups] = useState([]);
@@ -97,7 +97,7 @@ function GriyosCreateUserGrid({ userObject }) {
         "isActive": userObject.isActive === "true" ? true : false,
       }).unwrap();
       try {
-        const userID = createUserRes.itemList[0].id;
+        const userID = createUserRes.itemList[0].userID;
         const data = addedGroups.map((item) => ({
           "id": "",
           userID,
@@ -213,4 +213,4 @@ function GriyosCreateUserGrid({ userObject }) {
   return content;
 }
 
-export default GriyosCreateUserGrid;
+export default GroupsCreateUserGrid;
