@@ -1,8 +1,8 @@
 // react imports
-import { useMemo, useEffect, useState, useCallback } from "react";
+import { useMemo, useEffect, useState } from "react";
 
 // rrd imports
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
@@ -37,7 +37,6 @@ function RequestsGrid() {
   const { selectedRole } = useSelector((state) => state.requestsData);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const { requestTableData } = useSelector((state) => state.requestsData);
 
@@ -49,13 +48,11 @@ function RequestsGrid() {
     refetch,
   } = useGetRequestQuery({ role: selectedRole });
 
-  let navigateHandler;
-
   useEffect(() => {
     refetch();
     if (isSuccess) {
       const data = requests.itemList.map((item) => ({
-        id: item.id,
+        id: item.requestID,
         personID: item.personID,
         requestTypeNameFa: item.requestTypeNameFa,
         sender: item.requestFrom,
@@ -153,14 +150,6 @@ function RequestsGrid() {
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
-
-  navigateHandler = useCallback(async () => {
-    const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedRequest = findById(requestTableData, id);
-
-    await dispatch(setSelectedRequestData(selectedRequest));
-    navigate("/retirement-organization/retired");
-  }, [table, dispatch, navigate, requestTableData]);
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
