@@ -36,6 +36,7 @@ import BatchStatementsScreen from "./screens/BatchStatementsScreen";
 import SlipsScreen from "./screens/SlipsScreen";
 import StaffStatementsScreen from "./screens/StaffStatementsScreen";
 import ElectronicStatementScreen from "./screens/ElectronicStatementScreen";
+import CreateRequestScreen from "./screens/CreateRequestScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -96,6 +97,11 @@ const router = createBrowserRouter(
         <Route
           path="/retirement-organization/electronic-statement"
           element={<ElectronicStatementScreen />}
+        />
+
+        <Route
+          path="/retirement-organization/create-request"
+          element={<CreateRequestScreen />}
         />
       </Route>
       <Route path="*" element={<Error />} />

@@ -1,5 +1,8 @@
+// components
+import RequestAttachmentsGrid from "../../grids/RequestAttachmentsGrid";
+
 function RequestAttachmentsSection() {
-  return <div>Request Attachment Section</div>;
+  return <RequestAttachmentsGrid />;
 }
 
 export default RequestAttachmentsSection;

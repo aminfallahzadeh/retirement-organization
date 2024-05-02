@@ -15,6 +15,7 @@ import {
   AssignmentTurnedInOutlined as AssignmentTurnedInOutlinedIcon,
   Group as GroupIcon,
   HealthAndSafetyOutlined as HealthAndSafetyOutlinedIcon,
+  ArticleOutlined as RequestIcon,
 } from "@mui/icons-material";
 
 function SidebarNav() {
@@ -29,10 +30,19 @@ function SidebarNav() {
     location.pathname === "/retirement-organization/staff-statements";
   const electronicStatementPath =
     location.pathname === "/retirement-organization/electronic-statement";
+  const createRequestPath =
+    location.pathname === "/retirement-organization/create-request";
 
   const content = (
     <Sidebar rtl={true}>
       <Menu>
+        <MenuItem
+          component={<Link to={"/retirement-organization/create-request"} />}
+          active={createRequestPath}
+          icon={<RequestIcon sx={{ color: "#ff6700" }} />}
+        >
+          ایجاد درخواست
+        </MenuItem>
         <SubMenu
           label={<span>امور بازنشستگان</span>}
           icon={<PersonOutlinedIcon sx={{ color: "#ff6700" }} />}
