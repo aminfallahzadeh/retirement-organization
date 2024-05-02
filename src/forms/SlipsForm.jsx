@@ -14,17 +14,6 @@ function SlipsForm() {
             type="text"
             className="inputBox__form--input"
             required
-            id="sazman"
-          />
-          <label className="inputBox__form--label" htmlFor="sazman">
-            سازمان
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
             id="fishType"
           />
           <label className="inputBox__form--label" htmlFor="fishType">
@@ -39,7 +28,7 @@ function SlipsForm() {
             id="mahSalary"
           />
           <label className="inputBox__form--label" htmlFor="mahSalary">
-            دوره پرداخت حقوق(ماه)
+            سال مالی
           </label>
         </div>
         <div className="inputBox__form">
@@ -50,7 +39,7 @@ function SlipsForm() {
             id="salSalary"
           />
           <label className="inputBox__form--label" htmlFor="salSalary">
-            دوره پرداخت حقوق(سال)
+            ماه
           </label>
         </div>
       </form>

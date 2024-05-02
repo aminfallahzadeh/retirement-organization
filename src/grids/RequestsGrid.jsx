@@ -29,8 +29,12 @@ import "react-loading-skeleton/dist/skeleton.css";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-// hjelpers
-import { findById } from "../helper.js";
+// helpers
+import {
+  findById,
+  convertToPersianDateFormatted,
+  convertToPersianNumber,
+} from "../helper.js";
 
 function RequestsGrid() {
   const [rowSelection, setRowSelection] = useState({});
@@ -55,7 +59,7 @@ function RequestsGrid() {
         id: item.requestID,
         personID: item.personID,
         requestTypeNameFa: item.requestTypeNameFa,
-        sender: item.requestFrom,
+        sender: item.requestFrom || "-",
         date: item.requestDate,
         body: item.requestText,
       }));
@@ -93,6 +97,13 @@ function RequestsGrid() {
       {
         accessorKey: "date",
         header: "تاریخ درخواست",
+        Cell: ({ renderedCellValue }) => (
+          <div>
+            {convertToPersianNumber(
+              convertToPersianDateFormatted(renderedCellValue)
+            )}
+          </div>
+        ),
       },
       {
         accessorKey: "senderInfo",
