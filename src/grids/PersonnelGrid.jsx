@@ -1,8 +1,11 @@
 // react imports
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 // rrd imports
 import { Link } from "react-router-dom";
+
+// redux imports
+import { useSelector } from "react-redux";
 
 // mui imports
 import { IconButton } from "@mui/material";
@@ -15,22 +18,27 @@ import {
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-const data = [
-  {
-    staffNationalCode: "1234567890",
-    staffNO: "1234567890",
-    staffName: "محمدرضا",
-    staffFamilyName: "آقایی",
-  },
-];
-
-function StaffGrid() {
+function PersonnelGrid() {
   const [rowSelection, setRowSelection] = useState({});
+  const [data, setData] = useState([]);
+
+  const { personTableData } = useSelector((state) => state.personData);
+
+  useEffect(() => {
+    if (personTableData.length > 0) {
+      const mappedData = personTableData.map((item) => ({
+        personNationalCode: item.personNationalCode,
+        personFirstName: item.personFirstName,
+        personLastName: item.personLastName,
+      }));
+      setData(mappedData);
+    }
+  }, [personTableData]);
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "staffNationalCode",
+        accessorKey: "personNationalCode",
         header: "کد ملی",
       },
       {
@@ -38,11 +46,11 @@ function StaffGrid() {
         header: "شماره کارمندی",
       },
       {
-        accessorKey: "staffName",
+        accessorKey: "personFirstName",
         header: "نام",
       },
       {
-        accessorKey: "staffFamilyName",
+        accessorKey: "personLastName",
         header: "نام خانوادگی",
       },
       {
@@ -52,7 +60,7 @@ function StaffGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <Link to={"/retirement-organization/staff-statements/info"}>
+          <Link to={"/retirement-organization/personnel-statements/info"}>
             <IconButton color="primary">
               <RemoveRedEyeIcon />
             </IconButton>
@@ -90,4 +98,4 @@ function StaffGrid() {
   return content;
 }
 
-export default StaffGrid;
+export default PersonnelGrid;

@@ -15,6 +15,7 @@ import relatedDataSliceReducer from "./slices/relatedDataSlice";
 import statementDataSliceReducer from "./slices/statementDataSlice";
 import archiveDataSliceReducer from "./slices/archiveDataSlice";
 import heirDataSliceReducer from "./slices/heirDataSlice";
+import personDataSliceReducer from "./slices/personDataSlice";
 
 const store = configureStore({
   reducer: {
@@ -33,6 +34,7 @@ const store = configureStore({
     statementData: statementDataSliceReducer,
     archiveData: archiveDataSliceReducer,
     heirData: heirDataSliceReducer,
+    personData: personDataSliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

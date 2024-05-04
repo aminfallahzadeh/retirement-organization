@@ -65,7 +65,7 @@ function SidebarNav() {
         >
           <MenuItem
             component={
-              <Link to={"/retirement-organization/staff-statements"} />
+              <Link to={"/retirement-organization/personnel-statements"} />
             }
             active={staffStatementsPath}
           >

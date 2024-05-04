@@ -91,12 +91,12 @@ const router = createBrowserRouter(
         />
 
         <Route
-          path="/retirement-organization/staff-statements"
+          path="/retirement-organization/personnel-statements"
           element={<PersonnelStatementsScreen />}
         />
 
         <Route
-          path="/retirement-organization/staff-statements/info"
+          path="/retirement-organization/personnel-statements/info"
           element={<PersonnelInfoScreen />}
         />
 

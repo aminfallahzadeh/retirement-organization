@@ -1,14 +1,71 @@
+// react imports
+import { useState, useEffect } from "react";
+
+// redux imports
+import { useDispatch } from "react-redux";
+import { useLazyGetPersonsQuery } from "../slices/personApiSlice";
+import { setPersonTableData } from "../slices/personDataSlice";
+
 // components
-import StaffGrid from "../grids/StaffGrid";
+import PersonnelGrid from "../grids/PersonnelGrid";
 
 // mui imports
-import { Button } from "@mui/material";
+// import { Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import {
   SearchOutlined as SearchIcon,
-  RemoveRedEyeOutlined as EyeIcon,
+  // RemoveRedEyeOutlined as EyeIcon,
 } from "@mui/icons-material";
 
+// library imports
+import { toast } from "react-toastify";
+
 function PersonnelStatementForm() {
+  const [searchPersons, { isLoading, isFetching }] = useLazyGetPersonsQuery();
+
+  const [personnelObject, setPersonnelObject] = useState(null);
+
+  const dispatch = useDispatch();
+
+  const hadnlePersonnelObjectChange = (e) => {
+    const { name, value } = e.target;
+    setPersonnelObject({ ...personnelObject, [name]: value });
+  };
+
+  const disableButton =
+    personnelObject === null ||
+    personnelObject?.personFirstName === "" ||
+    personnelObject?.personLastName === "" ||
+    personnelObject?.personNartionalCode === "";
+
+  useEffect(() => {
+    console.log(personnelObject);
+  }, [personnelObject]);
+
+  const handleSearchPersonnels = async () => {
+    try {
+      const personFirstName = personnelObject?.personFirstName || "";
+      const personLastName = personnelObject?.personLastName || "";
+      const personNartionalCode = personnelObject?.personNartionalCode || "";
+
+      const searchRes = await searchPersons({
+        personID: "",
+        personFirstName,
+        personLastName,
+        personNartionalCode,
+      }).unwrap();
+      dispatch(setPersonTableData(searchRes.itemList));
+      toast.success(searchRes.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
   const content = (
     <>
       <section className="formContainer flex-col">
@@ -16,11 +73,16 @@ function PersonnelStatementForm() {
           <div className="inputBox__form">
             <input
               type="text"
-              id="codemelli"
+              id="personNartionalCode"
               className="inputBox__form--input"
+              name="personNartionalCode"
+              onChange={hadnlePersonnelObjectChange}
               required
             />
-            <label htmlFor="codemelli" className="inputBox__form--label">
+            <label
+              htmlFor="personNartionalCode"
+              className="inputBox__form--label"
+            >
               کد ملی
             </label>
           </div>
@@ -38,39 +100,46 @@ function PersonnelStatementForm() {
           <div className="inputBox__form">
             <input
               type="text"
-              id="staffName"
+              id="personFirstName"
               className="inputBox__form--input"
+              name="personFirstName"
+              onChange={hadnlePersonnelObjectChange}
               required
             />
-            <label htmlFor="staffName" className="inputBox__form--label">
+            <label htmlFor="personFirstName" className="inputBox__form--label">
               نام
             </label>
           </div>
           <div className="inputBox__form">
             <input
               type="text"
-              id="staffSurname"
+              id="personLastName"
               className="inputBox__form--input"
+              name="personLastName"
+              onChange={hadnlePersonnelObjectChange}
               required
             />
-            <label htmlFor="staffSurname" className="inputBox__form--label">
+            <label htmlFor="personLastName" className="inputBox__form--label">
               نام خانوادگی
             </label>
           </div>
         </form>
 
         <div style={{ marginRight: "auto" }} className="flex-row">
-          <Button
+          <LoadingButton
             dir="ltr"
             endIcon={<SearchIcon />}
+            disabled={disableButton}
             variant="contained"
             color="primary"
+            loading={isLoading || isFetching}
+            onClick={handleSearchPersonnels}
             sx={{ fontFamily: "sahel" }}
           >
             <span>جست و جو</span>
-          </Button>
+          </LoadingButton>
 
-          <Button
+          {/* <Button
             dir="ltr"
             endIcon={<EyeIcon />}
             variant="contained"
@@ -78,11 +147,11 @@ function PersonnelStatementForm() {
             sx={{ fontFamily: "sahel" }}
           >
             <span>مشاهده همه</span>
-          </Button>
+          </Button> */}
         </div>
       </section>
 
-      <StaffGrid />
+      <PersonnelGrid />
     </>
   );
 
