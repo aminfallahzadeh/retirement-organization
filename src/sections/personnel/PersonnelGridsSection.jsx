@@ -6,9 +6,11 @@ import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 // compoenents
-import StaffStatementsGrid from "../../grids/StaffStatementsGrid";
+import PersonnelStatementGrid from "../../grids/PersonnelStatementGrid";
+import PersonnelFractionGrid from "../../grids/PersonnelFractionGrid";
+import PersonnelTariffGrid from "../../grids/PersonnelTariffGrid";
 
-function StaffGridsSection() {
+function PersonnelGridsSection() {
   const [value, setValue] = useState("1");
 
   const handleChange = (event, newValue) => {
@@ -34,7 +36,7 @@ function StaffGridsSection() {
             padding: "0",
           }}
         >
-          <StaffStatementsGrid />
+          <PersonnelStatementGrid />
         </TabPanel>
         <TabPanel
           value="2"
@@ -42,7 +44,10 @@ function StaffGridsSection() {
             padding: "0",
           }}
         >
-          Tarefe
+          <div className="flex-col">
+            <PersonnelTariffGrid />
+            <PersonnelFractionGrid />
+          </div>
         </TabPanel>
       </TabContext>
     </section>
@@ -51,4 +56,4 @@ function StaffGridsSection() {
   return content;
 }
 
-export default StaffGridsSection;
+export default PersonnelGridsSection;

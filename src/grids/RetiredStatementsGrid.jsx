@@ -15,7 +15,6 @@ import {
 // mui imports
 import { IconButton, Button, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Edit as EditIcon } from "@mui/icons-material";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -25,6 +24,7 @@ import {
   Add as AddIcon,
   RemoveRedEye as RemoveRedEyeIcon,
   Refresh as RefreshIcon,
+  Edit as EditIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {

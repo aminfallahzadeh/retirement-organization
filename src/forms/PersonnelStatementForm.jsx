@@ -8,7 +8,7 @@ import {
   RemoveRedEyeOutlined as EyeIcon,
 } from "@mui/icons-material";
 
-function StaffStatementsForm() {
+function PersonnelStatementForm() {
   const content = (
     <>
       <section className="formContainer flex-col">
@@ -89,4 +89,4 @@ function StaffStatementsForm() {
   return content;
 }
 
-export default StaffStatementsForm;
+export default PersonnelStatementForm;

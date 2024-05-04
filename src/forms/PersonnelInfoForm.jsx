@@ -1,4 +1,4 @@
-function StaffInfoForm() {
+function PersonnelInfoForm() {
   const content = (
     <section className="formContainer">
       <form method="POST" className="grid grid--col-4">
@@ -149,4 +149,4 @@ function StaffInfoForm() {
   return content;
 }
 
-export default StaffInfoForm;
+export default PersonnelInfoForm;

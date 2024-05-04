@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 // mui imports
 import { IconButton, Button, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Edit as EditIcon } from "@mui/icons-material";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -14,6 +13,7 @@ import {
   Add as AddIcon,
   RemoveRedEye as RemoveRedEyeIcon,
   Refresh as RefreshIcon,
+  Print as PrintIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -22,10 +22,7 @@ import {
 } from "material-react-table";
 
 // helper imports
-import {
-  convertToPersianNumber,
-  convertToPersianDateFormatted,
-} from "../helper.js";
+import { convertToPersianNumber } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -40,7 +37,7 @@ const data = [
   },
 ];
 
-function RetiredStatementsGrid() {
+function PersonnelStatementGrid() {
   const [rowSelection, setRowSelection] = useState({});
 
   const columns = useMemo(
@@ -72,20 +69,20 @@ function RetiredStatementsGrid() {
         header: "تاریخ اجرا",
       },
       {
-        accessorKey: "editStaffStatementAction",
-        header: "ویرایش",
+        accessorKey: "printStaffStatementAction",
+        header: "چاپ",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
         Cell: () => (
           <IconButton color="success">
-            <EditIcon />
+            <PrintIcon />
           </IconButton>
         ),
       },
       {
         accessorKey: "observeStaffStatement",
-        header: "مشاهده حکم",
+        header: "مشاهده",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
@@ -166,4 +163,4 @@ function RetiredStatementsGrid() {
   return content;
 }
 
-export default RetiredStatementsGrid;
+export default PersonnelStatementGrid;

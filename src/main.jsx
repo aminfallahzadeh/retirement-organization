@@ -34,10 +34,10 @@ import UsersScreen from "./screens/UsersScreen";
 import RequestScreen from "./screens/RequestScreen";
 import BatchStatementsScreen from "./screens/BatchStatementsScreen";
 import SlipsScreen from "./screens/SlipsScreen";
-import StaffStatementsScreen from "./screens/StaffStatementsScreen";
+import PersonnelStatementsScreen from "./screens/PersonnelStatementsScreen";
 import ElectronicStatementScreen from "./screens/ElectronicStatementScreen";
 import CreateRequestScreen from "./screens/CreateRequestScreen";
-import StaffInfoScreen from "./screens/StaffInfoScreen.jsx";
+import PersonnelInfoScreen from "./screens/PersonnelInfoScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -92,12 +92,12 @@ const router = createBrowserRouter(
 
         <Route
           path="/retirement-organization/staff-statements"
-          element={<StaffStatementsScreen />}
+          element={<PersonnelStatementsScreen />}
         />
 
         <Route
           path="/retirement-organization/staff-statements/info"
-          element={<StaffInfoScreen />}
+          element={<PersonnelInfoScreen />}
         />
 
         <Route
