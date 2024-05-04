@@ -1,3 +1,6 @@
+// react imports
+import { useState, useEffect } from "react";
+
 // rrd imports
 import { Link, useLocation } from "react-router-dom";
 
@@ -15,11 +18,21 @@ import {
 } from "@mui/icons-material";
 
 function TopbarNav({ userName }) {
+  const [theme, setTheme] = useState("light");
+
   const logoutHandler = useLogout();
   const location = useLocation();
 
   const cartablePath =
     location.pathname === "/retirement-organization/dashboard";
+
+  const handleThemeChange = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute("color-scheme", theme);
+  }, [theme]);
 
   const content = (
     <nav className="topnav">
@@ -54,6 +67,9 @@ function TopbarNav({ userName }) {
                 کارتابل
               </Link>
             </li>
+            {/* <li>
+              <button onClick={handleThemeChange}>theme</button>
+            </li> */}
           </ul>
         </div>
 
