@@ -26,6 +26,7 @@ function PersonnelGrid() {
   useEffect(() => {
     if (personTableData.length > 0) {
       const mappedData = personTableData.map((item) => ({
+        id: item.personID,
         personNationalCode: item.personNationalCode,
         personFirstName: item.personFirstName,
         personLastName: item.personLastName,
@@ -62,8 +63,10 @@ function PersonnelGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <Link to={"/retirement-organization/personnel-statements/info"}>
+        Cell: ({ row }) => (
+          <Link
+            to={`/retirement-organization/personnel-statements/info?personID=${row.id}`}
+          >
             <IconButton color="primary">
               <RemoveRedEyeIcon />
             </IconButton>

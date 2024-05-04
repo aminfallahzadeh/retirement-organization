@@ -1,5 +1,11 @@
 // react imports
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+
+// rrd imports
+import { useLocation } from "react-router-dom";
+
+// redux imports
+import { useGetFractionItemViewQuery } from "../slices/fractionApiSlice";
 
 // mui imports
 import { PaginationItem } from "@mui/material";
@@ -15,107 +21,46 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
+// library imports
+import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 // helper imports
 import { convertToPersianNumber } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-const data = [
-  {
-    tariffYear: "۲",
-    tariffType: "تست",
-    chestName: "تست",
-    organization: "تست",
-    farv: "+",
-    ordib: "-",
-    khord: "-",
-    tir: "+",
-    mordad: "+",
-    shah: "-",
-    mehr: "-",
-    aban: "+",
-    azar: "-",
-    dey: "-",
-    bahman: "-",
-    esfand: "+",
-  },
-  {
-    tariffYear: "۲",
-    tariffType: "تست",
-    chestName: "تست",
-    organization: "تست",
-    farv: "+",
-    ordib: "-",
-    khord: "-",
-    tir: "+",
-    mordad: "+",
-    shah: "-",
-    mehr: "-",
-    aban: "+",
-    azar: "-",
-    dey: "-",
-    bahman: "-",
-    esfand: "+",
-  },
-  {
-    tariffYear: "۲",
-    tariffType: "تست",
-    chestName: "تست",
-    organization: "تست",
-    farv: "+",
-    ordib: "-",
-    khord: "-",
-    tir: "+",
-    mordad: "+",
-    shah: "-",
-    mehr: "-",
-    aban: "+",
-    azar: "-",
-    dey: "-",
-    bahman: "-",
-    esfand: "+",
-  },
-  {
-    tariffYear: "۲",
-    tariffType: "تست",
-    chestName: "تست",
-    organization: "تست",
-    farv: "+",
-    ordib: "-",
-    khord: "-",
-    tir: "+",
-    mordad: "+",
-    shah: "-",
-    mehr: "-",
-    aban: "+",
-    azar: "-",
-    dey: "-",
-    bahman: "-",
-    esfand: "+",
-  },
-  {
-    tariffYear: "۲",
-    tariffType: "تست",
-    chestName: "تست",
-    organization: "تست",
-    farv: "+",
-    ordib: "-",
-    khord: "-",
-    tir: "+",
-    mordad: "+",
-    shah: "-",
-    mehr: "-",
-    aban: "+",
-    azar: "-",
-    dey: "-",
-    bahman: "-",
-    esfand: "+",
-  },
-];
-
 export const PersonnelFractionGrid = () => {
   const [rowSelection, setRowSelection] = useState({});
+  const [tableData, setTableData] = useState([]);
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
+
+  const {
+    data: fractions,
+    isSuccess,
+    isLoading,
+    error,
+  } = useGetFractionItemViewQuery({ personID });
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log(fractions);
+    }
+  }, [isSuccess, fractions]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
 
   const columns = useMemo(
     () => [
@@ -190,7 +135,7 @@ export const PersonnelFractionGrid = () => {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data,
+    data: tableData,
     muiTableHeadCellProps: {
       sx: {
         color: "#001a57",
@@ -233,7 +178,23 @@ export const PersonnelFractionGrid = () => {
     state: { rowSelection },
   });
 
-  const content = <MaterialReactTable table={table} />;
+  const content = (
+    <>
+      {isLoading ? (
+        <div className="skeleton-lg">
+          <Skeleton
+            count={7}
+            baseColor="#dfdfdf"
+            highlightColor="#9f9f9f"
+            duration={1}
+            direction="rtl"
+          />
+        </div>
+      ) : (
+        <MaterialReactTable table={table} />
+      )}
+    </>
+  );
 
   return content;
 };

@@ -1,18 +1,21 @@
 // react imports
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+
+// rrd imports
+import { useLocation } from "react-router-dom";
+
+// redux imports
+import { useGetPersonnelStatementQuery } from "../slices/personnelStatementApiSlice";
 
 // mui imports
-import { IconButton, Button, Box } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
+import { IconButton } from "@mui/material";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
   ChevronRight,
   FirstPage,
   LastPage,
-  Add as AddIcon,
   RemoveRedEye as RemoveRedEyeIcon,
-  Refresh as RefreshIcon,
   Print as PrintIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -27,18 +30,41 @@ import { convertToPersianNumber } from "../helper.js";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-const data = [
-  {
-    retirementStatementSerial: "1234567890",
-    retirementStatementNo: "1234567890",
-    retirementStatementTypeName: "حکم",
-    retirementStatementIssueDate: "۱۴۰۳-۰۳-۱۲",
-    retirementStatementRunDate: "۱۴۰۳-۰۳-۱۲",
-  },
-];
+// library imports
+import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function PersonnelStatementGrid() {
   const [rowSelection, setRowSelection] = useState({});
+  const [personnelStatementTableData, setPersonnelStatementTableData] =
+    useState([]);
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
+
+  const {
+    data: statements,
+    isSuccess,
+    isLoading,
+    error,
+  } = useGetPersonnelStatementQuery({ personID });
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log(statements);
+    }
+  }, [isSuccess, statements]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
 
   const columns = useMemo(
     () => [
@@ -99,7 +125,7 @@ function PersonnelStatementGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data,
+    data: personnelStatementTableData,
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -111,31 +137,6 @@ function PersonnelStatementGrid() {
         cursor: "pointer",
       },
     }),
-    renderTopToolbarCustomActions: () => (
-      <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
-      >
-        <Button
-          dir="ltr"
-          endIcon={<AddIcon />}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>ایجاد</span>
-        </Button>
-
-        <LoadingButton
-          dir="ltr"
-          endIcon={<RefreshIcon />}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>بروز رسانی</span>
-        </LoadingButton>
-      </Box>
-    ),
     muiPaginationProps: {
       color: "success",
       variant: "outlined",
@@ -158,7 +159,23 @@ function PersonnelStatementGrid() {
     state: { rowSelection },
   });
 
-  const content = <MaterialReactTable table={table} />;
+  const content = (
+    <>
+      {isLoading ? (
+        <div className="skeleton-lg">
+          <Skeleton
+            count={7}
+            baseColor="#dfdfdf"
+            highlightColor="#9f9f9f"
+            duration={1}
+            direction="rtl"
+          />
+        </div>
+      ) : (
+        <MaterialReactTable table={table} />
+      )}
+    </>
+  );
 
   return content;
 }

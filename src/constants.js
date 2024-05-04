@@ -11,3 +11,6 @@ export const RETIREMENT_CALCULATION_URL_HTTPS =
 export const RETIREMENT_STATEMENT_URL_HTTPS =
   "https://185.129.238.13/api/RetirementStatement";
 export const SHARED_URL_HTTPS = "https://185.129.238.13/api/Shared";
+export const PERSONNEL_STATEMENT_URL_HTTPS =
+  "https://185.129.238.13/api/PersonnelStatement";
+export const FRACTION_URL_HTTPS = "https://185.129.238.13/api/Fraction";
