@@ -32,11 +32,11 @@ function PersonnelStatementForm() {
     setPersonnelObject({ ...personnelObject, [name]: value });
   };
 
-  const disableButton =
-    personnelObject === null ||
-    personnelObject?.personFirstName === "" ||
-    personnelObject?.personLastName === "" ||
-    personnelObject?.personNartionalCode === "";
+  // const disableButton =
+  //   personnelObject === null ||
+  //   personnelObject?.personFirstName === "" ||
+  //   personnelObject?.personLastName === "" ||
+  //   personnelObject?.personNartionalCode === "";
 
   useEffect(() => {
     console.log(personnelObject);
@@ -129,7 +129,6 @@ function PersonnelStatementForm() {
           <LoadingButton
             dir="ltr"
             endIcon={<SearchIcon />}
-            disabled={disableButton}
             variant="contained"
             color="primary"
             loading={isLoading || isFetching}
