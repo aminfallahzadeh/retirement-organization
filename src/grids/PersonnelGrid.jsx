@@ -21,7 +21,6 @@ import { defaultTableOptions } from "../utils.js";
 function PersonnelGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const [data, setData] = useState([]);
-
   const { personTableData } = useSelector((state) => state.personData);
 
   useEffect(() => {
@@ -33,6 +32,10 @@ function PersonnelGrid() {
       }));
       setData(mappedData);
     }
+
+    return () => {
+      setData([]);
+    };
   }, [personTableData]);
 
   const columns = useMemo(

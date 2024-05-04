@@ -22,25 +22,20 @@ import { toast } from "react-toastify";
 
 function PersonnelStatementForm() {
   const [searchPersons, { isLoading, isFetching }] = useLazyGetPersonsQuery();
+  const dispatch = useDispatch();
 
   const [personnelObject, setPersonnelObject] = useState(null);
-
-  const dispatch = useDispatch();
 
   const hadnlePersonnelObjectChange = (e) => {
     const { name, value } = e.target;
     setPersonnelObject({ ...personnelObject, [name]: value });
   };
 
-  // const disableButton =
-  //   personnelObject === null ||
-  //   personnelObject?.personFirstName === "" ||
-  //   personnelObject?.personLastName === "" ||
-  //   personnelObject?.personNartionalCode === "";
-
-  useEffect(() => {
-    console.log(personnelObject);
-  }, [personnelObject]);
+  const disableButton =
+    !personnelObject ||
+    (!personnelObject.personFirstName &&
+      !personnelObject.personLastName &&
+      !personnelObject.personNartionalCode);
 
   const handleSearchPersonnels = async () => {
     try {
@@ -55,9 +50,6 @@ function PersonnelStatementForm() {
         personNartionalCode,
       }).unwrap();
       dispatch(setPersonTableData(searchRes.itemList));
-      toast.success(searchRes.message, {
-        autoClose: 2000,
-      });
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -65,6 +57,16 @@ function PersonnelStatementForm() {
       });
     }
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(setPersonTableData([]));
+    };
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   console.log(personnelObject);
+  // }, [personnelObject]);
 
   const content = (
     <>
@@ -129,6 +131,7 @@ function PersonnelStatementForm() {
           <LoadingButton
             dir="ltr"
             endIcon={<SearchIcon />}
+            disabled={disableButton}
             variant="contained"
             color="primary"
             loading={isLoading || isFetching}
