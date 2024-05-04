@@ -57,6 +57,7 @@ function RequestsGrid() {
     if (isSuccess) {
       const data = requests.itemList.map((item) => ({
         id: item.requestID,
+        requestNO: item.requestNO || "-",
         personID: item.personID,
         requestTypeNameFa: item.requestTypeNameFa,
         sender: item.requestFrom || "-",
@@ -83,7 +84,7 @@ function RequestsGrid() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "id",
+        accessorKey: "requestNO",
         header: "شماره درخواست",
       },
       {
