@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 
 // redux imports
 import { useGetPersonsQuery } from "../slices/personApiSlice.js";
+import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 
 // library imports
 import { toast } from "react-toastify";
@@ -23,8 +24,10 @@ function PersonnelInfoForm() {
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
+  // GET MAIN DATA
   const { data: person, isSuccess, error } = useGetPersonsQuery({ personID });
 
+  // HANDLE MAIN DATA
   useEffect(() => {
     if (isSuccess) {
       setPersonObject(person?.itemList[0]);
@@ -39,6 +42,22 @@ function PersonnelInfoForm() {
       });
     }
   }, [error]);
+
+  // GET LOOKUP DATA
+  const { data: gender } = useGetLookupDataQuery({
+    lookUpType: "Gender",
+    lookUpID: personObject?.genderID,
+  });
+
+  const { data: maritalStatus } = useGetLookupDataQuery({
+    lookUpType: "MaritialStatus",
+    lookUpID: personObject?.maritalStatusID,
+  });
+
+  const { data: education } = useGetLookupDataQuery({
+    lookUpType: "EducationType",
+    lookUpID: personObject?.educationTypeID,
+  });
 
   const content = (
     <section className="formContainer">
@@ -83,7 +102,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">شماره شناسنامه</div>
             <div className="inputBox__form--readOnly-content">
-              {personObject.personCertificateNo}
+              {convertToPersianNumber(personObject.personCertificateNo)}
             </div>
           </div>
         </div>
@@ -92,7 +111,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">نام پدر</div>
             <div className="inputBox__form--readOnly-content">
-              {personObject.personFatherName}
+              {personObject.personFatherName || "-"}
             </div>
           </div>
         </div>
@@ -112,7 +131,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">محل تولد</div>
             <div className="inputBox__form--readOnly-content">
-              {personObject.personBirthPlace}
+              {personObject.personBirthPlace || "-"}
             </div>
           </div>
         </div>
@@ -121,7 +140,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">جنسیت</div>
             <div className="inputBox__form--readOnly-content">
-              {personObject.genderID}
+              {gender?.itemList[0].lookUpName || "-"}
             </div>
           </div>
         </div>
@@ -130,7 +149,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">وضعیت تاهل</div>
             <div className="inputBox__form--readOnly-content">
-              {personObject.maritalStatusID}
+              {maritalStatus?.itemList[0].lookUpName || "-"}
             </div>
           </div>
         </div>
@@ -139,7 +158,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">مدرک تحصیلی</div>
             <div className="inputBox__form--readOnly-content">
-              {personObject.educationTypeID}
+              {education?.itemList[0].lookUpName || "-"}
             </div>
           </div>
         </div>
@@ -147,7 +166,7 @@ function PersonnelInfoForm() {
         <div className="inputBox__form">
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">ورود به خدمت</div>
-            <div className="inputBox__form--readOnly-content"> </div>
+            <div className="inputBox__form--readOnly-content">-</div>
           </div>
         </div>
       </form>
