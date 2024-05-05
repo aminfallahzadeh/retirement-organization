@@ -13,15 +13,15 @@
 }
 
 .ps-sidebar-container {
-	background-color: $color-grey-3 !important;
-	color: $color-grey-5 !important;
+	background-color: var(--color-bg-sidebar-1) !important;
+	color: var(--color-sidebar-text) !important;
 }
 
 .ps-menu-button {
 	transition: all 0.25s;
 
 	&:hover {
-		background-color: $color-grey-1 !important;
+		background-color: var(--color-sidebar-hover) !important;
 	}
 }
 
@@ -30,10 +30,10 @@
 }
 
 .ps-submenu-content {
-	background-color: $color-grey-2 !important;
+	background-color: var(--color-bg-sidebar-2) !important;
 }
 
 .ps-active {
-	background-color: $color-grey-1 !important;
-	color: $color-fg-primary !important;
+	background-color: var(--color-sidebar-hover) !important;
+	color: var(--color-sidebar-text-selected) !important;
 }

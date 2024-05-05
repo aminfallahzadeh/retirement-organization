@@ -5,7 +5,7 @@
     right: 0;
     width: 100%;
     z-index: 9;
-    background-color: $color-fg-primary;
+    background-color: var(--color-fg-primary);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
     &__container {

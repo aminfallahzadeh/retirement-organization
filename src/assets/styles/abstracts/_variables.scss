@@ -2,23 +2,6 @@
 $color-bg-primary: #f1f1f1;
 $color-bg-secondary: #f8f8f8;
 
-:root {
-    /* Light theme */
-    --color-bg-primary-default: #f1f1f1;
-    --color-bg-secondary-default: #f8f8f8;
-    /* Define more variables for light theme as needed */
-
-    /* Dark theme */
-    --color-bg-primary-dark: #000;
-    --color-bg-secondary-dark: #000;
-    /* Define more variables for dark theme as needed */
-}
-
-// fg colors
-$color-fg-primary: #004e98;
-$color-fg-secondary: #3a6ea5;
-$color-fg-tertiary: #417bbb;
-
 // grey colors
 $color-grey-1: #ebebeb;
 $color-grey-2: #cfcfcf;
@@ -26,6 +9,23 @@ $color-grey-3: #c0c0c0;
 $color-grey-4: #9f9f9f;
 $color-grey-5: #333533;
 $color-grey-6: #252422;
+
+:root {
+    /* default theme */
+    --color-bg-primary: #f1f1f1;
+    --color-bg-secondary: #f8f8f8;
+    --color-fg-primary: #004e98;
+    --color-bg-sidebar-1: #c0c0c0;
+    --color-bg-sidebar-2: #cfcfcf;
+    --color-sidebar-text: #333533;
+    --color-sidebar-hover: #ebebeb;
+    --color-sidebar-text-selected: #004e98;
+}
+
+// fg colors
+$color-fg-primary: #004e98;
+$color-fg-secondary: #3a6ea5;
+$color-fg-tertiary: #417bbb;
 
 // accent colors
 $color-accent-red: #ff6700;
@@ -53,6 +53,10 @@ $margin-top-small: 50px;
 $padding-primary: 20px;
 
 :root[color-scheme="dark"] {
-    --color-bg-primary-default: #000;
-    $color-bg-secondary: #000;
+    --color-fg-primary: #0a0908;
+    --color-bg-sidebar-1: #5e503f;
+    --color-bg-sidebar-2: #a9927d;
+    --color-sidebar-text: #f2f4f3;
+    --color-sidebar-hover: #d7bba1;
+    --color-sidebar-text-selected: #49111c;
 }
