@@ -122,6 +122,7 @@ function RetiredStatementsGrid() {
     () => [
       {
         accessorKey: "retirementStatementSerial",
+        size: 20,
         header: "سریال حکم",
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
@@ -129,6 +130,7 @@ function RetiredStatementsGrid() {
       },
       {
         accessorKey: "retirementStatementNo",
+        size: 20,
         header: "شماره حکم",
       },
       {

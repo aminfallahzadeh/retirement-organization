@@ -140,6 +140,7 @@ function RetiredHeirGrid() {
       {
         accessorKey: "personNationalCode",
         header: "کد ملی",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
@@ -147,14 +148,17 @@ function RetiredHeirGrid() {
       {
         accessorKey: "personFirstName",
         header: "نام",
+        size: 20,
       },
       {
         accessorKey: "personLastName",
         header: "نام خانوادگی",
+        size: 20,
       },
       {
         accessorKey: "personBirthDate",
         header: "تاریخ تولد",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>
             {convertToPersianNumber(
@@ -165,11 +169,13 @@ function RetiredHeirGrid() {
       },
       {
         accessorKey: "relationshipWithParentName",
+        size: 20,
         header: "نسبت",
       },
       {
         accessorKey: "parentPersonNationalCode",
         header: "شماره پرونده",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),

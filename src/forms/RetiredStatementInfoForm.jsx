@@ -61,7 +61,7 @@ function RetiredStatementInfoForm() {
   };
 
   return (
-    <section className="formContainer flex-col">
+    <section className="formContainer formContainer--width-lg  flex-col">
       <form method="POST" className="grid grid--col-4">
         <div className="inputBox__form">
           <input
