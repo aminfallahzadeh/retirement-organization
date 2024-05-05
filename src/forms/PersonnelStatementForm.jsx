@@ -49,6 +49,12 @@ function PersonnelStatementForm() {
         personLastName,
         personNartionalCode,
       }).unwrap();
+      if (searchRes.itemList.length === 0) {
+        toast.error("نتیجه ای یافت نشد", {
+          autoClose: 2000,
+        });
+        return;
+      }
       dispatch(setPersonTableData(searchRes.itemList));
     } catch (err) {
       console.log(err);

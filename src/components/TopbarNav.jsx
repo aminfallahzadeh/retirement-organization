@@ -73,7 +73,7 @@ function TopbarNav({ userName }) {
               </Link>
             </li>
             <li className="topnav__theme">
-              <IconButton color="info" onClick={handleThemeChange}>
+              <IconButton color="warning" onClick={handleThemeChange}>
                 {theme === "light" ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
             </li>
