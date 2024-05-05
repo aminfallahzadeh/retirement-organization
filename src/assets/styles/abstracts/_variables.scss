@@ -1,12 +1,11 @@
-// final palette
 // bg colors
 $color-bg-primary: #f1f1f1;
 $color-bg-secondary: #f8f8f8;
 
 :root {
     /* Light theme */
-    --color-bg-primary-light: #f1f1f1;
-    --color-bg-secondary-light: #f8f8f8;
+    --color-bg-primary-default: #f1f1f1;
+    --color-bg-secondary-default: #f8f8f8;
     /* Define more variables for light theme as needed */
 
     /* Dark theme */
@@ -54,6 +53,6 @@ $margin-top-small: 50px;
 $padding-primary: 20px;
 
 :root[color-scheme="dark"] {
-    --color-bg-primary-light: #000;
+    --color-bg-primary-default: #000;
     $color-bg-secondary: #000;
 }
