@@ -17,6 +17,7 @@ import {
 } from "../slices/sharedApiSlice.js";
 
 // mui imports
+import { Box, CircularProgress } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
   Save as SaveIcon,
@@ -279,7 +280,15 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
   const content = (
     <>
       {isLoading || isFetching ? (
-        <div>در حال بارگذاری</div>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "2rem 10rem",
+          }}
+        >
+          <CircularProgress color="primary" />
+        </Box>
       ) : (
         <section className="formContainer formContainer--width-lg flex-col">
           <form method="POST" className="grid grid--col-3">
