@@ -27,7 +27,7 @@ import {
 } from "@mui/icons-material";
 
 function TopbarNav({ userName }) {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("default");
 
   const logoutHandler = useLogout();
   const location = useLocation();

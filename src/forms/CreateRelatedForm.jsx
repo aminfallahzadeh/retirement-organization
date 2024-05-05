@@ -53,7 +53,6 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   const [insertRelated, { isLoading }] = useInsertRelatedMutation();
 
   const location = useLocation();
-
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
@@ -197,7 +196,6 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
         selfEmployeeStartDate,
         selfEmployeeEndDate,
       }).unwrap();
-      console.log(insertRes);
       setShowCreateRelatedModal(false);
       toast.success(insertRes.message, {
         autoClose: 2000,

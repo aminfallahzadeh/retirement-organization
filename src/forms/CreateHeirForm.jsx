@@ -1,10 +1,15 @@
 // react imports
 import { useState, useEffect } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
+import { useInsertHeirMutation } from "../slices/heirApiSlice";
 import {
   useGetRelationshipQuery,
   useGetLookupDataQuery,
+  useGetPensionaryStatusQuery,
 } from "../slices/sharedApiSlice.js";
 
 // mui imports
@@ -15,7 +20,7 @@ import {
 } from "@mui/icons-material";
 
 // helpers
-import { convertToPersianNumber, convertToPersianDate } from "../helper.js";
+import { convertToPersianNumber, convertToEnglishNumber } from "../helper.js";
 
 // libary imports
 import { toast } from "react-toastify";
@@ -26,16 +31,22 @@ function CreateHeirForm() {
   // date states
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
-  const [selectedHeirDate, setSelectedHeirDate] = useState(null);
-  const [isHeirCalenderOpen, setIsHeirCalenderOpen] = useState(false);
-  const [selectedStoptopShareDate, setSelectedStoptopShareDate] =
-    useState(null);
-  const [isStoptopShareCalenderOpen, setIsStoptopShareCalenderOpen] =
+  const [selectedBaseFinishDate, setSelectedBaseFinishDate] = useState(null);
+  const [isBaseFinishDateCalenderOpen, setIsBaseFinishDateCalenderOpen] =
     useState(false);
+
+  const [heirObject, setHeirObject] = useState({});
+
+  const [insertHeir, { isLoading }] = useInsertHeirMutation();
 
   // look up states
   const [relationCombo, setRelationCombo] = useState([]);
   const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);
+  const [pensionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
 
   // GET LOOK UP DATA
   const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
@@ -43,6 +54,11 @@ function CreateHeirForm() {
 
   const { data: maritialStatusComboItems, isSuccess: isMaritialComboSuccess } =
     useGetLookupDataQuery({ lookUpType: "MaritialStatus" });
+
+  const {
+    data: pensionaryStatusComboItems,
+    isSuccess: isPensionaryStatusComboSuccess,
+  } = useGetPensionaryStatusQuery({ pensionaryStatusCategory: "H" });
 
   // FETCH LOOK UP DATA
   useEffect(() => {
@@ -57,33 +73,89 @@ function CreateHeirForm() {
     }
   }, [isMaritialComboSuccess, maritialStatusComboItems]);
 
+  useEffect(() => {
+    if (isPensionaryStatusComboSuccess) {
+      setPensionaryStatusCombo(pensionaryStatusComboItems.itemList);
+    }
+  }, [isPensionaryStatusComboSuccess, pensionaryStatusComboItems]);
+
   // date handlers
   const handleBirthDateChange = (date) => {
     setSelectedBirthDate(date);
     setIsBirthCalenderOpen(false);
   };
 
-  const handleHeirDateChange = (date) => {
-    setSelectedHeirDate(date);
-    setIsHeirCalenderOpen(false);
-  };
-
   const handleStoptopShareDateChange = (date) => {
-    setSelectedStoptopShareDate(date);
-    setIsStoptopShareCalenderOpen(false);
+    setSelectedBaseFinishDate(date);
+    setIsBaseFinishDateCalenderOpen(false);
   };
 
   const handleBirthOpenChange = (open) => {
     setIsBirthCalenderOpen(open);
   };
 
-  const handleHeirOpenChange = (open) => {
-    setIsHeirCalenderOpen(open);
+  const handleStoptopShareOpenChange = (open) => {
+    setIsBaseFinishDateCalenderOpen(open);
   };
 
-  const handleStoptopShareOpenChange = (open) => {
-    setIsStoptopShareCalenderOpen(open);
+  const handleHeirObjectChange = (e) => {
+    const { name, value } = e.target;
+    setHeirObject({
+      ...heirObject,
+      [name]: convertToPersianNumber(value),
+    });
   };
+
+  const handleInsertHeir = async () => {
+    try {
+      // Adjusting for timezone difference
+      const personBirthDate = new Date(selectedBirthDate);
+      personBirthDate.setMinutes(
+        personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
+      );
+
+      const pensionaryBaseFinishDate = new Date(selectedBaseFinishDate);
+      pensionaryBaseFinishDate.setMinutes(
+        pensionaryBaseFinishDate.getMinutes() -
+          pensionaryBaseFinishDate.getTimezoneOffset()
+      );
+
+      const insertRes = await insertHeir({
+        ...heirObject,
+        personID,
+        pensionaryStatusID: convertToEnglishNumber(
+          heirObject.pensionaryStatusID
+        ),
+        personCertificatetNo: convertToEnglishNumber(
+          heirObject.personCertificatetNo
+        ),
+        personNationalCode: convertToEnglishNumber(
+          heirObject.personNationalCode
+        ),
+        relationshipWithParentID: convertToEnglishNumber(
+          heirObject.relationshipWithParentID
+        ),
+        personRegion:
+          parseInt(convertToEnglishNumber(heirObject.personRegion)) || null,
+        personArea:
+          parseInt(convertToEnglishNumber(heirObject.personArea)) || null,
+        personBirthDate,
+        pensionaryBaseFinishDate,
+      }).unwrap();
+      toast.success(insertRes.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
+  useEffect(() => {
+    console.log(heirObject);
+  }, [heirObject]);
 
   const content = (
     <section className="formContainer formContainer--width-lg flex-col">
@@ -94,6 +166,7 @@ function CreateHeirForm() {
             className="inputBox__form--input"
             required
             name="relationshipWithParentID"
+            onChange={handleHeirObjectChange}
             id="relationshipWithParentID"
           >
             <option value=" ">انتخاب نسبت</option>
@@ -118,6 +191,8 @@ function CreateHeirForm() {
             type="text"
             className="inputBox__form--input"
             name="personFirstName"
+            value={heirObject?.personFirstName}
+            onChange={handleHeirObjectChange}
             required
             id="personFirstName1"
           />
@@ -129,6 +204,8 @@ function CreateHeirForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            value={heirObject?.personLastName}
+            onChange={handleHeirObjectChange}
             name="personLastName"
             required
             id="personLastName1"
@@ -143,6 +220,8 @@ function CreateHeirForm() {
             type="text"
             className="inputBox__form--input"
             name="personNationalCode"
+            value={heirObject?.personNationalCode}
+            onChange={handleHeirObjectChange}
             required
             id="personNationalCode2"
           />
@@ -158,6 +237,8 @@ function CreateHeirForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            value={heirObject?.personCertificatetNo}
+            onChange={handleHeirObjectChange}
             required
             name="personCertificatetNo"
             id="personCertificatetNo2"
@@ -173,6 +254,8 @@ function CreateHeirForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            value={heirObject?.personFatherName}
+            onChange={handleHeirObjectChange}
             required
             name="personFatherName"
             id="personFatherName1"
@@ -206,6 +289,8 @@ function CreateHeirForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            value={heirObject?.personBirthPlace}
+            onChange={handleHeirObjectChange}
             required
             name="personBirthPlace"
             id="personBirthPlace1"
@@ -218,6 +303,7 @@ function CreateHeirForm() {
           <select
             className="inputBox__form--input"
             name="maritalStatusID"
+            onChange={handleHeirObjectChange}
             required
             id="maritalStatusID1"
           >
@@ -241,6 +327,8 @@ function CreateHeirForm() {
             type="text"
             className="inputBox__form--input"
             required
+            value={heirObject?.personPhone}
+            onChange={handleHeirObjectChange}
             name="personPhone"
             id="personPhone11"
           />
@@ -253,6 +341,8 @@ function CreateHeirForm() {
             type="text"
             className="inputBox__form--input"
             name="personCellPhone"
+            value={heirObject?.personCellPhone}
+            onChange={handleHeirObjectChange}
             required
             id="personCellPhone222"
           />
@@ -265,6 +355,8 @@ function CreateHeirForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            value={heirObject?.personArea}
+            onChange={handleHeirObjectChange}
             required
             name="personArea"
             id="personArea1"
@@ -277,6 +369,8 @@ function CreateHeirForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            value={heirObject?.personRegion}
+            onChange={handleHeirObjectChange}
             required
             name="personRegion"
             id="personRegion1"
@@ -290,6 +384,8 @@ function CreateHeirForm() {
             type="text"
             className="inputBox__form--input"
             required
+            value={heirObject?.personCountry}
+            onChange={handleHeirObjectChange}
             name="personCountry"
             id="personCountry1"
           />
@@ -301,6 +397,8 @@ function CreateHeirForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            value={heirObject?.personState}
+            onChange={handleHeirObjectChange}
             required
             name="personState"
             id="personState1"
@@ -316,6 +414,8 @@ function CreateHeirForm() {
             className="inputBox__form--input"
             required
             name="personCity"
+            value={heirObject?.personCity}
+            onChange={handleHeirObjectChange}
             id="personCity1"
           />
           <label className="inputBox__form--label" htmlFor="personCity1">
@@ -328,6 +428,8 @@ function CreateHeirForm() {
             className="inputBox__form--input"
             required
             name="personPostalCode"
+            value={heirObject?.personPostalCode}
+            onChange={handleHeirObjectChange}
             id="personPostalCode1"
           />
           <label className="inputBox__form--label" htmlFor="personPostalCode1">
@@ -340,6 +442,8 @@ function CreateHeirForm() {
             className="inputBox__form--input"
             required
             name="personSpecialDisease"
+            value={heirObject?.personSpecialDisease}
+            onChange={handleHeirObjectChange}
             id="personSpecialDisease1"
           />
           <label
@@ -354,6 +458,8 @@ function CreateHeirForm() {
             type="text"
             className="inputBox__form--input"
             required
+            value={heirObject?.personAddress}
+            onChange={handleHeirObjectChange}
             name="personAddress"
             id="personAddress1"
           />
@@ -369,101 +475,36 @@ function CreateHeirForm() {
 
       <form className="grid grid--col-4">
         <div className="inputBox__form">
-          <input
-            type="text"
+          <select
             className="inputBox__form--input"
+            onChange={handleHeirObjectChange}
+            name="pensionaryStatusID"
             required
-            name="selfEmployeeTypeName"
-            id="selfEmployeeTypeName"
-          />
-          <label
-            className="inputBox__form--label"
-            htmlFor="selfEmployeeTypeName"
+            id="pensionaryStatusID"
           >
-            <span>*</span> وضعیت
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            name="vazifeNum"
-            id="vazifeNum"
-          />
-          <label className="inputBox__form--label" htmlFor="vazifeNum">
-            شماره وظیفه بگیری
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            name="sahmeVazife"
-            id="sahmeVazife"
-          />
-          <label className="inputBox__form--label" htmlFor="sahmeVazife">
-            سهم وظیفه بگیری
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            name="marriageRight"
-            id="marriageRight"
-          />
-          <label className="inputBox__form--label" htmlFor="marriageRight">
-            حق تاهل
-          </label>
-        </div>
-
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            name="childrenRight"
-            id="childrenRight"
-          />
-          <label className="inputBox__form--label" htmlFor="childrenRight">
-            حق اولاد
+            <option value=" ">انتخاب کنید</option>
+            {pensionaryStatusCombo.map((status) => (
+              <option
+                key={status.pensionaryStatusID}
+                value={status.pensionaryStatusID}
+              >
+                {status.pensionaryStatusName}
+              </option>
+            ))}
+          </select>
+          <label className="inputBox__form--label" htmlFor="pensionaryStatusID">
+            <span>*</span> وضعیت موظف
           </label>
         </div>
 
         <div className="inputBox__form">
           <InputDatePicker
-            value={selectedHeirDate}
-            onChange={handleHeirDateChange}
-            format={"jYYYY-jMM-jDD"}
-            onOpenChange={handleHeirOpenChange}
-            suffixIcon={<CalenderIcon color="action" />}
-            open={isHeirCalenderOpen}
-            style={{
-              border: "2px solid #cfcfcf",
-              borderRadius: "6px",
-              marginLeft: "0.5rem",
-            }}
-            wrapperStyle={{
-              border: "none",
-              cursor: "pointer",
-            }}
-          />
-          <div className="inputBox__form--readOnly-label">
-            تاریخ وظیفه بگیری
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <InputDatePicker
-            value={selectedStoptopShareDate}
+            value={selectedBaseFinishDate}
             onChange={handleStoptopShareDateChange}
             format={"jYYYY-jMM-jDD"}
             onOpenChange={handleStoptopShareOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
-            open={isStoptopShareCalenderOpen}
+            open={isBaseFinishDateCalenderOpen}
             style={{
               border: "2px solid #cfcfcf",
               borderRadius: "6px",
@@ -582,6 +623,20 @@ function CreateHeirForm() {
           </label>
         </div>
       </form>
+
+      <div style={{ marginRight: "auto" }}>
+        <LoadingButton
+          dir="ltr"
+          endIcon={<SaveIcon />}
+          onClick={handleInsertHeir}
+          loading={isLoading}
+          variant="contained"
+          color="success"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>ذخیره</span>
+        </LoadingButton>
+      </div>
     </section>
   );
 

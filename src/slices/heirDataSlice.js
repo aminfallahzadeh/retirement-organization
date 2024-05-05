@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   heirTableData: [],
-  selectedHeirData: [],
+  selectedHeirData: null,
 };
 
 const heirDataSlice = createSlice({

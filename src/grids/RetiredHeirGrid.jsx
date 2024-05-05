@@ -6,7 +6,10 @@ import { useLocation } from "react-router-dom";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { useGetHeirListByParentPersonIDQuery } from "../slices/heirApiSlice";
+import {
+  useGetHeirListByParentPersonIDQuery,
+  useRemoveHeirMutation,
+} from "../slices/heirApiSlice";
 import {
   setHeirTableData,
   setSelectedHeirData,
@@ -59,7 +62,7 @@ function RetiredHeirGrid() {
   const [showCreateHeirModal, setShowCreateHeirModal] = useState(false);
   const [showDeleteHeirModal, setShowDeleteHeirModal] = useState(false);
 
-  const { token } = useSelector((state) => state.auth);
+  const { selectedHeirData } = useSelector((state) => state.heirData);
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -70,6 +73,8 @@ function RetiredHeirGrid() {
   // access the data from redux store
   const { heirTableData } = useSelector((state) => state.heirData);
 
+  const [removeHeir, { isLoading: isDeleting }] = useRemoveHeirMutation();
+
   const {
     data: heirs,
     isSuccess,
@@ -78,7 +83,6 @@ function RetiredHeirGrid() {
     error,
     refetch,
   } = useGetHeirListByParentPersonIDQuery({
-    token,
     parentPersonID: personID,
   });
 
@@ -96,6 +100,24 @@ function RetiredHeirGrid() {
 
   const handleRefresh = () => {
     refetch();
+  };
+
+  const handleRemoveHeir = async () => {
+    try {
+      const deleteRes = await removeHeir({
+        pensionaryID: selectedHeirData?.pensionaryID,
+      }).unwrap();
+      setShowDeleteHeirModal(false);
+      refetch();
+      toast.success(deleteRes.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
   };
 
   useEffect(() => {
@@ -322,6 +344,8 @@ function RetiredHeirGrid() {
                 <LoadingButton
                   dir="ltr"
                   endIcon={<DoneIcon />}
+                  onClick={handleRemoveHeir}
+                  loading={isDeleting}
                   variant="contained"
                   color="success"
                   sx={{ fontFamily: "sahel" }}
