@@ -30,7 +30,6 @@ function ArrowButtonsGroups() {
 
   const { selectedGroupData } = useSelector((state) => state.groupsData);
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
-  const { token } = useSelector((state) => state.auth);
 
   const [insertGroupItem, { isLoading: isInserting }] =
     useInsertGroupItemMutation();
@@ -44,10 +43,7 @@ function ArrowButtonsGroups() {
         "itemName": "",
         groupID,
       }));
-      const insertRes = await insertGroupItem({
-        token,
-        data,
-      }).unwrap();
+      const insertRes = await insertGroupItem(data).unwrap();
       console.log(insertRes);
       toast.success(insertRes.message, {
         autoClose: 2000,
