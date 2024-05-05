@@ -26,8 +26,9 @@ function SidebarNav() {
   const batchStatementsPath =
     location.pathname === "/retirement-organization/batch-statements";
   const slipsPath = location.pathname === "/retirement-organization/slips";
-  const staffStatementsPath =
-    location.pathname === "/retirement-organization/staff-statements";
+  const personnelStatementsPath = location.pathname.startsWith(
+    "/retirement-organization/personnel-statements"
+  );
   const electronicStatementPath =
     location.pathname === "/retirement-organization/electronic-statement";
   const createRequestPath =
@@ -67,7 +68,7 @@ function SidebarNav() {
             component={
               <Link to={"/retirement-organization/personnel-statements"} />
             }
-            active={staffStatementsPath}
+            active={personnelStatementsPath}
           >
             احکام کارمندان
           </MenuItem>

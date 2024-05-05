@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 
 // rrd imports
 import { Link } from "react-router-dom";
@@ -20,24 +20,7 @@ import { defaultTableOptions } from "../utils.js";
 
 function PersonnelGrid() {
   const [rowSelection, setRowSelection] = useState({});
-  const [data, setData] = useState([]);
   const { personTableData } = useSelector((state) => state.personData);
-
-  useEffect(() => {
-    if (personTableData.length > 0) {
-      const mappedData = personTableData.map((item) => ({
-        id: item.personID,
-        personNationalCode: item.personNationalCode,
-        personFirstName: item.personFirstName,
-        personLastName: item.personLastName,
-      }));
-      setData(mappedData);
-    }
-
-    return () => {
-      setData([]);
-    };
-  }, [personTableData]);
 
   const columns = useMemo(
     () => [
@@ -80,7 +63,7 @@ function PersonnelGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data,
+    data: personTableData,
     enablePagination: false,
     enableBottomToolbar: false,
     muiTableContainerProps: { sx: { height: "500px" } },

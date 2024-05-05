@@ -1,5 +1,5 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // redux imports
 import { useDispatch } from "react-redux";
@@ -55,7 +55,13 @@ function PersonnelStatementForm() {
         });
         return;
       }
-      dispatch(setPersonTableData(searchRes.itemList));
+      const mappedData = searchRes.itemList.map((item) => ({
+        id: item.personID,
+        personNationalCode: item.personNationalCode,
+        personFirstName: item.personFirstName,
+        personLastName: item.personLastName,
+      }));
+      dispatch(setPersonTableData(mappedData));
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -63,16 +69,6 @@ function PersonnelStatementForm() {
       });
     }
   };
-
-  useEffect(() => {
-    return () => {
-      dispatch(setPersonTableData([]));
-    };
-  }, [dispatch]);
-
-  // useEffect(() => {
-  //   console.log(personnelObject);
-  // }, [personnelObject]);
 
   const content = (
     <>
