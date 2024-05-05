@@ -16,6 +16,11 @@ import {
   Logout as LogoutIcon,
   SpaceDashboardOutlined as DashboardIcon,
 } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import {
+  DarkModeOutlined as DarkModeIcon,
+  LightModeOutlined as LightModeIcon,
+} from "@mui/icons-material";
 
 function TopbarNav({ userName }) {
   const [theme, setTheme] = useState("light");
@@ -67,9 +72,11 @@ function TopbarNav({ userName }) {
                 کارتابل
               </Link>
             </li>
-            {/* <li>
-              <button onClick={handleThemeChange}>theme</button>
-            </li> */}
+            <li className="topnav__theme">
+              <IconButton color="info" onClick={handleThemeChange}>
+                {theme === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+              </IconButton>
+            </li>
           </ul>
         </div>
 

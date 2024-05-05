@@ -25,7 +25,10 @@ import {
 } from "material-react-table";
 
 // helper imports
-import { convertToPersianNumber } from "../helper.js";
+import {
+  convertToPersianNumber,
+  convertToPersianDateFormatted,
+} from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -54,6 +57,14 @@ function PersonnelStatementGrid() {
   useEffect(() => {
     if (isSuccess) {
       console.log(statements);
+      const data = statements.itemList.map((item) => ({
+        id: item.personnelStatementID,
+        personnelStatementSerial: item.personnelStatementSerial || "-",
+        personnelStatementTypeName: item.personnelStatementTypeName || "-",
+        personnelStatementIssueDate: item.personnelStatementIssueDate || "-",
+        personnelStatementRunDate: item.personnelStatementRunDate || "-",
+      }));
+      setPersonnelStatementTableData(data);
     }
   }, [isSuccess, statements]);
 
@@ -69,30 +80,44 @@ function PersonnelStatementGrid() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "retirementStatementSerial",
+        accessorKey: "personnelStatementSerial",
         header: "سریال حکم",
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
       },
       {
-        accessorKey: "retirementStatementNo",
+        accessorKey: "personnelStatementNo",
         header: "شماره حکم",
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
       },
       {
-        accessorKey: "retirementStatementTypeName",
+        accessorKey: "personnelStatementTypeName",
         header: "نوع حکم",
       },
       {
-        accessorKey: "retirementStatementIssueDate",
+        accessorKey: "personnelStatementIssueDate",
         header: "تاریخ صدور",
+        Cell: ({ renderedCellValue }) => (
+          <div>
+            {convertToPersianNumber(
+              convertToPersianDateFormatted(renderedCellValue)
+            )}
+          </div>
+        ),
       },
       {
-        accessorKey: "retirementStatementRunDate",
+        accessorKey: "personnelStatementRunDate",
         header: "تاریخ اجرا",
+        Cell: ({ renderedCellValue }) => (
+          <div>
+            {convertToPersianNumber(
+              convertToPersianDateFormatted(renderedCellValue)
+            )}
+          </div>
+        ),
       },
       {
         accessorKey: "printStaffStatementAction",
