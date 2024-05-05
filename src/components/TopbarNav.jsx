@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 // rrd imports
 import { Link, useLocation } from "react-router-dom";
 
+// redux imports
+import { useDispatch } from "react-redux";
+import { setThemeGlobal } from "../slices/themeDataSlice.js";
+
 // component imports
 import ProfilePicure from "./ProfilePicture";
 import DateTime from "./DateTime";
@@ -27,12 +31,14 @@ function TopbarNav({ userName }) {
 
   const logoutHandler = useLogout();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const cartablePath =
     location.pathname === "/retirement-organization/dashboard";
 
   const handleThemeChange = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    setTheme(theme === "default" ? "chocolate" : "default");
+    dispatch(setThemeGlobal(theme === "default" ? "chocolate" : "default"));
   };
 
   useEffect(() => {
@@ -74,7 +80,7 @@ function TopbarNav({ userName }) {
             </li>
             <li className="topnav__theme">
               <IconButton color="warning" onClick={handleThemeChange}>
-                {theme === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+                {theme === "default" ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
             </li>
           </ul>

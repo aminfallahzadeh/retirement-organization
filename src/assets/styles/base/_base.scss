@@ -15,7 +15,7 @@ body {
 
 html {
     scroll-behavior: smooth;
-    background-color: $color-bg-primary;
+    background-color: var(--color-bg-primary);
 
     textarea {
         resize: none;

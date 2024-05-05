@@ -93,7 +93,7 @@ function RetiredStatementsGrid() {
     refetch();
     if (isSuccess) {
       const data = statements.map((item) => ({
-        id: item.pensionaryID,
+        id: item.retirementStatementID,
         RetirementStatementID: item.RetirementStatementID,
         retirementStatementSerial: item.retirementStatementSerial,
         retirementStatementTypeName: item.retirementStatementTypeName,
