@@ -4,6 +4,12 @@ import { useState, useEffect } from "react";
 // rrd imports
 import { Link, useLocation } from "react-router-dom";
 
+// redux imports
+import {
+  useGetUserQuery,
+  useUpdateUserThemeMutation,
+} from "../slices/usersApiSlice";
+
 // component imports
 import ProfilePicure from "./ProfilePicture";
 import DateTime from "./DateTime";
@@ -16,13 +22,15 @@ import {
   Logout as LogoutIcon,
   SpaceDashboardOutlined as DashboardIcon,
 } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { IconButton, Box, CircularProgress } from "@mui/material";
 import {
   DarkModeOutlined as DarkModeIcon,
   LightModeOutlined as LightModeIcon,
 } from "@mui/icons-material";
 
-function TopbarNav({ userName }) {
+function TopbarNav({ userName, userID }) {
+  const { data: user, isSuccess } = useGetUserQuery(userID);
+
   const [theme, setTheme] = useState("default");
 
   const logoutHandler = useLogout();
@@ -31,15 +39,37 @@ function TopbarNav({ userName }) {
   const cartablePath =
     location.pathname === "/retirement-organization/dashboard";
 
-  const handleThemeChange = () => {
-    const selectedTheme = theme === "default" ? "chocolate" : "default";
-    setTheme(selectedTheme);
-    sessionStorage.setItem("theme", selectedTheme);
+  const [updateUserTheme, { isLoading }] = useUpdateUserThemeMutation();
+
+  const handleThemeChange = async () => {
+    try {
+      const selectedTheme = theme === "default" ? "chocolate" : "default";
+      setTheme(selectedTheme);
+      const res = await updateUserTheme({
+        userID,
+        theme: selectedTheme,
+      }).unwrap();
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log(user.itemList);
+    }
+  }, [isSuccess, user]);
 
   useEffect(() => {
     document.documentElement.setAttribute("color-scheme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (user) {
+      setTheme(user.itemList[0].theme);
+    }
+  }, [user]);
 
   const content = (
     <nav className="topnav">
@@ -75,9 +105,26 @@ function TopbarNav({ userName }) {
               </Link>
             </li>
             <li className="topnav__theme">
-              <IconButton color="warning" onClick={handleThemeChange}>
-                {theme === "default" ? <DarkModeIcon /> : <LightModeIcon />}
-              </IconButton>
+              {isLoading ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginRight: "10px",
+                  }}
+                >
+                  <CircularProgress color="warning" size={20} />
+                </Box>
+              ) : (
+                <IconButton
+                  color="warning"
+                  onClick={handleThemeChange}
+                  disabled={isLoading}
+                >
+                  {theme === "default" ? <DarkModeIcon /> : <LightModeIcon />}
+                </IconButton>
+              )}
             </li>
           </ul>
         </div>

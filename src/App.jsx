@@ -36,6 +36,7 @@ function App() {
   const [isActive, setIsActive] = useState(true);
   const [remaining, setRemaining] = useState(0);
   const [userName, setUserName] = useState("");
+  const [userID, setUserID] = useState("");
 
   const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -64,6 +65,7 @@ function App() {
       navigate("/retirement-organization/");
     } else {
       setUserName(jwtDecode(token).name);
+      setUserID(jwtDecode(token).id);
     }
   }, [token, navigate, isLoginPage]);
 
@@ -100,7 +102,7 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        {!isLoginPage && <TopbarNav userName={userName} />}
+        {!isLoginPage && <TopbarNav userName={userName} userID={userID} />}
         {!isLoginPage && <SidebarNav />}
         <main style={{ height: "100%" }}>
           <Outlet />

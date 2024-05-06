@@ -25,60 +25,26 @@ export const requestApiSlice = apiSlice.injectEndpoints({
         RequestDateFrom,
         RequestDateTo,
       }) => {
-        let url = `${REQUEST_URL_HTTPS}/GetRequest`;
+        let url = `${REQUEST_URL_HTTPS}/GetRequest?Role=${role}`;
 
-        const queryParams = [];
-        if (role) {
-          queryParams.push(`Role=${role}`);
-        }
         if (personID) {
-          queryParams.push(`personID=${personID}`);
+          url += `&personID=${personID}`;
         }
         if (requestID) {
-          queryParams.push(`requestID=${requestID}`);
+          url += `&requestID=${requestID}`;
         }
         if (RequestDateFrom) {
-          queryParams.push(`RequestDateFrom=${RequestDateFrom}`);
+          url += `&RequestDateFrom=${RequestDateFrom}`;
         }
         if (RequestDateTo) {
-          queryParams.push(`RequestDateTo=${RequestDateTo}`);
+          url += `&RequestDateTo=${RequestDateTo}`;
         }
-        if (queryParams.length > 0) {
-          url += `?${queryParams.join("&")}`;
-        }
+
         return {
           url,
         };
       },
     }),
-    // getRequest: builder.query({
-    //   query: ({
-    //     role,
-    //     personID,
-    //     requestID,
-    //     RequestDateFrom,
-    //     RequestDateTo,
-    //   }) => {
-    //     let url = `${REQUEST_URL_HTTPS}/GetRequest?Role=${role}`;
-
-    //     if (personID) {
-    //       url += `&personID=${personID}`;
-    //     }
-    //     if (requestID) {
-    //       url += `&requestID=${requestID}`;
-    //     }
-    //     if (RequestDateFrom) {
-    //       url += `&RequestDateFrom=${RequestDateFrom}`;
-    //     }
-    //     if (RequestDateTo) {
-    //       url += `&RequestDateTo=${RequestDateTo}`;
-    //     }
-
-    //     return {
-    //       url,
-    //     };
-    //   },
-    // }),
     insertRequest: builder.mutation({
       query: (data) => ({
         url: `${REQUEST_URL_HTTPS}/InsertRequest`,

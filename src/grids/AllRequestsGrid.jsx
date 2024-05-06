@@ -2,7 +2,7 @@
 import { useMemo, useEffect, useState } from "react";
 
 // rrd imports
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
@@ -35,11 +35,14 @@ function AllRequestsGrid() {
   const [rowSelection, setRowSelection] = useState({});
 
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const selectedRole = searchParams.get("role");
+  const personID = searchParams.get("personID");
 
   // access redux state
   const { allRequestTableData } = useSelector((state) => state.requestsData);
-  const { selectedRole } = useSelector((state) => state.requestsData);
-  const { personID } = useSelector((state) => state.retiredState);
 
   const {
     data: requests,

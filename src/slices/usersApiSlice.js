@@ -40,8 +40,8 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getUser: builder.query({
-      query: () => ({
-        url: `${USERS_URL_HTTPS}/GetUser`,
+      query: (userID) => ({
+        url: `${USERS_URL_HTTPS}/GetUser?userID=${userID}`,
       }),
     }),
     updateUser: builder.mutation({
@@ -94,6 +94,13 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    updateUserTheme: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL_HTTPS}/UpdateUserTheme`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -112,4 +119,5 @@ export const {
   useGetGroupItemsQuery,
   useGetUserGroupsQuery,
   useInsertGroupUsersMutation,
+  useUpdateUserThemeMutation,
 } = usersApiSlice;

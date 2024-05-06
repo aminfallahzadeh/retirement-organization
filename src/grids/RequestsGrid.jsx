@@ -114,7 +114,7 @@ function RequestsGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Link
-            to={`/retirement-organization/retired?personID=${row.original.personID}`}
+            to={`/retirement-organization/retired?personID=${row.original.personID}&role=${selectedRole}`}
           >
             <IconButton color="primary">
               <FeedIcon />
@@ -137,7 +137,7 @@ function RequestsGrid() {
         ),
       },
     ],
-    []
+    [selectedRole]
   );
 
   const table = useMaterialReactTable({
