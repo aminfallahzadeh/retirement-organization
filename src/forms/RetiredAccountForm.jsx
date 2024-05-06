@@ -1,5 +1,5 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -55,22 +55,38 @@ function RetiredAccountForm() {
     error,
   } = useGetRetiredAccountQuery(personID);
 
+  const fetchBankBranchData = useCallback(
+    async (bankID) => {
+      try {
+        const bankBranchRes = await getLookupData({
+          lookUpType: "BankBranch",
+          lookUpParentID: bankID,
+        }).unwrap();
+        setBankBranchCombo(bankBranchRes.itemList);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [getLookupData, setBankBranchCombo]
+  );
+
   // FETCH ACCOUNT DATA
   // GET BANK BRANCH DATA IF BANK BRANCH ID EXISTS
   useEffect(() => {
     if (isSuccess) {
       setAccountData(retiredAccountData);
-      try {
-        const bankBranchRes = getLookupData({
-          lookUpType: "BankBranch",
-          lookUpParentID: accountData.bankBranchID,
-        });
-        setBankBranchCombo(bankBranchRes.itemList);
-      } catch (err) {
-        console.log(err);
+      if (accountData.bankID) {
+        fetchBankBranchData(accountData.bankID);
       }
     }
-  }, [isSuccess, retiredAccountData, accountData.bankBranchID, getLookupData]);
+  }, [isSuccess, retiredAccountData, accountData.bankID, fetchBankBranchData]);
+
+  // GET BANK BRANCH ON USER BANK SELECT
+  useEffect(() => {
+    if (accountData.bankID) {
+      fetchBankBranchData(accountData.bankID);
+    }
+  }, [accountData.bankID, fetchBankBranchData]);
 
   // ERROR HANDLING
   useEffect(() => {
@@ -144,8 +160,7 @@ function RetiredAccountForm() {
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
           >
-            {/* <option value="2">انتخاب</option> */}
-            {isBankComboLoading && <option>در حال بارگذاری</option>}
+            <option value=" ">انتخاب</option>
             {bankCombo.map((bank) => (
               <option key={bank.lookUpID} value={bank.lookUpID}>
                 {bank.lookUpName}
@@ -168,9 +183,8 @@ function RetiredAccountForm() {
             className="inputBox__form--input"
             required
           >
-            {/* <option value="2">انتخاب</option> */}
-            {isBankBranchComboLoading && <option>در حال بارگذاری</option>}
-            {bankBranchCombo?.map((bankBranch) => (
+            <option value=" ">انتخاب</option>
+            {bankBranchCombo.map((bankBranch) => (
               <option key={bankBranch.lookUpID} value={bankBranch.lookUpID}>
                 {bankBranch.lookUpName}
               </option>

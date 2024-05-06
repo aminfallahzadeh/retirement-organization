@@ -29,7 +29,7 @@ import {
 } from "@mui/icons-material";
 
 function TopbarNav({ userName, userID }) {
-  const { data: user, isSuccess } = useGetUserQuery(userID);
+  const { data: user } = useGetUserQuery(userID);
 
   const [theme, setTheme] = useState("default");
 
@@ -54,12 +54,6 @@ function TopbarNav({ userName, userID }) {
       console.log(err);
     }
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      console.log(user.itemList);
-    }
-  }, [isSuccess, user]);
 
   useEffect(() => {
     document.documentElement.setAttribute("color-scheme", theme);

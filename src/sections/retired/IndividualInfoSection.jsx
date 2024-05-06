@@ -17,7 +17,6 @@ function IndividualInfoSection() {
   useEffect(() => {
     const colorScheme = document.documentElement.getAttribute("color-scheme");
     setTheme(colorScheme);
-    console.log(theme);
   }, [theme]);
 
   const content = (
