@@ -1,3 +1,6 @@
+// react imports
+import { useState, useEffect } from "react";
+
 // component imports
 import RetiredAdditionalInfo from "../../forms/RetiredAdditionalInfo";
 import RetiredPensionaryForm from "../../forms/RetiredPensionaryForm";
@@ -9,12 +12,20 @@ import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material";
 
 function IndividualInfoSection() {
+  const [theme, setTheme] = useState("default"); // State variable to hold the theme
+
+  useEffect(() => {
+    const colorScheme = document.documentElement.getAttribute("color-scheme");
+    setTheme(colorScheme);
+    console.log(theme);
+  }, [theme]);
+
   const content = (
     <section className="pensionersAffairs">
       <Accordion
         sx={{
           color: "#333533",
-          backgroundColor: "#c0c0c0",
+          backgroundColor: theme === "default" ? "#c0c0c0" : "#ebebeb",
         }}
       >
         <AccordionSummary
@@ -32,7 +43,7 @@ function IndividualInfoSection() {
       <Accordion
         sx={{
           color: "#333533",
-          backgroundColor: "#c0c0c0",
+          backgroundColor: theme === "default" ? "#c0c0c0" : "#ebebeb",
         }}
       >
         <AccordionSummary
@@ -50,7 +61,7 @@ function IndividualInfoSection() {
       <Accordion
         sx={{
           color: "#333533",
-          backgroundColor: "#c0c0c0",
+          backgroundColor: theme === "default" ? "#c0c0c0" : "#ebebeb",
         }}
       >
         <AccordionSummary
@@ -68,7 +79,7 @@ function IndividualInfoSection() {
       <Accordion
         sx={{
           color: "#333533",
-          backgroundColor: "#c0c0c0",
+          backgroundColor: theme === "default" ? "#c0c0c0" : "#ebebeb",
         }}
       >
         <AccordionSummary

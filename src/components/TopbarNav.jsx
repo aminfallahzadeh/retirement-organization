@@ -4,10 +4,6 @@ import { useState, useEffect } from "react";
 // rrd imports
 import { Link, useLocation } from "react-router-dom";
 
-// redux imports
-import { useDispatch } from "react-redux";
-import { setThemeGlobal } from "../slices/themeDataSlice.js";
-
 // component imports
 import ProfilePicure from "./ProfilePicture";
 import DateTime from "./DateTime";
@@ -31,14 +27,14 @@ function TopbarNav({ userName }) {
 
   const logoutHandler = useLogout();
   const location = useLocation();
-  const dispatch = useDispatch();
 
   const cartablePath =
     location.pathname === "/retirement-organization/dashboard";
 
   const handleThemeChange = () => {
-    setTheme(theme === "default" ? "chocolate" : "default");
-    dispatch(setThemeGlobal(theme === "default" ? "chocolate" : "default"));
+    const selectedTheme = theme === "default" ? "chocolate" : "default";
+    setTheme(selectedTheme);
+    sessionStorage.setItem("theme", selectedTheme);
   };
 
   useEffect(() => {

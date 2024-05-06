@@ -1,9 +1,6 @@
 // react imports
 import { useRef, useEffect } from "react";
 
-// helpers
-import { generateCaptcha } from "../helper.js";
-
 // redux imports
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,6 +15,9 @@ import {
   Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
+
+// helpers
+import { generateCaptcha } from "../helper.js";
 
 function Captcha() {
   const { userInput, captchaText } = useSelector((state) => state.captcha);
