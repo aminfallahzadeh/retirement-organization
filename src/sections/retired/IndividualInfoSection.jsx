@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 // component imports
-import RetiredAdditionalInfo from "../../forms/RetiredAdditionalInfo";
+import RetiredAccountForm from "../../forms/RetiredAccountForm";
 import RetiredPensionaryForm from "../../forms/RetiredPensionaryForm";
 import RetiredPersonForm from "../../forms/RetiredPersonForm";
 import ElectronicCaseSection from "./ElectronicCaseSection";
@@ -72,7 +72,7 @@ function IndividualInfoSection() {
           اطلاعات تکمیلی
         </AccordionSummary>
         <AccordionDetails>
-          <RetiredAdditionalInfo />
+          <RetiredAccountForm />
         </AccordionDetails>
       </Accordion>
 

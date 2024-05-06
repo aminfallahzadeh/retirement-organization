@@ -5,7 +5,10 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
+import {
+  useGetLookupDataQuery,
+  useLazyGetLookupDataQuery,
+} from "../slices/sharedApiSlice.js";
 import { useGetRetiredAccountQuery } from "../slices/retiredApiSlice";
 import { useUpdateRetiredAccountMutation } from "../slices/retiredApiSlice";
 
@@ -23,26 +26,76 @@ import { toast } from "react-toastify";
 // helpers
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
-function RetiredAdditionalInfo() {
+function RetiredAccountForm() {
   const [editable, setEditable] = useState(false);
+
+  // LOOP UP STATES
   const [bankCombo, setBankCombo] = useState([]);
   const [bankBranchCombo, setBankBranchCombo] = useState([]);
+
+  // ACCOUNT DATA STATE
   const [accountData, setAccountData] = useState({});
 
+  // ACCESS QUERY PARAMS
   const location = useLocation();
-
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
   const [updateRetiredAccount, { isLoading: isUpdating }] =
     useUpdateRetiredAccountMutation();
 
+  const [getLookupData, { isLoading: isBankBranchComboLoading }] =
+    useLazyGetLookupDataQuery();
+
+  // GET MAIN DATA
   const {
     data: retiredAccountData,
     isSuccess,
     isLoading,
     error,
   } = useGetRetiredAccountQuery(personID);
+
+  // FETCH ACCOUNT DATA
+  // GET BANK BRANCH DATA IF BANK BRANCH ID EXISTS
+  useEffect(() => {
+    if (isSuccess) {
+      setAccountData(retiredAccountData);
+      try {
+        const bankBranchRes = getLookupData({
+          lookUpType: "BankBranch",
+          lookUpParentID: accountData.bankBranchID,
+        });
+        setBankBranchCombo(bankBranchRes.itemList);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, [isSuccess, retiredAccountData, accountData.bankBranchID, getLookupData]);
+
+  // ERROR HANDLING
+  useEffect(() => {
+    if (error) {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
+
+  // GET LOOKUP DATA
+  const {
+    data: bankComboItems,
+    isSuccess: isBankComboSuccess,
+    isLoading: isBankComboLoading,
+  } = useGetLookupDataQuery({
+    lookUpType: "Bank",
+  });
+
+  // FETCH LOOKUP DATA
+  useEffect(() => {
+    if (isBankComboSuccess) {
+      setBankCombo(bankComboItems.itemList);
+    }
+  }, [isBankComboSuccess, bankComboItems]);
 
   const handleEditable = () => {
     setEditable(true);
@@ -52,71 +105,6 @@ function RetiredAdditionalInfo() {
     const { name, value } = e.target;
     setAccountData({ ...accountData, [name]: value });
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      setAccountData(retiredAccountData);
-    }
-  }, [isSuccess, retiredAccountData]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error?.data?.message || error.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [error]);
-
-  const {
-    data: bankComboItems,
-    isSuccess: isBankComboSuccess,
-    isLoading: isBankComboLoading,
-    error: bankComboError,
-  } = useGetLookupDataQuery({
-    lookUpType: "Bank",
-    lookUpId: accountData.bankID,
-  });
-
-  const {
-    data: bankBranchComboItems,
-    isSuccess: isBankBranchComboSuccess,
-    isLoading: isBankBranchComboLoading,
-    error: bankBranchComboError,
-  } = useGetLookupDataQuery({
-    lookUpType: "BankBranch",
-    // lookUpId: accountData.bankBranchID,
-  });
-
-  useEffect(() => {
-    if (isBankComboSuccess) {
-      setBankCombo(bankComboItems.itemList);
-    }
-  }, [isBankComboSuccess, bankComboItems]);
-
-  useEffect(() => {
-    if (bankComboError) {
-      toast.error(bankComboError?.data?.message || bankComboError.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [bankComboError]);
-
-  useEffect(() => {
-    if (isBankBranchComboSuccess) {
-      setBankBranchCombo(bankBranchComboItems.itemList);
-    }
-  }, [isBankBranchComboSuccess, bankBranchComboItems]);
-
-  useEffect(() => {
-    if (bankBranchComboError) {
-      toast.error(
-        bankBranchComboError?.data?.message || bankBranchComboError.error,
-        {
-          autoClose: 2000,
-        }
-      );
-    }
-  }, [bankBranchComboError]);
 
   const handleUpdateRetiredAccount = async () => {
     try {
@@ -182,7 +170,7 @@ function RetiredAdditionalInfo() {
           >
             {/* <option value="2">انتخاب</option> */}
             {isBankBranchComboLoading && <option>در حال بارگذاری</option>}
-            {bankBranchCombo.map((bankBranch) => (
+            {bankBranchCombo?.map((bankBranch) => (
               <option key={bankBranch.lookUpID} value={bankBranch.lookUpID}>
                 {bankBranch.lookUpName}
               </option>
@@ -303,4 +291,4 @@ function RetiredAdditionalInfo() {
   );
 }
 
-export default RetiredAdditionalInfo;
+export default RetiredAccountForm;

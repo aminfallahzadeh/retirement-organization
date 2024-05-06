@@ -36,7 +36,6 @@ function RelatedInfoSection() {
             <Tab label="احکام" value="2" />
             <Tab label="فیش حقوقی" value="3" />
             <Tab label="درخواست ها" value="4" />
-            <Tab label="مالی" value="5" />
           </TabList>
         </Box>
         <TabPanel
@@ -68,14 +67,6 @@ function RelatedInfoSection() {
           }}
         >
           <AllRequestsGrid />
-        </TabPanel>
-        <TabPanel
-          value="5"
-          sx={{
-            padding: "0",
-          }}
-        >
-          mali
         </TabPanel>
       </TabContext>
     </section>

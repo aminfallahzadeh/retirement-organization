@@ -129,6 +129,7 @@ function RetiredRelatedGrid() {
         relatedNtionalCode: related.personNationalCode,
         relatedFirstName: related.personFirstName,
         relatedLastName: related.personLastName,
+        relatedStatus: related.pensionaryIsUnderGauranteeText,
         relation: related.relationshipWithParentName,
       }));
       dispatch(setRelatedTableData(data));
@@ -160,6 +161,7 @@ function RetiredRelatedGrid() {
       {
         accessorKey: "relatedNtionalCode",
         header: "کد ملی",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
@@ -167,14 +169,22 @@ function RetiredRelatedGrid() {
       {
         accessorKey: "relatedFirstName",
         header: "نام",
+        size: 20,
       },
       {
         accessorKey: "relatedLastName",
         header: "نام خانوادگی",
+        size: 20,
+      },
+      {
+        accessorKey: "relatedStatus",
+        header: "وضعیت",
+        size: 20,
       },
       {
         accessorKey: "relatedBirthDate",
         header: "تاریخ تولد",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>
             {convertToPersianNumber(
@@ -186,6 +196,7 @@ function RetiredRelatedGrid() {
       {
         accessorKey: "relation",
         header: "نسبت",
+        size: 20,
       },
       {
         accessorKey: "editRelatedAction",

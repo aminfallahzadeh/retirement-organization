@@ -7,13 +7,19 @@ import { apiSlice } from "./apiSlice";
 export const sharedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getLookupData: builder.query({
-      query: ({ lookUpType, lookUpID }) => {
+      query: ({ lookUpType, lookUpID, lookUpParentID }) => {
         let url = `${SHARED_URL_HTTPS}/GetLookupData?lookUpType=${lookUpType}`;
+
         if (lookUpID) {
           url += `&lookUpID=${lookUpID}`;
+          console.log("lookupID", lookUpID);
+        }
+
+        if (lookUpParentID) {
+          url += `&lookUpParentID=${lookUpParentID}`;
         }
         return {
-          url: url,
+          url,
         };
       },
     }),
@@ -38,6 +44,7 @@ export const sharedApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetLookupDataQuery,
+  useLazyGetLookupDataQuery,
   useGetRelationshipQuery,
   useGetPensionaryStatusQuery,
   useGetRetirementStatementTypeQuery,

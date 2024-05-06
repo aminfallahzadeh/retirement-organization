@@ -38,7 +38,7 @@ import {
 
 // components
 import Modal from "../components/Modal";
-import EditHeirForm from "../forms/EditHeirForm";
+import UpdateHeirForm from "../forms/UpdateHeirForm";
 import CreateHeirForm from "../forms/CreateHeirForm";
 
 // library imports
@@ -129,6 +129,7 @@ function RetiredHeirGrid() {
         personNationalCode: heir.personNationalCode,
         personFirstName: heir.personFirstName,
         personLastName: heir.personLastName,
+        pensionaryIsUnderGauranteeText: heir.pensionaryIsUnderGauranteeText,
         personBirthDate: heir.personBirthDate,
         relationshipWithParentName: heir.relationshipWithParentName,
         parentPersonNationalCode: heir.parentPersonNationalCode,
@@ -175,6 +176,11 @@ function RetiredHeirGrid() {
       {
         accessorKey: "personLastName",
         header: "نام خانوادگی",
+        size: 20,
+      },
+      {
+        accessorKey: "pensionaryIsUnderGauranteeText",
+        header: "وضعیت",
         size: 20,
       },
       {
@@ -330,7 +336,7 @@ function RetiredHeirGrid() {
               title={"ویرایش اطلاعات موظف"}
               closeModal={() => setShowEditHeirModal(false)}
             >
-              <EditHeirForm />
+              <UpdateHeirForm />
             </Modal>
           ) : showDeleteHeirModal ? (
             <Modal

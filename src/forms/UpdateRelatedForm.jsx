@@ -40,12 +40,14 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
   const { selectedRelatedData } = useSelector((state) => state.relatedData);
   const personID = selectedRelatedData?.id;
 
+  // LOOK UP STATES
   const [relationCombo, setRelationCombo] = useState([]);
   const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);
   const [educationCombo, setEducationCombo] = useState([]);
   const [universityCombo, setUniversityCombo] = useState([]);
   const [pensionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
 
+  // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
   const [selectedMritialDate, setSelectedMritialDate] = useState(null);
   const [selectedSelfEmployeeStartDate, setSelectedSelfEmployeeStartDate] =
@@ -53,6 +55,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
   const [selectedSelfEmployeeEndDate, setSelectedSelfEmployeeEndDate] =
     useState(null);
 
+  // CALENDER STATES
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
   const [isMritialCalenderOpen, setIsMritialCalenderOpen] = useState(false);
   const [isSelfEmployeeStartCalenderOpen, setIsSelfEmployeeStartCalenderOpen] =
@@ -60,6 +63,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
   const [isSelfEmployeeEndCalenderOpen, setIsSelfEmployeeEndCalenderOpen] =
     useState(false);
 
+  // RELATED OBJECT STATE
   const [relatedObject, setRelatedObject] = useState({});
 
   const [updateRelated, { isLoading: isUpdating }] = useUpdateRelatedMutation();
@@ -78,7 +82,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
     error,
   } = useGetRelatedQuery(personID);
 
-  // fetch data
+  // FETCH MAIN DATA
   useEffect(() => {
     refetch();
     if (isSuccess) {
@@ -90,7 +94,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
     };
   }, [isSuccess, related, refetch]);
 
-  // handle error
+  // HANDLE ERROR
   useEffect(() => {
     if (error && error.status !== "FETCH_ERROR") {
       toast.error(error?.data?.message || error.error, {
@@ -99,6 +103,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
     }
   }, [error]);
 
+  // GET LOOKUP DATA
   const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
     useGetRelationshipQuery();
 
@@ -116,6 +121,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
     isSuccess: isPensionaryStatusComboSuccess,
   } = useGetPensionaryStatusQuery({ pensionaryStatusCategory: "L" });
 
+  // FETCH LOOKUP DATA
   useEffect(() => {
     if (isRelationComboSuccess) {
       setRelationCombo(relationComboItems.itemList);
@@ -146,6 +152,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
     }
   }, [isPensionaryStatusComboSuccess, pensionaryStatusComboItems]);
 
+  // CHANGE HANDLERS
   const handleBirthDateChange = (date) => {
     setSelectedBirthDate(date);
     setIsBirthCalenderOpen(false);
@@ -182,7 +189,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
     setIsSelfEmployeeEndCalenderOpen(open);
   };
 
-  // handle dates
+  // HANDLE DATES
   useEffect(() => {
     setSelectedBirthDate(convertToPersianDate(relatedObject?.personBirthDate));
   }, [relatedObject?.personBirthDate]);
@@ -205,6 +212,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
     );
   }, [relatedObject?.selfEmployeeEndDate]);
 
+  // HANDLE RELATED OBJECT CHANGE
   const handleRelatedObjectChange = (e) => {
     const { name, value } = e.target;
     setRelatedObject({
@@ -213,11 +221,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
     });
   };
 
-  useEffect(() => {
-    console.log(relatedObject);
-    console.log(selectedBirthDate);
-  }, [relatedObject, selectedBirthDate]);
-
+  // HANDLE UPDATE RELATED
   const handleUpdateRelated = async () => {
     try {
       // Adjusting for timezone difference

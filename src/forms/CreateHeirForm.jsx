@@ -467,6 +467,18 @@ function CreateHeirForm() {
             نشانی
           </label>
         </div>
+        <div className="inputBox__form col-span-3 row-span-2">
+          <textarea
+            type="text"
+            className="inputBox__form--input"
+            required
+            name="heirDesc"
+            id="heirDesc"
+          ></textarea>
+          <label className="inputBox__form--label" htmlFor="heirDesc">
+            توضیحات
+          </label>
+        </div>
       </form>
 
       <div className="Modal__header u-margin-top-sm">
@@ -595,31 +607,6 @@ function CreateHeirForm() {
           />
           <label className="inputBox__form--label" htmlFor="tabiiBiome">
             بیمه تبعی
-          </label>
-        </div>
-        <div className="inputBox__form col-span-2">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            name="shahrBank"
-            id="shahrBank"
-          />
-          <label className="inputBox__form--label" htmlFor="shahrBank">
-            شماره حساب بانک شهر
-          </label>
-        </div>
-
-        <div className="inputBox__form col-span-4">
-          <textarea
-            type="text"
-            className="inputBox__form--input"
-            required
-            name="heirDesc"
-            id="heirDesc"
-          ></textarea>
-          <label className="inputBox__form--label" htmlFor="heirDesc">
-            توضیحات
           </label>
         </div>
       </form>

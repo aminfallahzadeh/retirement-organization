@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
-function EditHeirForm() {
+function UpdateHeirForm() {
   // date states
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
@@ -588,4 +588,4 @@ function EditHeirForm() {
   return content;
 }
 
-export default EditHeirForm;
+export default UpdateHeirForm;

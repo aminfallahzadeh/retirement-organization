@@ -8,7 +8,7 @@ import { Save as SaveIcon } from "@mui/icons-material";
 
 // components
 import RequestAttachmentsSection from "../sections/request/RequestAttachmentsSection";
-import RequestInfoSection from "../sections/request/RequestInfoSection";
+import CreateRequestForm from "../forms/CreateRequestForm";
 
 function CreateRequestScreen() {
   const [value, setValue] = useState("1");
@@ -19,11 +19,13 @@ function CreateRequestScreen() {
 
   const content = (
     <section className="main flex-col">
+      <h4 className="title-primary">ایجاد درخواست</h4>
+
       <div>
         <TabContext value={value}>
           <Box sx={{ bgcolor: "background.paper", borderRadius: 1 }}>
             <TabList onChange={handleChange} aria-label="tabs">
-              <Tab label="درخواست" value="1" />
+              <Tab label="اطلاعات درخواست" value="1" />
               <Tab label="پیوست ها" value="2" />
             </TabList>
           </Box>
@@ -33,7 +35,7 @@ function CreateRequestScreen() {
               padding: "0",
             }}
           >
-            <RequestInfoSection />
+            <CreateRequestForm />
           </TabPanel>
           <TabPanel
             value="2"

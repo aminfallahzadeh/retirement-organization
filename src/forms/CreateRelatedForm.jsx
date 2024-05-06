@@ -688,7 +688,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--label"
             htmlFor="selfEmployeeTypeName"
           >
-            <span>*</span> وضعیت
+            وضعیت
           </label>
         </div>
 
