@@ -53,7 +53,7 @@ function Captcha() {
     for (let i = 0; i < captchaText.length; i++) {
       ctx.save();
       // adjust startX for each char
-      ctx.translate(startX + i * 20, 30);
+      ctx.translate(startX + i * 30, 30);
       ctx.rotate((Math.random() - 0.5) * 0.4);
       ctx.fillText(captchaText[i], 0, 0);
       ctx.restore();
@@ -61,14 +61,14 @@ function Captcha() {
   }, [captchaText]);
 
   useEffect(() => {
-    dispatch(setCaptchaText(generateCaptcha(6)));
+    dispatch(setCaptchaText(generateCaptcha(4)));
     dispatch(setCaptchaInput(""));
     dispatch(setCaptcha(false));
   }, [dispatch]);
 
   function refreshCaptcha(e) {
     e.preventDefault();
-    dispatch(setCaptchaText(generateCaptcha(6)));
+    dispatch(setCaptchaText(generateCaptcha(4)));
     dispatch(setCaptchaInput(""));
     dispatch(setCaptcha(false));
   }

@@ -3,8 +3,7 @@ import { useState } from "react";
 
 // mui imports
 import { Box, Tab } from "@mui/material";
-import { LoadingButton, TabContext, TabList, TabPanel } from "@mui/lab";
-import { Save as SaveIcon } from "@mui/icons-material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 // components
 import RequestAttachmentsSection from "../sections/request/RequestAttachmentsSection";
@@ -18,7 +17,7 @@ function CreateRequestScreen() {
   };
 
   const content = (
-    <section className="main flex-col">
+    <section className="main">
       <h4 className="title-primary">ایجاد درخواست</h4>
 
       <div>
@@ -46,18 +45,6 @@ function CreateRequestScreen() {
             <RequestAttachmentsSection />
           </TabPanel>
         </TabContext>
-      </div>
-
-      <div style={{ marginRight: "auto" }} className="flex-row">
-        <LoadingButton
-          dir="ltr"
-          endIcon={<SaveIcon />}
-          variant="contained"
-          color="success"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>ذخیره</span>
-        </LoadingButton>
       </div>
     </section>
   );
