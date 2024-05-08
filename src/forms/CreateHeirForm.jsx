@@ -1,14 +1,16 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
 
 // redux imports
+
 import { useInsertHeirMutation } from "../slices/heirApiSlice";
 import {
   useGetRelationshipQuery,
   useGetLookupDataQuery,
+  useLazyGetLookupDataQuery,
   useGetPensionaryStatusQuery,
 } from "../slices/sharedApiSlice.js";
 
@@ -27,26 +29,29 @@ import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
-function CreateHeirForm() {
-  // date states
+function CreateHeirForm({ setShowCreateHeirModal }) {
+  // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
   const [selectedBaseFinishDate, setSelectedBaseFinishDate] = useState(null);
   const [isBaseFinishDateCalenderOpen, setIsBaseFinishDateCalenderOpen] =
     useState(false);
 
+  // HEIR STATE
   const [heirObject, setHeirObject] = useState({});
 
   const [insertHeir, { isLoading }] = useInsertHeirMutation();
 
-  // look up states
+  // LOOP UP STATES
   const [relationCombo, setRelationCombo] = useState([]);
   const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);
   const [pensionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
+  const [bankCombo, setBankCombo] = useState([]);
+  const [bankBranchCombo, setBankBranchCombo] = useState([]);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const personID = searchParams.get("personID");
+  const parentPersonID = searchParams.get("personID");
 
   // GET LOOK UP DATA
   const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
@@ -55,10 +60,36 @@ function CreateHeirForm() {
   const { data: maritialStatusComboItems, isSuccess: isMaritialComboSuccess } =
     useGetLookupDataQuery({ lookUpType: "MaritialStatus" });
 
+  const [getLookupData, { isLoading: isBankBranchComboLoading }] =
+    useLazyGetLookupDataQuery();
+
   const {
     data: pensionaryStatusComboItems,
     isSuccess: isPensionaryStatusComboSuccess,
   } = useGetPensionaryStatusQuery({ pensionaryStatusCategory: "H" });
+
+  const {
+    data: bankComboItems,
+    isSuccess: isBankComboSuccess,
+    isLoading: isBankComboLoading,
+  } = useGetLookupDataQuery({
+    lookUpType: "Bank",
+  });
+
+  const fetchBankBranchData = useCallback(
+    async (bankID) => {
+      try {
+        const bankBranchRes = await getLookupData({
+          lookUpType: "BankBranch",
+          lookUpParentID: convertToEnglishNumber(bankID),
+        }).unwrap();
+        setBankBranchCombo(bankBranchRes.itemList);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [getLookupData, setBankBranchCombo]
+  );
 
   // FETCH LOOK UP DATA
   useEffect(() => {
@@ -79,7 +110,20 @@ function CreateHeirForm() {
     }
   }, [isPensionaryStatusComboSuccess, pensionaryStatusComboItems]);
 
-  // date handlers
+  useEffect(() => {
+    if (isBankComboSuccess) {
+      setBankCombo(bankComboItems.itemList);
+    }
+  }, [isBankComboSuccess, bankComboItems]);
+
+  // GET BANK BRANCH ON USER BANK SELECT
+  useEffect(() => {
+    if (heirObject.bankID) {
+      fetchBankBranchData(heirObject.bankID);
+    }
+  }, [heirObject.bankID, fetchBankBranchData]);
+
+  // DATE HANDLERS
   const handleBirthDateChange = (date) => {
     setSelectedBirthDate(date);
     setIsBirthCalenderOpen(false);
@@ -122,7 +166,7 @@ function CreateHeirForm() {
 
       const insertRes = await insertHeir({
         ...heirObject,
-        personID,
+        parentPersonID,
         pensionaryStatusID: convertToEnglishNumber(
           heirObject.pensionaryStatusID
         ),
@@ -142,6 +186,7 @@ function CreateHeirForm() {
         personBirthDate,
         pensionaryBaseFinishDate,
       }).unwrap();
+      setShowCreateHeirModal(false);
       toast.success(insertRes.message, {
         autoClose: 2000,
       });
@@ -537,29 +582,50 @@ function CreateHeirForm() {
 
       <form method="POST" className="grid grid--col-4">
         <div className="inputBox__form">
-          <input
+          <select
+            disabled={isBankComboLoading}
             type="text"
+            id="bankID"
+            name="bankID"
+            onChange={handleHeirObjectChange}
+            value={convertToEnglishNumber(heirObject.bankID) || " "}
             className="inputBox__form--input"
-            required
-            name="heirBank"
-            id="heirBank"
-          />
-          <label className="inputBox__form--label" htmlFor="heirBank">
+          >
+            <option value=" ">انتخاب</option>
+            {bankCombo.map((bank) => (
+              <option key={bank.lookUpID} value={bank.lookUpID}>
+                {bank.lookUpName}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="bankID" className="inputBox__form--label">
             بانک
           </label>
         </div>
+
         <div className="inputBox__form">
-          <input
+          <select
+            disabled={isBankBranchComboLoading}
             type="text"
+            id="bankBranchID"
+            name="bankBranchID"
+            value={heirObject.bankBranchID || ""}
+            onChange={handleHeirObjectChange}
             className="inputBox__form--input"
             required
-            name="heirBranch"
-            id="heirBranch"
-          />
-          <label className="inputBox__form--label" htmlFor="heirBranch">
+          >
+            <option value=" ">انتخاب</option>
+            {bankBranchCombo.map((bankBranch) => (
+              <option key={bankBranch.lookUpID} value={bankBranch.lookUpID}>
+                {bankBranch.lookUpName}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="bankBranchID" className="inputBox__form--label">
             شعبه
           </label>
         </div>
+
         <div className="inputBox__form">
           <input
             type="text"

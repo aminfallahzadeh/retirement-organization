@@ -21,12 +21,7 @@ function IndividualInfoSection() {
 
   const content = (
     <section className="pensionersAffairs">
-      <Accordion
-        sx={{
-          color: "#333533",
-          backgroundColor: theme === "default" ? "#c0c0c0" : "#ebebeb",
-        }}
-      >
+      <Accordion>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
@@ -39,12 +34,7 @@ function IndividualInfoSection() {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion
-        sx={{
-          color: "#333533",
-          backgroundColor: theme === "default" ? "#c0c0c0" : "#ebebeb",
-        }}
-      >
+      <Accordion>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
@@ -57,12 +47,7 @@ function IndividualInfoSection() {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion
-        sx={{
-          color: "#333533",
-          backgroundColor: theme === "default" ? "#c0c0c0" : "#ebebeb",
-        }}
-      >
+      <Accordion>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
@@ -75,12 +60,7 @@ function IndividualInfoSection() {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion
-        sx={{
-          color: "#333533",
-          backgroundColor: theme === "default" ? "#c0c0c0" : "#ebebeb",
-        }}
-      >
+      <Accordion>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"

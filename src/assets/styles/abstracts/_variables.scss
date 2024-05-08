@@ -39,39 +39,3 @@ $margin-top-small: 50px;
 
 // paddings
 $padding-primary: 20px;
-
-:root {
-    /* default theme */
-    /* main coloras */
-    --color-bg-primary: #f1f1f1;
-    --color-bg-secondary: #f8f8f8;
-    --color-fg-primary: #004e98;
-
-    /* sidebar colors */
-    --color-bg-sidebar-1: #c0c0c0;
-    --color-bg-sidebar-2: #cfcfcf;
-    --color-sidebar-text: #333533;
-    --color-sidebar-hover: #ebebeb;
-    --color-sidebar-text-selected: #004e98;
-
-    /* typography colors */
-    --color-bg-title-primary: #c0c0c0;
-    --color-text-title-primary: #333533;
-}
-
-:root[color-scheme="chocolate"] {
-    /* chocolate theme */
-    /* main coloras */
-    --color-bg-primary: #c0c0c0;
-    --color-fg-primary: #0a0908;
-
-    /* sidebar colors */
-    --color-bg-sidebar-1: #5e503f;
-    --color-bg-sidebar-2: #a9927d;
-    --color-sidebar-text: #f2f4f3;
-    --color-sidebar-hover: #d7bba1;
-    --color-sidebar-text-selected: #49111c;
-
-    /* typography colors */
-    --color-bg-title-primary: rgba(169, 146, 125, 0.5);
-}

@@ -71,17 +71,14 @@ function RetiredAccountForm() {
   );
 
   // FETCH ACCOUNT DATA
-  // GET BANK BRANCH DATA IF BANK BRANCH ID EXISTS
+  // FETCH MAIN DATA
   useEffect(() => {
     if (isSuccess) {
       setAccountData(retiredAccountData);
-      if (accountData.bankID) {
-        fetchBankBranchData(accountData.bankID);
-      }
     }
-  }, [isSuccess, retiredAccountData, accountData.bankID, fetchBankBranchData]);
+  }, [isSuccess, retiredAccountData]);
 
-  // GET BANK BRANCH ON USER BANK SELECT
+  // GET & FETCH BANK BRANCH ON USER BANK SELECT
   useEffect(() => {
     if (accountData.bankID) {
       fetchBankBranchData(accountData.bankID);
@@ -147,6 +144,10 @@ function RetiredAccountForm() {
     }
   };
 
+  useEffect(() => {
+    console.log("retired account", accountData);
+  }, [accountData]);
+
   return (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>
@@ -156,7 +157,7 @@ function RetiredAccountForm() {
             type="text"
             id="bankID"
             name="bankID"
-            value={accountData.bankID || ""}
+            value={accountData.bankID || " "}
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
           >

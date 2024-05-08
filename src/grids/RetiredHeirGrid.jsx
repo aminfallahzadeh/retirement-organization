@@ -336,7 +336,7 @@ function RetiredHeirGrid() {
               title={"ویرایش اطلاعات موظف"}
               closeModal={() => setShowEditHeirModal(false)}
             >
-              <UpdateHeirForm />
+              <UpdateHeirForm setShowCreateHeirModal={setShowCreateHeirModal} />
             </Modal>
           ) : showDeleteHeirModal ? (
             <Modal
