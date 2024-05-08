@@ -124,7 +124,7 @@ function RetiredAccountForm() {
       const updateRes = await updateRetiredAccount({
         ...accountData,
         ledgerCode: parseInt(accountData.ledgerCode),
-        insuranceAmount: parseInt(
+        insuranceAmount: parseFloat(
           convertToEnglishNumber(accountData.insuranceAmount)
         ),
         insuranceCoef: parseFloat(

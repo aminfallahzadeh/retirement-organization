@@ -185,6 +185,11 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           parseInt(convertToEnglishNumber(heirObject.personArea)) || null,
         personBirthDate,
         pensionaryBaseFinishDate,
+        accountNo: convertToEnglishNumber(heirObject?.accountNo),
+        insuranceCoef:
+          parseFloat(convertToEnglishNumber(heirObject?.insuranceCoef)) || 0,
+        insuranceAmount:
+          parseFloat(convertToEnglishNumber(heirObject?.insuranceAmount)) || 0,
       }).unwrap();
       setShowCreateHeirModal(false);
       toast.success(insertRes.message, {
@@ -605,7 +610,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
 
         <div className="inputBox__form">
           <select
-            disabled={isBankBranchComboLoading}
+            disabled={bankBranchCombo.length === 0 || isBankBranchComboLoading}
             type="text"
             id="bankBranchID"
             name="bankBranchID"
@@ -631,10 +636,12 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             type="text"
             className="inputBox__form--input"
             required
-            name="heirAccount"
-            id="heirAccount"
+            onChange={handleHeirObjectChange}
+            value={heirObject?.accountNo || ""}
+            name="accountNo"
+            id="accountNoHeir"
           />
-          <label className="inputBox__form--label" htmlFor="heirAccount">
+          <label className="inputBox__form--label" htmlFor="accountNoHeir">
             حساب
           </label>
         </div>
@@ -644,9 +651,9 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             className="inputBox__form--input"
             required
             name="varaseRadif"
-            id="varaseRadif"
+            id="varaseRadifHeir"
           />
-          <label className="inputBox__form--label" htmlFor="varaseRadif">
+          <label className="inputBox__form--label" htmlFor="varaseRadifHeir">
             ردیف ورثه
           </label>
         </div>
@@ -655,23 +662,31 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleHeirObjectChange}
+            name="insuranceCoef"
+            value={heirObject?.insuranceCoef || ""}
             required
-            name="bimeCoef"
-            id="bimeCoef"
+            id="insuranceCoefHeir"
           />
-          <label className="inputBox__form--label" htmlFor="bimeCoef">
+          <label className="inputBox__form--label" htmlFor="insuranceCoefHeir">
             ضریب بیمه
           </label>
         </div>
+
         <div className="inputBox__form">
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleHeirObjectChange}
+            value={heirObject?.insuranceAmount || ""}
             required
-            name="tabiiBiome"
-            id="tabiiBiome"
+            name="insuranceAmount"
+            id="insuranceAmountHeir"
           />
-          <label className="inputBox__form--label" htmlFor="tabiiBiome">
+          <label
+            className="inputBox__form--label"
+            htmlFor="insuranceAmountHeir"
+          >
             بیمه تبعی
           </label>
         </div>
