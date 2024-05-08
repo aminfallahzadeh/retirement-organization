@@ -336,7 +336,7 @@ function RetiredHeirGrid() {
               title={"ویرایش اطلاعات موظف"}
               closeModal={() => setShowEditHeirModal(false)}
             >
-              <UpdateHeirForm setShowCreateHeirModal={setShowCreateHeirModal} />
+              <UpdateHeirForm setShowEditHeirModal={setShowEditHeirModal} />
             </Modal>
           ) : showDeleteHeirModal ? (
             <Modal
@@ -376,7 +376,7 @@ function RetiredHeirGrid() {
               title={"ایجاد موظف"}
               closeModal={() => setShowCreateHeirModal(false)}
             >
-              <CreateHeirForm />
+              <CreateHeirForm setShowCreateHeirModal={setShowCreateHeirModal} />
             </Modal>
           ) : null}
           <MaterialReactTable table={table} />

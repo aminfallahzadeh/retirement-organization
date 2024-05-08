@@ -78,13 +78,6 @@ function RetiredAccountForm() {
     }
   }, [isSuccess, retiredAccountData]);
 
-  // GET & FETCH BANK BRANCH ON USER BANK SELECT
-  useEffect(() => {
-    if (accountData.bankID) {
-      fetchBankBranchData(accountData.bankID);
-    }
-  }, [accountData.bankID, fetchBankBranchData]);
-
   // ERROR HANDLING
   useEffect(() => {
     if (error) {
@@ -93,6 +86,13 @@ function RetiredAccountForm() {
       });
     }
   }, [error]);
+
+  // GET & FETCH BANK BRANCH ON USER BANK SELECT
+  useEffect(() => {
+    if (accountData.bankID) {
+      fetchBankBranchData(accountData.bankID);
+    }
+  }, [accountData.bankID, fetchBankBranchData]);
 
   // GET LOOKUP DATA
   const {
@@ -143,10 +143,6 @@ function RetiredAccountForm() {
       });
     }
   };
-
-  useEffect(() => {
-    console.log("retired account", accountData);
-  }, [accountData]);
 
   return (
     <section className="formContainer flex-col">

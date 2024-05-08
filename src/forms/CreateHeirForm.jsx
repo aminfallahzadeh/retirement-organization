@@ -129,7 +129,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
     setIsBirthCalenderOpen(false);
   };
 
-  const handleStoptopShareDateChange = (date) => {
+  const handleBaseFinishDateChange = (date) => {
     setSelectedBaseFinishDate(date);
     setIsBaseFinishDateCalenderOpen(false);
   };
@@ -138,7 +138,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
     setIsBirthCalenderOpen(open);
   };
 
-  const handleStoptopShareOpenChange = (open) => {
+  const handleBaseFinishDateOpenChange = (open) => {
     setIsBaseFinishDateCalenderOpen(open);
   };
 
@@ -190,6 +190,8 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           parseFloat(convertToEnglishNumber(heirObject?.insuranceCoef)) || 0,
         insuranceAmount:
           parseFloat(convertToEnglishNumber(heirObject?.insuranceAmount)) || 0,
+        ledgerCode:
+          parseInt(convertToEnglishNumber(heirObject.ledgerCode)) || 0,
       }).unwrap();
       setShowCreateHeirModal(false);
       toast.success(insertRes.message, {
@@ -562,9 +564,9 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
         <div className="inputBox__form">
           <InputDatePicker
             value={selectedBaseFinishDate}
-            onChange={handleStoptopShareDateChange}
+            onChange={handleBaseFinishDateChange}
             format={"jYYYY-jMM-jDD"}
-            onOpenChange={handleStoptopShareOpenChange}
+            onOpenChange={handleBaseFinishDateOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isBaseFinishDateCalenderOpen}
             style={{
@@ -577,7 +579,9 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
               cursor: "pointer",
             }}
           />
-          <div className="inputBox__form--readOnly-label">تاریخ قطع سهم</div>
+          <div className="inputBox__form--readOnly-label">
+            تاریخ مبنای قطع سهم
+          </div>
         </div>
       </form>
 
@@ -649,11 +653,13 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleHeirObjectChange}
+            value={heirObject?.ledgerCode || ""}
             required
-            name="varaseRadif"
-            id="varaseRadifHeir"
+            name="ledgerCode"
+            id="ledgerCodeHeir"
           />
-          <label className="inputBox__form--label" htmlFor="varaseRadifHeir">
+          <label className="inputBox__form--label" htmlFor="ledgerCodeHeir">
             ردیف ورثه
           </label>
         </div>

@@ -12,12 +12,8 @@ export const heirApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getHeir: builder.query({
-      query: (token) => ({
-        url: `${HEIR_URL_HTTPS}/GetHeir`,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
+      query: (personID) => ({
+        url: `${HEIR_URL_HTTPS}/GetHeir?personID=${personID}`,
       }),
     }),
     insertHeir: builder.mutation({
