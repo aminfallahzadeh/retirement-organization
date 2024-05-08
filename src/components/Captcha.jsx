@@ -61,14 +61,14 @@ function Captcha() {
   }, [captchaText]);
 
   useEffect(() => {
-    dispatch(setCaptchaText(generateCaptcha(4)));
+    dispatch(setCaptchaText(generateCaptcha(6)));
     dispatch(setCaptchaInput(""));
     dispatch(setCaptcha(false));
   }, [dispatch]);
 
   function refreshCaptcha(e) {
     e.preventDefault();
-    dispatch(setCaptchaText(generateCaptcha(4)));
+    dispatch(setCaptchaText(generateCaptcha(6)));
     dispatch(setCaptchaInput(""));
     dispatch(setCaptcha(false));
   }
