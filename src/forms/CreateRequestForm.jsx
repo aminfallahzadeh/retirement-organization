@@ -14,6 +14,9 @@ import { Save as SaveIcon } from "@mui/icons-material";
 // library imports
 import { toast } from "react-toastify";
 
+// helpers
+import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
+
 function CreateRequestForm() {
   const [insertRequest, { isLoading: isInserting }] =
     useInsertRequestMutation();
@@ -51,6 +54,7 @@ function CreateRequestForm() {
       const insertRes = await insertRequest({
         ...requestObject,
         requestFrom: 1,
+        personID: convertToEnglishNumber(requestObject.personID),
       }).unwrap();
       console.log(insertRes);
       toast.success(insertRes.message, {
@@ -101,6 +105,7 @@ function CreateRequestForm() {
             type="text"
             id="personID"
             name="personID"
+            value={convertToPersianNumber(requestObject?.personID)}
             onChange={handleRequestObjectChange}
             className="inputBox__form--input"
             required

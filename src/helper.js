@@ -3,9 +3,12 @@ import momentj from "moment-jalaali";
 
 // convert to persian number
 export const convertToPersianNumber = (num) => {
-  const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-  const result = String(num).replace(/\d/g, (match) => persianDigits[match]);
-  return result;
+  if (num) {
+    const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+    const result = String(num).replace(/\d/g, (match) => persianDigits[match]);
+    return result;
+  }
+  return "";
 };
 
 // convert to english number

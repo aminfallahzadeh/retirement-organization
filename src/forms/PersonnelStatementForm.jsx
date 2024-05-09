@@ -57,6 +57,7 @@ function PersonnelStatementForm() {
       }
       const mappedData = searchRes.itemList.map((item) => ({
         id: item.personID,
+        personID: item.personID,
         personNationalCode: item.personNationalCode,
         personFirstName: item.personFirstName,
         personLastName: item.personLastName,

@@ -15,6 +15,9 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
+// helpers
+import { convertToPersianNumber } from "../helper.js";
+
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
@@ -25,20 +28,26 @@ function PersonnelGrid() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "personNationalCode",
-        header: "کد ملی",
-      },
-      {
-        accessorKey: "staffNO",
-        header: "شماره کارمندی",
-      },
-      {
         accessorKey: "personFirstName",
         header: "نام",
       },
       {
         accessorKey: "personLastName",
         header: "نام خانوادگی",
+      },
+      {
+        accessorKey: "personNationalCode",
+        header: "کد ملی",
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
+      },
+      {
+        accessorKey: "personID",
+        header: "شماره کارمندی",
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
       },
       {
         accessorKey: "observeStaff",
