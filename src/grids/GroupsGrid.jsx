@@ -94,11 +94,9 @@ function GroupsGrid() {
   const deleteGroupHandler = async () => {
     try {
       const res = await deleteGroup({
-        data: {
-          "id": selectedGroupData?.id,
-          "groupName": selectedGroupData?.name,
-          "isdeleted": true,
-        },
+        "id": selectedGroupData?.id,
+        "groupName": selectedGroupData?.name,
+        "isdeleted": true,
       }).unwrap();
       setShowDeleteGroupModal(false);
       refetch();

@@ -61,7 +61,7 @@ function Login() {
         });
       } else if (!captcha) {
         // reset captcha after invalid input
-        dispatch(setCaptchaText(generateCaptcha(6)));
+        dispatch(setCaptchaText(generateCaptcha(4)));
         dispatch(setCaptchaInput(""));
         dispatch(setCaptcha(false));
         toast.error("! کد امنیتی اشتباه است", {
@@ -72,7 +72,7 @@ function Login() {
     } catch (err) {
       setUsername("");
       setPassword("");
-      dispatch(setCaptchaText(generateCaptcha(6)));
+      dispatch(setCaptchaText(generateCaptcha(4)));
       dispatch(setCaptchaInput(""));
       toast.error(err?.data?.message || err.error, {
         fontSize: "18px",
