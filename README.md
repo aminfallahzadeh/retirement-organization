@@ -105,21 +105,21 @@ Feel free to reach out for any further assistance or clarification regarding the
 
 - Login Screen with full authentication system, error handling and captcha checker.
 
-![Login Screen Showcase](./public/gifs/amin-login-screen.gif)
+<img src="./public/gifs/amin-login-screen.gif" alt="Login Screen Showcase" width="350">
 
 - Using REST-APIs to manage every single request.
 - Used [React Pro Sidebar](https://www.npmjs.com/package/react-pro-sidebar) to manage a responsive sidebar
 - Used beautifull loader animations using MUI and [React Skeleton](https://www.npmjs.com/package/react-loading-skeleton)
 
-![Animations Showcase](./public//gifs/amin-retirement-organization-1.gif)
+<img src="./public//gifs/amin-retirement-organization-1.gif" alt="Animations Showcase" width="350">
 
 - Theme switcher button which saves in user information and persists across all devices
 
-![Theme Switcher Showcase](./public/gifs/amin-retirement-organization-2.gif)
+<img src="./public/gifs/amin-retirement-organization-2.gif" alt="Theme Switcher Showcase" width="350">
 
 - Implemented Fully-Features and Fully-Localized data grids using [Material React Table](https://github.com/KevinVandy/material-react-table)
 
-![Data Grid Showcase](./public/gifs/amin-retirement-organization-3.gif)
+<img src="./public/gifs/amin-retirement-organization-3.gif" alt="Data Grid Showcase" width="350">
 
 ## Additional Notes
 
