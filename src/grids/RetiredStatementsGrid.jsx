@@ -42,6 +42,7 @@ import {
 // components
 import Modal from "../components/Modal";
 import GenerateStatementForm from "../forms/GenerateStatementForm.jsx";
+import RetirementStatementViewForm from "../forms/RetirementStatementViewForm.jsx";
 
 // library imports
 import Skeleton from "react-loading-skeleton";
@@ -64,6 +65,7 @@ function RetiredStatementsGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const [showGenerateStatementModal, setShowGenerateStatementModal] =
     useState(false);
+  const [showViewStatementModal, setShowViewStatementModal] = useState(false);
   const [showDeleteStatementModal, setShowDeleteStatementModal] =
     useState(false);
 
@@ -91,6 +93,10 @@ function RetiredStatementsGrid() {
   // HANDLERS
   const handleGenerateStatementModalChange = () => {
     setShowGenerateStatementModal(true);
+  };
+
+  const handleViewStatementModalChange = () => {
+    setShowViewStatementModal(true);
   };
 
   const handleDeleteStatementModalChange = () => {
@@ -208,7 +214,7 @@ function RetiredStatementsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="primary">
+          <IconButton color="primary" onClick={handleViewStatementModalChange}>
             <RemoveRedEyeIcon />
           </IconButton>
         ),
@@ -338,13 +344,20 @@ function RetiredStatementsGrid() {
         </div>
       ) : (
         <>
-          {showDeleteStatementModal ? (
+          {showViewStatementModal ? (
             <Modal
-              title={"حذف گروه"}
-              closeModal={() => handleDeleteStatementModalChange(false)}
+              title={"مشاهده حکم"}
+              closeModal={() => setShowViewStatementModal(false)}
+            >
+              <RetirementStatementViewForm />
+            </Modal>
+          ) : showDeleteStatementModal ? (
+            <Modal
+              title={"حذف حکم"}
+              closeModal={() => setShowDeleteStatementModal(false)}
             >
               <p className="paragraph-primary">
-                آیا از حذف این گروه اطمینان دارید؟
+                آیا از حذف این حکم اطمینان دارید؟
               </p>
               <div className="flex-row flex-center">
                 <LoadingButton
@@ -361,7 +374,7 @@ function RetiredStatementsGrid() {
                 <Button
                   dir="ltr"
                   endIcon={<CloseIcon />}
-                  onClick={() => handleDeleteStatementModalChange(false)}
+                  onClick={() => setShowDeleteStatementModal(false)}
                   variant="contained"
                   color="error"
                   sx={{ fontFamily: "sahel" }}
