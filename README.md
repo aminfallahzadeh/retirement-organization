@@ -1,37 +1,39 @@
-# Retirement Organization Login Screen Project
+# Retirement Organization System
 
 ## Table of Contents
 
-- [Retirement Organization Login Screen Project](#retirement-organization-login-screen-project)
+- [Retirement Organization System](#retirement-organization-system)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Project Structure](#project-structure)
-  - [Getting Started](#getting-started)
-  - [Dependencies](#dependencies)
+  - [Getting Started](#getting-started) - [❗️ IMPORTANT: This is currently not possible to login as far as a valid username and password is requires. Additionally, there is no functionality for creating a new user, as the Municipality automatically generates user accounts based on employment status. To compensate, I have included images, and gifs thorough explanations to accurately showcase the project.](#️-important-this-is-currently-not-possible-to-login-as-far-as-a-valid-username-and-password-is-requires-additionally-there-is-no-functionality-for-creating-a-new-user-as-the-municipality-automatically-generates-user-accounts-based-on-employment-status-to-compensate-i-have-included-images-and-gifs-thorough-explanations-to-accurately-showcase-the-project)
+  - [Main Dependencies](#main-dependencies)
   - [Usage](#usage)
+  - [Highlighted Fetures](#highlighted-fetures)
   - [Additional Notes](#additional-notes)
   - [License](#license)
   - [Contact](#contact)
 
 ## Introduction
 
-This project represents the login screen for the Retirement Organization, managed by DAHAK-CO and affiliated with the Municipality of Tehran. The login screen is a part of a larger web application designed to facilitate access for authorized users to the organization's services.
+This project represents the main system for the Retirement Organization of Municipality of Tehran, managed by [DAHAK](https://github.com/dahakco) company and affiliated with the Municipality of Tehran. This is a large web application which manages the retirement process of an official employee whith all of the details like statements, relateds, family etc. This project also includes a backend infrastructure which written in .NET Core and uses MS SQL Server for data management services. The backend includes lots of REST-APIs to manage every single requests in the application.
 
 ## Project Structure
 
 The project is organized into several files and directories:
 
-- **`src/App.jsx`**: The main entry point for the application. It initializes the `AuthProvider` for managing authentication and renders the `Outlet` which serves as a placeholder for nested routes. The `ToastContainer` is used for displaying notifications.
+- **`src/main.jsx`**: The main entry point for the application. It initializes the `AuthProvider` for managing authentication and includes all the routes that application is currently using.
 
-- **`src/providers/AuthProvider.jsx`**: Manages authentication state and provides authentication context to the application.
+- **`src/App.jsx`**: The App component renders the outlet which servers all the nested routes. The `ToastContainer` is used for displaying notifications.The `ThemeProvider` is also used to provide nice and smooth MUI theme.
+- **`src/store.js`**: Manages all the stores used inside the application using [Redux](https://github.com/reduxjs/redux)
 
 - **`src/pages/Login.jsx`**: Represents the login page where users can authenticate themselves.
 
-- **`src/pages/Dashboard.jsx`**: Placeholder for the dashboard page (currently commented out).
+- **`src/pages/Dashboard.jsx`**: Placeholder for the dashboard page.
 
-- **`src/assets/styles/main.scss`**: Stylesheet for the project.
+- **`src/pages/Error.jsx`**: Placeholder for an error page when the route is not found.
 
-- **`index.css`**: Styling for the index file.
+- **`src/assets/styles/main.scss`**: SASS stylesheet for the project.
 
 ## Getting Started
 
@@ -48,13 +50,19 @@ The project is organized into several files and directories:
    npm run dev
    ```
 
-## Dependencies
+###### ❗️ IMPORTANT: This is currently not possible to login as far as a valid username and password is requires. Additionally, there is no functionality for creating a new user, as the Municipality automatically generates user accounts based on employment status. To compensate, I have included images, and gifs thorough explanations to accurately showcase the project.
 
-The project uses the following dependencies:
+## Main Dependencies
+
+These are the main project dependencies:
 
 - **`react`**: JavaScript library for building user interfaces.
 - **`react-router-dom`**: Routing library for React applications.
 - **`react-toastify`**: Notification library for displaying alerts and messages.
+- **`react-redux`**: Redux bindings for React.
+- **`@reduxjs/toolkit`**: Redux toolkit for efficient Redux development.
+- **`async-mutex`**: Asynchronous mutex implementation.
+- **`@mui/material`**: Material-UI library.
 
 ## Usage
 
@@ -93,9 +101,29 @@ For detailed information on your rights and obligations under the GPL-3 license,
 
 Feel free to reach out for any further assistance or clarification regarding the usage and licensing of this project.
 
+## Highlighted Fetures
+
+- Login Screen with full authentication system, error handling and captcha checker.
+
+![Login Screen Showcase](./public/gifs/amin-login-screen.gif)
+
+- Using REST-APIs to manage every single request.
+- Used [React Pro Sidebar](https://www.npmjs.com/package/react-pro-sidebar) to manage a responsive sidebar
+- Used beautifull loader animations using MUI and [React Skeleton](https://www.npmjs.com/package/react-loading-skeleton)
+
+![Animations Showcase](./public//gifs/amin-retirement-organization-1.gif)
+
+- Theme switcher button which saves in user information and persists across all devices
+
+![Theme Switcher Showcase](./public/gifs/amin-retirement-organization-2.gif)
+
+- Implemented Fully-Features and Fully-Localized data grids using [Material React Table](https://github.com/KevinVandy/material-react-table)
+
+![Data Grid Showcase](./public/gifs/amin-retirement-organization-3.gif)
+
 ## Additional Notes
 
-- The current structure includes a commented-out `Dashboard` component. You can uncomment and customize it based on the organization's requirements.
+- This application is currently under development this is why you can see some problems or bugs in the gifs.
 
 - Ensure that the necessary routes are configured to navigate between the login screen and the dashboard.
 
