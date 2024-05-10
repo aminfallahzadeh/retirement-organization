@@ -349,7 +349,9 @@ function RetiredStatementsGrid() {
               title={"مشاهده حکم"}
               closeModal={() => setShowViewStatementModal(false)}
             >
-              <RetirementStatementViewForm />
+              <RetirementStatementViewForm
+                RetirementStatementID={selectedStatement.id}
+              />
             </Modal>
           ) : showDeleteStatementModal ? (
             <Modal

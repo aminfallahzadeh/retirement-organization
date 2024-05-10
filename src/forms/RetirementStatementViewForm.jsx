@@ -1,8 +1,33 @@
+// react imports
+import { useState, useEffect } from "react";
+
+// redux imports
+import { useGetRetirementStatementQuery } from "../slices/retirementStatementApiSlice";
+
 // mui imports
 import { LoadingButton } from "@mui/lab";
 import { Save as SaveIcon } from "@mui/icons-material";
 
-function RetirementStatementViewForm() {
+function RetirementStatementViewForm({ RetirementStatementID }) {
+  const {
+    data: retirementStatement,
+    isLoading,
+    isSuccess,
+    error,
+  } = useGetRetirementStatementQuery({ RetirementStatementID });
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log(retirementStatement);
+    }
+  }, [isSuccess, retirementStatement]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+    }
+  }, [error]);
+
   const checkBoxStyle = {
     display: "flex",
     alignItems: "center",

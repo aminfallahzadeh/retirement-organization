@@ -24,46 +24,10 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
-    insertRetirementStatement: builder.mutation({
-      query: (data) => ({
-        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/InsertRetirementStatement`,
+    getRetirementStatement: builder.query({
+      query: ({ RetirementStatementID }) => ({
+        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GetRetirementStatement?RetirementStatementID=${RetirementStatementID}`,
         method: "POST",
-        body: data,
-      }),
-    }),
-    updateRetirementStatement: builder.mutation({
-      query: (data) => ({
-        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/UpdateRetirementStatement`,
-        method: "POST",
-        body: data,
-      }),
-    }),
-    addRetiremnetStatementAmount: builder.mutation({
-      query: (data) => ({
-        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/AddRetiremnetStatementAmount`,
-        method: "POST",
-        body: data,
-      }),
-    }),
-    addRetirementStatementRelated: builder.mutation({
-      query: (data) => ({
-        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/AddRetirementStatementRelated`,
-        method: "POST",
-        body: data,
-      }),
-    }),
-    removeRetirementStatementRelated: builder.mutation({
-      query: (data) => ({
-        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/RemoveRetirementStatementRelated`,
-        method: "POST",
-        body: data,
-      }),
-    }),
-    removeRetirementStatementAmount: builder.mutation({
-      query: (data) => ({
-        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/RemoveRetirementStatementAmount`,
-        method: "POST",
-        body: data,
       }),
     }),
   }),
@@ -73,10 +37,5 @@ export const {
   useGetListOfRetirementStatementsQuery,
   useGenerateNewRetirementStatementMutation,
   useRemoveRetirementStatementMutation,
-  useInsertRetirementStatementMutation,
-  useUpdateRetirementStatementMutation,
-  useAddRetiremnetStatementAmountMutation,
-  useAddRetirementStatementRelatedMutation,
-  useRemoveRetirementStatementRelatedMutation,
-  useRemoveRetirementStatementAmountMutation,
+  useGetRetirementStatementQuery,
 } = retirementStatementApiSlice;
