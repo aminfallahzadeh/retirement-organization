@@ -157,7 +157,9 @@ function RetiredAccountForm() {
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
           >
-            <option value=" ">انتخاب</option>
+            <option value=" " disabled>
+              انتخاب
+            </option>
             {bankCombo.map((bank) => (
               <option key={bank.lookUpID} value={bank.lookUpID}>
                 {bank.lookUpName}
@@ -180,7 +182,9 @@ function RetiredAccountForm() {
             className="inputBox__form--input"
             required
           >
-            <option value=" ">انتخاب</option>
+            <option value=" " disabled>
+              انتخاب
+            </option>
             {bankBranchCombo.map((bankBranch) => (
               <option key={bankBranch.lookUpID} value={bankBranch.lookUpID}>
                 {bankBranch.lookUpName}

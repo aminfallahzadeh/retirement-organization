@@ -86,6 +86,9 @@ function RequestsGrid() {
       {
         accessorKey: "requestNO",
         header: "شماره درخواست",
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
       {
         accessorKey: "requestTypeNameFa",

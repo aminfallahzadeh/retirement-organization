@@ -29,7 +29,11 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { defaultTableOptions } from "../utils.js";
 
 // hjelpers
-import { findById } from "../helper.js";
+import {
+  findById,
+  convertToPersianNumber,
+  convertToPersianDateFormatted,
+} from "../helper.js";
 
 function AllRequestsGrid() {
   const [rowSelection, setRowSelection] = useState({});
@@ -57,6 +61,7 @@ function AllRequestsGrid() {
     if (isSuccess) {
       const data = requests.itemList.map((item) => ({
         id: item.id,
+        requestNO: item.requestNO || "-",
         personId: item.personID,
         requestTypeNameFa: item.requestTypeNameFa,
         sender: item.requestFrom,
@@ -85,6 +90,9 @@ function AllRequestsGrid() {
       {
         accessorKey: "id",
         header: "شماره درخواست",
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
       {
         accessorKey: "requestTypeNameFa",
@@ -97,9 +105,16 @@ function AllRequestsGrid() {
       {
         accessorKey: "date",
         header: "تاریخ درخواست",
+        Cell: ({ renderedCellValue }) => (
+          <div>
+            {convertToPersianNumber(
+              convertToPersianDateFormatted(renderedCellValue)
+            )}
+          </div>
+        ),
       },
       {
-        accessorKey: "observe",
+        accessorKey: "observeReq",
         header: "مشاهده درخواست",
         enableSorting: false,
         enableColumnActions: false,

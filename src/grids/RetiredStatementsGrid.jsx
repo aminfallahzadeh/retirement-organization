@@ -6,16 +6,21 @@ import { useLocation } from "react-router-dom";
 
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import { useGetListOfRetirementStatementsQuery } from "../slices/retirementStatementApiSlice.js";
 import {
-  setStatementTableData,
-  setSelectedStatementData,
-} from "../slices/statementDataSlice.js";
+  useGetListOfRetirementStatementsQuery,
+  useRemoveRetirementStatementMutation,
+} from "../slices/retirementStatementApiSlice.js";
+import { setStatementTableData } from "../slices/statementDataSlice.js";
 
 // mui imports
-import { IconButton, Button, Box } from "@mui/material";
+import {
+  IconButton,
+  Button,
+  Box,
+  Tooltip,
+  PaginationItem,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
   ChevronRight,
@@ -24,7 +29,9 @@ import {
   Add as AddIcon,
   RemoveRedEye as RemoveRedEyeIcon,
   Refresh as RefreshIcon,
-  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Close as CloseIcon,
+  Done as DoneIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -34,7 +41,6 @@ import {
 
 // components
 import Modal from "../components/Modal";
-import RetiredStatementInfoForm from "../forms/RetiredStatementInfoForm";
 import GenerateStatementForm from "../forms/GenerateStatementForm.jsx";
 
 // library imports
@@ -53,16 +59,22 @@ import {
 import { defaultTableOptions } from "../utils.js";
 
 function RetiredStatementsGrid() {
+  const [selectedStatement, setSelectedStatement] = useState(null);
+
   const [rowSelection, setRowSelection] = useState({});
   const [showGenerateStatementModal, setShowGenerateStatementModal] =
     useState(false);
-  const [showEditStatementModal, setShowEditStatementModal] = useState(false);
+  const [showDeleteStatementModal, setShowDeleteStatementModal] =
+    useState(false);
 
   const dispatch = useDispatch();
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
+
+  const [removeRetirmentStatement, { isLoading: isDeleting }] =
+    useRemoveRetirementStatementMutation();
 
   // access the data from redux store
   const { statementTableData } = useSelector((state) => state.statementData);
@@ -76,17 +88,35 @@ function RetiredStatementsGrid() {
     refetch,
   } = useGetListOfRetirementStatementsQuery(personID);
 
-  // handlers
-  const handleEditShowStatementModal = () => {
-    setShowEditStatementModal(true);
-  };
-
+  // HANDLERS
   const handleGenerateStatementModalChange = () => {
     setShowGenerateStatementModal(true);
   };
 
+  const handleDeleteStatementModalChange = () => {
+    setShowDeleteStatementModal(true);
+  };
+
   const handleRefresh = () => {
     refetch();
+  };
+
+  const handleRemoveStatement = async () => {
+    try {
+      const deleteRes = await removeRetirmentStatement({
+        rsID: selectedStatement.id,
+      }).unwrap();
+      console.log(deleteRes);
+      setShowDeleteStatementModal(false);
+      toast.success(deleteRes.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
   };
 
   useEffect(() => {
@@ -94,12 +124,13 @@ function RetiredStatementsGrid() {
     if (isSuccess) {
       const data = statements.map((item) => ({
         id: item.retirementStatementID,
-        RetirementStatementID: item.RetirementStatementID,
         retirementStatementSerial: item.retirementStatementSerial,
         retirementStatementTypeName: item.retirementStatementTypeName,
         retirementStatementNo: item.retirementStatementNo,
         retirementStatementIssueDate: item.retirementStatementIssueDate,
         retirementStatementRunDate: item.retirementStatementRunDate,
+        retirementStatementIssueConfirmDate:
+          item.retirementStatementIssueConfirmDate,
       }));
       dispatch(setStatementTableData(data));
     }
@@ -107,7 +138,14 @@ function RetiredStatementsGrid() {
     return () => {
       dispatch(setStatementTableData([]));
     };
-  }, [isSuccess, refetch, dispatch, statements, showEditStatementModal]);
+  }, [
+    isSuccess,
+    refetch,
+    dispatch,
+    statements,
+    showGenerateStatementModal,
+    showDeleteStatementModal,
+  ]);
 
   useEffect(() => {
     if (error) {
@@ -118,8 +156,17 @@ function RetiredStatementsGrid() {
     }
   }, [error]);
 
+  useEffect(() => {
+    console.log(selectedStatement);
+  }, [selectedStatement]);
+
   const columns = useMemo(
     () => [
+      {
+        accessorKey: "retirementStatementNo",
+        size: 20,
+        header: "شماره حکم",
+      },
       {
         accessorKey: "retirementStatementSerial",
         size: 20,
@@ -127,11 +174,6 @@ function RetiredStatementsGrid() {
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
-      },
-      {
-        accessorKey: "retirementStatementNo",
-        size: 20,
-        header: "شماره حکم",
       },
       {
         accessorKey: "retirementStatementTypeName",
@@ -160,18 +202,6 @@ function RetiredStatementsGrid() {
         ),
       },
       {
-        accessorKey: "editStatementAction",
-        header: "ویرایش",
-        enableSorting: false,
-        enableColumnActions: false,
-        size: 20,
-        Cell: () => (
-          <IconButton color="success" onClick={handleEditShowStatementModal}>
-            <EditIcon />
-          </IconButton>
-        ),
-      },
-      {
         accessorKey: "observeStatement",
         header: "مشاهده حکم",
         enableSorting: false,
@@ -181,6 +211,32 @@ function RetiredStatementsGrid() {
           <IconButton color="primary">
             <RemoveRedEyeIcon />
           </IconButton>
+        ),
+      },
+      {
+        accessorKey: "removeStatement",
+        header: "حذف حکم",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        Cell: ({ row }) => (
+          <Tooltip
+            title={
+              row.original.retirementStatementIssueConfirmDate
+                ? "حکم تایید شده"
+                : "حذف حکم"
+            }
+          >
+            <span>
+              <IconButton
+                color="error"
+                disabled={row.original.retirementStatementIssueConfirmDate}
+                onClick={handleDeleteStatementModalChange}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
         ),
       },
     ],
@@ -257,14 +313,14 @@ function RetiredStatementsGrid() {
     const selectedGroup = findById(statementTableData, id);
 
     if (id) {
-      dispatch(setSelectedStatementData(selectedGroup));
+      setSelectedStatement(selectedGroup);
     } else {
-      dispatch(setSelectedStatementData([]));
+      setSelectedStatement([]);
     }
 
     return () => {
       // Cleanup function to clear selected group
-      dispatch(setSelectedStatementData([]));
+      setSelectedStatement([]);
     };
   }, [dispatch, table, rowSelection, statementTableData]);
 
@@ -282,12 +338,37 @@ function RetiredStatementsGrid() {
         </div>
       ) : (
         <>
-          {showEditStatementModal ? (
+          {showDeleteStatementModal ? (
             <Modal
-              title={"حکم بازنشسته"}
-              closeModal={() => setShowEditStatementModal(false)}
+              title={"حذف گروه"}
+              closeModal={() => handleDeleteStatementModalChange(false)}
             >
-              <RetiredStatementInfoForm />
+              <p className="paragraph-primary">
+                آیا از حذف این گروه اطمینان دارید؟
+              </p>
+              <div className="flex-row flex-center">
+                <LoadingButton
+                  dir="ltr"
+                  endIcon={<DoneIcon />}
+                  variant="contained"
+                  onClick={handleRemoveStatement}
+                  loading={isDeleting}
+                  color="success"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>بله</span>
+                </LoadingButton>
+                <Button
+                  dir="ltr"
+                  endIcon={<CloseIcon />}
+                  onClick={() => handleDeleteStatementModalChange(false)}
+                  variant="contained"
+                  color="error"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>خیر</span>
+                </Button>
+              </div>
             </Modal>
           ) : showGenerateStatementModal ? (
             <Modal
