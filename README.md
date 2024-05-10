@@ -6,9 +6,8 @@
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Project Structure](#project-structure)
-  - [Getting Started](#getting-started) - [❗️ IMPORTANT: This is currently not possible to login as far as a valid username and password is requires. Additionally, there is no functionality for creating a new user, as the Municipality automatically generates user accounts based on employment status. To compensate, I have included images, and gifs thorough explanations to accurately showcase the project.](#️-important-this-is-currently-not-possible-to-login-as-far-as-a-valid-username-and-password-is-requires-additionally-there-is-no-functionality-for-creating-a-new-user-as-the-municipality-automatically-generates-user-accounts-based-on-employment-status-to-compensate-i-have-included-images-and-gifs-thorough-explanations-to-accurately-showcase-the-project)
+  - [Getting Started](#getting-started)
   - [Main Dependencies](#main-dependencies)
-  - [Usage](#usage)
   - [Highlighted Fetures](#highlighted-fetures)
   - [Additional Notes](#additional-notes)
   - [License](#license)
@@ -50,7 +49,7 @@ The project is organized into several files and directories:
    npm run dev
    ```
 
-###### ❗️ IMPORTANT: This is currently not possible to login as far as a valid username and password is requires. Additionally, there is no functionality for creating a new user, as the Municipality automatically generates user accounts based on employment status. To compensate, I have included images, and gifs thorough explanations to accurately showcase the project.
+**❗️ NOTE**: This is currently not possible to login as far as a valid username and password is requires. Additionally, there is no functionality for creating a new user, as the Municipality automatically generates user accounts based on employment status. To compensate, I have included images, and gifs thorough explanations to accurately showcase the project.
 
 ## Main Dependencies
 
@@ -63,43 +62,6 @@ These are the main project dependencies:
 - **`@reduxjs/toolkit`**: Redux toolkit for efficient Redux development.
 - **`async-mutex`**: Asynchronous mutex implementation.
 - **`@mui/material`**: Material-UI library.
-
-## Usage
-
-To integrate the login screen into your application, you must comply with the terms of the [GNU General Public License v3.0](LICENSE).
-
-1. Import the `AuthProvider` from `./providers/AuthProvider` and wrap your application with it.
-2. Create routes using `react-router-dom` and define the login and dashboard pages accordingly.
-
-   ```javascript
-   // Example route configuration
-   const router = createBrowserRouter([
-     {
-       path: "/login-screen/",
-       element: <App />,
-       children: [
-         {
-           path: "/login-screen/",
-           element: <Login />,
-         },
-         {
-           path: "/login-screen/dashboard",
-           element: <Dashboard />,
-         },
-       ],
-     },
-   ]);
-
-   ReactDOM.createRoot(document.getElementById("root")).render(
-     <RouterProvider router={router} />
-   );
-   ```
-
-3. Ensure that your application adheres to the terms of the GPL-3 license. This includes providing the source code of your application to any user who requests it, and ensuring that any modifications to the original code are also distributed under the GPL-3 license.
-
-For detailed information on your rights and obligations under the GPL-3 license, please refer to the [LICENSE](LICENSE) file.
-
-Feel free to reach out for any further assistance or clarification regarding the usage and licensing of this project.
 
 ## Highlighted Fetures
 
