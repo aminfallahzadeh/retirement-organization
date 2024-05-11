@@ -1,5 +1,5 @@
 // react imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // redux imports
 import { useDispatch } from "react-redux";
@@ -20,6 +20,9 @@ import {
 // library imports
 import { toast } from "react-toastify";
 
+// helpers
+import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
+
 function PersonnelStatementForm() {
   const [searchPersons, { isLoading, isFetching }] = useLazyGetPersonsQuery();
   const dispatch = useDispatch();
@@ -35,19 +38,19 @@ function PersonnelStatementForm() {
     !personnelObject ||
     (!personnelObject.personFirstName &&
       !personnelObject.personLastName &&
-      !personnelObject.personNartionalCode);
+      !personnelObject.personNationalCode);
 
   const handleSearchPersonnels = async () => {
     try {
       const personFirstName = personnelObject?.personFirstName || "";
       const personLastName = personnelObject?.personLastName || "";
-      const personNartionalCode = personnelObject?.personNartionalCode || "";
+      const personNationalCode = personnelObject?.personNationalCode || "";
 
       const searchRes = await searchPersons({
         personID: "",
         personFirstName,
         personLastName,
-        personNartionalCode,
+        personNationalCode: convertToEnglishNumber(personNationalCode),
       }).unwrap();
       if (searchRes.itemList.length === 0) {
         toast.error("نتیجه ای یافت نشد", {
@@ -71,6 +74,10 @@ function PersonnelStatementForm() {
     }
   };
 
+  useEffect(() => {
+    console.log(personnelObject);
+  }, [personnelObject]);
+
   const content = (
     <>
       <section className="formContainer flex-col">
@@ -78,14 +85,17 @@ function PersonnelStatementForm() {
           <div className="inputBox__form">
             <input
               type="text"
-              id="personNartionalCode"
+              id="personNationalCode"
               className="inputBox__form--input"
-              name="personNartionalCode"
+              value={convertToPersianNumber(
+                personnelObject?.personNationalCode
+              )}
+              name="personNationalCode"
               onChange={hadnlePersonnelObjectChange}
               required
             />
             <label
-              htmlFor="personNartionalCode"
+              htmlFor="personNationalCode"
               className="inputBox__form--label"
             >
               کد ملی
@@ -96,6 +106,7 @@ function PersonnelStatementForm() {
               type="text"
               id="personelCode"
               className="inputBox__form--input"
+              disabled
               required
             />
             <label htmlFor="personelCode" className="inputBox__form--label">
