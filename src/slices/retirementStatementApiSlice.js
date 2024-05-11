@@ -27,7 +27,6 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
     getRetirementStatement: builder.query({
       query: ({ RetirementStatementID }) => ({
         url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GetRetirementStatement?RetirementStatementID=${RetirementStatementID}`,
-        method: "POST",
       }),
     }),
   }),

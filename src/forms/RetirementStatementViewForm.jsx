@@ -8,7 +8,12 @@ import { useGetRetirementStatementQuery } from "../slices/retirementStatementApi
 import { LoadingButton } from "@mui/lab";
 import { Save as SaveIcon } from "@mui/icons-material";
 
+// library imports
+import { toast } from "react-toastify";
+
 function RetirementStatementViewForm({ RetirementStatementID }) {
+  const [retirementStatementData, setRetirementStatementData] = useState({});
+
   const {
     data: retirementStatement,
     isLoading,
@@ -18,13 +23,16 @@ function RetirementStatementViewForm({ RetirementStatementID }) {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(retirementStatement);
+      setRetirementStatementData(retirementStatement);
     }
   }, [isSuccess, retirementStatement]);
 
   useEffect(() => {
     if (error) {
       console.log(error);
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
     }
   }, [error]);
 
