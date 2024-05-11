@@ -185,6 +185,10 @@ function RetiredPersonForm() {
     });
   };
 
+  useEffect(() => {
+    console.log("retired person", personData);
+  }, [personData]);
+
   // handle update retired person
   const handleUpdateRetired = async () => {
     try {
@@ -297,7 +301,7 @@ function RetiredPersonForm() {
             id="personCertificatetNo"
             className="inputBox__form--input"
             value={
-              convertToPersianNumber(personData?.personCertificatetNo) ?? ""
+              convertToPersianNumber(personData?.personCertificateNo) ?? ""
             }
             onChange={handlePersonDataChange}
             required
@@ -354,6 +358,7 @@ function RetiredPersonForm() {
             disabled={!editable}
             value={selectedBirthDate}
             defaultValue={null}
+            format={"jYYYY/jMM/jDD"}
             onChange={handleBirthDateChange}
             onOpenChange={handleBirthOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
@@ -817,6 +822,7 @@ function RetiredPersonForm() {
           <InputDatePicker
             disabled={!editable}
             value={selectedDeathDate}
+            format={"jYYYY/jMM/jDD"}
             onChange={handleDeathDateChange}
             onOpenChange={handleDeathOpenChange}
             open={isDeathCalenderOpen}

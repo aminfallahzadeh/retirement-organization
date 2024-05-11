@@ -212,7 +212,7 @@ function RetiredAccountForm() {
             required
           />
           <label htmlFor="accountNo" className="inputBox__form--label">
-            حساب
+            شماره حساب
           </label>
         </div>
 

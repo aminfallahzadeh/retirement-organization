@@ -149,7 +149,9 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">وضعیت تاهل</div>
             <div className="inputBox__form--readOnly-content">
-              {maritalStatus?.itemList[0].lookUpName || "-"}
+              {maritalStatus?.itemList.lenghth === 1
+                ? maritalStatus?.itemList[0].lookUpName
+                : "-"}
             </div>
           </div>
         </div>
@@ -158,7 +160,9 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">مدرک تحصیلی</div>
             <div className="inputBox__form--readOnly-content">
-              {education?.itemList[0].lookUpName || "-"}
+              {education?.itemList.lenghth === 1
+                ? education?.itemList[0].lookUpName
+                : "-"}
             </div>
           </div>
         </div>
