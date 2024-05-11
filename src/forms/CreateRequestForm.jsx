@@ -1,6 +1,9 @@
 // react imports
 import { useState, useEffect } from "react";
 
+// rrd imports
+import { useNavigate } from "react-router-dom";
+
 // redux imports
 import {
   useGetRequestTypeQuery,
@@ -20,6 +23,8 @@ import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 function CreateRequestForm() {
   const [insertRequest, { isLoading: isInserting }] =
     useInsertRequestMutation();
+
+  const navigate = useNavigate();
 
   // REQUEST OBJECT STATE
   const [requestObject, setRequestObject] = useState({});
@@ -55,7 +60,12 @@ function CreateRequestForm() {
         ...requestObject,
         requestFrom: 1,
         personID: convertToEnglishNumber(requestObject.personID),
+        requestID: "",
+        requestNO: "",
+        requestTypeName: "",
+        requestTypeNameFa: "",
       }).unwrap();
+      navigate("/retirement-organization/dashboard");
       console.log(insertRes);
       toast.success(insertRes.message, {
         autoClose: 2000,

@@ -276,7 +276,7 @@ function RetiredStatementsGrid() {
           color="primary"
           sx={{ fontFamily: "sahel" }}
         >
-          <span>ایجاد</span>
+          <span>صدور</span>
         </Button>
 
         <LoadingButton
