@@ -1,8 +1,9 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // redux imports
 import { useGetRetirementStatementQuery } from "../slices/retirementStatementApiSlice";
+import { useLazyGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice";
 
 // mui imports
 import { LoadingButton } from "@mui/lab";
@@ -11,8 +12,20 @@ import { Save as SaveIcon } from "@mui/icons-material";
 // library imports
 import { toast } from "react-toastify";
 
+// helpers
+import {
+  convertToPersianNumber,
+  convertToPersianDateFormatted,
+} from "../helper";
+
 function RetirementStatementViewForm({ RetirementStatementID }) {
   const [retirementStatementData, setRetirementStatementData] = useState({});
+
+  const [statementType, setStatementType] = useState("");
+  const [
+    getRetirementStatementType,
+    { isLoading: getRetirementStatementTypeLoading },
+  ] = useLazyGetRetirementStatementTypeQuery();
 
   const {
     data: retirementStatement,
@@ -21,12 +34,28 @@ function RetirementStatementViewForm({ RetirementStatementID }) {
     error,
   } = useGetRetirementStatementQuery({ RetirementStatementID });
 
+  const fetchRetirementType = useCallback(
+    async (RetirementStatementTypeID) => {
+      try {
+        const typeRes = await getRetirementStatementType({
+          RetirementStatementTypeID,
+        }).unwrap();
+        setStatementType(typeRes.itemList[0].retirementStatementTypeName);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [getRetirementStatementType]
+  );
+
+  // FETCH MAIN DATA
   useEffect(() => {
     if (isSuccess) {
       setRetirementStatementData(retirementStatement);
     }
   }, [isSuccess, retirementStatement]);
 
+  // HANDLE ERROR
   useEffect(() => {
     if (error) {
       console.log(error);
@@ -35,6 +64,16 @@ function RetirementStatementViewForm({ RetirementStatementID }) {
       });
     }
   }, [error]);
+
+  // GET LOOKUP DATA
+  useEffect(() => {
+    if (
+      retirementStatementData &&
+      retirementStatementData.retirementStatementTypeID
+    ) {
+      fetchRetirementType(retirementStatementData.retirementStatementTypeID);
+    }
+  }, [retirementStatementData, fetchRetirementType]);
 
   const checkBoxStyle = {
     display: "flex",
@@ -419,39 +458,33 @@ function RetirementStatementViewForm({ RetirementStatementID }) {
       </div>
 
       <form method="POST" className="grid grid--col-4">
-        <div className="inputBox__form col-span-2">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="statementType"
-          />
-          <label className="inputBox__form--label" htmlFor="statementType">
-            <span>*</span> نوع حکم
-          </label>
-        </div>
-        <div className="inputBox__form col-span-2">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="statementSerial"
-          />
-          <label className="inputBox__form--label" htmlFor="statementSerial">
-            سریال حکم
-          </label>
+        <div className="inputBox__form">
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">نوع حکم</div>
+            <div className="inputBox__form--readOnly-content">
+              {statementType}
+            </div>
+          </div>
         </div>
 
-        <div className="inputBox__form col-span-4">
-          <textarea
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="statementDesc"
-          ></textarea>
-          <label className="inputBox__form--label" htmlFor="statementDesc">
-            توضیحات
-          </label>
+        <div className="inputBox__form">
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">سریال حکم</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(
+                retirementStatementData.retirementStatementSerial
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="inputBox__form col-span-4 row-span-2">
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">شرح حکم</div>
+            <div className="inputBox__form--readOnly-content">
+              {retirementStatementData.retirementStatementDesc}
+            </div>
+          </div>
         </div>
       </form>
 
@@ -507,9 +540,6 @@ function RetirementStatementViewForm({ RetirementStatementID }) {
       </form>
       <form method="POST" className="grid grid--col-7 u-margin-top-md">
         <div style={firstGridStyle} className="row-span-4 col-span-2">
-          <p style={pStyle}>شرح حکم</p>
-        </div>
-        <div style={firstGridStyle} className="row-span-4 col-span-2">
           <p style={pStyle}>آیتم های حکم</p>
         </div>
         <div style={arrowsStyle}>
@@ -523,37 +553,40 @@ function RetirementStatementViewForm({ RetirementStatementID }) {
 
       <form className="grid grid--col-3 u-margin-top-md">
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="runDate"
-          />
-          <label className="inputBox__form--label" htmlFor="runDate">
-            <span>*</span> تاریخ اجرا
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">تاریخ اجرا</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(
+                convertToPersianDateFormatted(
+                  retirementStatementData.retirementStatementRunDate
+                )
+              )}
+            </div>
+          </div>
         </div>
+
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="issueDate"
-          />
-          <label className="inputBox__form--label" htmlFor="issueDate">
-            تاریخ صدور
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">تاریخ صدور</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(
+                convertToPersianDateFormatted(
+                  retirementStatementData.retirementStatementIssueDate
+                )
+              )}
+            </div>
+          </div>
         </div>
+
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="statementNum"
-          />
-          <label className="inputBox__form--label" htmlFor="statementNum">
-            شماره حکم
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">شماره حکم</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(
+                retirementStatementData.retirementStatementNo
+              )}
+            </div>
+          </div>
         </div>
       </form>
 

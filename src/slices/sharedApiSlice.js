@@ -35,9 +35,17 @@ export const sharedApiSlice = apiSlice.injectEndpoints({
     }),
 
     getRetirementStatementType: builder.query({
-      query: () => ({
-        url: `${SHARED_URL_HTTPS}/GetRetirementStatementType`,
-      }),
+      query: ({ RetirementStatementTypeID }) => {
+        let url = `${SHARED_URL_HTTPS}/GetRetirementStatementType`;
+
+        if (RetirementStatementTypeID) {
+          url += `?RetirementStatementTypeID=${RetirementStatementTypeID}`;
+        }
+
+        return {
+          url,
+        };
+      },
     }),
   }),
 });
@@ -48,4 +56,5 @@ export const {
   useGetRelationshipQuery,
   useGetPensionaryStatusQuery,
   useGetRetirementStatementTypeQuery,
+  useLazyGetRetirementStatementTypeQuery,
 } = sharedApiSlice;
