@@ -6,9 +6,6 @@ import { useDispatch } from "react-redux";
 import { useLazyGetPersonsQuery } from "../slices/personApiSlice";
 import { setPersonTableData } from "../slices/personDataSlice";
 
-// components
-import PersonnelGrid from "../grids/PersonnelGrid";
-
 // mui imports
 // import { Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -154,20 +151,10 @@ function PersonnelStatementForm() {
           >
             <span>جست و جو</span>
           </LoadingButton>
-
-          {/* <Button
-            dir="ltr"
-            endIcon={<EyeIcon />}
-            variant="contained"
-            color="warning"
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>مشاهده همه</span>
-          </Button> */}
         </div>
       </section>
 
-      <PersonnelGrid />
+      {/* <PersonnelGrid /> */}
     </>
   );
 
