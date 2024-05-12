@@ -24,6 +24,7 @@ import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
 } from "../helper";
+import { IdleTimerConsumer } from "react-idle-timer";
 
 function RetirementStatementViewForm({ statementID }) {
   const [retirementStatementData, setRetirementStatementData] = useState({});
@@ -31,7 +32,9 @@ function RetirementStatementViewForm({ statementID }) {
 
   // LOOK UP STATEs
   const [gender, setGender] = useState("");
+  const [maritialStatus, setMaritialStatus] = useState("");
   const [statementType, setStatementType] = useState("");
+  const [educationType, setEducationType] = useState("");
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -93,14 +96,15 @@ function RetirementStatementViewForm({ statementID }) {
   }, [error]);
 
   // LOOK UP DATA FUNCTIONS
-  const fetchGender = useCallback(
-    async (lookUpID) => {
+  const fetchLookUp = useCallback(
+    async (type, id) => {
       try {
         const genderRes = await getLookupData({
-          lookUpType: "Gender",
-          lookUpID,
+          lookUpType: type,
+          lookUpID: id,
         }).unwrap();
-        setGender(genderRes.itemList[0].lookUpName);
+        return genderRes;
+        // setGender(genderRes.itemList[0].lookUpName);
       } catch (err) {
         console.log(err);
       }
@@ -125,9 +129,51 @@ function RetirementStatementViewForm({ statementID }) {
   // GET LOOKUP DATA
   useEffect(() => {
     if (retiredObject && retiredObject.genderID) {
-      fetchGender(retiredObject.genderID);
+      const fetchData = async () => {
+        try {
+          const data = await fetchLookUp("Gender", retiredObject.genderID);
+          setGender(data.itemList[0].lookUpName);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchData();
     }
-  }, [retiredObject, fetchGender]);
+  }, [retiredObject, fetchLookUp]);
+
+  useEffect(() => {
+    if (retiredObject && retiredObject.maritalStatusID) {
+      const fetchData = async () => {
+        try {
+          const data = await fetchLookUp(
+            "MaritialStatus",
+            retiredObject.maritalStatusID
+          );
+          setMaritialStatus(data.itemList[0].lookUpName);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchData();
+    }
+  }, [retiredObject, fetchLookUp]);
+
+  useEffect(() => {
+    if (retiredObject && retiredObject.educationTypeID) {
+      const fetchData = async () => {
+        try {
+          const data = await fetchLookUp(
+            "EducationType",
+            retiredObject.educationTypeID
+          );
+          setEducationType(data.itemList[0].lookUpName);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchData();
+    }
+  }, [retiredObject, fetchLookUp]);
 
   useEffect(() => {
     if (
@@ -138,31 +184,9 @@ function RetirementStatementViewForm({ statementID }) {
     }
   }, [retirementStatementData, fetchRetirementType]);
 
-  const checkBoxStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    border: "2px solid #a0a0a0",
-    borderRadius: "6px",
-    columnGap: "10px",
-    padding: "0px 15px",
-  };
-
   const pStyle = {
     marginBottom: "0",
     color: "#b63f00",
-    flex: 1,
-  };
-
-  const checkBoxLabelStyle = {
-    color: "#707070",
-  };
-
-  const itemStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    columnGap: "5px",
     flex: 1,
   };
 
@@ -251,61 +275,54 @@ function RetirementStatementViewForm({ statementID }) {
         </div>
 
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personBirth"
-          />
-          <label className="inputBox__form--label" htmlFor="personBirth">
-            تاریخ تولد
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personPlaceBirth"
-          />
-          <label className="inputBox__form--label" htmlFor="personPlaceBirth">
-            محل تولد
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(
+                convertToPersianDateFormatted(retiredObject?.personBirthDate)
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personMarital"
-          />
-          <label className="inputBox__form--label" htmlFor="personMarital">
-            وضعیت تاهل
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">محل تولد</div>
+            <div className="inputBox__form--readOnly-content">
+              {retiredObject?.personBirthPlace}
+            </div>
+          </div>
         </div>
+
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personRetiredNum"
-          />
-          <label className="inputBox__form--label" htmlFor="personRetiredNum">
-            شماره بازنشستگی
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">وضعیت تاهل</div>
+            <div className="inputBox__form--readOnly-content">
+              {maritialStatus}
+            </div>
+          </div>
         </div>
+
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personDegree"
-          />
-          <label className="inputBox__form--label" htmlFor="personDegree">
-            مدرک تحصیلی
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">
+              شماره بازنشستگی
+            </div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(retiredObject?.retiredID) ?? ""}
+            </div>
+          </div>
         </div>
+
+        <div className="inputBox__form">
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">مدرک تحصیلی</div>
+            <div className="inputBox__form--readOnly-content">
+              {educationType}
+            </div>
+          </div>
+        </div>
+
         <div className="inputBox__form">
           <input
             type="text"
@@ -351,60 +368,116 @@ function RetirementStatementViewForm({ statementID }) {
             کد پستی
           </label>
         </div>
+
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personRetiredDate"
-          />
-          <label className="inputBox__form--label" htmlFor="personRetiredDate">
-            تاریخ بازنشستگی
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">
+              تاریخ بازنشستگی
+            </div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(
+                convertToPersianDateFormatted(retiredObject?.retirementDate)
+              )}
+            </div>
+          </div>
         </div>
 
-        <div style={checkBoxStyle} className="col-span-4">
-          <p style={pStyle}>وضعیت ایثارگری</p>
+        <div className="checkboxContainer col-span-4">
+          <p className={"checkboxContainer__title"}>وضعیت ایثارگری:</p>
 
-          <div style={itemStyle}>
-            <input type="checkbox" id="khShahid" value="khShahid" />
-            <label htmlFor="khShahid" style={checkBoxLabelStyle}>
+          <div className="checkboxContainer__item">
+            <input
+              type="checkbox"
+              id="personIsSacrificedFamily"
+              name="personIsSacrificedFamily"
+              checked={!!retiredObject?.personIsSacrificedFamily}
+              readOnly
+            />
+            <label
+              htmlFor="personIsSacrificedFamily"
+              className={"checkboxContainer__label"}
+            >
               {" "}
               خانواده شهید
             </label>
           </div>
 
-          <div style={itemStyle}>
-            <input type="checkbox" id="warrior" value="warrior" />
-            <label htmlFor="warrior" style={checkBoxLabelStyle}>
+          <div className="checkboxContainer__item">
+            <input
+              type="checkbox"
+              id="personIsWarrior"
+              name="personIsWarrior"
+              checked={!!retiredObject?.personIsWarrior}
+              readOnly
+            />
+            <label
+              htmlFor="personIsWarrior"
+              className={"checkboxContainer__label"}
+            >
               رزمنده
             </label>
           </div>
 
-          <div style={itemStyle}>
-            <input type="checkbox" id="shahidChild" value="shahidChild" />
-            <label htmlFor="shahidChild" style={checkBoxLabelStyle}>
+          <div className="checkboxContainer__item">
+            <input
+              type="checkbox"
+              id="personIsChildOfSacrificed"
+              name="personIsChildOfSacrificed"
+              checked={!!retiredObject?.personIsChildOfSacrificed}
+              readOnly
+            />
+            <label
+              htmlFor="personIsChildOfSacrificed"
+              className={"checkboxContainer__label"}
+            >
               فرزند شهید
             </label>
           </div>
 
-          <div style={itemStyle}>
-            <input type="checkbox" id="sacreficed" value="sacreficed" />
-            <label htmlFor="sacreficed" style={checkBoxLabelStyle}>
+          <div className="checkboxContainer__item">
+            <input
+              type="checkbox"
+              id="personIsValiant"
+              name="personIsValiant"
+              checked={!!retiredObject?.personIsValiant}
+              readOnly
+            />
+            <label
+              htmlFor="personIsValiant"
+              className={"checkboxContainer__label"}
+            >
               جانباز
             </label>
           </div>
 
-          <div style={itemStyle}>
-            <input type="checkbox" id="warSacreficed" value="warSacreficed" />
-            <label htmlFor="warSacreficed" style={checkBoxLabelStyle}>
+          <div className="checkboxContainer__item">
+            <input
+              type="checkbox"
+              id="personIsSacrificed"
+              name="personIsSacrificed"
+              checked={!!retiredObject?.personIsSacrificed}
+              readOnly
+            />
+            <label
+              htmlFor="personIsSacrificed"
+              className={"checkboxContainer__label"}
+            >
               شهید
             </label>
           </div>
 
-          <div style={itemStyle}>
-            <input type="checkbox" id="free" value="free" />
-            <label htmlFor="free" style={checkBoxLabelStyle}>
+          <div className="checkboxContainer__item">
+            <input
+              type="checkbox"
+              id="personIsCaptive"
+              name="personIsCaptive"
+              checked={!!retiredObject?.personIsCaptive}
+              readOnly
+            />
+            <label
+              htmlFor="personIsCaptive"
+              className={"checkboxContainer__label"}
+            >
               آزاده
             </label>
           </div>
