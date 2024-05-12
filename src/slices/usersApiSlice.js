@@ -40,9 +40,27 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getUser: builder.query({
-      query: (userID) => ({
-        url: `${USERS_URL_HTTPS}/GetUser?userID=${userID}`,
-      }),
+      query: ({ userName, userID }) => {
+        let url = `${USERS_URL_HTTPS}/GetUser`;
+
+        const queryParams = [];
+
+        if (userName) {
+          queryParams.push(`userName=${userName}`);
+        }
+
+        if (userID) {
+          queryParams.push(`userID=${userID}`);
+        }
+
+        if (queryParams.length > 0) {
+          url += `?${queryParams.join("&")}`;
+        }
+
+        return {
+          url,
+        };
+      },
     }),
     updateUser: builder.mutation({
       query: (data) => ({

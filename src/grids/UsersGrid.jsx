@@ -63,7 +63,7 @@ function UsersGrid() {
     isSuccess,
     error,
     refetch,
-  } = useGetUserQuery();
+  } = useGetUserQuery({});
 
   const handleShowEditNameModal = () => {
     setShowEditUserModal(true);
@@ -105,6 +105,10 @@ function UsersGrid() {
     showEditUserModal,
     showEditUserGroupsModal,
   ]);
+
+  useEffect(() => {
+    console.log(usersTableData);
+  }, [usersTableData]);
 
   useEffect(() => {
     if (error) {

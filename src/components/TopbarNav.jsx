@@ -29,7 +29,7 @@ import {
 } from "@mui/icons-material";
 
 function TopbarNav({ userName, userID }) {
-  const { data: user } = useGetUserQuery(userID);
+  const { data: user } = useGetUserQuery({ userID });
 
   const [theme, setTheme] = useState("default");
 

@@ -12,7 +12,6 @@ export const sharedApiSlice = apiSlice.injectEndpoints({
 
         if (lookUpID) {
           url += `&lookUpID=${lookUpID}`;
-          console.log("lookupID", lookUpID);
         }
 
         if (lookUpParentID) {
