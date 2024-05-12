@@ -60,10 +60,6 @@ function CreateRequestForm() {
         ...requestObject,
         requestFrom: 1,
         personID: convertToEnglishNumber(requestObject.personID),
-        requestID: "",
-        requestNO: "",
-        requestTypeName: "",
-        requestTypeNameFa: "",
       }).unwrap();
       navigate("/retirement-organization/dashboard");
       console.log(insertRes);

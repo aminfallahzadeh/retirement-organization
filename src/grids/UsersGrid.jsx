@@ -22,16 +22,10 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-// helpers
-import { findById } from "../helper.js";
-
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-import {
-  setUsersTableData,
-  setSelectedUserData,
-} from "../slices/usersDataSlice.js";
+import { setUsersTableData } from "../slices/usersDataSlice.js";
 
 // components
 import Modal from "../components/Modal";
@@ -47,6 +41,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 function UsersGrid() {
   const [rowSelection, setRowSelection] = useState({});
+  const [userID, setUserID] = useState(null);
 
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [showEditUserGroupsModal, setShowEditUserGroupsModal] = useState(false);
@@ -226,18 +221,21 @@ function UsersGrid() {
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedUserInfo = findById(usersTableData, id);
+    // const selectedUserInfo = findById(usersTableData, id);
 
     if (id) {
-      dispatch(setSelectedUserData(selectedUserInfo));
-    } else {
-      dispatch(setSelectedUserData([]));
+      setUserID(id);
     }
+    // if (id) {
+    //   dispatch(setSelectedUserData(selectedUserInfo));
+    // } else {
+    //   dispatch(setSelectedUserData([]));
+    // }
 
-    return () => {
-      // Cleanup function to clear selected user
-      dispatch(setSelectedUserData([]));
-    };
+    // return () => {
+    //   // Cleanup function to clear selected user
+    //   dispatch(setSelectedUserData([]));
+    // };
   }, [dispatch, table, rowSelection, usersTableData]);
 
   const content = (
@@ -259,7 +257,10 @@ function UsersGrid() {
               title={"ویرایش اطلاعات کاربر"}
               closeModal={() => setShowEditUserModal(false)}
             >
-              <EditUserForm setShowEditUserModal={setShowEditUserModal} />
+              <EditUserForm
+                setShowEditUserModal={setShowEditUserModal}
+                userID={userID}
+              />
             </Modal>
           ) : showEditUserGroupsModal ? (
             <Modal
