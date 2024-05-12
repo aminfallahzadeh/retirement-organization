@@ -48,7 +48,6 @@ function Login() {
 
   const onSubmit = async (data) => {
     // user authentication logic
-    console.log(data);
     try {
       const res = await login(data).unwrap();
       dispatch(setCredentials({ ...res }));

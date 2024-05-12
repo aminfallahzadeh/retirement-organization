@@ -60,7 +60,7 @@ import {
 import { defaultTableOptions } from "../utils.js";
 
 function RetiredStatementsGrid() {
-  const [selectedStatement, setSelectedStatement] = useState(null);
+  const [statementID, setStatementID] = useState(null);
 
   const [rowSelection, setRowSelection] = useState({});
   const [showGenerateStatementModal, setShowGenerateStatementModal] =
@@ -162,10 +162,6 @@ function RetiredStatementsGrid() {
     }
   }, [error]);
 
-  useEffect(() => {
-    console.log(selectedStatement);
-  }, [selectedStatement]);
-
   const columns = useMemo(
     () => [
       {
@@ -236,7 +232,11 @@ function RetiredStatementsGrid() {
             <span>
               <IconButton
                 color="error"
-                disabled={row.original.retirementStatementIssueConfirmDate}
+                disabled={
+                  row.original.retirementStatementIssueConfirmDate
+                    ? true
+                    : false
+                }
                 onClick={handleDeleteStatementModalChange}
               >
                 <DeleteIcon />
@@ -316,18 +316,10 @@ function RetiredStatementsGrid() {
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedGroup = findById(statementTableData, id);
 
     if (id) {
-      setSelectedStatement(selectedGroup);
-    } else {
-      setSelectedStatement([]);
+      setStatementID(id);
     }
-
-    return () => {
-      // Cleanup function to clear selected group
-      setSelectedStatement([]);
-    };
   }, [dispatch, table, rowSelection, statementTableData]);
 
   const content = (
@@ -349,9 +341,7 @@ function RetiredStatementsGrid() {
               title={"مشاهده حکم"}
               closeModal={() => setShowViewStatementModal(false)}
             >
-              <RetirementStatementViewForm
-                RetirementStatementID={selectedStatement.id}
-              />
+              <RetirementStatementViewForm statementID={statementID} />
             </Modal>
           ) : showDeleteStatementModal ? (
             <Modal

@@ -1,9 +1,16 @@
 // react imports
 import { useState, useEffect, useCallback } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
+import { useGetRetiredQuery } from "../slices/retiredApiSlice";
 import { useGetRetirementStatementQuery } from "../slices/retirementStatementApiSlice";
-import { useLazyGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice";
+import {
+  useLazyGetRetirementStatementTypeQuery,
+  useLazyGetLookupDataQuery,
+} from "../slices/sharedApiSlice";
 
 // mui imports
 import { LoadingButton } from "@mui/lab";
@@ -18,10 +25,22 @@ import {
   convertToPersianDateFormatted,
 } from "../helper";
 
-function RetirementStatementViewForm({ RetirementStatementID }) {
+function RetirementStatementViewForm({ statementID }) {
   const [retirementStatementData, setRetirementStatementData] = useState({});
+  const [retiredObject, setRetiredObject] = useState(null);
 
+  // LOOK UP STATEs
+  const [gender, setGender] = useState("");
   const [statementType, setStatementType] = useState("");
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const personID = searchParams.get("personID");
+
+  // ACCESS LAZY LOOK UP QUERIES
+  const [getLookupData, { isLoading: getLookupDataLoading }] =
+    useLazyGetLookupDataQuery();
+
   const [
     getRetirementStatementType,
     { isLoading: getRetirementStatementTypeLoading },
@@ -29,10 +48,65 @@ function RetirementStatementViewForm({ RetirementStatementID }) {
 
   const {
     data: retirementStatement,
-    isLoading,
-    isSuccess,
+    isLoading: getRetirementStatementLoading,
+    isSuccess: getRetirementStatementSuccess,
     error,
-  } = useGetRetirementStatementQuery({ RetirementStatementID });
+  } = useGetRetirementStatementQuery({ RetirementStatementID: statementID });
+
+  // GET RETIRED INFO
+  const {
+    data: retired,
+    isLoading: getRetiredLoading,
+    isSuccess: getRetiredSuccess,
+    error: getRetiredError,
+  } = useGetRetiredQuery(personID);
+
+  // FETCH RETIRED DATA
+  useEffect(() => {
+    if (getRetiredSuccess) {
+      console.log(retired);
+      setRetiredObject(retired.itemList[0]);
+    }
+  }, [getRetiredSuccess, retired]);
+
+  // FETCH STATEMENT DATA
+  useEffect(() => {
+    if (getRetirementStatementSuccess) {
+      setRetirementStatementData(retirementStatement);
+    }
+  }, [getRetirementStatementSuccess, retirementStatement]);
+
+  // HANDLE ERRORs
+  useEffect(() => {
+    if (getRetiredError) {
+      console.log(getRetiredError);
+    }
+  }, [getRetiredError]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
+
+  // LOOK UP DATA FUNCTIONS
+  const fetchGender = useCallback(
+    async (lookUpID) => {
+      try {
+        const genderRes = await getLookupData({
+          lookUpType: "Gender",
+          lookUpID,
+        }).unwrap();
+        setGender(genderRes.itemList[0].lookUpName);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [getLookupData]
+  );
 
   const fetchRetirementType = useCallback(
     async (RetirementStatementTypeID) => {
@@ -48,24 +122,13 @@ function RetirementStatementViewForm({ RetirementStatementID }) {
     [getRetirementStatementType]
   );
 
-  // FETCH MAIN DATA
-  useEffect(() => {
-    if (isSuccess) {
-      setRetirementStatementData(retirementStatement);
-    }
-  }, [isSuccess, retirementStatement]);
-
-  // HANDLE ERROR
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-      toast.error(error?.data?.message || error.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [error]);
-
   // GET LOOKUP DATA
+  useEffect(() => {
+    if (retiredObject && retiredObject.genderID) {
+      fetchGender(retiredObject.genderID);
+    }
+  }, [retiredObject, fetchGender]);
+
   useEffect(() => {
     if (
       retirementStatementData &&
@@ -136,72 +199,57 @@ function RetirementStatementViewForm({ RetirementStatementID }) {
     <section className="formContainer formContainer--width-lg  flex-col">
       <form method="POST" className="grid grid--col-4">
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="melli"
-          />
-          <label className="inputBox__form--label" htmlFor="melli">
-            <span>*</span> کد ملی
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personName"
-          />
-          <label className="inputBox__form--label" htmlFor="personName">
-            نام
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personFamily"
-          />
-          <label className="inputBox__form--label" htmlFor="personFamily">
-            نام خانوادگی
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personSHSH"
-          />
-          <label className="inputBox__form--label" htmlFor="personSHSH">
-            شماره شناسنامه
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">کد ملی</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(retiredObject?.personNationalCode)}
+            </div>
+          </div>
         </div>
 
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personFather"
-          />
-          <label className="inputBox__form--label" htmlFor="personFather">
-            نام پدر
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">نام</div>
+            <div className="inputBox__form--readOnly-content">
+              {retiredObject?.personFirstName}
+            </div>
+          </div>
         </div>
+
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personGender"
-          />
-          <label className="inputBox__form--label" htmlFor="personGender">
-            جنسیت
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">نام خانوادگی</div>
+            <div className="inputBox__form--readOnly-content">
+              {retiredObject?.personLastName}
+            </div>
+          </div>
         </div>
+
+        <div className="inputBox__form">
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">شماره شناسنامه</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(retiredObject?.personCertificateNo)}
+            </div>
+          </div>
+        </div>
+
+        <div className="inputBox__form">
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">نام پدر</div>
+            <div className="inputBox__form--readOnly-content">
+              {retiredObject?.personFatherName}
+            </div>
+          </div>
+        </div>
+
+        <div className="inputBox__form">
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">جنسیت</div>
+            <div className="inputBox__form--readOnly-content">{gender}</div>
+          </div>
+        </div>
+
         <div className="inputBox__form">
           <input
             type="text"
