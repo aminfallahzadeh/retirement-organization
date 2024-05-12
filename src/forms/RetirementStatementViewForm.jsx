@@ -6,13 +6,14 @@ import { useLocation } from "react-router-dom";
 
 // redux imports
 import { useGetRetiredQuery } from "../slices/retiredApiSlice";
-import { useGetRetirementStatementQuery } from "../slices/retirementStatementApiSlice";
+import { useLazyGetRetirementStatementQuery } from "../slices/retirementStatementApiSlice";
 import {
   useLazyGetRetirementStatementTypeQuery,
   useLazyGetLookupDataQuery,
 } from "../slices/sharedApiSlice";
 
 // mui imports
+import { Box, CircularProgress } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Save as SaveIcon } from "@mui/icons-material";
 
@@ -24,7 +25,6 @@ import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
 } from "../helper";
-import { IdleTimerConsumer } from "react-idle-timer";
 
 function RetirementStatementViewForm({ statementID }) {
   const [retirementStatementData, setRetirementStatementData] = useState({});
@@ -49,35 +49,55 @@ function RetirementStatementViewForm({ statementID }) {
     { isLoading: getRetirementStatementTypeLoading },
   ] = useLazyGetRetirementStatementTypeQuery();
 
-  const {
-    data: retirementStatement,
-    isLoading: getRetirementStatementLoading,
-    isSuccess: getRetirementStatementSuccess,
-    error,
-  } = useGetRetirementStatementQuery({ RetirementStatementID: statementID });
+  // ACCESS LAZY RETIREMENT STATEMENT QUERy
+  const [getRetirementStatement, { isLoading: getRetirementStatementLoading }] =
+    useLazyGetRetirementStatementQuery();
+
+  // FETCH STATEMENT OBJECT FUNCTION
+  const fetchStatement = useCallback(
+    async (RetirementStatementID) => {
+      try {
+        const res = await getRetirementStatement({
+          RetirementStatementID,
+        }).unwrap();
+        setRetirementStatementData(res);
+      } catch (err) {
+        console.log(err);
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
+    },
+    [getRetirementStatement]
+  );
 
   // GET RETIRED INFO
   const {
     data: retired,
     isLoading: getRetiredLoading,
+    isFetching: getRetiredFetching,
     isSuccess: getRetiredSuccess,
     error: getRetiredError,
+    refetch: retiredRefetch,
   } = useGetRetiredQuery(personID);
 
   // FETCH RETIRED DATA
   useEffect(() => {
+    retiredRefetch();
     if (getRetiredSuccess) {
-      console.log(retired);
       setRetiredObject(retired.itemList[0]);
     }
-  }, [getRetiredSuccess, retired]);
+    return () => {
+      setRetiredObject(null);
+    };
+  }, [getRetiredSuccess, retired, retiredRefetch]);
 
-  // FETCH STATEMENT DATA
+  // FETCH STATEMENT DATA IF ID EXISTS
   useEffect(() => {
-    if (getRetirementStatementSuccess) {
-      setRetirementStatementData(retirementStatement);
+    if (statementID) {
+      fetchStatement(statementID);
     }
-  }, [getRetirementStatementSuccess, retirementStatement]);
+  }, [statementID, fetchStatement]);
 
   // HANDLE ERRORs
   useEffect(() => {
@@ -85,15 +105,6 @@ function RetirementStatementViewForm({ statementID }) {
       console.log(getRetiredError);
     }
   }, [getRetiredError]);
-
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-      toast.error(error?.data?.message || error.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [error]);
 
   // LOOK UP DATA FUNCTIONS
   const fetchLookUp = useCallback(
@@ -220,499 +231,502 @@ function RetirementStatementViewForm({ statementID }) {
   };
 
   return (
-    <section className="formContainer formContainer--width-lg  flex-col">
-      <form method="POST" className="grid grid--col-4">
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">کد ملی</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(retiredObject?.personNationalCode)}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">نام</div>
-            <div className="inputBox__form--readOnly-content">
-              {retiredObject?.personFirstName}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">نام خانوادگی</div>
-            <div className="inputBox__form--readOnly-content">
-              {retiredObject?.personLastName}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">شماره شناسنامه</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(retiredObject?.personCertificateNo)}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">نام پدر</div>
-            <div className="inputBox__form--readOnly-content">
-              {retiredObject?.personFatherName}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">جنسیت</div>
-            <div className="inputBox__form--readOnly-content">{gender}</div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(
-                convertToPersianDateFormatted(retiredObject?.personBirthDate)
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">محل تولد</div>
-            <div className="inputBox__form--readOnly-content">
-              {retiredObject?.personBirthPlace}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">وضعیت تاهل</div>
-            <div className="inputBox__form--readOnly-content">
-              {maritialStatus}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">
-              شماره بازنشستگی
-            </div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(retiredObject?.retiredID) ?? ""}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">مدرک تحصیلی</div>
-            <div className="inputBox__form--readOnly-content">
-              {educationType}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">کد درمانی</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(retiredObject?.insuranceCode)}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">تعداد فرزند</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(retiredObject?.childCount)}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">گروه</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(retiredObject?.retiredGroup)}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">کد پستی</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(retiredObject?.personPostalCode)}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">
-              تاریخ بازنشستگی
-            </div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(
-                convertToPersianDateFormatted(retiredObject?.retirementDate)
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="checkboxContainer col-span-4">
-          <p className={"checkboxContainer__title"}>وضعیت ایثارگری:</p>
-
-          <div className="checkboxContainer__item">
-            <input
-              type="checkbox"
-              id="personIsSacrificedFamily"
-              name="personIsSacrificedFamily"
-              checked={!!retiredObject?.personIsSacrificedFamily}
-              readOnly
-            />
-            <label
-              htmlFor="personIsSacrificedFamily"
-              className={"checkboxContainer__label"}
-            >
-              {" "}
-              خانواده شهید
-            </label>
-          </div>
-
-          <div className="checkboxContainer__item">
-            <input
-              type="checkbox"
-              id="personIsWarrior"
-              name="personIsWarrior"
-              checked={!!retiredObject?.personIsWarrior}
-              readOnly
-            />
-            <label
-              htmlFor="personIsWarrior"
-              className={"checkboxContainer__label"}
-            >
-              رزمنده
-            </label>
-          </div>
-
-          <div className="checkboxContainer__item">
-            <input
-              type="checkbox"
-              id="personIsChildOfSacrificed"
-              name="personIsChildOfSacrificed"
-              checked={!!retiredObject?.personIsChildOfSacrificed}
-              readOnly
-            />
-            <label
-              htmlFor="personIsChildOfSacrificed"
-              className={"checkboxContainer__label"}
-            >
-              فرزند شهید
-            </label>
-          </div>
-
-          <div className="checkboxContainer__item">
-            <input
-              type="checkbox"
-              id="personIsValiant"
-              name="personIsValiant"
-              checked={!!retiredObject?.personIsValiant}
-              readOnly
-            />
-            <label
-              htmlFor="personIsValiant"
-              className={"checkboxContainer__label"}
-            >
-              جانباز
-            </label>
-          </div>
-
-          <div className="checkboxContainer__item">
-            <input
-              type="checkbox"
-              id="personIsSacrificed"
-              name="personIsSacrificed"
-              checked={!!retiredObject?.personIsSacrificed}
-              readOnly
-            />
-            <label
-              htmlFor="personIsSacrificed"
-              className={"checkboxContainer__label"}
-            >
-              شهید
-            </label>
-          </div>
-
-          <div className="checkboxContainer__item">
-            <input
-              type="checkbox"
-              id="personIsCaptive"
-              name="personIsCaptive"
-              checked={!!retiredObject?.personIsCaptive}
-              readOnly
-            />
-            <label
-              htmlFor="personIsCaptive"
-              className={"checkboxContainer__label"}
-            >
-              آزاده
-            </label>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">عنوان شغل</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(retiredObject?.retiredLastPosition)}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">مرتبه</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(retiredObject?.retiredJobDegree)}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">آخرین محل خدمت</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(retiredObject?.lastOrganization)}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">
-              آخرین پست سازمانی{" "}
-            </div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(retiredObject?.retiredLastPosition)}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="realSanatavat"
-          />
-          <label className="inputBox__form--label" htmlFor="realSanatavat">
-            سنوات خدمت واقعی
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="bonusSanatavat"
-          />
-          <label className="inputBox__form--label" htmlFor="bonusSanatavat">
-            سنوات ارفاقی
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="retiredSanatavat"
-          />
-          <label className="inputBox__form--label" htmlFor="retiredSanatavat">
-            سنوات بازنشستگی
-          </label>
-        </div>
-      </form>
-
-      <div className="Modal__header u-margin-top-md">
-        <h4 className="title-secondary">اطلاعات حکم بازنشستگی</h4>
-      </div>
-
-      <form method="POST" className="grid grid--col-4">
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">نوع حکم</div>
-            <div className="inputBox__form--readOnly-content">
-              {statementType}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">سریال حکم</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(
-                retirementStatementData.retirementStatementSerial
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form col-span-4 row-span-2">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">شرح حکم</div>
-            <div className="inputBox__form--readOnly-content">
-              {retirementStatementData.retirementStatementDesc}
-            </div>
-          </div>
-        </div>
-      </form>
-
-      <div className="Modal__header u-margin-top-md">
-        <h4 className="title-secondary">اطلاعات پشتیبان</h4>
-      </div>
-
-      <form method="POSt" className="grid grid--col-4">
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="backupName"
-          />
-          <label className="inputBox__form--label" htmlFor="backupName">
-            نام
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="backupFamily"
-          />
-          <label className="inputBox__form--label" htmlFor="backupFamily">
-            نام خانوادگی
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="backupRelation"
-          />
-          <label className="inputBox__form--label" htmlFor="backupRelation">
-            نسبت
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="backupTell"
-          />
-          <label className="inputBox__form--label" htmlFor="backupTell">
-            تلفن
-          </label>
-        </div>
-      </form>
-      <form method="POST" className="grid grid--col-7 u-margin-top-md">
-        <div style={firstGridStyle} className="row-span-4 col-span-2">
-          <p style={pStyle}>آیتم های حکم</p>
-        </div>
-        <div style={arrowsStyle}>
-          <p style={pStyle}>&lt;&lt;</p>
-          <p style={pStyle}>&gt;&gt;</p>
-        </div>
-        <div style={firstGridStyle} className="row-span-4 col-span-2">
-          <p style={pStyle}>آیتم حکم</p>
-        </div>
-      </form>
-
-      <form className="grid grid--col-3 u-margin-top-md">
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">تاریخ اجرا</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(
-                convertToPersianDateFormatted(
-                  retirementStatementData.retirementStatementRunDate
-                )
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">تاریخ صدور</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(
-                convertToPersianDateFormatted(
-                  retirementStatementData.retirementStatementIssueDate
-                )
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">شماره حکم</div>
-            <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(
-                retirementStatementData.retirementStatementNo
-              )}
-            </div>
-          </div>
-        </div>
-      </form>
-
-      <div className="Modal__header u-margin-top-md">
-        <h4 className="title-secondary">موظفین</h4>
-      </div>
-
-      <div style={gridTitleStyle}>
-        <div style={gridItemsStyle}>ردیف</div>
-        <div style={gridItemsStyle}>کد ملی</div>
-        <div style={gridItemsStyle}>نام</div>
-        <div style={gridItemsStyle}>نام خانوادگی</div>
-        <div style={gridItemsStyle}>نام پدر</div>
-        <div style={gridItemsStyle}>نسبت</div>
-        <div style={gridItemsStyle}>تاریخ تولد</div>
-        <div style={gridItemsStyle}>حقوق وظیفه</div>
-        <div style={gridItemsStyle}>بازنشستگی تکمیلی</div>
-        <div style={gridItemsStyle}>حق تاهل</div>
-        <div style={gridItemsStyle}>حق اولاد</div>
-      </div>
-
-      <div style={{ marginRight: "auto" }}>
-        <LoadingButton
-          dir="ltr"
-          endIcon={<SaveIcon />}
-          variant="contained"
-          color="success"
-          sx={{ fontFamily: "sahel" }}
+    <>
+      {getRetiredLoading || getRetiredFetching || !retiredObject ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "2rem 10rem",
+          }}
         >
-          <span>ذخیره</span>
-        </LoadingButton>
-      </div>
-    </section>
+          <CircularProgress color="primary" />
+        </Box>
+      ) : (
+        <section className="formContainer formContainer--width-lg  flex-col">
+          <form method="POST" className="grid grid--col-4">
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">کد ملی</div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.personNationalCode)}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">نام</div>
+                <div className="inputBox__form--readOnly-content">
+                  {retiredObject?.personFirstName}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  نام خانوادگی
+                </div>
+                <div className="inputBox__form--readOnly-content">
+                  {retiredObject?.personLastName}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  شماره شناسنامه
+                </div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.personCertificateNo)}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">نام پدر</div>
+                <div className="inputBox__form--readOnly-content">
+                  {retiredObject?.personFatherName}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">جنسیت</div>
+                <div className="inputBox__form--readOnly-content">{gender}</div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(
+                    convertToPersianDateFormatted(
+                      retiredObject?.personBirthDate
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">محل تولد</div>
+                <div className="inputBox__form--readOnly-content">
+                  {retiredObject?.personBirthPlace}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">وضعیت تاهل</div>
+                <div className="inputBox__form--readOnly-content">
+                  {maritialStatus}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  شماره بازنشستگی
+                </div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.retiredID) ?? ""}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  مدرک تحصیلی
+                </div>
+                <div className="inputBox__form--readOnly-content">
+                  {educationType}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">کد درمانی</div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.insuranceCode)}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  تعداد فرزند
+                </div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.childCount)}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">گروه</div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.retiredGroup)}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">کد پستی</div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.personPostalCode)}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  تاریخ بازنشستگی
+                </div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(
+                    convertToPersianDateFormatted(retiredObject?.retirementDate)
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="checkboxContainer col-span-4">
+              <p className={"checkboxContainer__title"}>وضعیت ایثارگری:</p>
+
+              <div className="checkboxContainer__item">
+                <input
+                  type="checkbox"
+                  id="personIsSacrificedFamily"
+                  name="personIsSacrificedFamily"
+                  checked={!!retiredObject?.personIsSacrificedFamily}
+                  readOnly
+                />
+                <label
+                  htmlFor="personIsSacrificedFamily"
+                  className={"checkboxContainer__label"}
+                >
+                  {" "}
+                  خانواده شهید
+                </label>
+              </div>
+
+              <div className="checkboxContainer__item">
+                <input
+                  type="checkbox"
+                  id="personIsWarrior"
+                  name="personIsWarrior"
+                  checked={!!retiredObject?.personIsWarrior}
+                  readOnly
+                />
+                <label
+                  htmlFor="personIsWarrior"
+                  className={"checkboxContainer__label"}
+                >
+                  رزمنده
+                </label>
+              </div>
+
+              <div className="checkboxContainer__item">
+                <input
+                  type="checkbox"
+                  id="personIsChildOfSacrificed"
+                  name="personIsChildOfSacrificed"
+                  checked={!!retiredObject?.personIsChildOfSacrificed}
+                  readOnly
+                />
+                <label
+                  htmlFor="personIsChildOfSacrificed"
+                  className={"checkboxContainer__label"}
+                >
+                  فرزند شهید
+                </label>
+              </div>
+
+              <div className="checkboxContainer__item">
+                <input
+                  type="checkbox"
+                  id="personIsValiant"
+                  name="personIsValiant"
+                  checked={!!retiredObject?.personIsValiant}
+                  readOnly
+                />
+                <label
+                  htmlFor="personIsValiant"
+                  className={"checkboxContainer__label"}
+                >
+                  جانباز
+                </label>
+              </div>
+
+              <div className="checkboxContainer__item">
+                <input
+                  type="checkbox"
+                  id="personIsSacrificed"
+                  name="personIsSacrificed"
+                  checked={!!retiredObject?.personIsSacrificed}
+                  readOnly
+                />
+                <label
+                  htmlFor="personIsSacrificed"
+                  className={"checkboxContainer__label"}
+                >
+                  شهید
+                </label>
+              </div>
+
+              <div className="checkboxContainer__item">
+                <input
+                  type="checkbox"
+                  id="personIsCaptive"
+                  name="personIsCaptive"
+                  checked={!!retiredObject?.personIsCaptive}
+                  readOnly
+                />
+                <label
+                  htmlFor="personIsCaptive"
+                  className={"checkboxContainer__label"}
+                >
+                  آزاده
+                </label>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">مرتبه</div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.retiredJobDegree)}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  آخرین محل خدمت
+                </div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.lastOrganization)}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  آخرین پست سازمانی{" "}
+                </div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.retiredLastPosition)}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  سنوات خدمت واقعی
+                </div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.retiredRealDuration)}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  سنوات ارفاقی
+                </div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.retiredGrantDuration)}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  سنوات بازنشستگی
+                </div>
+                <div className="inputBox__form--readOnly-content"></div>
+              </div>
+            </div>
+          </form>
+
+          <div className="Modal__header u-margin-top-md">
+            <h4 className="title-secondary">اطلاعات حکم بازنشستگی</h4>
+          </div>
+
+          <form method="POST" className="grid grid--col-4">
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">نوع حکم</div>
+                <div className="inputBox__form--readOnly-content">
+                  {statementType}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">سریال حکم</div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(
+                    retirementStatementData.retirementStatementSerial
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form col-span-4 row-span-2">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">شرح حکم</div>
+                <div className="inputBox__form--readOnly-content">
+                  {retirementStatementData.retirementStatementDesc}
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div className="Modal__header u-margin-top-md">
+            <h4 className="title-secondary">اطلاعات پشتیبان</h4>
+          </div>
+
+          <form method="POSt" className="grid grid--col-4">
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">نام</div>
+                <div className="inputBox__form--readOnly-content">
+                  {retiredObject?.backupFirstName}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">
+                  نام خانوادگی
+                </div>
+                <div className="inputBox__form--readOnly-content">
+                  {retiredObject?.backupLastName}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">نسبت</div>
+                <div className="inputBox__form--readOnly-content">
+                  {retiredObject?.backupRelation}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">تلفن</div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(retiredObject?.backupPhone)}
+                </div>
+              </div>
+            </div>
+          </form>
+          <form method="POST" className="grid grid--col-2 u-margin-top-md">
+            <div style={firstGridStyle} className="row-span-4">
+              <p style={pStyle}>آیتم های حکم</p>
+            </div>
+            <div style={firstGridStyle} className="row-span-4">
+              <p style={pStyle}>آیتم حکم</p>
+            </div>
+          </form>
+
+          <form className="grid grid--col-3 u-margin-top-md">
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">تاریخ اجرا</div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(
+                    convertToPersianDateFormatted(
+                      retirementStatementData.retirementStatementRunDate
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">تاریخ صدور</div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(
+                    convertToPersianDateFormatted(
+                      retirementStatementData.retirementStatementIssueDate
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <div className="inputBox__form--readOnly-input">
+                <div className="inputBox__form--readOnly-label">شماره حکم</div>
+                <div className="inputBox__form--readOnly-content">
+                  {convertToPersianNumber(
+                    retirementStatementData.retirementStatementNo
+                  )}
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div className="Modal__header u-margin-top-md">
+            <h4 className="title-secondary">موظفین</h4>
+          </div>
+
+          <div style={gridTitleStyle}>
+            <div style={gridItemsStyle}>ردیف</div>
+            <div style={gridItemsStyle}>کد ملی</div>
+            <div style={gridItemsStyle}>نام</div>
+            <div style={gridItemsStyle}>نام خانوادگی</div>
+            <div style={gridItemsStyle}>نام پدر</div>
+            <div style={gridItemsStyle}>نسبت</div>
+            <div style={gridItemsStyle}>تاریخ تولد</div>
+            <div style={gridItemsStyle}>حقوق وظیفه</div>
+            <div style={gridItemsStyle}>بازنشستگی تکمیلی</div>
+            <div style={gridItemsStyle}>حق تاهل</div>
+            <div style={gridItemsStyle}>حق اولاد</div>
+          </div>
+
+          <div style={{ marginRight: "auto" }}>
+            <LoadingButton
+              dir="ltr"
+              endIcon={<SaveIcon />}
+              variant="contained"
+              color="success"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>ذخیره</span>
+            </LoadingButton>
+          </div>
+        </section>
+      )}
+    </>
   );
 }
 

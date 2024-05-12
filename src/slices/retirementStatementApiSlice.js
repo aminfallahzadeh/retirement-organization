@@ -37,4 +37,5 @@ export const {
   useGenerateNewRetirementStatementMutation,
   useRemoveRetirementStatementMutation,
   useGetRetirementStatementQuery,
+  useLazyGetRetirementStatementQuery,
 } = retirementStatementApiSlice;
