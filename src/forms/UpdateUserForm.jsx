@@ -16,10 +16,10 @@ import { Box, CircularProgress } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Save as SaveIcon } from "@mui/icons-material";
 
-function UserEditForm({ setShowEditUserModal, userID }) {
+function UpdateUserForm({ setShowEditUserModal, userID }) {
   const { selectedUserData } = useSelector((state) => state.usersData);
 
-  const [userObject, setUserObject] = useState({});
+  const [userObject, setUserObject] = useState(null);
 
   const handleUserObjectChange = (e) => {
     const { name, value } = e.target;
@@ -93,7 +93,7 @@ function UserEditForm({ setShowEditUserModal, userID }) {
 
   const content = (
     <>
-      {isLoading || isFetching ? (
+      {isLoading || isFetching || !userObject ? (
         <Box
           sx={{
             display: "flex",
@@ -260,4 +260,4 @@ function UserEditForm({ setShowEditUserModal, userID }) {
   return content;
 }
 
-export default UserEditForm;
+export default UpdateUserForm;

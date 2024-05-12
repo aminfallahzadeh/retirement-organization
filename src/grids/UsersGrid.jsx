@@ -29,7 +29,7 @@ import { setUsersTableData } from "../slices/usersDataSlice.js";
 
 // components
 import Modal from "../components/Modal";
-import EditUserForm from "../forms/EditUserForm";
+import UpdateUserForm from "../forms/UpdateUserForm";
 import GroupsGridUser from "../grids/GroupsGridUser";
 import UserGroupsGrid from "../grids/UserGroupsGrid";
 import ArrowButtonsUsers from "../components/ArrowButtonsUsers";
@@ -221,21 +221,10 @@ function UsersGrid() {
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    // const selectedUserInfo = findById(usersTableData, id);
 
     if (id) {
       setUserID(id);
     }
-    // if (id) {
-    //   dispatch(setSelectedUserData(selectedUserInfo));
-    // } else {
-    //   dispatch(setSelectedUserData([]));
-    // }
-
-    // return () => {
-    //   // Cleanup function to clear selected user
-    //   dispatch(setSelectedUserData([]));
-    // };
   }, [dispatch, table, rowSelection, usersTableData]);
 
   const content = (
@@ -257,7 +246,7 @@ function UsersGrid() {
               title={"ویرایش اطلاعات کاربر"}
               closeModal={() => setShowEditUserModal(false)}
             >
-              <EditUserForm
+              <UpdateUserForm
                 setShowEditUserModal={setShowEditUserModal}
                 userID={userID}
               />
