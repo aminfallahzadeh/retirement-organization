@@ -878,6 +878,7 @@ function RetiredPersonForm() {
           dir="ltr"
           endIcon={<SaveIcon />}
           loading={isUpdating}
+          disabled={!editable}
           onClick={handleUpdateRetired}
           variant="contained"
           color="success"

@@ -263,7 +263,7 @@ function RetiredPensionaryForm() {
             disabled={!editable}
             value={selectedRetriementDate}
             onChange={handleRetiredDateChange}
-            format={"jYYYY-jMM-jDD"}
+            format={"jYYYY/jMM/jDD"}
             onOpenChange={handleRetiredOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isRetriementCalenderOpen}
@@ -367,6 +367,7 @@ function RetiredPensionaryForm() {
           dir="ltr"
           endIcon={<SaveIcon />}
           loading={isUpdating}
+          disabled={!editable}
           onClick={handleUpdateRetiredPensionary}
           variant="contained"
           color="success"

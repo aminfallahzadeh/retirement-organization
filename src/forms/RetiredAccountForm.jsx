@@ -282,6 +282,7 @@ function RetiredAccountForm() {
           dir="ltr"
           endIcon={<SaveIcon />}
           loading={isUpdating}
+          disabled={!editable}
           onClick={handleUpdateRetiredAccount}
           variant="contained"
           color="success"

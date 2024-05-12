@@ -1,5 +1,6 @@
 // react imports
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 // component imports
 import Captcha from "../components/Captcha";
@@ -34,27 +35,27 @@ import { LoadingButton } from "@mui/lab";
 function Login() {
   const { captcha } = useSelector((state) => state.captcha);
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm();
 
   const [login, { isLoading }] = useLoginMutation();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     // user authentication logic
-
+    console.log(data);
     try {
-      const res = await login({ username, password }).unwrap();
+      const res = await login(data).unwrap();
       dispatch(setCredentials({ ...res }));
-      setUsername("");
-      setPassword("");
-
+      setValue("username", "");
+      setValue("password", "");
       if (captcha) {
         navigate("/retirement-organization/dashboard");
-        /* console.log(res); */
         toast.success(res.message, {
           fontSize: "18px",
           autoClose: 2000,
@@ -64,16 +65,18 @@ function Login() {
         dispatch(setCaptchaText(generateCaptcha(4)));
         dispatch(setCaptchaInput(""));
         dispatch(setCaptcha(false));
+        setValue("username", "");
+        setValue("password", "");
         toast.error("! کد امنیتی اشتباه است", {
           fontSize: "18px",
           autoClose: 2000,
         });
       }
     } catch (err) {
-      setUsername("");
-      setPassword("");
       dispatch(setCaptchaText(generateCaptcha(4)));
       dispatch(setCaptchaInput(""));
+      setValue("username", "");
+      setValue("password", "");
       toast.error(err?.data?.message || err.error, {
         fontSize: "18px",
         autoClose: 2000,
@@ -106,7 +109,7 @@ function Login() {
       <img src="./images/login-bg.jpg" className="bg" />
       <form
         className="loginContainer"
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         method="POST"
         noValidate
       >
@@ -114,18 +117,25 @@ function Login() {
           <div className="loginContainer__box--header">
             <span>ورود به صفحه کاربری</span>
           </div>
+          <div className="flex-row flex-center">
+            {errors.username && (
+              <div className="error-form">{errors.username.message}</div>
+            )}
+            {errors.password && (
+              <div className="error-form">{errors.password.message}</div>
+            )}
+          </div>
 
           <div className="inputBox__login ">
             <input
               type="text"
-              id="user"
+              id="username"
+              {...register("username", { required: "نام کاربری را وارد کنید" })}
               className="inputBox__login--input"
-              value={username}
               required
-              onChange={(e) => setUsername(e.target.value)}
               disabled={isLoading}
             />
-            <label htmlFor="user" className="inputBox__login--label">
+            <label htmlFor="username" className="inputBox__login--label">
               نام کاربری
             </label>
             <PersonOutlinedIcon style={style} />
@@ -134,14 +144,13 @@ function Login() {
           <div className="inputBox__login">
             <input
               type="password"
-              id="pass"
+              id="password"
+              {...register("password", { required: "کلمه عبور را وارد کنید" })}
               className="inputBox__login--input"
-              value={password}
               required
-              onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
             />
-            <label htmlFor="pass" className="inputBox__login--label">
+            <label htmlFor="password" className="inputBox__login--label">
               کلمه عبور
             </label>
             <LockOutlinIcon style={style} />
@@ -153,6 +162,7 @@ function Login() {
           <LoadingButton
             dir="ltr"
             onClick={handleSubmit}
+            type="submit"
             endIcon={<LoginIcon />}
             loading={isLoading}
             variant="contained"
