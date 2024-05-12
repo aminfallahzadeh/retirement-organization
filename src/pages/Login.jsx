@@ -116,16 +116,12 @@ function Login() {
           <div className="loginContainer__box--header">
             <span>ورود به صفحه کاربری</span>
           </div>
-          <div className="flex-row flex-center">
-            {errors.username && (
-              <div className="error-form">{errors.username.message}</div>
-            )}
-            {errors.password && (
-              <div className="error-form">{errors.password.message}</div>
-            )}
-          </div>
+          <div className="flex-row flex-center"></div>
 
-          <div className="inputBox__login ">
+          <div className="inputBox__login">
+            {errors.username && (
+              <span className="error-form">{errors.username.message}</span>
+            )}
             <input
               type="text"
               id="username"
@@ -139,8 +135,10 @@ function Login() {
             </label>
             <PersonOutlinedIcon style={style} />
           </div>
-
           <div className="inputBox__login">
+            {errors.password && (
+              <span className="error-form">{errors.password.message}</span>
+            )}
             <input
               type="password"
               id="password"

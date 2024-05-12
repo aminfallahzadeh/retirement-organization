@@ -324,49 +324,39 @@ function RetirementStatementViewForm({ statementID }) {
         </div>
 
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personTreatCode"
-          />
-          <label className="inputBox__form--label" htmlFor="personTreatCode">
-            کد درمانی
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">کد درمانی</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(retiredObject?.insuranceCode)}
+            </div>
+          </div>
         </div>
 
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personChildren"
-          />
-          <label className="inputBox__form--label" htmlFor="personChildren">
-            تعداد فرزند
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">تعداد فرزند</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(retiredObject?.childCount)}
+            </div>
+          </div>
         </div>
+
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personGroup"
-          />
-          <label className="inputBox__form--label" htmlFor="personGroup">
-            گروه
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">گروه</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(retiredObject?.retiredGroup)}
+            </div>
+          </div>
         </div>
+
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="personPostal"
-          />
-          <label className="inputBox__form--label" htmlFor="personPostal">
-            کد پستی
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">کد پستی</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(retiredObject?.personPostalCode)}
+            </div>
+          </div>
         </div>
 
         <div className="inputBox__form">
@@ -484,61 +474,43 @@ function RetirementStatementViewForm({ statementID }) {
         </div>
 
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="jobTitle"
-          />
-          <label className="inputBox__form--label" htmlFor="jobTitle">
-            عنوان شغل
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="martabeh"
-          />
-          <label className="inputBox__form--label" htmlFor="martabeh">
-            مرتبه
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="maskanYaraneh"
-          />
-          <label className="inputBox__form--label" htmlFor="maskanYaraneh">
-            یارانه حق مسکن
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="lastMilitary"
-          />
-          <label className="inputBox__form--label" htmlFor="lastMilitary">
-            آخرین محل خدمت
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">عنوان شغل</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(retiredObject?.retiredLastPosition)}
+            </div>
+          </div>
         </div>
 
         <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            required
-            id="lastPost"
-          />
-          <label className="inputBox__form--label" htmlFor="lastPost">
-            آخرین پست سازمانی
-          </label>
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">مرتبه</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(retiredObject?.retiredJobDegree)}
+            </div>
+          </div>
         </div>
+
+        <div className="inputBox__form">
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">آخرین محل خدمت</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(retiredObject?.lastOrganization)}
+            </div>
+          </div>
+        </div>
+
+        <div className="inputBox__form">
+          <div className="inputBox__form--readOnly-input">
+            <div className="inputBox__form--readOnly-label">
+              آخرین پست سازمانی{" "}
+            </div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianNumber(retiredObject?.retiredLastPosition)}
+            </div>
+          </div>
+        </div>
+
         <div className="inputBox__form">
           <input
             type="text"

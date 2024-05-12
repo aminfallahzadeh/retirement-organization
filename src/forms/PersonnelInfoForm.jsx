@@ -75,7 +75,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">شماره کارمندی</div>
             <div className="inputBox__form--readOnly-content">
-              {personObject.personFirstName}
+              {convertToPersianNumber(personObject.personID)}
             </div>
           </div>
         </div>

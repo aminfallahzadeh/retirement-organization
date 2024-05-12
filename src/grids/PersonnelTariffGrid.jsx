@@ -49,7 +49,14 @@ function PersonnelTariffGrid() {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(tarrifs);
+      const data = tarrifs.itemList.map((tariff, index) => ({
+        rowNum: index + 1,
+        personnelStatementOffTypeName: tariff.personnelStatementOffTypeName,
+        personnelStatementOffYear: tariff.personnelStatementOffYear,
+        personnelStatementOffMonth: tariff.personnelStatementOffMonth,
+        personnelStatementOffDay: tariff.personnelStatementOffDay,
+      }));
+      setTableData(data);
     }
   }, [isSuccess, tarrifs]);
 
@@ -67,33 +74,55 @@ function PersonnelTariffGrid() {
       {
         accessorKey: "rowNum",
         header: "ردیف",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
       },
       {
-        accessorKey: "personnelWorkType",
+        accessorKey: "personnelStatementOffTypeName",
         header: "نوع خدمت",
+        size: 20,
       },
       {
-        accessorKey: "personnelYear",
+        accessorKey: "personnelStatementOffYear",
         header: "سال",
+        size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
       {
-        accessorKey: "personnelMonth",
+        accessorKey: "personnelStatementOffMonth",
         header: "ماه",
+        size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
       {
-        accessorKey: "personnelDay",
+        accessorKey: "personnelStatementOffDay",
         header: "روز",
+        size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
       {
         accessorKey: "reaclTotal",
         header: "جمع واقعی",
+        size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
       {
         accessorKey: "total",
         header: "جمع",
+        size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
     ],
     []

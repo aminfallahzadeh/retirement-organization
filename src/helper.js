@@ -3,7 +3,7 @@ import momentj from "moment-jalaali";
 
 // convert to persian number
 export const convertToPersianNumber = (num) => {
-  if (num) {
+  if (num || num === 0) {
     const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
     const result = String(num).replace(/\d/g, (match) => persianDigits[match]);
     return result;

@@ -53,7 +53,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
 
-  const [selectedBseFinishDate, setSelectedBseFinishDate] = useState(null);
+  const [selectedBaseFinishDate, setSelectedBaseFinishDate] = useState(null);
   const [isBaseFinishDateCalenderOpen, setIsBaseFinishDateCalenderOpen] =
     useState(false);
 
@@ -181,7 +181,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
   };
 
   const handleBaseFinishDateChange = (date) => {
-    setSelectedBseFinishDate(date);
+    setSelectedBaseFinishDate(date);
     setIsBaseFinishDateCalenderOpen(false);
   };
 
@@ -199,7 +199,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
   }, [heirObject?.personBirthDate]);
 
   useEffect(() => {
-    setSelectedBseFinishDate(
+    setSelectedBaseFinishDate(
       convertToPersianDate(heirObject?.pensionaryBaseFinishDate)
     );
   }, [heirObject?.pensionaryBaseFinishDate]);
@@ -225,10 +225,10 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
         personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
       );
 
-      const pensionaryBaseFinishDate = new Date(selectedBseFinishDate);
-      pensionaryBaseFinishDate.setMinutes(
-        pensionaryBaseFinishDate.getMinutes() -
-          pensionaryBaseFinishDate.getTimezoneOffset()
+      const personBaseFinishDate = new Date(selectedBaseFinishDate);
+      personBaseFinishDate.setMinutes(
+        personBaseFinishDate.getMinutes() -
+          personBaseFinishDate.getTimezoneOffset()
       );
 
       const updateRes = await updateHeir({
@@ -251,6 +251,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
           parseInt(convertToEnglishNumber(heirObject.personArea)) || null,
         parentPersonID,
         personBirthDate,
+        personBaseFinishDate,
       }).unwrap();
       console.log(updateRes);
       setShowEditHeirModal(false);
@@ -661,7 +662,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
 
             <div className="inputBox__form">
               <InputDatePicker
-                value={selectedBseFinishDate}
+                value={selectedBaseFinishDate}
                 onChange={handleBaseFinishDateChange}
                 format={"jYYYY-jMM-jDD"}
                 onOpenChange={handleBaseFinishDateOpenChange}

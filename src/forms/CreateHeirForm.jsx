@@ -158,10 +158,10 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
         personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
       );
 
-      const pensionaryBaseFinishDate = new Date(selectedBaseFinishDate);
-      pensionaryBaseFinishDate.setMinutes(
-        pensionaryBaseFinishDate.getMinutes() -
-          pensionaryBaseFinishDate.getTimezoneOffset()
+      const personBaseFinishDate = new Date(selectedBaseFinishDate);
+      personBaseFinishDate.setMinutes(
+        personBaseFinishDate.getMinutes() -
+          personBaseFinishDate.getTimezoneOffset()
       );
 
       const insertRes = await insertHeir({
@@ -184,7 +184,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
         personArea:
           parseInt(convertToEnglishNumber(heirObject.personArea)) || null,
         personBirthDate,
-        pensionaryBaseFinishDate,
+        personBaseFinishDate,
         accountNo: convertToEnglishNumber(heirObject?.accountNo),
         insuranceCoef:
           parseFloat(convertToEnglishNumber(heirObject?.insuranceCoef)) || 0,
