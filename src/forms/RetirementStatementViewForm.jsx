@@ -14,8 +14,9 @@ import {
 
 // mui imports
 import { Box, CircularProgress } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { Save as SaveIcon } from "@mui/icons-material";
+
+// components
+import RelatedHeirStatementGrid from "../grids/RelatedHeirStatementGrid";
 
 // library imports
 import { toast } from "react-toastify";
@@ -205,29 +206,6 @@ function RetirementStatementViewForm({ statementID }) {
     border: "2px solid #a0a0a0",
     borderRadius: "6px",
     padding: "10px",
-  };
-
-  const arrowsStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
-    textAlign: "center",
-    paddingTop: "100px",
-    columnGap: "5px",
-  };
-
-  const gridTitleStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: "10px",
-  };
-
-  const gridItemsStyle = {
-    backgroundColor: "#f8f8f8",
-    border: "2px solid #a0a0a0",
-    padding: "5px 10px",
   };
 
   return (
@@ -696,33 +674,14 @@ function RetirementStatementViewForm({ statementID }) {
           </form>
 
           <div className="Modal__header u-margin-top-md">
-            <h4 className="title-secondary">موظفین</h4>
+            <h4 className="title-secondary">
+              {retiredObject?.personDeathDate ? "موظفین" : "وابستگان"}
+            </h4>
           </div>
-
-          <div style={gridTitleStyle}>
-            <div style={gridItemsStyle}>ردیف</div>
-            <div style={gridItemsStyle}>کد ملی</div>
-            <div style={gridItemsStyle}>نام</div>
-            <div style={gridItemsStyle}>نام خانوادگی</div>
-            <div style={gridItemsStyle}>نام پدر</div>
-            <div style={gridItemsStyle}>نسبت</div>
-            <div style={gridItemsStyle}>تاریخ تولد</div>
-            <div style={gridItemsStyle}>حقوق وظیفه</div>
-            <div style={gridItemsStyle}>بازنشستگی تکمیلی</div>
-            <div style={gridItemsStyle}>حق تاهل</div>
-            <div style={gridItemsStyle}>حق اولاد</div>
-          </div>
-
-          <div style={{ marginRight: "auto" }}>
-            <LoadingButton
-              dir="ltr"
-              endIcon={<SaveIcon />}
-              variant="contained"
-              color="success"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>ذخیره</span>
-            </LoadingButton>
+          <div>
+            <RelatedHeirStatementGrid
+              itemList={retirementStatementData.retirementStatementRelatedList}
+            />
           </div>
         </section>
       )}
