@@ -31,7 +31,7 @@ export const relatedApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     removeRelated: builder.mutation({
-      query: (pensionaryID) => ({
+      query: ({ pensionaryID }) => ({
         url: `${RELATED_URL_HTTPS}/RemoveRelated?pensionaryID=${pensionaryID}`,
         method: "POST",
       }),

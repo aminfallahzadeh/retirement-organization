@@ -28,12 +28,13 @@ import {
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-function RelatedHeirStatementGrid({ itemList }) {
+function StatementViewHeirGrid({ relatedList, amountList }) {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
-    if (itemList) {
-      const data = itemList.map((item, index) => ({
+    if (relatedList) {
+      const data = relatedList.map((item, index) => ({
+        id: item.retirementStatementRelatedID,
         rowNumber: index + 1,
         personNationalCode: item.personNationalCode,
         personFirstName: item.personFirstName,
@@ -45,7 +46,7 @@ function RelatedHeirStatementGrid({ itemList }) {
 
       setTableData(data);
     }
-  }, [itemList]);
+  }, [relatedList]);
 
   const columns = useMemo(
     () => [
@@ -98,27 +99,103 @@ function RelatedHeirStatementGrid({ itemList }) {
         ),
       },
       {
-        accessorKey: "test1",
+        accessorKey: "retirementStatementItemAmount1",
         header: "حقوق وظیفه",
         size: 20,
+        Cell: ({ row }) => {
+          const foundItem = amountList.find(
+            (obj) =>
+              obj.retirementStatementRelatedID === row.original.id &&
+              obj.retirementStatementItemID === "2001"
+          );
+
+          if (foundItem) {
+            return (
+              <div>
+                {convertToPersianNumber(
+                  foundItem.retirementStatementItemAmount
+                )}
+              </div>
+            );
+          } else {
+            return <div>-</div>;
+          }
+        },
       },
       {
-        accessorKey: "test2",
+        accessorKey: "retirementStatementItemAmount2",
         header: "بازنشستگی تکمیلی",
         size: 20,
+        Cell: ({ row }) => {
+          const foundItem = amountList.find(
+            (obj) =>
+              obj.retirementStatementRelatedID === row.original.id &&
+              obj.retirementStatementItemID === "2002"
+          );
+
+          if (foundItem) {
+            return (
+              <div>
+                {convertToPersianNumber(
+                  foundItem.retirementStatementItemAmount
+                )}
+              </div>
+            );
+          } else {
+            return <div>-</div>;
+          }
+        },
       },
       {
-        accessorKey: "test3",
+        accessorKey: "retirementStatementItemAmount3",
         header: "حق تاهل",
         size: 20,
+        Cell: ({ row }) => {
+          const foundItem = amountList.find(
+            (obj) =>
+              obj.retirementStatementRelatedID === row.original.id &&
+              obj.retirementStatementItemID === "2004"
+          );
+
+          if (foundItem) {
+            return (
+              <div>
+                {convertToPersianNumber(
+                  foundItem.retirementStatementItemAmount
+                )}
+              </div>
+            );
+          } else {
+            return <div>-</div>;
+          }
+        },
       },
       {
-        accessorKey: "test4",
+        accessorKey: "retirementStatementItemAmount4",
         header: "حق اولاد",
         size: 20,
+        Cell: ({ row }) => {
+          const foundItem = amountList.find(
+            (obj) =>
+              obj.retirementStatementRelatedID === row.original.id &&
+              obj.retirementStatementItemID === "2003"
+          );
+
+          if (foundItem) {
+            return (
+              <div>
+                {convertToPersianNumber(
+                  foundItem.retirementStatementItemAmount
+                )}
+              </div>
+            );
+          } else {
+            return <div>-</div>;
+          }
+        },
       },
     ],
-    []
+    [amountList]
   );
 
   const table = useMaterialReactTable({
@@ -150,4 +227,4 @@ function RelatedHeirStatementGrid({ itemList }) {
   return content;
 }
 
-export default RelatedHeirStatementGrid;
+export default StatementViewHeirGrid;

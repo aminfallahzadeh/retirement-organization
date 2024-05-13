@@ -16,7 +16,8 @@ import {
 import { Box, CircularProgress } from "@mui/material";
 
 // components
-import RelatedHeirStatementGrid from "../grids/RelatedHeirStatementGrid";
+import StatementViewRelatedGrid from "../grids/StatementViewRelatedGrid";
+import StatementViewHeirGrid from "../grids/StatementViewHeirGrid";
 
 // library imports
 import { toast } from "react-toastify";
@@ -210,7 +211,12 @@ function RetirementStatementViewForm({ statementID }) {
 
   return (
     <>
-      {getRetiredLoading || getRetiredFetching || !retiredObject ? (
+      {getRetiredLoading ||
+      getRetiredFetching ||
+      !retiredObject ||
+      getLookupDataLoading ||
+      getRetirementStatementTypeLoading ||
+      getRetirementStatementLoading ? (
         <Box
           sx={{
             display: "flex",
@@ -679,9 +685,25 @@ function RetirementStatementViewForm({ statementID }) {
             </h4>
           </div>
           <div>
-            <RelatedHeirStatementGrid
-              itemList={retirementStatementData.retirementStatementRelatedList}
-            />
+            {retiredObject?.personDeathDate ? (
+              <StatementViewHeirGrid
+                relatedList={
+                  retirementStatementData.retirementStatementRelatedList
+                }
+                amountList={
+                  retirementStatementData.retirementStatementAmountList
+                }
+              />
+            ) : (
+              <StatementViewRelatedGrid
+                relatedList={
+                  retirementStatementData.retirementStatementRelatedList
+                }
+                amountList={
+                  retirementStatementData.retirementStatementAmountList
+                }
+              />
+            )}
           </div>
         </section>
       )}

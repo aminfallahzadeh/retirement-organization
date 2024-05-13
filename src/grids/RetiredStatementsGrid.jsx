@@ -53,7 +53,6 @@ import { toast } from "react-toastify";
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
-  findById,
 } from "../helper.js";
 
 // utils imports
@@ -110,7 +109,7 @@ function RetiredStatementsGrid() {
   const handleRemoveStatement = async () => {
     try {
       const deleteRes = await removeRetirmentStatement({
-        rsID: selectedStatement.id,
+        rsID: statementID,
       }).unwrap();
       console.log(deleteRes);
       setShowDeleteStatementModal(false);
