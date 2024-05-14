@@ -699,9 +699,6 @@ function RetirementStatementViewForm({ statementID }) {
                 relatedList={
                   retirementStatementData.retirementStatementRelatedList
                 }
-                amountList={
-                  retirementStatementData.retirementStatementAmountList
-                }
               />
             )}
           </div>

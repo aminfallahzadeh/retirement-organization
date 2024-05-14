@@ -38,14 +38,22 @@ import {
 
 function RetiredPersonForm() {
   const [editable, setEditable] = useState(false);
+
+  // LOOK UP STATES
   const [genderCombo, setGenderCombo] = useState([]);
   const [educationCombo, setEducationCombo] = useState([]);
   const [housingCombo, setHousingCombo] = useState([]);
   const [maritalStatusCombo, setMaritalStatusCombo] = useState([]);
+  const [countryCombo, setCountryCombo] = useState([]);
+  const [cityCombo, setCityCombo] = useState([]);
+
+  // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
   const [selectedDeathDate, setSelectedDeathDate] = useState(null);
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
   const [isDeathCalenderOpen, setIsDeathCalenderOpen] = useState(false);
+
+  // MAIN STATE
   const [personData, setPersonData] = useState({});
 
   const dispatch = useDispatch();
@@ -89,7 +97,7 @@ function RetiredPersonForm() {
     }
   }, [error]);
 
-  // lookup data
+  // GET LOOK UP DATA
   const { data: genderComboItems, isSuccess: isGenderComboSuccess } =
     useGetLookupDataQuery({
       lookUpType: "Gender",
@@ -110,7 +118,17 @@ function RetiredPersonForm() {
       lookUpType: "MaritialStatus",
     });
 
-  // handle dates
+  const { data: countryComboItems, isSuccess: isCountryComboSuccess } =
+    useGetLookupDataQuery({
+      lookUpType: "Country",
+    });
+
+  const { data: cityComboItems, isSuccess: isCityComboSuccess } =
+    useGetLookupDataQuery({
+      lookUpType: "City",
+    });
+
+  // HANDLE DATES
   useEffect(() => {
     setSelectedBirthDate(convertToPersianDate(personData?.personBirthDate));
   }, [personData?.personBirthDate]);
@@ -119,7 +137,7 @@ function RetiredPersonForm() {
     setSelectedDeathDate(convertToPersianDate(personData?.personDeathDate));
   }, [personData?.personDeathDate]);
 
-  // fetch combo data
+  // FETCH LOOK UP DATA
   useEffect(() => {
     if (isGenderComboSuccess) {
       setGenderCombo(genderComboItems.itemList);
@@ -143,6 +161,18 @@ function RetiredPersonForm() {
       setMaritalStatusCombo(maritalStatusComboItems.itemList);
     }
   }, [isMatritalComboSuccess, maritalStatusComboItems]);
+
+  useEffect(() => {
+    if (isCountryComboSuccess) {
+      setCountryCombo(countryComboItems.itemList);
+    }
+  }, [isCountryComboSuccess, countryComboItems]);
+
+  useEffect(() => {
+    if (isCityComboSuccess) {
+      setCityCombo(cityComboItems.itemList);
+    }
+  }, [isCityComboSuccess, cityComboItems]);
 
   // other handlers
   const handleEditable = () => {
@@ -678,7 +708,7 @@ function RetiredPersonForm() {
         </div>
 
         <div className="inputBox__form">
-          <input
+          <select
             disabled={!editable}
             type="text"
             id="personCountry"
@@ -687,7 +717,16 @@ function RetiredPersonForm() {
             className="inputBox__form--input field"
             onChange={handlePersonDataChange}
             required
-          />
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+            {countryCombo.map((country) => (
+              <option key={country.lookUpID} value={country.lookUpID}>
+                {country.lookUpName}
+              </option>
+            ))}
+          </select>
           <label htmlFor="personCountry" className="inputBox__form--label">
             <span>*</span> کشور
           </label>
@@ -710,7 +749,7 @@ function RetiredPersonForm() {
         </div>
 
         <div className="inputBox__form">
-          <input
+          <select
             disabled={!editable}
             type="text"
             id="personCity"
@@ -719,7 +758,16 @@ function RetiredPersonForm() {
             className="inputBox__form--input"
             onChange={handlePersonDataChange}
             required
-          />
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+            {cityCombo.map((city) => (
+              <option key={city.lookUpID} value={city.lookUpID}>
+                {city.lookUpName}
+              </option>
+            ))}
+          </select>
           <label htmlFor="personCity" className="inputBox__form--label">
             شهر
           </label>

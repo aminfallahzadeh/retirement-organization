@@ -15,10 +15,6 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-// library imports
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-
 // helper imports
 import {
   convertToPersianNumber,
@@ -28,7 +24,7 @@ import {
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-function StatementViewRelatedGrid({ relatedList, amountList }) {
+function StatementViewRelatedGrid({ relatedList }) {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
@@ -98,104 +94,8 @@ function StatementViewRelatedGrid({ relatedList, amountList }) {
           </div>
         ),
       },
-      {
-        accessorKey: "retirementStatementItemAmount1",
-        header: "حقوق مبنا",
-        size: 20,
-        Cell: ({ row }) => {
-          const foundItem = amountList.find(
-            (obj) =>
-              obj.retirementStatementRelatedID === row.original.id &&
-              obj.retirementStatementItemID === "1001"
-          );
-
-          if (foundItem) {
-            return (
-              <div>
-                {convertToPersianNumber(
-                  foundItem.retirementStatementItemAmount
-                )}
-              </div>
-            );
-          } else {
-            return <div>-</div>;
-          }
-        },
-      },
-      {
-        accessorKey: "retirementStatementItemAmount2",
-        header: "حقوق تکمیلی",
-        size: 20,
-        Cell: ({ row }) => {
-          const foundItem = amountList.find(
-            (obj) =>
-              obj.retirementStatementRelatedID === row.original.id &&
-              obj.retirementStatementItemID === "1002"
-          );
-
-          if (foundItem) {
-            return (
-              <div>
-                {convertToPersianNumber(
-                  foundItem.retirementStatementItemAmount
-                )}
-              </div>
-            );
-          } else {
-            return <div>-</div>;
-          }
-        },
-      },
-      {
-        accessorKey: "retirementStatementItemAmount3",
-        header: "حق اولاد",
-        size: 20,
-        Cell: ({ row }) => {
-          const foundItem = amountList.find(
-            (obj) =>
-              obj.retirementStatementRelatedID === row.original.id &&
-              obj.retirementStatementItemID === "1003"
-          );
-
-          if (foundItem) {
-            return (
-              <div>
-                {convertToPersianNumber(
-                  foundItem.retirementStatementItemAmount
-                )}
-              </div>
-            );
-          } else {
-            return <div>-</div>;
-          }
-        },
-      },
-      {
-        accessorKey: "retirementStatementItemAmount4",
-        header: "حق عائله مندی",
-        size: 20,
-        Cell: ({ row }) => {
-          const foundItem = amountList.find(
-            (obj) =>
-              obj.retirementStatementRelatedID === row.original.id &&
-              obj.retirementStatementItemID === "1004"
-          );
-
-          if (foundItem) {
-            return (
-              <div>
-                {convertToPersianNumber(
-                  foundItem.retirementStatementItemAmount
-                )}
-              </div>
-            );
-          } else {
-            return <div>-</div>;
-          }
-        },
-      },
     ],
-    [amountList]
+    []
   );
 
   const table = useMaterialReactTable({
