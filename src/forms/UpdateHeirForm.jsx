@@ -234,9 +234,9 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
 
   useEffect(() => {
     setSelectedBaseFinishDate(
-      convertToPersianDate(heirObject?.pensionaryBaseFinishDate)
+      convertToPersianDate(heirObject?.personBaseFinishDate)
     );
-  }, [heirObject?.pensionaryBaseFinishDate]);
+  }, [heirObject?.personBaseFinishDate]);
 
   useEffect(() => {
     console.log(heirObject);
@@ -267,25 +267,41 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
 
       const updateRes = await updateHeir({
         ...heirObject,
-        pensionaryStatusID: convertToEnglishNumber(
-          heirObject.pensionaryStatusID
-        ),
-        personCertificatetNo: convertToEnglishNumber(
-          heirObject.personCertificatetNo
+        relationshipWithParentID: convertToEnglishNumber(
+          heirObject?.relationshipWithParentID
         ),
         personNationalCode: convertToEnglishNumber(
-          heirObject.personNationalCode
+          heirObject?.personNationalCode
         ),
-        relationshipWithParentID: convertToEnglishNumber(
-          heirObject.relationshipWithParentID
+        personCertificateNo: convertToEnglishNumber(
+          heirObject?.personCertificateNo
         ),
-        personRegion:
-          parseInt(convertToEnglishNumber(heirObject.personRegion)) || null,
-        personArea:
-          parseInt(convertToEnglishNumber(heirObject.personArea)) || null,
-        parentPersonID,
         personBirthDate,
+        maritalStatusID: convertToEnglishNumber(heirObject?.maritalStatusID),
+        personPhone: convertToEnglishNumber(heirObject?.personPhone),
+        personCellPhone: convertToEnglishNumber(heirObject?.personCellPhone),
+        personRegion:
+          parseInt(convertToEnglishNumber(heirObject?.personRegion)) || null,
+        personArea:
+          parseInt(convertToEnglishNumber(heirObject?.personArea)) || null,
+        personCountryID: convertToEnglishNumber(heirObject?.personCountryID),
+        personStateID: convertToEnglishNumber(heirObject?.personStateID),
+        personCityID: convertToEnglishNumber(heirObject?.personCityID),
+        personPostalCode: convertToEnglishNumber(heirObject?.personPostalCode),
+        pensionaryStatusID: convertToEnglishNumber(
+          heirObject?.pensionaryStatusID
+        ),
         personBaseFinishDate,
+        bankID: convertToEnglishNumber(heirObject?.bankID),
+        bankBranchID: convertToEnglishNumber(heirObject?.bankBranchID),
+        accountNo: convertToEnglishNumber(heirObject?.accountNo),
+        insuranceCoef:
+          parseFloat(convertToEnglishNumber(heirObject?.insuranceCoef)) || 0,
+        insuranceAmount:
+          parseFloat(convertToEnglishNumber(heirObject?.insuranceAmount)) || 0,
+        ledgerCode:
+          parseInt(convertToEnglishNumber(heirObject.ledgerCode)) || 0,
+        parentPersonID,
       }).unwrap();
       console.log(updateRes);
       setShowEditHeirModal(false);
@@ -320,12 +336,14 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 type="text"
                 className="inputBox__form--input"
                 onChange={handleHeirObjectChange}
-                value={heirObject?.relationshipWithParentID}
+                value={heirObject?.relationshipWithParentID || " "}
                 required
                 name="relationshipWithParentID"
                 id="relationshipWithParentID"
               >
-                <option value=" ">انتخاب نسبت</option>
+                <option value=" " disabled>
+                  انتخاب نسبت
+                </option>
                 {relationCombo.map((relation) => (
                   <option
                     key={relation.relationshipID}
@@ -346,7 +364,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
               <input
                 type="text"
                 className="inputBox__form--input"
-                value={heirObject?.personFirstName}
+                value={heirObject?.personFirstName || ""}
                 onChange={handleHeirObjectChange}
                 name="personFirstName"
                 required
@@ -364,7 +382,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 type="text"
                 className="inputBox__form--input"
                 name="personLastName"
-                value={heirObject?.personLastName}
+                value={heirObject?.personLastName || ""}
                 onChange={handleHeirObjectChange}
                 required
                 id="personLastName1"
@@ -382,7 +400,9 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 type="text"
                 className="inputBox__form--input"
                 onChange={handleHeirObjectChange}
-                value={convertToPersianNumber(heirObject?.personNationalCode)}
+                value={
+                  convertToPersianNumber(heirObject?.personNationalCode) ?? ""
+                }
                 name="personNationalCode"
                 required
                 id="personNationalCode2"
@@ -401,11 +421,11 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 className="inputBox__form--input"
                 onChange={handleHeirObjectChange}
                 value={
-                  convertToPersianNumber(heirObject?.personCertificatetNo) || ""
+                  convertToPersianNumber(heirObject?.personCertificateNo) || ""
                 }
                 required
-                name="personCertificatetNo"
-                id="personCertificatetNo2"
+                name="personCertificateNo"
+                id="personCertificateNo2"
               />
               <label
                 className="inputBox__form--label"
@@ -419,7 +439,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 type="text"
                 className="inputBox__form--input"
                 onChange={handleHeirObjectChange}
-                value={heirObject?.personFatherName}
+                value={heirObject?.personFatherName || ""}
                 required
                 name="personFatherName"
                 id="personFatherName1"
@@ -459,7 +479,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 required
                 name="personBirthPlace"
                 onChange={handleHeirObjectChange}
-                value={heirObject?.personBirthPlace}
+                value={heirObject?.personBirthPlace || ""}
                 id="personBirthPlace1"
               />
               <label
@@ -478,7 +498,9 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 required
                 id="maritalStatusID1"
               >
-                <option value=" ">انتخاب کنید</option>
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
                 {maritialStatusCombo.map((maritalStatus) => (
                   <option
                     key={maritalStatus.lookUpID}
@@ -500,7 +522,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
               <input
                 type="text"
                 className="inputBox__form--input"
-                value={convertToPersianNumber(heirObject?.personPhone)}
+                value={convertToPersianNumber(heirObject?.personPhone) || ""}
                 onChange={handleHeirObjectChange}
                 required
                 name="personPhone"
@@ -515,7 +537,9 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 type="text"
                 className="inputBox__form--input"
                 onChange={handleHeirObjectChange}
-                value={convertToPersianNumber(heirObject?.personCellPhone)}
+                value={
+                  convertToPersianNumber(heirObject?.personCellPhone) || ""
+                }
                 name="personCellPhone"
                 required
                 id="personCellPhone222"
@@ -534,7 +558,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 className="inputBox__form--input"
                 required
                 onChange={handleHeirObjectChange}
-                value={convertToPersianNumber(heirObject?.personArea)}
+                value={convertToPersianNumber(heirObject?.personArea) || ""}
                 name="personArea"
                 id="personArea1"
               />
@@ -549,7 +573,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 required
                 name="personRegion"
                 onChange={handleHeirObjectChange}
-                value={convertToPersianNumber(heirObject?.personRegion)}
+                value={convertToPersianNumber(heirObject?.personRegion) || ""}
                 id="personRegion1"
               />
               <label className="inputBox__form--label" htmlFor="personRegion1">
@@ -561,7 +585,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 type="text"
                 id="personCountry"
                 name="personCountryID"
-                value={heirObject.personCountryID || " "}
+                value={heirObject?.personCountryID || " "}
                 className="inputBox__form--input field"
                 onChange={handleHeirObjectChange}
                 required
@@ -585,7 +609,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 id="personState"
                 name="personStateID"
                 className="inputBox__form--input"
-                value={heirObject.personStateID || " "}
+                value={heirObject?.personStateID || " "}
                 onChange={handleHeirObjectChange}
                 required
               >
@@ -609,7 +633,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 id="personCity"
                 name="personCityID"
                 className="inputBox__form--input"
-                value={heirObject.personCiryID || " "}
+                value={heirObject?.personCityID || " "}
                 onChange={handleHeirObjectChange}
                 required
               >
@@ -632,7 +656,9 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 className="inputBox__form--input"
                 required
                 onChange={handleHeirObjectChange}
-                value={convertToPersianNumber(heirObject?.personPostalCode)}
+                value={
+                  convertToPersianNumber(heirObject?.personPostalCode) || ""
+                }
                 name="personPostalCode"
                 id="personPostalCode1"
               />
@@ -649,7 +675,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 className="inputBox__form--input"
                 required
                 onChange={handleHeirObjectChange}
-                value={heirObject?.personSpecialDisease}
+                value={heirObject?.personSpecialDisease || ""}
                 name="personSpecialDisease"
                 id="personSpecialDisease1"
               />
@@ -666,7 +692,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 className="inputBox__form--input"
                 required
                 onChange={handleHeirObjectChange}
-                value={heirObject?.personAddress}
+                value={heirObject?.personAddress || ""}
                 name="personAddress"
                 id="personAddress1"
               />
@@ -679,11 +705,16 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
               <textarea
                 type="text"
                 className="inputBox__form--input"
+                value={heirObject?.personDescription || ""}
+                onChange={handleHeirObjectChange}
                 required
-                name="heirDesc"
-                id="heirDesc"
+                name="personDescription"
+                id="personDescription"
               ></textarea>
-              <label className="inputBox__form--label" htmlFor="heirDesc">
+              <label
+                className="inputBox__form--label"
+                htmlFor="personDescription"
+              >
                 توضیحات
               </label>
             </div>
@@ -698,12 +729,14 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
               <select
                 className="inputBox__form--input"
                 onChange={handleHeirObjectChange}
-                value={heirObject?.pensionaryStatusID}
+                value={heirObject?.pensionaryStatusID || " "}
                 name="pensionaryStatusID"
                 required
                 id="pensionaryStatusID"
               >
-                <option value=" ">انتخاب کنید</option>
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
                 {pensionaryStatusCombo.map((status) => (
                   <option
                     key={status.pensionaryStatusID}
@@ -750,7 +783,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                   شماره وظیفه بگیری
                 </div>
                 <div className="inputBox__form--readOnly-content">
-                  {convertToPersianNumber(heirObject?.heirID)}
+                  {convertToPersianNumber(heirObject?.heirID) || "-"}
                 </div>
               </div>
             </div>
@@ -765,7 +798,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                     convertToPersianDateFormatted(
                       heirObject?.pensionaryStartDate
                     )
-                  )}
+                  ) || "-"}
                 </div>
               </div>
             </div>
@@ -857,7 +890,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 className="inputBox__form--input"
                 required
                 onChange={handleHeirObjectChange}
-                value={heirObject?.insuranceCoef || ""}
+                value={convertToPersianNumber(heirObject?.insuranceCoef) || ""}
                 name="insuranceCoef"
                 id="insuranceCoefHeir"
               />
@@ -874,7 +907,9 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
                 className="inputBox__form--input"
                 required
                 onChange={handleHeirObjectChange}
-                value={heirObject?.insuranceAmount || ""}
+                value={
+                  convertToPersianNumber(heirObject?.insuranceAmount) || ""
+                }
                 name="insuranceAmount"
                 id="insuranceAmountHeir"
               />

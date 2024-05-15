@@ -184,10 +184,6 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
     });
   };
 
-  useEffect(() => {
-    console.log(heirObject);
-  }, [heirObject]);
-
   const handleInsertHeir = async () => {
     try {
       // Adjusting for timezone difference
@@ -204,25 +200,33 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
 
       const insertRes = await insertHeir({
         ...heirObject,
-        parentPersonID,
-        pensionaryStatusID: convertToEnglishNumber(
-          heirObject.pensionaryStatusID
-        ),
-        personCertificatetNo: convertToEnglishNumber(
-          heirObject.personCertificatetNo
+        relationshipWithParentID: convertToEnglishNumber(
+          heirObject?.relationshipWithParentID
         ),
         personNationalCode: convertToEnglishNumber(
-          heirObject.personNationalCode
+          heirObject?.personNationalCode
         ),
-        relationshipWithParentID: convertToEnglishNumber(
-          heirObject.relationshipWithParentID
+        personCertificateNo: convertToEnglishNumber(
+          heirObject?.personCertificateNo
         ),
-        personRegion:
-          parseInt(convertToEnglishNumber(heirObject.personRegion)) || null,
-        personArea:
-          parseInt(convertToEnglishNumber(heirObject.personArea)) || null,
         personBirthDate,
+        maritalStatusID: convertToEnglishNumber(heirObject?.maritalStatusID),
+        personPhone: convertToEnglishNumber(heirObject?.personPhone),
+        personCellPhone: convertToEnglishNumber(heirObject?.personCellPhone),
+        personRegion:
+          parseInt(convertToEnglishNumber(heirObject?.personRegion)) || null,
+        personArea:
+          parseInt(convertToEnglishNumber(heirObject?.personArea)) || null,
+        personCountryID: convertToEnglishNumber(heirObject?.personCountryID),
+        personStateID: convertToEnglishNumber(heirObject?.personStateID),
+        personCityID: convertToEnglishNumber(heirObject?.personCityID),
+        personPostalCode: convertToEnglishNumber(heirObject?.personPostalCode),
+        pensionaryStatusID: convertToEnglishNumber(
+          heirObject?.pensionaryStatusID
+        ),
         personBaseFinishDate,
+        bankID: convertToEnglishNumber(heirObject?.bankID),
+        bankBranchID: convertToEnglishNumber(heirObject?.bankBranchID),
         accountNo: convertToEnglishNumber(heirObject?.accountNo),
         insuranceCoef:
           parseFloat(convertToEnglishNumber(heirObject?.insuranceCoef)) || 0,
@@ -230,6 +234,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           parseFloat(convertToEnglishNumber(heirObject?.insuranceAmount)) || 0,
         ledgerCode:
           parseInt(convertToEnglishNumber(heirObject.ledgerCode)) || 0,
+        parentPersonID,
       }).unwrap();
       setShowCreateHeirModal(false);
       toast.success(insertRes.message, {
@@ -243,23 +248,22 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
     }
   };
 
-  useEffect(() => {
-    console.log(heirObject);
-  }, [heirObject]);
-
   const content = (
     <section className="formContainer formContainer--width-lg flex-col">
-      <form method="POST" className="grid grid--col-3">
+      <form method="POST" className="grid grid--col-3" noValidate>
         <div className="inputBox__form">
           <select
             type="text"
             className="inputBox__form--input"
+            value={heirObject?.relationshipWithParentID || " "}
             required
             name="relationshipWithParentID"
             onChange={handleHeirObjectChange}
             id="relationshipWithParentID"
           >
-            <option value=" ">انتخاب نسبت</option>
+            <option value=" " disabled>
+              انتخاب نسبت
+            </option>
             {relationCombo.map((relation) => (
               <option
                 key={relation.relationshipID}
@@ -281,7 +285,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             type="text"
             className="inputBox__form--input"
             name="personFirstName"
-            value={heirObject?.personFirstName}
+            value={heirObject?.personFirstName || ""}
             onChange={handleHeirObjectChange}
             required
             id="personFirstName1"
@@ -294,7 +298,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           <input
             type="text"
             className="inputBox__form--input"
-            value={heirObject?.personLastName}
+            value={heirObject?.personLastName || ""}
             onChange={handleHeirObjectChange}
             name="personLastName"
             required
@@ -310,7 +314,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             type="text"
             className="inputBox__form--input"
             name="personNationalCode"
-            value={heirObject?.personNationalCode}
+            value={heirObject?.personNationalCode || ""}
             onChange={handleHeirObjectChange}
             required
             id="personNationalCode2"
@@ -327,15 +331,15 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           <input
             type="text"
             className="inputBox__form--input"
-            value={heirObject?.personCertificatetNo}
+            value={heirObject?.personCertificateNo || ""}
             onChange={handleHeirObjectChange}
             required
-            name="personCertificatetNo"
-            id="personCertificatetNo2"
+            name="personCertificateNo"
+            id="personCertificateNo2"
           />
           <label
             className="inputBox__form--label"
-            htmlFor="personCertificatetNo2"
+            htmlFor="personCertificateNo2"
           >
             <span>*</span> شماره شناسنامه
           </label>
@@ -344,7 +348,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           <input
             type="text"
             className="inputBox__form--input"
-            value={heirObject?.personFatherName}
+            value={heirObject?.personFatherName || ""}
             onChange={handleHeirObjectChange}
             required
             name="personFatherName"
@@ -379,7 +383,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           <input
             type="text"
             className="inputBox__form--input"
-            value={heirObject?.personBirthPlace}
+            value={heirObject?.personBirthPlace || ""}
             onChange={handleHeirObjectChange}
             required
             name="personBirthPlace"
@@ -394,10 +398,13 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             className="inputBox__form--input"
             name="maritalStatusID"
             onChange={handleHeirObjectChange}
+            value={heirObject?.maritalStatusID || " "}
             required
             id="maritalStatusID1"
           >
-            <option value=" ">انتخاب کنید</option>
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
             {maritialStatusCombo.map((maritalStatus) => (
               <option
                 key={maritalStatus.lookUpID}
@@ -417,7 +424,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             type="text"
             className="inputBox__form--input"
             required
-            value={heirObject?.personPhone}
+            value={heirObject?.personPhone || ""}
             onChange={handleHeirObjectChange}
             name="personPhone"
             id="personPhone11"
@@ -431,7 +438,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             type="text"
             className="inputBox__form--input"
             name="personCellPhone"
-            value={heirObject?.personCellPhone}
+            value={heirObject?.personCellPhone || ""}
             onChange={handleHeirObjectChange}
             required
             id="personCellPhone222"
@@ -523,7 +530,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             id="personCity"
             name="personCityID"
             className="inputBox__form--input"
-            value={heirObject.personCiryID || " "}
+            value={convertToEnglishNumber(heirObject.personCityID) || " "}
             onChange={handleHeirObjectChange}
             required
           >
@@ -547,7 +554,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             className="inputBox__form--input"
             required
             name="personPostalCode"
-            value={heirObject?.personPostalCode}
+            value={heirObject?.personPostalCode || ""}
             onChange={handleHeirObjectChange}
             id="personPostalCode1"
           />
@@ -561,7 +568,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             className="inputBox__form--input"
             required
             name="personSpecialDisease"
-            value={heirObject?.personSpecialDisease}
+            value={heirObject?.personSpecialDisease || ""}
             onChange={handleHeirObjectChange}
             id="personSpecialDisease1"
           />
@@ -577,7 +584,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             type="text"
             className="inputBox__form--input"
             required
-            value={heirObject?.personAddress}
+            value={heirObject?.personAddress || ""}
             onChange={handleHeirObjectChange}
             name="personAddress"
             id="personAddress1"
@@ -590,11 +597,13 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           <textarea
             type="text"
             className="inputBox__form--input"
+            onChange={handleHeirObjectChange}
+            value={heirObject?.personDescription || ""}
             required
-            name="heirDesc"
-            id="heirDesc"
+            name="personDescription"
+            id="personDescription"
           ></textarea>
-          <label className="inputBox__form--label" htmlFor="heirDesc">
+          <label className="inputBox__form--label" htmlFor="personDescription">
             توضیحات
           </label>
         </div>
@@ -604,7 +613,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
         <h4 className="title-secondary"> اطلاعات وظیفه بگیری </h4>
       </div>
 
-      <form className="grid grid--col-4">
+      <form className="grid grid--col-4" noValidate>
         <div className="inputBox__form">
           <select
             className="inputBox__form--input"
@@ -613,7 +622,9 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             required
             id="pensionaryStatusID"
           >
-            <option value=" ">انتخاب کنید</option>
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
             {pensionaryStatusCombo.map((status) => (
               <option
                 key={status.pensionaryStatusID}
@@ -656,7 +667,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
         <h4 className="title-secondary"> اطلاعات بانکی وظیفه بگیر </h4>
       </div>
 
-      <form method="POST" className="grid grid--col-4">
+      <form method="POST" className="grid grid--col-4" noValidate>
         <div className="inputBox__form">
           <select
             disabled={isBankComboLoading}
@@ -664,10 +675,12 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             id="bankID"
             name="bankID"
             onChange={handleHeirObjectChange}
-            value={convertToEnglishNumber(heirObject.bankID) || " "}
+            value={convertToEnglishNumber(heirObject.bankID) || ""}
             className="inputBox__form--input"
           >
-            <option value=" ">انتخاب</option>
+            <option value=" " disabled>
+              انتخاب
+            </option>
             {bankCombo.map((bank) => (
               <option key={bank.lookUpID} value={bank.lookUpID}>
                 {bank.lookUpName}
@@ -685,12 +698,14 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             type="text"
             id="bankBranchID"
             name="bankBranchID"
-            value={heirObject.bankBranchID || ""}
+            value={convertToEnglishNumber(heirObject.bankBranchID) || ""}
             onChange={handleHeirObjectChange}
             className="inputBox__form--input"
             required
           >
-            <option value=" ">انتخاب</option>
+            <option value=" " disabled>
+              انتخاب
+            </option>
             {bankBranchCombo.map((bankBranch) => (
               <option key={bankBranch.lookUpID} value={bankBranch.lookUpID}>
                 {bankBranch.lookUpName}
@@ -713,7 +728,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             id="accountNoHeir"
           />
           <label className="inputBox__form--label" htmlFor="accountNoHeir">
-            حساب
+            شماره حساب
           </label>
         </div>
         <div className="inputBox__form">

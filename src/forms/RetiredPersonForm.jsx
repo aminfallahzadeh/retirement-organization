@@ -227,10 +227,6 @@ function RetiredPersonForm() {
     });
   };
 
-  useEffect(() => {
-    console.log("retired person", personData);
-  }, [personData]);
-
   // handle update retired person
   const handleUpdateRetired = async () => {
     try {

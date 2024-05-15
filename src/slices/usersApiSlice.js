@@ -57,8 +57,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           url += `?${queryParams.join("&")}`;
         }
 
-        console.log("params", queryParams);
-
         return {
           url,
         };
