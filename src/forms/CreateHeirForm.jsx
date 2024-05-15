@@ -48,6 +48,9 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
   const [pensionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
   const [bankCombo, setBankCombo] = useState([]);
   const [bankBranchCombo, setBankBranchCombo] = useState([]);
+  const [countryCombo, setCountryCombo] = useState([]);
+  const [stateCombo, setStateCombo] = useState([]);
+  const [cityCombo, setCityCombo] = useState([]);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -67,6 +70,19 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
     data: pensionaryStatusComboItems,
     isSuccess: isPensionaryStatusComboSuccess,
   } = useGetPensionaryStatusQuery({ pensionaryStatusCategory: "H" });
+
+  const { data: countryComboItems, isSuccess: isCountryComboSuccess } =
+    useGetLookupDataQuery({ lookUpType: "Country" });
+
+  const { data: cityComboItems, isSuccess: isCityComboSuccess } =
+    useGetLookupDataQuery({
+      lookUpType: "City",
+    });
+
+  const { data: stateComboItems, isSuccess: isStateComboSuccess } =
+    useGetLookupDataQuery({
+      lookUpType: "State",
+    });
 
   const {
     data: bankComboItems,
@@ -116,6 +132,24 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
     }
   }, [isBankComboSuccess, bankComboItems]);
 
+  useEffect(() => {
+    if (isCountryComboSuccess) {
+      setCountryCombo(countryComboItems.itemList);
+    }
+  }, [isCountryComboSuccess, countryComboItems]);
+
+  useEffect(() => {
+    if (isCityComboSuccess) {
+      setCityCombo(cityComboItems.itemList);
+    }
+  }, [isCityComboSuccess, cityComboItems]);
+
+  useEffect(() => {
+    if (isStateComboSuccess) {
+      setStateCombo(stateComboItems.itemList);
+    }
+  }, [isStateComboSuccess, stateComboItems]);
+
   // GET BANK BRANCH ON USER BANK SELECT
   useEffect(() => {
     if (heirObject.bankID) {
@@ -149,6 +183,10 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
       [name]: convertToPersianNumber(value),
     });
   };
+
+  useEffect(() => {
+    console.log(heirObject);
+  }, [heirObject]);
 
   const handleInsertHeir = async () => {
     try {
@@ -432,48 +470,77 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           </label>
         </div>
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
-            className="inputBox__form--input"
-            required
-            value={heirObject?.personCountry}
+            id="personCountry"
+            name="personCountryID"
+            value={heirObject.personCountryID || " "}
+            className="inputBox__form--input field"
             onChange={handleHeirObjectChange}
-            name="personCountry"
-            id="personCountry1"
-          />
-          <label className="inputBox__form--label" htmlFor="personCountry1">
-            کشور
+            required
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+            {countryCombo.map((country) => (
+              <option key={country.lookUpID} value={country.lookUpID}>
+                {country.lookUpName}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="personCountry" className="inputBox__form--label">
+            <span>*</span> کشور
           </label>
         </div>
+
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
+            id="personState"
+            name="personStateID"
             className="inputBox__form--input"
-            value={heirObject?.personState}
+            value={heirObject.personStateID || " "}
             onChange={handleHeirObjectChange}
             required
-            name="personState"
-            id="personState1"
-          />
-          <label className="inputBox__form--label" htmlFor="personState1">
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+            {stateCombo.map((state) => (
+              <option key={state.lookUpID} value={state.lookUpID}>
+                {state.lookUpName}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="personState" className="inputBox__form--label">
             استان
           </label>
         </div>
 
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
+            id="personCity"
+            name="personCityID"
             className="inputBox__form--input"
-            required
-            name="personCity"
-            value={heirObject?.personCity}
+            value={heirObject.personCiryID || " "}
             onChange={handleHeirObjectChange}
-            id="personCity1"
-          />
-          <label className="inputBox__form--label" htmlFor="personCity1">
+            required
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+            {cityCombo.map((city) => (
+              <option key={city.lookUpID} value={city.lookUpID}>
+                {city.lookUpName}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="personCity" className="inputBox__form--label">
             شهر
           </label>
         </div>
+
         <div className="inputBox__form">
           <input
             type="text"

@@ -45,6 +45,7 @@ function RetiredPersonForm() {
   const [housingCombo, setHousingCombo] = useState([]);
   const [maritalStatusCombo, setMaritalStatusCombo] = useState([]);
   const [countryCombo, setCountryCombo] = useState([]);
+  const [stateCombo, setStateCombo] = useState([]);
   const [cityCombo, setCityCombo] = useState([]);
 
   // DATE STATES
@@ -128,6 +129,11 @@ function RetiredPersonForm() {
       lookUpType: "City",
     });
 
+  const { data: stateComboItems, isSuccess: isStateComboSuccess } =
+    useGetLookupDataQuery({
+      lookUpType: "State",
+    });
+
   // HANDLE DATES
   useEffect(() => {
     setSelectedBirthDate(convertToPersianDate(personData?.personBirthDate));
@@ -173,6 +179,12 @@ function RetiredPersonForm() {
       setCityCombo(cityComboItems.itemList);
     }
   }, [isCityComboSuccess, cityComboItems]);
+
+  useEffect(() => {
+    if (isStateComboSuccess) {
+      setStateCombo(stateComboItems.itemList);
+    }
+  }, [isStateComboSuccess, stateComboItems]);
 
   // other handlers
   const handleEditable = () => {
@@ -712,8 +724,8 @@ function RetiredPersonForm() {
             disabled={!editable}
             type="text"
             id="personCountry"
-            value={personData?.personCountry || ""}
-            name="personCountry"
+            value={personData?.personCountryID || ""}
+            name="personCountryID"
             className="inputBox__form--input field"
             onChange={handlePersonDataChange}
             required
@@ -733,16 +745,25 @@ function RetiredPersonForm() {
         </div>
 
         <div className="inputBox__form">
-          <input
+          <select
             disabled={!editable}
             type="text"
             id="personState"
-            value={personData?.personState || ""}
-            name="personState"
+            value={personData?.personStateID || ""}
+            name="personStateID"
             className="inputBox__form--input"
             onChange={handlePersonDataChange}
             required
-          />
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+            {stateCombo.map((state) => (
+              <option key={state.lookUpID} value={state.lookUpID}>
+                {state.lookUpName}
+              </option>
+            ))}
+          </select>
           <label htmlFor="personState" className="inputBox__form--label">
             استان
           </label>
@@ -753,8 +774,8 @@ function RetiredPersonForm() {
             disabled={!editable}
             type="text"
             id="personCity"
-            value={personData?.personCity || ""}
-            name="personCity"
+            value={personData?.personCityID || ""}
+            name="personCityID"
             className="inputBox__form--input"
             onChange={handlePersonDataChange}
             required

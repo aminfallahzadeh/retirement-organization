@@ -28,19 +28,23 @@ import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
 function CreateRelatedForm({ setShowCreateRelatedModal }) {
+  // LOOKUP STATES
   const [relationCombo, setRelationCombo] = useState([]);
   const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);
   const [educationCombo, setEducationCombo] = useState([]);
   const [universityCombo, setUniversityCombo] = useState([]);
   const [pensionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
+  const [countryCombo, setCountryCombo] = useState([]);
+  const [stateCombo, setStateCombo] = useState([]);
+  const [cityCombo, setCityCombo] = useState([]);
 
+  // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
   const [selectedMritialDate, setSelectedMritialDate] = useState(null);
   const [selectedSelfEmployeeStartDate, setSelectedSelfEmployeeStartDate] =
     useState(null);
   const [selectedSelfEmployeeEndDate, setSelectedSelfEmployeeEndDate] =
     useState(null);
-
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
   const [isMritialCalenderOpen, setIsMritialCalenderOpen] = useState(false);
   const [isSelfEmployeeStartCalenderOpen, setIsSelfEmployeeStartCalenderOpen] =
@@ -48,6 +52,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   const [isSelfEmployeeEndCalenderOpen, setIsSelfEmployeeEndCalenderOpen] =
     useState(false);
 
+  // MAIN STATE
   const [relatedObject, setRelatedObject] = useState({});
 
   const [insertRelated, { isLoading }] = useInsertRelatedMutation();
@@ -69,12 +74,25 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   const { data: universityComboItems, isSuccess: isUniversityComboSuccess } =
     useGetLookupDataQuery({ lookUpType: "UniversityType" });
 
+  const { data: countryComboItems, isSuccess: isCountryComboSuccess } =
+    useGetLookupDataQuery({ lookUpType: "Country" });
+
+  const { data: cityComboItems, isSuccess: isCityComboSuccess } =
+    useGetLookupDataQuery({
+      lookUpType: "City",
+    });
+
+  const { data: stateComboItems, isSuccess: isStateComboSuccess } =
+    useGetLookupDataQuery({
+      lookUpType: "State",
+    });
+
   const {
     data: pensionaryStatusComboItems,
     isSuccess: isPensionaryStatusComboSuccess,
   } = useGetPensionaryStatusQuery({ pensionaryStatusCategory: "L" });
 
-  // HANDLE LOOKUP DATA
+  // FETCH LOOKUP DATA
   useEffect(() => {
     if (isRelationComboSuccess) {
       setRelationCombo(relationComboItems.itemList);
@@ -104,6 +122,24 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
       setPensionaryStatusCombo(pensionaryStatusComboItems.itemList);
     }
   }, [isPensionaryStatusComboSuccess, pensionaryStatusComboItems]);
+
+  useEffect(() => {
+    if (isCountryComboSuccess) {
+      setCountryCombo(countryComboItems.itemList);
+    }
+  }, [isCountryComboSuccess, countryComboItems]);
+
+  useEffect(() => {
+    if (isCityComboSuccess) {
+      setCityCombo(cityComboItems.itemList);
+    }
+  }, [isCityComboSuccess, cityComboItems]);
+
+  useEffect(() => {
+    if (isStateComboSuccess) {
+      setStateCombo(stateComboItems.itemList);
+    }
+  }, [isStateComboSuccess, stateComboItems]);
 
   // CHANGE HANDLERS
   const handleBirthDateChange = (date) => {
@@ -564,44 +600,71 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           </label>
         </div>
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
-            className="inputBox__form--input"
-            required
+            id="personCountry"
+            name="personCountryID"
+            value={relatedObject.personCountryID || " "}
+            className="inputBox__form--input field"
             onChange={handleRealtedObjectChange}
-            name="personCountry"
-            value={relatedObject?.personCountry}
-            id="personCountry1"
-          />
-          <label className="inputBox__form--label" htmlFor="personCountry1">
-            کشور
+            required
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+            {countryCombo.map((country) => (
+              <option key={country.lookUpID} value={country.lookUpID}>
+                {country.lookUpName}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="personCountry" className="inputBox__form--label">
+            <span>*</span> کشور
           </label>
         </div>
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
+            id="personState"
+            name="personStateID"
             className="inputBox__form--input"
-            required
+            value={relatedObject?.personStateID || " "}
             onChange={handleRealtedObjectChange}
-            name="personState"
-            value={relatedObject?.personState}
-            id="personState1"
-          />
-          <label className="inputBox__form--label" htmlFor="personState1">
+            required
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+            {stateCombo.map((state) => (
+              <option key={state.lookUpID} value={state.lookUpID}>
+                {state.lookUpName}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="personState" className="inputBox__form--label">
             استان
           </label>
         </div>
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
+            id="personCity"
+            name="personCityID"
             className="inputBox__form--input"
-            required
+            value={relatedObject.personCiryID || " "}
             onChange={handleRealtedObjectChange}
-            name="personCity"
-            value={relatedObject?.personCity}
-            id="personCity1"
-          />
-          <label className="inputBox__form--label" htmlFor="personCity1">
+            required
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+            {cityCombo.map((city) => (
+              <option key={city.lookUpID} value={city.lookUpID}>
+                {city.lookUpName}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="personCity" className="inputBox__form--label">
             شهر
           </label>
         </div>
