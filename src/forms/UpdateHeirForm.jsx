@@ -238,10 +238,6 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
     );
   }, [heirObject?.personBaseFinishDate]);
 
-  useEffect(() => {
-    console.log(heirObject);
-  }, [heirObject]);
-
   // HANDLE RELATED OBJECT CHANGE
   const handleHeirObjectChange = (e) => {
     const { name, value } = e.target;
@@ -303,7 +299,6 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
           parseInt(convertToEnglishNumber(heirObject.ledgerCode)) || 0,
         parentPersonID,
       }).unwrap();
-      console.log(updateRes);
       setShowEditHeirModal(false);
       toast.success(updateRes.message, {
         autoClose: 2000,

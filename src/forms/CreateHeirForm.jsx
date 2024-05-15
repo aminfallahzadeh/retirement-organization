@@ -619,6 +619,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             className="inputBox__form--input"
             onChange={handleHeirObjectChange}
             name="pensionaryStatusID"
+            value={heirObject?.pensionaryStatusID || " "}
             required
             id="pensionaryStatusID"
           >

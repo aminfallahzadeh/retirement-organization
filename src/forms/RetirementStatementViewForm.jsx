@@ -209,6 +209,10 @@ function RetirementStatementViewForm({ statementID }) {
     padding: "10px",
   };
 
+  useEffect(() => {
+    console.log(retiredObject);
+  }, [retiredObject]);
+
   return (
     <>
       {getRetiredLoading ||
@@ -353,7 +357,9 @@ function RetirementStatementViewForm({ statementID }) {
                   تعداد فرزند
                 </div>
                 <div className="inputBox__form--readOnly-content">
-                  {convertToPersianNumber(retiredObject?.childCount)}
+                  {convertToPersianNumber(
+                    retirementStatementData?.retirementStatementChildrenCount
+                  )}
                 </div>
               </div>
             </div>
