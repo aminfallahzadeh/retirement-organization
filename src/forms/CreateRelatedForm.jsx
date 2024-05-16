@@ -59,7 +59,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const personID = searchParams.get("personID");
+  const parentPersonID = searchParams.get("personID");
 
   // GET LOOKUP DATA
   const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
@@ -210,23 +210,39 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
 
       const insertRes = await insertRelated({
         ...relatedObject,
-        parentPersonID: personID,
-        pensionaryStatusID: convertToEnglishNumber(
-          relatedObject.pensionaryStatusID
+        parentPersonID,
+        relationshipWithParentID: convertToEnglishNumber(
+          relatedObject.relationshipWithParentID
         ),
-        personCertificatetNo: convertToEnglishNumber(
-          relatedObject.personCertificatetNo
+        personCertificateNo: convertToEnglishNumber(
+          relatedObject.personCertificateNo
         ),
         personNationalCode: convertToEnglishNumber(
           relatedObject.personNationalCode
         ),
-        relationshipWithParentID: convertToEnglishNumber(
-          relatedObject.relationshipWithParentID
+        pensionaryStatusID: convertToEnglishNumber(
+          relatedObject.pensionaryStatusID
+        ),
+        maritalStatusID: convertToEnglishNumber(relatedObject.maritalStatusID),
+        educationTypeID: convertToEnglishNumber(relatedObject.educationTypeID),
+        universityID: convertToEnglishNumber(relatedObject.universityID),
+        personPhone: convertToEnglishNumber(relatedObject.personPhone),
+        personCellPhone: convertToEnglishNumber(relatedObject.personCellPhone),
+        personCellPhone2: convertToEnglishNumber(
+          relatedObject.personCellPhone2
         ),
         personRegion:
           parseInt(convertToEnglishNumber(relatedObject.personRegion)) || null,
         personArea:
           parseInt(convertToEnglishNumber(relatedObject.personArea)) || null,
+        personCountryID: convertToEnglishNumber(relatedObject.personCountryID),
+        personCityID: convertToEnglishNumber(relatedObject.personCityID),
+        personStateID: convertToEnglishNumber(relatedObject.personStateID),
+        personPostalCode: convertToEnglishNumber(
+          relatedObject.personPostalCode
+        ),
+        backupPhone: convertToEnglishNumber(relatedObject.backupPhone),
+        backupCellphone: convertToEnglishNumber(relatedObject.backupCellphone),
         personBirthDate,
         personMaritalDate,
         selfEmployeeStartDate,
@@ -251,12 +267,15 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           <select
             type="text"
             className="inputBox__form--input"
+            value={relatedObject?.relationshipWithParentID || " "}
             required
             name="relationshipWithParentID"
             onChange={handleRealtedObjectChange}
             id="relationshipWithParentID"
           >
-            <option value=" ">انتخاب نسبت</option>
+            <option value=" " disabled>
+              انتخاب نسبت
+            </option>
             {relationCombo.map((relation) => (
               <option
                 key={relation.relationshipID}
@@ -278,7 +297,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             type="text"
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
-            value={relatedObject?.personFirstName}
+            value={relatedObject?.personFirstName || ""}
             name="personFirstName"
             required
             id="personFirstName1"
@@ -292,7 +311,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             type="text"
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
-            value={relatedObject?.personLastName}
+            value={relatedObject?.personLastName || ""}
             name="personLastName"
             required
             id="personLastName1"
@@ -306,7 +325,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             type="text"
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
-            value={relatedObject?.personNationalCode}
+            value={relatedObject?.personNationalCode ?? ""}
             name="personNationalCode"
             required
             id="personNationalCode2"
@@ -325,13 +344,13 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             required
             onChange={handleRealtedObjectChange}
-            value={relatedObject?.personCertificatetNo}
-            name="personCertificatetNo"
-            id="personCertificatetNo2"
+            value={relatedObject?.personCertificateNo ?? ""}
+            name="personCertificateNo"
+            id="personCertificateNo2"
           />
           <label
             className="inputBox__form--label"
-            htmlFor="personCertificatetNo2"
+            htmlFor="personCertificateNo2"
           >
             <span>*</span> شماره شناسنامه
           </label>
@@ -342,7 +361,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             required
             onChange={handleRealtedObjectChange}
-            value={relatedObject.personFatherName}
+            value={relatedObject?.personFatherName || ""}
             name="personFatherName"
             id="personFatherName1"
           />
@@ -354,7 +373,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           <InputDatePicker
             value={selectedBirthDate}
             onChange={handleBirthDateChange}
-            format={"jYYYY-jMM-jDD"}
+            format={"jYYYY/jMM/jDD"}
             onOpenChange={handleBirthOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isBirthCalenderOpen}
@@ -374,7 +393,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           <InputDatePicker
             value={selectedMritialDate}
             onChange={handleMaritialDateChange}
-            format={"jYYYY-jMM-jDD"}
+            format={"jYYYY/jMM/jDD"}
             onOpenChange={handleMaritialOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isMritialCalenderOpen}
@@ -397,7 +416,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             required
             onChange={handleRealtedObjectChange}
-            value={relatedObject?.personBirthPlace}
+            value={relatedObject?.personBirthPlace || ""}
             name="personBirthPlace"
             id="personBirthPlace1"
           />
@@ -410,11 +429,14 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           <select
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
+            value={relatedObject?.pensionaryStatusID || " "}
             name="pensionaryStatusID"
             required
             id="pensionaryStatusID"
           >
-            <option value=" ">انتخاب کنید</option>
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
             {pensionaryStatusCombo.map((status) => (
               <option
                 key={status.pensionaryStatusID}
@@ -433,11 +455,14 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           <select
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
+            value={relatedObject?.maritalStatusID || " "}
             name="maritalStatusID"
             required
             id="maritalStatusID1"
           >
-            <option value=" ">انتخاب کنید</option>
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
             {maritialStatusCombo.map((maritalStatus) => (
               <option
                 key={maritalStatus.lookUpID}
@@ -457,11 +482,14 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             type="text"
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
+            value={relatedObject?.educationTypeID || " "}
             name="educationTypeID"
             required
             id="educationTypeID1"
           >
-            <option value=" ">انتخاب کنید</option>
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
             {educationCombo.map((educationType) => (
               <option
                 key={educationType.lookUpID}
@@ -480,7 +508,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             type="text"
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
-            value={relatedObject?.educationTypeCaption}
+            value={relatedObject?.educationTypeCaption || ""}
             name="educationTypeCaption"
             required
             id="educationTypeCaption"
@@ -498,11 +526,14 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             type="text"
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
+            value={relatedObject?.universityID || " "}
             name="universityID"
             required
             id="universityID1"
           >
-            <option value=" ">انتخاب کنید</option>
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
             {universityCombo.map((uni) => (
               <option key={uni.lookUpID} value={uni.lookUpID}>
                 {uni.lookUpName}
@@ -519,7 +550,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             required
             onChange={handleRealtedObjectChange}
-            value={relatedObject?.universityCaption}
+            value={relatedObject?.universityCaption || ""}
             name="universityCaption"
             id="universityCaption"
           />
@@ -533,7 +564,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
             name="personCellPhone"
-            value={relatedObject?.personCellPhone}
+            value={relatedObject?.personCellPhone || ""}
             required
             id="personCellPhone1"
           />
@@ -548,7 +579,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
             name="personCellPhone2"
-            value={relatedObject?.personCellPhone2}
+            value={relatedObject?.personCellPhone2 || ""}
             required
             id="personCellPhone22"
           />
@@ -563,7 +594,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             required
             onChange={handleRealtedObjectChange}
             name="personPhone"
-            value={relatedObject?.personPhone}
+            value={relatedObject?.personPhone || ""}
             id="personPhone1"
           />
           <label className="inputBox__form--label" htmlFor="personPhone1">
@@ -577,7 +608,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             required
             onChange={handleRealtedObjectChange}
             name="personRegion"
-            value={relatedObject?.personRegion}
+            value={relatedObject?.personRegion || ""}
             id="personRegion1"
           />
           <label className="inputBox__form--label" htmlFor="personRegion1">
@@ -592,7 +623,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             required
             onChange={handleRealtedObjectChange}
             name="personArea"
-            value={relatedObject?.personArea}
+            value={relatedObject?.personArea || ""}
             id="personArea1"
           />
           <label className="inputBox__form--label" htmlFor="personArea1">
@@ -604,7 +635,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             type="text"
             id="personCountry"
             name="personCountryID"
-            value={relatedObject.personCountryID || " "}
+            value={relatedObject?.personCountryID || " "}
             className="inputBox__form--input field"
             onChange={handleRealtedObjectChange}
             required
@@ -651,7 +682,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             id="personCity"
             name="personCityID"
             className="inputBox__form--input"
-            value={relatedObject.personCiryID || " "}
+            value={relatedObject?.personCityID || " "}
             onChange={handleRealtedObjectChange}
             required
           >
@@ -676,7 +707,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             required
             onChange={handleRealtedObjectChange}
             name="personPostalCode"
-            value={relatedObject?.personPostalCode}
+            value={relatedObject?.personPostalCode ?? ""}
             id="personPostalCode1"
           />
           <label className="inputBox__form--label" htmlFor="personPostalCode1">
@@ -690,7 +721,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             required
             onChange={handleRealtedObjectChange}
             name="personSpecialDisease"
-            value={relatedObject?.personSpecialDisease}
+            value={relatedObject?.personSpecialDisease || ""}
             id="personSpecialDisease1"
           />
           <label
@@ -708,7 +739,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             required
             onChange={handleRealtedObjectChange}
             name="personAddress"
-            value={relatedObject?.personAddress}
+            value={relatedObject?.personAddress || ""}
             id="personAddress1"
           />
           <label className="inputBox__form--label" htmlFor="personAddress1">
@@ -723,7 +754,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             required
             onChange={handleRealtedObjectChange}
             name="personDescription"
-            value={relatedObject?.personDescription}
+            value={relatedObject?.personDescription || ""}
             id="personDescription1"
           ></textarea>
           <label className="inputBox__form--label" htmlFor="personDescription1">
@@ -744,7 +775,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             required
             onChange={handleRealtedObjectChange}
             name="selfEmployeeTypeName"
-            value={relatedObject.selfEmployeeTypeName}
+            value={relatedObject?.selfEmployeeTypeName || ""}
             id="selfEmployeeTypeName"
           />
           <label
@@ -759,7 +790,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           <InputDatePicker
             value={selectedSelfEmployeeStartDate}
             onChange={handleSelfEmployeeStartDateChange}
-            format={"jYYYY-jMM-jDD"}
+            format={"jYYYY/jMM/jDD"}
             onOpenChange={handleSelfEmployeeStartOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isSelfEmployeeStartCalenderOpen}
@@ -779,7 +810,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           <InputDatePicker
             value={selectedSelfEmployeeEndDate}
             onChange={handleSelfEmployeeEndDateChange}
-            format={"jYYYY-jMM-jDD"}
+            format={"jYYYY/jMM/jDD"}
             onOpenChange={handleSelfEmployeeEndOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isSelfEmployeeEndCalenderOpen}
@@ -803,7 +834,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             required
             onChange={handleRealtedObjectChange}
             name="selfEmployeeDesc"
-            value={relatedObject?.selfEmployeeDesc}
+            value={relatedObject?.selfEmployeeDesc || ""}
             id="selfEmployeeDesc"
           ></textarea>
           <label className="inputBox__form--label" htmlFor="selfEmployeeDesc">
@@ -823,7 +854,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
             name="backupFirstName"
-            value={relatedObject?.backupFirstName}
+            value={relatedObject?.backupFirstName || ""}
             required
             id="backupFirstName1"
           />
@@ -837,7 +868,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
             name="backupLastName"
-            value={relatedObject?.backupLastName}
+            value={relatedObject?.backupLastName || ""}
             required
             id="backupLastName1"
           />
@@ -851,7 +882,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
             name="backupRelation"
-            value={relatedObject?.backupRelation}
+            value={relatedObject?.backupRelation || ""}
             required
             id="backupRelation"
           />
@@ -865,7 +896,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
             name="backupPhone"
-            value={relatedObject?.backupPhone}
+            value={relatedObject?.backupPhone || ""}
             required
             id="backupPhone"
           />
@@ -880,7 +911,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
             name="backupCellphone"
-            value={relatedObject?.backupCellphone}
+            value={relatedObject?.backupCellphone || ""}
             required
             id="backupCellphone"
           />
@@ -895,7 +926,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
             name="backupAddress"
-            value={relatedObject?.backupAddress}
+            value={relatedObject?.backupAddress || ""}
             required
             id="backupAddress"
           />

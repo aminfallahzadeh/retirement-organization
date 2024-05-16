@@ -43,7 +43,7 @@ export const heirApiSlice = apiSlice.injectEndpoints({
     }),
     removeHeir: builder.mutation({
       query: ({ pensionaryID }) => ({
-        url: `${HEIR_URL_HTTPS}/RemovHeir?pensionaryID=${pensionaryID}`,
+        url: `${HEIR_URL_HTTPS}/RemoveHeir?pensionaryID=${pensionaryID}`,
         method: "POST",
       }),
     }),

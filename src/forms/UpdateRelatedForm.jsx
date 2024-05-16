@@ -251,7 +251,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
     const { name, value } = e.target;
     setRelatedObject({
       ...relatedObject,
-      [name]: convertToPersianNumber(value),
+      [name]: value,
     });
   };
 
@@ -280,23 +280,39 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
 
       const updateRes = await updateRelated({
         ...relatedObject,
-        pensionaryStatusID: convertToEnglishNumber(
-          relatedObject.pensionaryStatusID
+        parentPersonID,
+        relationshipWithParentID: convertToEnglishNumber(
+          relatedObject.relationshipWithParentID
         ),
-        personCertificatetNo: convertToEnglishNumber(
-          relatedObject.personCertificatetNo
+        personCertificateNo: convertToEnglishNumber(
+          relatedObject.personCertificateNo
         ),
         personNationalCode: convertToEnglishNumber(
           relatedObject.personNationalCode
         ),
-        relationshipWithParentID: convertToEnglishNumber(
-          relatedObject.relationshipWithParentID
+        pensionaryStatusID: convertToEnglishNumber(
+          relatedObject.pensionaryStatusID
+        ),
+        maritalStatusID: convertToEnglishNumber(relatedObject.maritalStatusID),
+        educationTypeID: convertToEnglishNumber(relatedObject.educationTypeID),
+        universityID: convertToEnglishNumber(relatedObject.universityID),
+        personPhone: convertToEnglishNumber(relatedObject.personPhone),
+        personCellPhone: convertToEnglishNumber(relatedObject.personCellPhone),
+        personCellPhone2: convertToEnglishNumber(
+          relatedObject.personCellPhone2
         ),
         personRegion:
           parseInt(convertToEnglishNumber(relatedObject.personRegion)) || null,
         personArea:
           parseInt(convertToEnglishNumber(relatedObject.personArea)) || null,
-        parentPersonID,
+        personCountryID: convertToEnglishNumber(relatedObject.personCountryID),
+        personCityID: convertToEnglishNumber(relatedObject.personCityID),
+        personStateID: convertToEnglishNumber(relatedObject.personStateID),
+        personPostalCode: convertToEnglishNumber(
+          relatedObject.personPostalCode
+        ),
+        backupPhone: convertToEnglishNumber(relatedObject.backupPhone),
+        backupCellphone: convertToEnglishNumber(relatedObject.backupCellphone),
         personBirthDate,
         personMaritalDate,
         selfEmployeeStartDate,
@@ -314,6 +330,10 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
       });
     }
   };
+
+  useEffect(() => {
+    console.log(relatedObject);
+  }, [relatedObject]);
 
   const content = (
     <>
@@ -334,12 +354,15 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
               <select
                 type="text"
                 className="inputBox__form--input"
+                value={relatedObject?.relationshipWithParentID || " "}
                 required
                 name="relationshipWithParentID"
                 onChange={handleRelatedObjectChange}
                 id="relationshipWithParentID"
               >
-                <option value=" ">انتخاب نسبت</option>
+                <option value=" " disabled>
+                  انتخاب نسبت
+                </option>
                 {relationCombo.map((relation) => (
                   <option
                     key={relation.relationshipID}
@@ -361,7 +384,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 type="text"
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
-                value={relatedObject?.personFirstName}
+                value={relatedObject?.personFirstName || ""}
                 name="personFirstName"
                 required
                 id="personFirstName1"
@@ -378,7 +401,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 type="text"
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
-                value={relatedObject?.personLastName}
+                value={relatedObject?.personLastName || ""}
                 name="personLastName"
                 required
                 id="personLastName1"
@@ -395,7 +418,10 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 type="text"
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
-                value={relatedObject?.personNationalCode}
+                value={
+                  convertToPersianNumber(relatedObject?.personNationalCode) ??
+                  ""
+                }
                 name="personNationalCode"
                 required
                 id="personNationalCode2"
@@ -414,15 +440,16 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 required
                 onChange={handleRelatedObjectChange}
-                value={convertToPersianNumber(
-                  relatedObject?.personCertificatetNo
-                )}
-                name="personCertificatetNo"
-                id="personCertificatetNo2"
+                value={
+                  convertToPersianNumber(relatedObject?.personCertificateNo) ??
+                  ""
+                }
+                name="personCertificateNo"
+                id="personCertificateNo2"
               />
               <label
                 className="inputBox__form--label"
-                htmlFor="personCertificatetNo2"
+                htmlFor="personCertificateNo2"
               >
                 <span>*</span> شماره شناسنامه
               </label>
@@ -433,7 +460,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 required
                 onChange={handleRelatedObjectChange}
-                value={relatedObject.personFatherName}
+                value={relatedObject?.personFatherName || ""}
                 name="personFatherName"
                 id="personFatherName1"
               />
@@ -448,7 +475,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
               <InputDatePicker
                 value={convertToPersianDate(selectedBirthDate)}
                 onChange={handleBirthDateChange}
-                format={"jYYYY-jMM-jDD"}
+                format={"jYYYY/jMM/jDD"}
                 onOpenChange={handleBirthOpenChange}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isBirthCalenderOpen}
@@ -468,7 +495,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
               <InputDatePicker
                 value={selectedMritialDate}
                 onChange={handleMaritialDateChange}
-                format={"jYYYY-jMM-jDD"}
+                format={"jYYYY/jMM/jDD"}
                 onOpenChange={handleMaritialOpenChange}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isMritialCalenderOpen}
@@ -491,7 +518,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 required
                 onChange={handleRelatedObjectChange}
-                value={relatedObject?.personBirthPlace}
+                value={relatedObject?.personBirthPlace || ""}
                 name="personBirthPlace"
                 id="personBirthPlace1"
               />
@@ -507,11 +534,14 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
               <select
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
+                value={relatedObject?.pensionaryStatusID || " "}
                 name="pensionaryStatusID"
                 required
                 id="pensionaryStatusID"
               >
-                <option value=" ">انتخاب کنید</option>
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
                 {pensionaryStatusCombo.map((status) => (
                   <option
                     key={status.pensionaryStatusID}
@@ -533,11 +563,14 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
               <select
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
+                value={relatedObject?.maritalStatusID || " "}
                 name="maritalStatusID"
                 required
                 id="maritalStatusID1"
               >
-                <option value=" ">انتخاب کنید</option>
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
                 {maritialStatusCombo.map((maritalStatus) => (
                   <option
                     key={maritalStatus.lookUpID}
@@ -560,11 +593,14 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 type="text"
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
+                value={relatedObject?.educationTypeID || " "}
                 name="educationTypeID"
                 required
                 id="educationTypeID1"
               >
-                <option value=" ">انتخاب کنید</option>
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
                 {educationCombo.map((educationType) => (
                   <option
                     key={educationType.lookUpID}
@@ -586,7 +622,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 type="text"
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
-                value={relatedObject?.educationTypeCaption}
+                value={relatedObject?.educationTypeCaption || ""}
                 name="educationTypeCaption"
                 required
                 id="educationTypeCaption"
@@ -604,11 +640,14 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 type="text"
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
+                value={relatedObject?.universityID || " "}
                 name="universityID"
                 required
                 id="universityID1"
               >
-                <option value=" ">انتخاب کنید</option>
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
                 {universityCombo.map((uni) => (
                   <option key={uni.lookUpID} value={uni.lookUpID}>
                     {uni.lookUpName}
@@ -625,7 +664,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 required
                 onChange={handleRelatedObjectChange}
-                value={relatedObject?.universityCaption}
+                value={relatedObject?.universityCaption || ""}
                 name="universityCaption"
                 id="universityCaption"
               />
@@ -642,7 +681,9 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
                 name="personCellPhone"
-                value={relatedObject?.personCellPhone}
+                value={
+                  convertToPersianNumber(relatedObject?.personCellPhone) ?? ""
+                }
                 required
                 id="personCellPhone1"
               />
@@ -660,7 +701,9 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
                 name="personCellPhone2"
-                value={relatedObject?.personCellPhone2}
+                value={
+                  convertToPersianNumber(relatedObject?.personCellPhone2) ?? ""
+                }
                 required
                 id="personCellPhone22"
               />
@@ -678,7 +721,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 required
                 onChange={handleRelatedObjectChange}
                 name="personPhone"
-                value={relatedObject?.personPhone}
+                value={convertToPersianNumber(relatedObject?.personPhone) || ""}
                 id="personPhone1"
               />
               <label className="inputBox__form--label" htmlFor="personPhone1">
@@ -692,7 +735,9 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 required
                 onChange={handleRelatedObjectChange}
                 name="personRegion"
-                value={relatedObject?.personRegion}
+                value={
+                  convertToPersianNumber(relatedObject?.personRegion) ?? ""
+                }
                 id="personRegion1"
               />
               <label className="inputBox__form--label" htmlFor="personRegion1">
@@ -707,7 +752,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 required
                 onChange={handleRelatedObjectChange}
                 name="personArea"
-                value={relatedObject?.personArea}
+                value={convertToPersianNumber(relatedObject?.personArea) ?? ""}
                 id="personArea1"
               />
               <label className="inputBox__form--label" htmlFor="personArea1">
@@ -719,7 +764,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 type="text"
                 id="personCountry"
                 name="personCountryID"
-                value={relatedObject.personCountryID || " "}
+                value={relatedObject?.personCountryID || " "}
                 className="inputBox__form--input field"
                 onChange={handleRelatedObjectChange}
                 required
@@ -766,7 +811,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 id="personCity"
                 name="personCityID"
                 className="inputBox__form--input"
-                value={relatedObject.personCiryID || " "}
+                value={relatedObject?.personCityID || " "}
                 onChange={handleRelatedObjectChange}
                 required
               >
@@ -791,7 +836,9 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 required
                 onChange={handleRelatedObjectChange}
                 name="personPostalCode"
-                value={relatedObject?.personPostalCode}
+                value={
+                  convertToPersianNumber(relatedObject?.personPostalCode) ?? ""
+                }
                 id="personPostalCode1"
               />
               <label
@@ -808,7 +855,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 required
                 onChange={handleRelatedObjectChange}
                 name="personSpecialDisease"
-                value={relatedObject?.personSpecialDisease}
+                value={relatedObject?.personSpecialDisease || ""}
                 id="personSpecialDisease1"
               />
               <label
@@ -826,7 +873,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 required
                 onChange={handleRelatedObjectChange}
                 name="personAddress"
-                value={relatedObject?.personAddress}
+                value={relatedObject?.personAddress || ""}
                 id="personAddress1"
               />
               <label className="inputBox__form--label" htmlFor="personAddress1">
@@ -841,7 +888,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 required
                 onChange={handleRelatedObjectChange}
                 name="personDescription"
-                value={relatedObject?.personDescription}
+                value={relatedObject?.personDescription || ""}
                 id="personDescription1"
               ></textarea>
               <label
@@ -865,7 +912,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 required
                 onChange={handleRelatedObjectChange}
                 name="selfEmployeeTypeName"
-                value={relatedObject.selfEmployeeTypeName}
+                value={relatedObject?.selfEmployeeTypeName || ""}
                 id="selfEmployeeTypeName"
               />
               <label
@@ -880,7 +927,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
               <InputDatePicker
                 value={selectedSelfEmployeeStartDate}
                 onChange={handleSelfEmployeeStartDateChange}
-                format={"jYYYY-jMM-jDD"}
+                format={"jYYYY/jMM/jDD"}
                 onOpenChange={handleSelfEmployeeStartOpenChange}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isSelfEmployeeStartCalenderOpen}
@@ -900,7 +947,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
               <InputDatePicker
                 value={selectedSelfEmployeeEndDate}
                 onChange={handleSelfEmployeeEndDateChange}
-                format={"jYYYY-jMM-jDD"}
+                format={"jYYYY/jMM/jDD"}
                 onOpenChange={handleSelfEmployeeEndOpenChange}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isSelfEmployeeEndCalenderOpen}
@@ -924,7 +971,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 required
                 onChange={handleRelatedObjectChange}
                 name="selfEmployeeDesc"
-                value={relatedObject?.selfEmployeeDesc}
+                value={relatedObject?.selfEmployeeDesc || ""}
                 id="selfEmployeeDesc"
               ></textarea>
               <label
@@ -947,7 +994,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
                 name="backupFirstName"
-                value={relatedObject?.backupFirstName}
+                value={relatedObject?.backupFirstName || ""}
                 required
                 id="backupFirstName1"
               />
@@ -964,7 +1011,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
                 name="backupLastName"
-                value={relatedObject?.backupLastName}
+                value={relatedObject?.backupLastName || ""}
                 required
                 id="backupLastName1"
               />
@@ -981,7 +1028,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
                 name="backupRelation"
-                value={relatedObject?.backupRelation}
+                value={relatedObject?.backupRelation || ""}
                 required
                 id="backupRelation"
               />
@@ -995,7 +1042,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
                 name="backupPhone"
-                value={relatedObject?.backupPhone}
+                value={convertToPersianNumber(relatedObject?.backupPhone) ?? ""}
                 required
                 id="backupPhone"
               />
@@ -1010,7 +1057,9 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
                 name="backupCellphone"
-                value={relatedObject?.backupCellphone}
+                value={
+                  convertToPersianNumber(relatedObject?.backupCellphone) ?? ""
+                }
                 required
                 id="backupCellphone"
               />
@@ -1028,7 +1077,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
                 name="backupAddress"
-                value={relatedObject?.backupAddress}
+                value={relatedObject?.backupAddress || ""}
                 required
                 id="backupAddress"
               />

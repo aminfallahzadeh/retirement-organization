@@ -363,7 +363,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           <InputDatePicker
             value={selectedBirthDate}
             onChange={handleBirthDateChange}
-            format={"jYYYY-jMM-jDD"}
+            format={"jYYYY/jMM/jDD"}
             onOpenChange={handleBirthOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isBirthCalenderOpen}
@@ -644,7 +644,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           <InputDatePicker
             value={selectedBaseFinishDate}
             onChange={handleBaseFinishDateChange}
-            format={"jYYYY-jMM-jDD"}
+            format={"jYYYY/jMM/jDD"}
             onOpenChange={handleBaseFinishDateOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isBaseFinishDateCalenderOpen}
