@@ -245,15 +245,22 @@ function RetiredPersonForm() {
         personNationalCode: convertToEnglishNumber(
           personData.personNationalCode
         ),
-        personCertificatetNo: convertToEnglishNumber(
-          personData.personCertificatetNo
+        personCertificateNo: convertToEnglishNumber(
+          personData.personCertificateNo
         ),
+        genderID: convertToEnglishNumber(personData.genderID),
         personPhone: convertToEnglishNumber(personData.personPhone),
         personCellPhone: convertToEnglishNumber(personData.personCellPhone),
         personCellPhone2: convertToEnglishNumber(personData.personCellPhone2),
         personRegion: parseInt(convertToEnglishNumber(personData.personRegion)),
+        educationTypeID: convertToEnglishNumber(personData.educationTypeID),
+        personCountryID: convertToEnglishNumber(personData.personCountryID),
+        personCityID: convertToEnglishNumber(personData.personCityID),
+        personStateID: convertToEnglishNumber(personData.personStateID),
         personArea: parseInt(convertToEnglishNumber(personData.personArea)),
         personPostalCode: convertToEnglishNumber(personData.personPostalCode),
+        housingTypeID: convertToEnglishNumber(personData.housingTypeID),
+        maritalStatusID: convertToEnglishNumber(personData.maritalStatusID),
         personBirthDate,
         personDeathDate,
       }).unwrap();
@@ -591,7 +598,7 @@ function RetiredPersonForm() {
               شماره بازنشستگی
             </div>
             <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(personData?.retiredID) || ""}
+              {convertToPersianNumber(personData?.retiredID) || "-"}
             </div>
           </div>
         </div>
@@ -697,13 +704,15 @@ function RetiredPersonForm() {
             disabled={!editable}
             type="text"
             id="educationTypeID"
-            value={personData?.educationTypeID || ""}
+            value={personData?.educationTypeID || " "}
             name="educationTypeID"
             className="inputBox__form--input field"
             onChange={handlePersonDataChange}
             required
           >
-            <option value="0">انتخاب کنید</option>
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
             {educationCombo.map((edu) => (
               <option key={edu.lookUpID} value={edu.lookUpID}>
                 {edu.lookUpName}
@@ -720,7 +729,7 @@ function RetiredPersonForm() {
             disabled={!editable}
             type="text"
             id="personCountry"
-            value={personData?.personCountryID || ""}
+            value={personData?.personCountryID || " "}
             name="personCountryID"
             className="inputBox__form--input field"
             onChange={handlePersonDataChange}
@@ -745,7 +754,7 @@ function RetiredPersonForm() {
             disabled={!editable}
             type="text"
             id="personState"
-            value={personData?.personStateID || ""}
+            value={personData?.personStateID || " "}
             name="personStateID"
             className="inputBox__form--input"
             onChange={handlePersonDataChange}
@@ -770,7 +779,7 @@ function RetiredPersonForm() {
             disabled={!editable}
             type="text"
             id="personCity"
-            value={personData?.personCityID || ""}
+            value={personData?.personCityID || " "}
             name="personCityID"
             className="inputBox__form--input"
             onChange={handlePersonDataChange}
@@ -842,13 +851,15 @@ function RetiredPersonForm() {
             disabled={!editable}
             type="text"
             id="housingTypeID"
-            value={personData?.housingTypeID || ""}
+            value={personData?.housingTypeID || " "}
             name="housingTypeID"
             className="inputBox__form--input"
             onChange={handlePersonDataChange}
             required
           >
-            <option value="0">انتخاب</option>
+            <option value=" " disabled>
+              انتخاب
+            </option>
             {housingCombo.map((house) => (
               <option key={house.lookUpID} value={house.lookUpID}>
                 {house.lookUpName}
@@ -867,11 +878,13 @@ function RetiredPersonForm() {
             name="maritalStatusID"
             id="maritalStatusID"
             className="inputBox__form--input"
-            value={personData?.maritalStatusID || "0"}
+            value={personData?.maritalStatusID || " "}
             onChange={handlePersonDataChange}
             required
           >
-            <option value="0">انتخاب</option>
+            <option value=" " disabled>
+              انتخاب
+            </option>
             {maritalStatusCombo.map((item) => (
               <option key={item.lookUpID} value={item.lookUpID}>
                 {item.lookUpName}

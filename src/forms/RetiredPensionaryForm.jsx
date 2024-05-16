@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useDispatch } from "react-redux";
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import {
   useUpdateRetiredPensionaryMutation,
@@ -35,16 +34,21 @@ import { InputDatePicker } from "jalaali-react-date-picker";
 
 function RetiredPensionaryForm() {
   const [editable, setEditable] = useState(false);
+
+  // LOOKUP DATA STATES
   const [employmentTypeCombo, setEmploymentTypeCombo] = useState([]);
+
+  // DATE STATES
   const [selectedRetriementDate, setSelectedRetriementDate] = useState(null);
   const [isRetriementCalenderOpen, setIsRetirementCalenderOpen] =
     useState(false);
+
+  // PENSIONARY STATES
   const [pensionaryData, setPensionaryData] = useState({});
 
   const [updateRetiredPensionary, { isLoading: isUpdating }] =
     useUpdateRetiredPensionaryMutation();
 
-  const dispatch = useDispatch();
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
@@ -62,11 +66,7 @@ function RetiredPensionaryForm() {
     if (isPensionarySuccess) {
       setPensionaryData(pensionary?.itemList[0]);
     }
-
-    return () => {
-      setPensionaryData({});
-    };
-  }, [isPensionarySuccess, pensionary, dispatch]);
+  }, [isPensionarySuccess, pensionary]);
 
   // handle error
   useEffect(() => {
@@ -78,42 +78,29 @@ function RetiredPensionaryForm() {
     }
   }, [pensionaryError]);
 
+  // GET LOOK UP DATA
   const {
     data: employmentTypeComboItems,
     isSuccess: isEmploymentTypeComboSuccess,
-    error: employmentTypeComboError,
   } = useGetLookupDataQuery({
     lookUpType: "EmploymentType",
   });
 
-  // fetch combo data
+  // FETCH LOOK UP DATA
   useEffect(() => {
     if (isEmploymentTypeComboSuccess) {
       setEmploymentTypeCombo(employmentTypeComboItems.itemList);
     }
   }, [isEmploymentTypeComboSuccess, employmentTypeComboItems]);
 
-  useEffect(() => {
-    if (employmentTypeComboError) {
-      console.log(employmentTypeComboError);
-      toast.error(
-        employmentTypeComboError?.data?.message ||
-          employmentTypeComboError.error,
-        {
-          autoClose: 2000,
-        }
-      );
-    }
-  }, [employmentTypeComboError]);
-
-  // handle dates
+  // HANDLE DATEs
   useEffect(() => {
     setSelectedRetriementDate(
       convertToPersianDate(pensionaryData?.retirementDate)
     );
   }, [pensionaryData?.retirementDate]);
 
-  // other handlers
+  // CHANGE HANDLERs
   const handleEditable = () => {
     setEditable(true);
   };
@@ -241,12 +228,14 @@ function RetiredPensionaryForm() {
             type="text"
             id="employmentTypeID"
             name="employmentTypeID"
-            value={pensionaryData?.employmentTypeID || ""}
+            value={pensionaryData?.employmentTypeID || " "}
             onChange={handlePensionaryDataChange}
             className="inputBox__form--input"
             required
           >
-            <option value=" ">انتخاب کنید</option>
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
             {employmentTypeCombo?.map((item) => (
               <option key={item.lookUpID} value={item.lookUpID}>
                 {item.lookUpName}
@@ -262,9 +251,10 @@ function RetiredPensionaryForm() {
           <InputDatePicker
             disabled={!editable}
             value={selectedRetriementDate}
+            defaultValue={null}
             onChange={handleRetiredDateChange}
-            format={"jYYYY/jMM/jDD"}
             onOpenChange={handleRetiredOpenChange}
+            format={"jYYYY/jMM/jDD"}
             suffixIcon={<CalenderIcon color="action" />}
             open={isRetriementCalenderOpen}
             style={{
@@ -291,7 +281,9 @@ function RetiredPensionaryForm() {
             value={pensionaryData?.pensionaryIsActive || " "}
             onChange={handlePensionaryDataChange}
           >
-            <option value=" ">انتخاب کنید</option>
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
             <option value="true">فعال</option>
             <option value="false">غیر فعال</option>
           </select>

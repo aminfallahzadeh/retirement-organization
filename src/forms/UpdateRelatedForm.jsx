@@ -331,10 +331,6 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
     }
   };
 
-  useEffect(() => {
-    console.log(relatedObject);
-  }, [relatedObject]);
-
   const content = (
     <>
       {isLoading || isFetching ? (

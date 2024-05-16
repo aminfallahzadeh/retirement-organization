@@ -123,13 +123,13 @@ function RetiredAccountForm() {
     try {
       const updateRes = await updateRetiredAccount({
         ...accountData,
-        ledgerCode: parseInt(accountData.ledgerCode),
-        insuranceAmount: parseFloat(
-          convertToEnglishNumber(accountData.insuranceAmount)
-        ),
-        insuranceCoef: parseFloat(
-          convertToEnglishNumber(accountData.insuranceCoef)
-        ),
+        ledgerCode:
+          parseInt(convertToEnglishNumber(accountData.ledgerCode)) || null,
+        insuranceAmount:
+          parseFloat(convertToEnglishNumber(accountData.insuranceAmount)) ||
+          null,
+        insuranceCoef:
+          parseFloat(convertToEnglishNumber(accountData.insuranceCoef)) || null,
         accountNo: convertToEnglishNumber(accountData.accountNo),
       }).unwrap();
       setEditable(false);
@@ -144,7 +144,11 @@ function RetiredAccountForm() {
     }
   };
 
-  return (
+  useEffect(() => {
+    console.log(accountData);
+  }, [accountData]);
+
+  const content = (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>
         <div className="inputBox__form">
@@ -153,7 +157,7 @@ function RetiredAccountForm() {
             type="text"
             id="bankID"
             name="bankID"
-            value={accountData.bankID || " "}
+            value={accountData?.bankID || " "}
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
           >
@@ -177,7 +181,7 @@ function RetiredAccountForm() {
             type="text"
             id="bankBranchID"
             name="bankBranchID"
-            value={accountData.bankBranchID || ""}
+            value={accountData?.bankBranchID || " "}
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
             required
@@ -202,11 +206,7 @@ function RetiredAccountForm() {
             type="text"
             id="accountNo"
             name="accountNo"
-            value={
-              isLoading
-                ? "در حال بارگذاری"
-                : convertToPersianNumber(accountData.accountNo) ?? ""
-            }
+            value={convertToPersianNumber(accountData?.accountNo) ?? ""}
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
             required
@@ -222,11 +222,7 @@ function RetiredAccountForm() {
             type="text"
             id="ledgerCode"
             name="ledgerCode"
-            value={
-              isLoading
-                ? "در حال بارگذاری"
-                : convertToPersianNumber(accountData.ledgerCode) ?? ""
-            }
+            value={convertToPersianNumber(accountData?.ledgerCode) ?? ""}
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
             required
@@ -242,11 +238,7 @@ function RetiredAccountForm() {
             type="text"
             id="insuranceCoef"
             name="insuranceCoef"
-            value={
-              isLoading
-                ? "در حال بارگذاری"
-                : convertToPersianNumber(accountData.insuranceCoef) ?? ""
-            }
+            value={convertToPersianNumber(accountData?.insuranceCoef) ?? ""}
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
             required
@@ -262,11 +254,7 @@ function RetiredAccountForm() {
             type="text"
             id="insuranceAmount"
             name="insuranceAmount"
-            value={
-              isLoading
-                ? "در حال بارگذاری"
-                : convertToPersianNumber(accountData.insuranceAmount) ?? ""
-            }
+            value={convertToPersianNumber(accountData?.insuranceAmount) ?? ""}
             onChange={handleAccountDataChange}
             className="inputBox__form--input"
             required
@@ -305,6 +293,8 @@ function RetiredAccountForm() {
       </div>
     </section>
   );
+
+  return content;
 }
 
 export default RetiredAccountForm;
