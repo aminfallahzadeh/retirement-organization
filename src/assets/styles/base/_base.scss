@@ -23,7 +23,7 @@ html {
 }
 
 select {
-    cursor: pointer;
+    cursor: pointer !important;
     text-overflow: ellipsis;
 }
 

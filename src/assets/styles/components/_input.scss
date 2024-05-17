@@ -56,7 +56,7 @@
 		background: transparent;
 		color: $color-grey-5;
 		padding-inline: 20px 50px;
-		border: 2px solid $color-grey-2;
+		border: 2px solid var(--color-input-border);
 		border-radius: $border-radius-secondary;
 		outline: none;
 		text-align: right;
@@ -73,8 +73,7 @@
 			top: -10px;
 			right: 20px;
 			font-size: 12px;
-			background-color: $color-grey-1;
-			color: $color-grey-4;
+			background-color: var(--color-bg-label);
 			border-radius: $border-radius-secondary;
 			padding: 0 10px;
 			cursor: text;
@@ -132,7 +131,7 @@
 		transition: 0.2s;
 		font-size: 12px;
 		cursor: text;
-		color: $color-grey-5;
+		color: var(--color-label-primary);
 
 		span {
 			color: $color-accent-red;

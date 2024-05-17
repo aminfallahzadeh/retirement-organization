@@ -20,7 +20,7 @@ function CreateRequestScreen() {
     <section className="main">
       <h4 className="title-primary">ایجاد درخواست</h4>
 
-      <div>
+      <div className="u-margin-top-md">
         <TabContext value={value}>
           <Box sx={{ bgcolor: "background.paper", borderRadius: 1 }}>
             <TabList onChange={handleChange} aria-label="tabs">

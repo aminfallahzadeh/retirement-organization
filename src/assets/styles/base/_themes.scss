@@ -20,6 +20,13 @@
     --color-bg-accordion-primary: #c0c0c0;
     --color-text-accordion-primary: #333533;
     --color-expand-icon-accordion: #333533;
+
+    --color-label-primary: #9f9f9f;
+    --color-bg-label: #ebebeb;
+
+    /* input colors */
+    --color-input-border: #cfcfcf;
+    --color-bg-container: #fff;
 }
 
 :root[color-scheme="chocolate"] {
@@ -42,4 +49,11 @@
     --color-bg-accordion-primary: #5e503f;
     --color-text-accordion-primary: #f2f4f3;
     --color-expand-icon-accordion: #f2f4f3;
+
+    /* input colors */
+    --color-input-border: #d7bba1;
+    --color-bg-container: #ebebeb;
+
+    --color-label-primary: #a9927d;
+    --color-bg-label: #f2f4f3;
 }
