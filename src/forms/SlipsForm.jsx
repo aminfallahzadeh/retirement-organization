@@ -2,7 +2,12 @@
 import { useState, useEffect, useCallback } from "react";
 
 // redux imports
-import { useLazyExistPaySlipQuery } from "../slices/payApiSlice";
+import { useDispatch } from "react-redux";
+import {
+  useLazyExistPaySlipQuery,
+  useLazyGetPayListQuery,
+} from "../slices/payApiSlice";
+import { setSlipsTableData } from "../slices/slipsDataSlice";
 
 // mui imports
 import { LoadingButton } from "@mui/lab";
@@ -12,7 +17,7 @@ import {
 } from "@mui/icons-material";
 
 // helpers
-import { convertToPersianNumber } from "../helper";
+import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
 function SlipsForm() {
   const [isSlipExists, setIsSlipExists] = useState(false);
@@ -20,7 +25,11 @@ function SlipsForm() {
   // MAIN STATE
   const [slipObject, setSlipObject] = useState({});
 
+  const dispatch = useDispatch();
+
   const [existPaySlip, { isLoading: isChecking }] = useLazyExistPaySlipQuery();
+  const [getPayList, { isLoading: isGettingPayList }] =
+    useLazyGetPayListQuery();
 
   // SLIP CHECKER FUNCTION
   const slipChecker = useCallback(
@@ -60,12 +69,25 @@ function SlipsForm() {
     }
   }, [slipChecker, slipObject]);
 
+  // GET PAY LST HANDLER
+  const getPayListHandler = async () => {
+    try {
+      const res = await getPayList({
+        personID: convertToEnglishNumber(slipObject.personID),
+        currentYear: parseInt(slipObject.year),
+        currentMonth: parseInt(slipObject.month),
+      }).unwrap();
+      dispatch(setSlipsTableData(res));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const content = (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-4" noValidate>
         <div className="inputBox__form">
           <select
-            type="text"
             name="payType"
             className="inputBox__form--input"
             onChange={handleSlipObjectChange}
@@ -92,7 +114,6 @@ function SlipsForm() {
         {slipObject.payType === "M" && (
           <div className="inputBox__form">
             <select
-              type="text"
               name="condition"
               className="inputBox__form--input"
               onChange={handleSlipObjectChange}
@@ -114,7 +135,6 @@ function SlipsForm() {
 
         <div className="inputBox__form">
           <select
-            type="text"
             className="inputBox__form--input"
             name="year"
             onChange={handleSlipObjectChange}
@@ -164,7 +184,6 @@ function SlipsForm() {
 
         <div className="inputBox__form">
           <select
-            type="text"
             className="inputBox__form--input"
             required
             name="month"
@@ -192,6 +211,21 @@ function SlipsForm() {
             ماه
           </label>
         </div>
+
+        <div className="inputBox__form">
+          <input
+            type="text"
+            id="personID"
+            name="personID"
+            onChange={handleSlipObjectChange}
+            required
+            className="inputBox__form--input"
+            value={convertToPersianNumber(slipObject?.personID) || ""}
+          />
+          <label className="inputBox__form--label" htmlFor="personID">
+            <span>*</span> شماره کارمندی
+          </label>
+        </div>
       </form>
 
       <div style={{ marginRight: "auto" }} className="flex-row">
@@ -199,8 +233,9 @@ function SlipsForm() {
           <LoadingButton
             dir="ltr"
             endIcon={<EyeIcon />}
-            loading={isChecking}
-            disabled={Object.keys(slipObject).length < 4}
+            loading={isChecking || isGettingPayList}
+            onClick={getPayListHandler}
+            disabled={Object.keys(slipObject).length < 5}
             variant="contained"
             color="primary"
             sx={{ fontFamily: "sahel" }}
@@ -212,7 +247,7 @@ function SlipsForm() {
             dir="ltr"
             endIcon={<ExportIcon />}
             loading={isChecking}
-            disabled={Object.keys(slipObject).length < 4}
+            disabled={Object.keys(slipObject).length < 5}
             variant="contained"
             color="warning"
             sx={{ fontFamily: "sahel" }}
