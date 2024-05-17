@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import {
   useLazyExistPaySlipQuery,
   useLazyGetPayListQuery,
+  useIssuePayMutation,
 } from "../slices/payApiSlice";
 import { setSlipsTableData } from "../slices/slipsDataSlice";
 
@@ -19,8 +20,11 @@ import {
 // helpers
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
+// library imports
+import { toast } from "react-toastify";
+
 function SlipsForm() {
-  const [isSlipExists, setIsSlipExists] = useState(false);
+  const [isSlipExists, setIsSlipExists] = useState(null);
 
   // MAIN STATE
   const [slipObject, setSlipObject] = useState({});
@@ -30,6 +34,9 @@ function SlipsForm() {
   const [existPaySlip, { isLoading: isChecking }] = useLazyExistPaySlipQuery();
   const [getPayList, { isLoading: isGettingPayList }] =
     useLazyGetPayListQuery();
+
+  const [issuePay, { isLoading: isIssuing, isSuccess, error }] =
+    useIssuePayMutation();
 
   // SLIP CHECKER FUNCTION
   const slipChecker = useCallback(
@@ -83,6 +90,27 @@ function SlipsForm() {
     }
   };
 
+  // ISSUE SLIP HANDLER
+  const issuePayHandler = async () => {
+    try {
+      const res = await issuePay({
+        personID: convertToEnglishNumber(slipObject.personID) || null,
+        currentYear: parseInt(slipObject.year),
+        currentMonth: parseInt(slipObject.month),
+      }).unwrap();
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
+  useEffect(() => {
+    console.log(slipObject);
+  }, [slipObject]);
+
   const content = (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-4" noValidate>
@@ -110,28 +138,6 @@ function SlipsForm() {
             نوع فیش
           </label>
         </div>
-
-        {slipObject.payType === "M" && (
-          <div className="inputBox__form">
-            <select
-              name="condition"
-              className="inputBox__form--input"
-              onChange={handleSlipObjectChange}
-              value={slipObject?.condition || " "}
-              required
-              id="condition"
-            >
-              <option value=" " disabled>
-                انتخاب کنید{" "}
-              </option>
-              <option value="1">انفرادی</option>
-              <option value="2">گروهی</option>
-            </select>
-            <label className="inputBox__form--label" htmlFor="condition">
-              حالت درخواست
-            </label>
-          </div>
-        )}
 
         <div className="inputBox__form">
           <select
@@ -212,20 +218,44 @@ function SlipsForm() {
           </label>
         </div>
 
-        <div className="inputBox__form">
-          <input
-            type="text"
-            id="personID"
-            name="personID"
-            onChange={handleSlipObjectChange}
-            required
-            className="inputBox__form--input"
-            value={convertToPersianNumber(slipObject?.personID) || ""}
-          />
-          <label className="inputBox__form--label" htmlFor="personID">
-            <span>*</span> شماره کارمندی
-          </label>
-        </div>
+        {isSlipExists === false && (
+          <div className="inputBox__form">
+            <select
+              name="condition"
+              className="inputBox__form--input"
+              onChange={handleSlipObjectChange}
+              value={slipObject?.condition || " "}
+              required
+              id="condition"
+            >
+              <option value=" " disabled>
+                انتخاب کنید{" "}
+              </option>
+              <option value="1">انفرادی</option>
+              <option value="2">گروهی</option>
+            </select>
+            <label className="inputBox__form--label" htmlFor="condition">
+              حالت درخواست
+            </label>
+          </div>
+        )}
+
+        {slipObject.condition === "1" && (
+          <div className="inputBox__form">
+            <input
+              type="text"
+              id="personID"
+              name="personID"
+              onChange={handleSlipObjectChange}
+              required
+              className="inputBox__form--input"
+              value={convertToPersianNumber(slipObject?.personID) || ""}
+            />
+            <label className="inputBox__form--label" htmlFor="personID">
+              <span>*</span> شماره کارمندی
+            </label>
+          </div>
+        )}
       </form>
 
       <div style={{ marginRight: "auto" }} className="flex-row">
@@ -247,7 +277,9 @@ function SlipsForm() {
             dir="ltr"
             endIcon={<ExportIcon />}
             loading={isChecking}
-            disabled={Object.keys(slipObject).length < 5}
+            disabled={
+              Object.keys(slipObject).length < 5 || !slipObject.personID
+            }
             variant="contained"
             color="warning"
             sx={{ fontFamily: "sahel" }}

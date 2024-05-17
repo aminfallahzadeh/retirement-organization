@@ -43,10 +43,9 @@ function Dashboard() {
 
   return (
     <section className="main flex-col">
-      <div className="flex-row flex-row--grow">
-        <h4 className="title-primary">کارتابل</h4>
-        <RoleSelectionForm isLoading={isLoading} roles={roles} />
-      </div>
+      <h4 className="title-primary">کارتابل</h4>
+      <RoleSelectionForm isLoading={isLoading} roles={roles} />
+
       {isRolesSuccess && selectedRole && <RequestsGrid />}
     </section>
   );

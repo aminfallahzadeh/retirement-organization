@@ -21,6 +21,13 @@ export const payApiSlice = apiSlice.injectEndpoints({
         url: `${PAY_URL_HTTPS}/GetPay?payID=${payID}`,
       }),
     }),
+
+    issuePay: builder.mutation({
+      query: ({ personID, currentYear, currentMonth }) => ({
+        url: `${PAY_URL_HTTPS}/IssuePayForMunicipality?personID=${personID}&currentYear=${currentYear}&currentMonth=${currentMonth}&requestID=null&payDate=null`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -28,4 +35,5 @@ export const {
   useLazyExistPaySlipQuery,
   useLazyGetPayListQuery,
   useGetPayQuery,
+  useIssuePayMutation,
 } = payApiSlice;

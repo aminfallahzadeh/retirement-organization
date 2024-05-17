@@ -10,8 +10,8 @@ function RoleSelectionForm({ isLoading, roles }) {
   };
 
   return (
-    <div className="formCOntainer">
-      <form className="grid grid--col-2" noValidate>
+    <div className="formContainer">
+      <form className="grid grid--col-3" noValidate>
         <div className="inputBox__form">
           <select
             disabled={isLoading}
