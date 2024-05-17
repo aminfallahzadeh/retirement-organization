@@ -12,7 +12,7 @@ import {
 } from "@mui/icons-material";
 
 // helpers
-import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
+import { convertToPersianNumber } from "../helper";
 
 function SlipsForm() {
   const [isSlipExists, setIsSlipExists] = useState(false);
@@ -28,10 +28,10 @@ function SlipsForm() {
       try {
         const res = await existPaySlip({
           payType,
-          currentYear,
-          currentMonth,
+          currentYear: parseInt(currentYear),
+          currentMonth: parseInt(currentMonth),
         }).unwrap();
-        console.log(res);
+        setIsSlipExists(res);
       } catch (err) {
         console.log(err);
       }
@@ -46,15 +46,19 @@ function SlipsForm() {
   };
 
   useEffect(() => {
-    console.log(slipObject);
-  }, [slipObject]);
+    console.log(isSlipExists);
+  }, [isSlipExists, slipObject]);
 
   // CHECK SLIP EXISTANCE ON USER DATA ENTER
   useEffect(() => {
-    if (slipObject.payType) {
-      slipChecker(slipObject.payType);
+    if (slipObject.payType && slipObject.year && slipObject.month) {
+      slipChecker({
+        payType: slipObject.payType,
+        currentYear: slipObject.year,
+        currentMonth: slipObject.month,
+      });
     }
-  }, [slipChecker, slipObject.payType]);
+  }, [slipChecker, slipObject]);
 
   const content = (
     <section className="formContainer flex-col">
@@ -85,7 +89,7 @@ function SlipsForm() {
           </label>
         </div>
 
-        {slipObject.fishType === "M" && (
+        {slipObject.payType === "M" && (
           <div className="inputBox__form">
             <select
               type="text"
@@ -109,15 +113,50 @@ function SlipsForm() {
         )}
 
         <div className="inputBox__form">
-          <input
+          <select
             type="text"
             className="inputBox__form--input"
             name="year"
             onChange={handleSlipObjectChange}
-            value={convertToPersianNumber(slipObject?.year) || ""}
+            value={slipObject?.year || " "}
             required
             id="year"
-          />
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+            <option value="1390">۱۳۹۰</option>
+            <option value="1391">۱۳۹۱</option>
+            <option value="1392">۱۳۹۲</option>
+            <option value="1393">۱۳۹۳</option>
+            <option value="1394">۱۳۹۴</option>
+            <option value="1395">۱۳۹۵</option>
+            <option value="1396">۱۳۹۶</option>
+            <option value="1397">۱۳۹۷</option>
+            <option value="1398">۱۳۹۸</option>
+            <option value="1399">۱۳۹۹</option>
+            <option value="1400">۱۴۰۰</option>
+            <option value="1401">۱۴۰۱</option>
+            <option value="1402">۱۴۰۲</option>
+            <option value="1403">۱۴۰۳</option>
+            <option value="1404">۱۴۰۴</option>
+            <option value="1405">۱۴۰۵</option>
+            <option value="1406">۱۴۰۶</option>
+            <option value="1407">۱۴۰۷</option>
+            <option value="1408">۱۴۰۸</option>
+            <option value="1409">۱۴۰۹</option>
+            <option value="1410">۱۴۱۰</option>
+            <option value="1411">۱۴۱۱</option>
+            <option value="1412">۱۴۱۲</option>
+            <option value="1413">۱۴۱۳</option>
+            <option value="1414">۱۴۱۴</option>
+            <option value="1415">۱۴۱۵</option>
+            <option value="1416">۱۴۱۶</option>
+            <option value="1417">۱۴۱۷</option>
+            <option value="1418">۱۴۱۸</option>
+            <option value="1419">۱۴۱۹</option>
+            <option value="1420">۱۴۲۰</option>
+          </select>
           <label className="inputBox__form--label" htmlFor="year">
             سال مالی
           </label>
@@ -136,18 +175,18 @@ function SlipsForm() {
             <option value=" " disabled>
               انتخاب کنید
             </option>
-            <option value="فروردین">فروردین</option>
-            <option value="اردیبهشت">اردیبهشت</option>
-            <option value="خرداد">خرداد</option>
-            <option value="تیر">تیر</option>
-            <option value="مرداد">مرداد</option>
-            <option value="شهریور">شهریور</option>
-            <option value="مهر">مهر</option>
-            <option value="آبان">آبان</option>
-            <option value="آذر">آذر</option>
-            <option value="دی">دی</option>
-            <option value="بهمن">بهمن</option>
-            <option value="اسفند">اسفند</option>
+            <option value="1">فروردین</option>
+            <option value="2">اردیبهشت</option>
+            <option value="3">خرداد</option>
+            <option value="4">تیر</option>
+            <option value="5">مرداد</option>
+            <option value="6">شهریور</option>
+            <option value="7">مهر</option>
+            <option value="8">آبان</option>
+            <option value="9">آذر</option>
+            <option value="10">دی</option>
+            <option value="11">بهمن</option>
+            <option value="12">اسفند</option>
           </select>
           <label className="inputBox__form--label" htmlFor="month">
             ماه
@@ -160,6 +199,8 @@ function SlipsForm() {
           <LoadingButton
             dir="ltr"
             endIcon={<EyeIcon />}
+            loading={isChecking}
+            disabled={Object.keys(slipObject).length < 4}
             variant="contained"
             color="primary"
             sx={{ fontFamily: "sahel" }}
@@ -170,6 +211,8 @@ function SlipsForm() {
           <LoadingButton
             dir="ltr"
             endIcon={<ExportIcon />}
+            loading={isChecking}
+            disabled={Object.keys(slipObject).length < 4}
             variant="contained"
             color="warning"
             sx={{ fontFamily: "sahel" }}

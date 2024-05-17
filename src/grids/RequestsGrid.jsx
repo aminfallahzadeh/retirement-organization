@@ -102,11 +102,7 @@ function RequestsGrid() {
         accessorKey: "date",
         header: "تاریخ درخواست",
         Cell: ({ renderedCellValue }) => (
-          <div>
-            {convertToPersianNumber(
-              convertToPersianDateFormatted(renderedCellValue)
-            )}
-          </div>
+          <div>{convertToPersianDateFormatted(renderedCellValue)}</div>
         ),
       },
       {

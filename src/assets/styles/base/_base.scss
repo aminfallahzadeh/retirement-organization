@@ -24,6 +24,7 @@ html {
 
 select {
     cursor: pointer;
+    text-overflow: ellipsis;
 }
 
 input[type="checkbox"],

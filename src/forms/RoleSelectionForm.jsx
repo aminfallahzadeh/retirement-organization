@@ -11,13 +11,12 @@ function RoleSelectionForm({ isLoading, roles }) {
 
   return (
     <div className="formCOntainer">
-      <form className="grid grid--col-4">
+      <form className="grid grid--col-2" noValidate>
         <div className="inputBox__form">
           <select
             disabled={isLoading}
             className="inputBox__form--input"
             id="role"
-            style={{ cursor: "pointer" }}
             onChange={handleRoleSelection}
           >
             {roles?.itemList?.map((role) => (

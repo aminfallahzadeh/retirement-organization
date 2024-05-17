@@ -8,7 +8,7 @@ export const payApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     existPaySlip: builder.query({
       query: ({ payType, currentYear, currentMonth }) => ({
-        url: `${PAY_URL_HTTPS}/Pay?payType=${payType}&currentYear=${currentYear}&currentMonth=${currentMonth}`,
+        url: `${PAY_URL_HTTPS}/ExistPaySlip?payType=${payType}&currentYear=${currentYear}&currentMonth=${currentMonth}`,
       }),
     }),
   }),
