@@ -1,12 +1,16 @@
 // react imports
 import { useState, useEffect, useCallback } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
 import { useDispatch } from "react-redux";
 import {
   useLazyExistPaySlipQuery,
   useLazyGetPayListQuery,
   useIssuePayMutation,
+  useInsertPayMutation,
 } from "../slices/payApiSlice";
 import { setSlipsTableData } from "../slices/slipsDataSlice";
 
@@ -25,6 +29,7 @@ import { toast } from "react-toastify";
 
 function SlipsForm() {
   const [isSlipExists, setIsSlipExists] = useState(null);
+  const [issueType, setIssueType] = useState("1");
 
   // MAIN STATE
   const [slipObject, setSlipObject] = useState({});
@@ -35,8 +40,13 @@ function SlipsForm() {
   const [getPayList, { isLoading: isGettingPayList }] =
     useLazyGetPayListQuery();
 
-  const [issuePay, { isLoading: isIssuing, isSuccess, error }] =
-    useIssuePayMutation();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const requestID = searchParams.get("requestID");
+
+  const [issuePay, { isLoading: isIssuing }] = useIssuePayMutation();
+  const [insertPay, { isLoading: isInserting }] = useInsertPayMutation();
 
   // SLIP CHECKER FUNCTION
   const slipChecker = useCallback(
@@ -59,6 +69,10 @@ function SlipsForm() {
   const handleSlipObjectChange = (e) => {
     const { name, value } = e.target;
     setSlipObject({ ...slipObject, [name]: value });
+  };
+
+  const handleIssueTypeChange = (e) => {
+    setIssueType(e.target.value);
   };
 
   useEffect(() => {
@@ -91,14 +105,36 @@ function SlipsForm() {
   };
 
   // ISSUE SLIP HANDLER
-  const issuePayHandler = async () => {
+  const insertGroupPayHandler = async () => {
     try {
       const res = await issuePay({
-        personID: convertToEnglishNumber(slipObject.personID) || null,
         currentYear: parseInt(slipObject.year),
         currentMonth: parseInt(slipObject.month),
+        requestID,
       }).unwrap();
-      console.log(res);
+      toast.success(res.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
+  const insertSoloPayHandler = async () => {
+    try {
+      const res = await insertPay({
+        ...slipObject,
+        requestID,
+        currentYear: parseInt(slipObject.year),
+        currentMonth: parseInt(slipObject.month),
+        personID: convertToEnglishNumber(slipObject.personID),
+      }).unwrap();
+      toast.success(res.message, {
+        autoClose: 2000,
+      });
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -108,12 +144,29 @@ function SlipsForm() {
   };
 
   useEffect(() => {
-    console.log(slipObject);
-  }, [slipObject]);
+    console.log(isSlipExists);
+  }, [slipObject, isSlipExists]);
 
   const content = (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-4" noValidate>
+        <div className="inputBox__form">
+          <select
+            name="condition"
+            className="inputBox__form--input"
+            onChange={handleIssueTypeChange}
+            value={issueType}
+            required
+            id="condition"
+          >
+            <option value="1">گروهی</option>
+            <option value="2">انفرادی</option>
+          </select>
+          <label className="inputBox__form--label" htmlFor="condition">
+            حالت درخواست
+          </label>
+        </div>
+
         <div className="inputBox__form">
           <select
             name="payType"
@@ -218,29 +271,7 @@ function SlipsForm() {
           </label>
         </div>
 
-        {isSlipExists === false && (
-          <div className="inputBox__form">
-            <select
-              name="condition"
-              className="inputBox__form--input"
-              onChange={handleSlipObjectChange}
-              value={slipObject?.condition || " "}
-              required
-              id="condition"
-            >
-              <option value=" " disabled>
-                انتخاب کنید{" "}
-              </option>
-              <option value="1">انفرادی</option>
-              <option value="2">گروهی</option>
-            </select>
-            <label className="inputBox__form--label" htmlFor="condition">
-              حالت درخواست
-            </label>
-          </div>
-        )}
-
-        {slipObject.condition === "1" && (
+        {issueType === "2" && (
           <div className="inputBox__form">
             <input
               type="text"
@@ -265,7 +296,7 @@ function SlipsForm() {
             endIcon={<EyeIcon />}
             loading={isChecking || isGettingPayList}
             onClick={getPayListHandler}
-            disabled={Object.keys(slipObject).length < 5}
+            disabled={Object.keys(slipObject).length < 3}
             variant="contained"
             color="primary"
             sx={{ fontFamily: "sahel" }}
@@ -276,10 +307,11 @@ function SlipsForm() {
           <LoadingButton
             dir="ltr"
             endIcon={<ExportIcon />}
-            loading={isChecking}
-            disabled={
-              Object.keys(slipObject).length < 5 || !slipObject.personID
+            loading={isChecking || isInserting || isIssuing}
+            onClick={
+              issueType === "2" ? insertSoloPayHandler : insertGroupPayHandler
             }
+            disabled={Object.keys(slipObject).length < 3}
             variant="contained"
             color="warning"
             sx={{ fontFamily: "sahel" }}

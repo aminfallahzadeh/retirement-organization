@@ -23,9 +23,17 @@ export const payApiSlice = apiSlice.injectEndpoints({
     }),
 
     issuePay: builder.mutation({
-      query: ({ personID, currentYear, currentMonth }) => ({
-        url: `${PAY_URL_HTTPS}/IssuePayForMunicipality?personID=${personID}&currentYear=${currentYear}&currentMonth=${currentMonth}&requestID=null&payDate=null`,
+      query: ({ currentYear, currentMonth }) => ({
+        url: `${PAY_URL_HTTPS}/IssuePayForMunicipality?&currentYear=${currentYear}&currentMonth=${currentMonth}`,
         method: "POST",
+      }),
+    }),
+
+    insertPay: builder.mutation({
+      query: (data) => ({
+        url: `${PAY_URL_HTTPS}/InsertPay`,
+        method: "POST",
+        body: data,
       }),
     }),
   }),
@@ -36,4 +44,5 @@ export const {
   useLazyGetPayListQuery,
   useGetPayQuery,
   useIssuePayMutation,
+  useInsertPayMutation,
 } = payApiSlice;

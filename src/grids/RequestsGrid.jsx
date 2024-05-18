@@ -58,6 +58,7 @@ function RequestsGrid() {
       const data = requests.itemList.map((item) => ({
         id: item.requestID,
         requestNO: item.requestNO || "-",
+        requestTypeID: item.requestTypeID,
         personID: item.personID,
         requestTypeNameFa: item.requestTypeNameFa,
         sender: item.requestFrom || "-",
@@ -80,6 +81,10 @@ function RequestsGrid() {
       });
     }
   }, [error]);
+
+  useEffect(() => {
+    console.log(requestTableData);
+  }, [requestTableData]);
 
   const columns = useMemo(
     () => [
@@ -113,7 +118,12 @@ function RequestsGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Link
-            to={`/retirement-organization/retired?personID=${row.original.personID}&role=${selectedRole}`}
+            to={
+              row.original.requestTypeID ===
+              "62A54585-F331-434A-9027-C9F3060F683A"
+                ? `/retirement-organization/slips?requestID=${row.original.id}`
+                : `/retirement-organization/retired?personID=${row.original.personID}&role=${selectedRole}`
+            }
           >
             <IconButton color="primary">
               <FeedIcon />

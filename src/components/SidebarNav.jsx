@@ -25,7 +25,6 @@ function SidebarNav() {
   const userPath = location.pathname === "/retirement-organization/users";
   const batchStatementsPath =
     location.pathname === "/retirement-organization/batch-statements";
-  const slipsPath = location.pathname === "/retirement-organization/slips";
   const personnelStatementsPath = location.pathname.startsWith(
     "/retirement-organization/personnel-statements"
   );
@@ -84,12 +83,7 @@ function SidebarNav() {
           label={<span>حقوق و دستمزد</span>}
           icon={<PaymentOutlinedIcon sx={{ color: "#ff6700" }} />}
         >
-          <MenuItem
-            component={<Link to={"/retirement-organization/slips"} />}
-            active={slipsPath}
-          >
-            فیش های حقوقی
-          </MenuItem>
+          <MenuItem>فیش های حقوقی</MenuItem>
           <MenuItem>اعمال تسهیلات کشوری</MenuItem>
           <MenuItem>تولید فایل حقوق</MenuItem>
           <MenuItem>تولید فایل ریز اقساط</MenuItem>
