@@ -530,7 +530,10 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
               <select
                 className="inputBox__form--input"
                 onChange={handleRelatedObjectChange}
-                value={relatedObject?.pensionaryStatusID || " "}
+                value={
+                  convertToEnglishNumber(relatedObject?.pensionaryStatusID) ||
+                  " "
+                }
                 name="pensionaryStatusID"
                 required
                 id="pensionaryStatusID"

@@ -429,7 +429,9 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           <select
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
-            value={relatedObject?.pensionaryStatusID || " "}
+            value={
+              convertToEnglishNumber(relatedObject?.pensionaryStatusID) || " "
+            }
             name="pensionaryStatusID"
             required
             id="pensionaryStatusID"

@@ -724,7 +724,9 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
               <select
                 className="inputBox__form--input"
                 onChange={handleHeirObjectChange}
-                value={heirObject?.pensionaryStatusID || " "}
+                value={
+                  convertToEnglishNumber(heirObject?.pensionaryStatusID) || " "
+                }
                 name="pensionaryStatusID"
                 required
                 id="pensionaryStatusID"
