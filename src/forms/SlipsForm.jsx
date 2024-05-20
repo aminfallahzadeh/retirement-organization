@@ -98,11 +98,22 @@ function SlipsForm() {
   const getPayListHandler = async () => {
     try {
       const res = await getPayList({
-        personID: convertToEnglishNumber(slipObject.personID),
-        currentYear: parseInt(slipObject.year),
-        currentMonth: parseInt(slipObject.month),
+        currentYear: parseInt(slipObject.currentYear),
+        currentMonth: parseInt(slipObject.currentMonth),
+        payType: slipObject.payType,
       }).unwrap();
-      dispatch(setSlipsTableData(res));
+      const mappedData = res.itemList.map((item, index) => ({
+        id: item.payID,
+        rowNum: index + 1,
+        payFirstName: item.payFirstName,
+        payLastName: item.payLastName,
+        accountNo: item.accountNo,
+        payDebitAmount: item.payDebitAmount,
+        payCreditAmount: item.payCreditAmount,
+        payAmount: item.payAmount,
+        payDate: item.payDate,
+      }));
+      dispatch(setSlipsTableData(mappedData));
     } catch (err) {
       console.log(err);
     }
@@ -135,7 +146,9 @@ function SlipsForm() {
         currentYear: parseInt(slipObject.currentYear),
         currentMonth: parseInt(slipObject.currentMonth),
         personID: convertToEnglishNumber(slipObject.personID),
+        payDate: new Date(),
       }).unwrap();
+      setIsSlipExists(true);
       toast.success(res.message, {
         autoClose: 2000,
       });
@@ -275,7 +288,7 @@ function SlipsForm() {
           </label>
         </div>
 
-        {issueType === "2" && (
+        {issueType === "2" && isSlipExists === false && (
           <div className="inputBox__form">
             <input
               type="text"

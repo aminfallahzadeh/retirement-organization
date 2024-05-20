@@ -12,8 +12,8 @@ export const payApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getPayList: builder.query({
-      query: ({ personID, currentYear, currentMonth }) => ({
-        url: `${PAY_URL_HTTPS}/GetPayListByPersonID?personID=${personID}&currentYear=${currentYear}&currentMonth=${currentMonth}`,
+      query: ({ currentYear, currentMonth, payType }) => ({
+        url: `${PAY_URL_HTTPS}/GetPayList?currentYear=${currentYear}&currentMonth=${currentMonth}&payType=${payType}`,
       }),
     }),
     getPay: builder.query({

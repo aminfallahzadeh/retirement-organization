@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 
 // redux imports
 import { useSelector } from "react-redux";
@@ -13,7 +13,6 @@ import {
   FirstPage,
   LastPage,
   RemoveRedEye as RemoveRedEyeIcon,
-  Print as PrintIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -30,10 +29,6 @@ import {
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-// library imports
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-
 function PersonnelStatementGrid() {
   const [rowSelection, setRowSelection] = useState({});
 
@@ -42,55 +37,61 @@ function PersonnelStatementGrid() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "personnelStatementSerial",
-        header: "سریال حکم",
-        Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianNumber(renderedCellValue)}</div>
-        ),
-      },
-      {
-        accessorKey: "personnelStatementNo",
-        header: "شماره حکم",
-        Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianNumber(renderedCellValue)}</div>
-        ),
-      },
-      {
-        accessorKey: "personnelStatementTypeName",
-        header: "نوع حکم",
-      },
-      {
-        accessorKey: "personnelStatementIssueDate",
-        header: "تاریخ صدور",
-        Cell: ({ renderedCellValue }) => (
-          <div>
-            {convertToPersianNumber(
-              convertToPersianDateFormatted(renderedCellValue)
-            )}
-          </div>
-        ),
-      },
-      {
-        accessorKey: "personnelStatementRunDate",
-        header: "تاریخ اجرا",
-        Cell: ({ renderedCellValue }) => (
-          <div>
-            {convertToPersianNumber(
-              convertToPersianDateFormatted(renderedCellValue)
-            )}
-          </div>
-        ),
-      },
-      {
-        accessorKey: "printStaffStatementAction",
-        header: "چاپ",
-        enableSorting: false,
-        enableColumnActions: false,
+        accessorKey: "rowNum",
+        header: "ردیف",
         size: 20,
-        Cell: () => (
-          <IconButton color="success">
-            <PrintIcon />
-          </IconButton>
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "payFirstName",
+        header: "نام",
+        size: 20,
+      },
+      {
+        accessorKey: "payLastName",
+        header: "نام خانوادگی",
+        size: 20,
+      },
+      {
+        accessorKey: "accountNo",
+        header: "شماره حساب",
+        size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "payDebitAmount",
+        header: "بستانکاری",
+        size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "payCreditAmount",
+        header: "بدهکاری",
+        size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "payAmount",
+        header: "مبلغ کل",
+        size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "payDate",
+        header: "تاریخ پرداخت",
+        size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianDateFormatted(renderedCellValue)}</div>
         ),
       },
       {
