@@ -81,11 +81,15 @@ function SlipsForm() {
 
   // CHECK SLIP EXISTANCE ON USER DATA ENTER
   useEffect(() => {
-    if (slipObject.payType && slipObject.year && slipObject.month) {
+    if (
+      slipObject.payType &&
+      slipObject.currentYear &&
+      slipObject.currentMonth
+    ) {
       slipChecker({
         payType: slipObject.payType,
-        currentYear: slipObject.year,
-        currentMonth: slipObject.month,
+        currentYear: slipObject.currentYear,
+        currentMonth: slipObject.currentMonth,
       });
     }
   }, [slipChecker, slipObject]);
@@ -128,8 +132,8 @@ function SlipsForm() {
       const res = await insertPay({
         ...slipObject,
         requestID,
-        currentYear: parseInt(slipObject.year),
-        currentMonth: parseInt(slipObject.month),
+        currentYear: parseInt(slipObject.currentYear),
+        currentMonth: parseInt(slipObject.currentMonth),
         personID: convertToEnglishNumber(slipObject.personID),
       }).unwrap();
       toast.success(res.message, {
@@ -144,8 +148,8 @@ function SlipsForm() {
   };
 
   useEffect(() => {
-    console.log(isSlipExists);
-  }, [slipObject, isSlipExists]);
+    console.log(slipObject);
+  }, [slipObject]);
 
   const content = (
     <section className="formContainer flex-col">
@@ -195,9 +199,9 @@ function SlipsForm() {
         <div className="inputBox__form">
           <select
             className="inputBox__form--input"
-            name="year"
+            name="currentYear"
             onChange={handleSlipObjectChange}
-            value={slipObject?.year || " "}
+            value={slipObject?.currentYear || " "}
             required
             id="year"
           >
@@ -245,9 +249,9 @@ function SlipsForm() {
           <select
             className="inputBox__form--input"
             required
-            name="month"
+            name="currentMonth"
             onChange={handleSlipObjectChange}
-            value={convertToPersianNumber(slipObject?.month) || " "}
+            value={convertToPersianNumber(slipObject?.currentMonth) || " "}
             id="month"
           >
             <option value=" " disabled>
