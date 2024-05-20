@@ -180,7 +180,7 @@ function SlipsForm() {
             <option value="2">انفرادی</option>
           </select>
           <label className="inputBox__form--label" htmlFor="condition">
-            حالت درخواست
+            نوع صدور
           </label>
         </div>
 

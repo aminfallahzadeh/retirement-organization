@@ -117,7 +117,7 @@ function CreateRequestForm() {
             required
           />
           <label htmlFor="personID" className="inputBox__form--label">
-            شماره کارمندی
+            <span>*</span> شماره کارمندی
           </label>
         </div>
 
@@ -131,7 +131,7 @@ function CreateRequestForm() {
             required
           ></textarea>
           <label htmlFor="requestText" className="inputBox__form--label">
-            متن درخواست
+            <span>*</span> متن درخواست
           </label>
         </div>
       </form>
