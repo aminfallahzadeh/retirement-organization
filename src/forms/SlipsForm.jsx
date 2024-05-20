@@ -264,7 +264,7 @@ function SlipsForm() {
             required
             name="currentMonth"
             onChange={handleSlipObjectChange}
-            value={convertToPersianNumber(slipObject?.currentMonth) || " "}
+            value={slipObject?.currentMonth || " "}
             id="month"
           >
             <option value=" " disabled>
