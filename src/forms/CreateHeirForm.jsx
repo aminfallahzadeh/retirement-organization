@@ -678,7 +678,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             id="bankID"
             name="bankID"
             onChange={handleHeirObjectChange}
-            value={convertToEnglishNumber(heirObject.bankID) || ""}
+            value={convertToEnglishNumber(heirObject?.bankID) || " "}
             className="inputBox__form--input"
           >
             <option value=" " disabled>

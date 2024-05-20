@@ -40,7 +40,7 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
     useGenerateNewRetirementStatementMutation();
 
   const { data: retirementStatementTypesComboItems, isSuccess } =
-    useGetRetirementStatementTypeQuery();
+    useGetRetirementStatementTypeQuery({ RetirementStatementTypeID: null });
 
   useEffect(() => {
     if (isSuccess) {
@@ -60,6 +60,10 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    console.log(retirementStatementTypesComboItems);
+  }, [retirementStatementTypesComboItems]);
 
   const handleRunDateChange = (date) => {
     setSelectedRunDate(date);
