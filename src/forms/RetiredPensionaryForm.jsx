@@ -5,7 +5,10 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
+import {
+  useGetLookupDataQuery,
+  useGetPensionaryStatusQuery,
+} from "../slices/sharedApiSlice.js";
 import {
   useUpdateRetiredPensionaryMutation,
   useGetRetiredPensionaryQuery,
@@ -37,6 +40,7 @@ function RetiredPensionaryForm() {
 
   // LOOKUP DATA STATES
   const [employmentTypeCombo, setEmploymentTypeCombo] = useState([]);
+  const [pernsionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
 
   // DATE STATES
   const [selectedRetriementDate, setSelectedRetriementDate] = useState(null);
@@ -86,12 +90,30 @@ function RetiredPensionaryForm() {
     lookUpType: "EmploymentType",
   });
 
+  const {
+    data: pensionaryStatusComboItems,
+    isSuccess: isPensionaryStatusComboSuccess,
+  } = useGetPensionaryStatusQuery({
+    pensionaryStatusCategory: "R",
+  });
+
   // FETCH LOOK UP DATA
   useEffect(() => {
     if (isEmploymentTypeComboSuccess) {
       setEmploymentTypeCombo(employmentTypeComboItems.itemList);
     }
   }, [isEmploymentTypeComboSuccess, employmentTypeComboItems]);
+
+  useEffect(() => {
+    if (isPensionaryStatusComboSuccess) {
+      setPensionaryStatusCombo(pensionaryStatusComboItems.itemList);
+      console.log(pernsionaryStatusCombo);
+    }
+  }, [
+    isPensionaryStatusComboSuccess,
+    pensionaryStatusComboItems,
+    pernsionaryStatusCombo,
+  ]);
 
   // HANDLE DATEs
   useEffect(() => {
@@ -162,6 +184,10 @@ function RetiredPensionaryForm() {
       });
     }
   };
+
+  useEffect(() => {
+    console.log(pensionaryData);
+  }, [pensionaryData]);
 
   const content = (
     <section className="formContainer flex-col">
@@ -274,18 +300,24 @@ function RetiredPensionaryForm() {
           <select
             disabled={!editable}
             className="inputBox__form--input"
-            id="pensionaryIsActive"
+            id="pensionaryStatusID"
             style={{ cursor: "pointer" }}
-            name="pensionaryIsActive"
+            name="pensionaryStatusID"
             required
-            value={pensionaryData?.pensionaryIsActive || " "}
+            value={pensionaryData?.pensionaryStatusID || " "}
             onChange={handlePensionaryDataChange}
           >
             <option value=" " disabled>
               انتخاب کنید
             </option>
-            <option value="true">فعال</option>
-            <option value="false">غیر فعال</option>
+            {pernsionaryStatusCombo.map((item) => (
+              <option
+                key={item.pensionaryStatusID}
+                value={item.pensionaryStatusID}
+              >
+                {item.pensionaryStatusName}
+              </option>
+            ))}
           </select>
           <label className="inputBox__form--label" htmlFor="pensionaryIsActive">
             وضعیت

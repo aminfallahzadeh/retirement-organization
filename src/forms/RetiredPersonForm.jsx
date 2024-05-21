@@ -231,14 +231,26 @@ function RetiredPersonForm() {
   const handleUpdateRetired = async () => {
     try {
       // Adjusting for timezone difference
-      const personBirthDate = new Date(selectedBirthDate);
-      personBirthDate.setMinutes(
-        personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
-      );
-      const personDeathDate = new Date(selectedDeathDate);
-      personDeathDate.setMinutes(
-        personDeathDate.getMinutes() - personDeathDate.getTimezoneOffset()
-      );
+      let personDeathDate;
+      let personBirthDate;
+
+      if (personDeathDate) {
+        personDeathDate = new Date(selectedDeathDate);
+        personDeathDate.setMinutes(
+          personDeathDate.getMinutes() - personDeathDate.getTimezoneOffset()
+        );
+      } else {
+        personDeathDate = null;
+      }
+
+      if (personBirthDate) {
+        personBirthDate = new Date(selectedBirthDate);
+        personBirthDate.setMinutes(
+          personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
+        );
+      } else {
+        personBirthDate = null;
+      }
 
       const updateRes = await updateRetiredPerson({
         ...personData,
@@ -276,6 +288,10 @@ function RetiredPersonForm() {
       });
     }
   };
+
+  useEffect(() => {
+    console.log(selectedDeathDate);
+  }, [selectedDeathDate]);
 
   const content = (
     <section className="formContainer flex-col">
@@ -342,8 +358,8 @@ function RetiredPersonForm() {
           <input
             disabled={!editable}
             type="text"
-            name="personCertificatetNo"
-            id="personCertificatetNo"
+            name="personCertificateNo"
+            id="personCertificateNo"
             className="inputBox__form--input"
             value={
               convertToPersianNumber(personData?.personCertificateNo) ?? ""
@@ -352,7 +368,7 @@ function RetiredPersonForm() {
             required
           />
           <label
-            htmlFor="personCertificatetNo"
+            htmlFor="personCertificateNo"
             className="inputBox__form--label"
           >
             <span>*</span> شماره شناسنامه
@@ -433,7 +449,7 @@ function RetiredPersonForm() {
             required
           />
           <label htmlFor="personBirthPlace" className="inputBox__form--label">
-            <span>*</span> محل تولد
+            محل تولد
           </label>
         </div>
 
@@ -720,7 +736,7 @@ function RetiredPersonForm() {
             ))}
           </select>
           <label htmlFor="educationTypeID" className="inputBox__form--label">
-            <span>*</span> مدرک تحصیلی
+            مدرک تحصیلی
           </label>
         </div>
 
@@ -745,7 +761,7 @@ function RetiredPersonForm() {
             ))}
           </select>
           <label htmlFor="personCountry" className="inputBox__form--label">
-            <span>*</span> کشور
+            کشور
           </label>
         </div>
 
@@ -811,7 +827,7 @@ function RetiredPersonForm() {
             required
           />
           <label htmlFor="personRegion" className="inputBox__form--label">
-            <span>*</span> منطقه سکونت
+            منطقه سکونت
           </label>
         </div>
         <div className="inputBox__form">
