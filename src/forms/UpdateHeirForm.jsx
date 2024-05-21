@@ -250,16 +250,27 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
   const handleUpdateHeir = async () => {
     try {
       // Adjusting for timezone difference
-      const personBirthDate = new Date(selectedBirthDate);
-      personBirthDate.setMinutes(
-        personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
-      );
+      let personBirthDate;
+      let personBaseFinishDate;
 
-      const personBaseFinishDate = new Date(selectedBaseFinishDate);
-      personBaseFinishDate.setMinutes(
-        personBaseFinishDate.getMinutes() -
-          personBaseFinishDate.getTimezoneOffset()
-      );
+      if (personBirthDate) {
+        personBirthDate = new Date(selectedBirthDate);
+        personBirthDate.setMinutes(
+          personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
+        );
+      } else {
+        personBirthDate = null;
+      }
+
+      if (personBaseFinishDate) {
+        personBaseFinishDate = new Date(selectedBaseFinishDate);
+        personBaseFinishDate.setMinutes(
+          personBaseFinishDate.getMinutes() -
+            personBaseFinishDate.getTimezoneOffset()
+        );
+      } else {
+        personBaseFinishDate = null;
+      }
 
       const updateRes = await updateHeir({
         ...heirObject,

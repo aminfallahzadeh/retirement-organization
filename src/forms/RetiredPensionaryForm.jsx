@@ -146,10 +146,16 @@ function RetiredPensionaryForm() {
   const handleUpdateRetiredPensionary = async () => {
     try {
       // Adjusting for timezone difference
-      const retirementDate = new Date(selectedRetriementDate);
-      retirementDate.setMinutes(
-        retirementDate.getMinutes() - retirementDate.getTimezoneOffset()
-      );
+      let retirementDate;
+
+      if (retirementDate) {
+        retirementDate = new Date(selectedRetriementDate);
+        retirementDate.setMinutes(
+          retirementDate.getMinutes() - retirementDate.getTimezoneOffset()
+        );
+      } else {
+        retirementDate = null;
+      }
 
       const updateRes = await updateRetiredPensionary({
         ...pensionaryData,

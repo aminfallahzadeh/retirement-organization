@@ -259,24 +259,46 @@ function UpdateRelatedForm({ setShowEditRelatedModal }) {
   const handleUpdateRelated = async () => {
     try {
       // Adjusting for timezone difference
-      const personBirthDate = new Date(selectedBirthDate);
-      personBirthDate.setMinutes(
-        personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
-      );
-      const personMaritalDate = new Date(selectedMritialDate);
-      personMaritalDate.setMinutes(
-        personMaritalDate.getMinutes() - personMaritalDate.getTimezoneOffset()
-      );
-      const selfEmployeeStartDate = new Date(selectedSelfEmployeeStartDate);
-      selfEmployeeStartDate.setMinutes(
-        selfEmployeeStartDate.getMinutes() -
-          selfEmployeeStartDate.getTimezoneOffset()
-      );
-      const selfEmployeeEndDate = new Date(selectedSelfEmployeeEndDate);
-      selfEmployeeEndDate.setMinutes(
-        selfEmployeeEndDate.getMinutes() -
-          selfEmployeeEndDate.getTimezoneOffset()
-      );
+      let personBirthDate;
+      let personMaritalDate;
+      let selfEmployeeStartDate;
+      let selfEmployeeEndDate;
+
+      if (personBirthDate) {
+        personBirthDate = new Date(selectedBirthDate);
+        personBirthDate.setMinutes(
+          personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
+        );
+      } else {
+        personBirthDate = null;
+      }
+
+      if (personMaritalDate) {
+        personMaritalDate = new Date(selectedMritialDate);
+        personMaritalDate.setMinutes(
+          personMaritalDate.getMinutes() - personMaritalDate.getTimezoneOffset()
+        );
+      } else {
+        personMaritalDate = null;
+      }
+      if (selfEmployeeStartDate) {
+        selfEmployeeStartDate = new Date(selectedSelfEmployeeStartDate);
+        selfEmployeeStartDate.setMinutes(
+          selfEmployeeStartDate.getMinutes() -
+            selfEmployeeStartDate.getTimezoneOffset()
+        );
+      } else {
+        selfEmployeeStartDate = null;
+      }
+      if (selfEmployeeEndDate) {
+        selfEmployeeEndDate = new Date(selectedSelfEmployeeEndDate);
+        selfEmployeeEndDate.setMinutes(
+          selfEmployeeEndDate.getMinutes() -
+            selfEmployeeEndDate.getTimezoneOffset()
+        );
+      } else {
+        selfEmployeeEndDate = null;
+      }
 
       const updateRes = await updateRelated({
         ...relatedObject,
