@@ -18,7 +18,7 @@ import { Save as SaveIcon } from "@mui/icons-material";
 import { toast } from "react-toastify";
 
 // helpers
-import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
+import { convertToEnglishNumber } from "../helper";
 
 function CreateRequestForm() {
   const [insertRequest, { isLoading: isInserting }] =
@@ -91,7 +91,9 @@ function CreateRequestForm() {
             name="requestTypeID"
             required
           >
-            <option value=" ">انتخاب کنید</option>
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
             {requestTypeCombo?.map((requestType) => (
               <option
                 key={requestType.requestTypeID}
@@ -107,15 +109,37 @@ function CreateRequestForm() {
         </div>
 
         <div className="inputBox__form">
-          <input
-            type="text"
+          <select
             id="personID"
             name="personID"
-            value={convertToPersianNumber(requestObject?.personID)}
+            value={requestObject?.personID || " "}
             onChange={handleRequestObjectChange}
             className="inputBox__form--input"
             required
-          />
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+
+            <option value="49e66fb39a124555b9329c9b7994509a">amin amin</option>
+            <option value="810e59798cc54b94b45cd0c776fff16b">علی اسدی</option>
+            <option value="4fba2ae8420348fc9d16b21a55fef23f">
+              امیر بابابیک
+            </option>
+            <option value="e931cee492514557a6cba93fa7f3fbd4">
+              زهرا بابابیک
+            </option>
+            <option value="110000256">مهدی بشارت صنعتی</option>
+            <option value="7777701a948e411aa204bc350utkt5">سونیا گلدوست</option>
+            <option value="1c81794b5d4447aba8bea1ae915ae756">بهمن محمدی</option>
+            <option value="19d06de3cf8c44a3b832b46ed0276b90">مریم مهرجو</option>
+            <option value="7777701a948e411aa204bc350a56f155">
+              شیما میرباقری
+            </option>
+            <option value="8b2a301a948e411aa204bc350a56f155">
+              احسان میرباقری
+            </option>
+          </select>
           <label htmlFor="personID" className="inputBox__form--label">
             <span>*</span> شماره کارمندی
           </label>
