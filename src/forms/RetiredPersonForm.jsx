@@ -275,6 +275,7 @@ function RetiredPersonForm() {
         maritalStatusID: convertToEnglishNumber(personData.maritalStatusID),
         personBirthDate,
         personDeathDate,
+        personID,
       }).unwrap();
       refetch();
       setEditable(false);
