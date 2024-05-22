@@ -60,11 +60,11 @@ function AllRequestsGrid() {
     refetch();
     if (isSuccess) {
       const data = requests.itemList.map((item) => ({
-        id: item.id,
+        id: item.requestNO,
         requestNO: item.requestNO || "-",
         personId: item.personID,
         requestTypeNameFa: item.requestTypeNameFa,
-        sender: item.requestFrom,
+        personName: item.personName,
         date: item.requestDate,
         body: item.requestText,
       }));
@@ -90,6 +90,7 @@ function AllRequestsGrid() {
       {
         accessorKey: "id",
         header: "شماره درخواست",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
@@ -97,14 +98,17 @@ function AllRequestsGrid() {
       {
         accessorKey: "requestTypeNameFa",
         header: "نوع درخواست",
+        size: 20,
       },
       {
-        accessorKey: "sender",
+        accessorKey: "personName",
         header: "ارسال کننده",
+        size: 20,
       },
       {
         accessorKey: "date",
         header: "تاریخ درخواست",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>
             {convertToPersianNumber(
