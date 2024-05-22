@@ -119,12 +119,12 @@ function SlipsForm() {
     }
   };
 
-  // ISSUE SLIP HANDLER
+  // ISSUE GROUP SLIP HANDLER
   const insertGroupPayHandler = async () => {
     try {
       const res = await issuePay({
-        currentYear: parseInt(slipObject.year),
-        currentMonth: parseInt(slipObject.month),
+        currentYear: parseInt(slipObject.currentYear),
+        currentMonth: parseInt(slipObject.currentMonth),
         requestID,
       }).unwrap();
       toast.success(res.message, {
@@ -162,7 +162,7 @@ function SlipsForm() {
 
   useEffect(() => {
     console.log(slipObject);
-  }, [slipObject]);
+  }, [slipObject, issueType]);
 
   const content = (
     <section className="formContainer flex-col">
