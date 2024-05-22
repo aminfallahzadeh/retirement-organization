@@ -12,7 +12,7 @@ import {
 
 // mui imports
 import { LoadingButton } from "@mui/lab";
-import { Save as SaveIcon } from "@mui/icons-material";
+import { ArrowUpwardOutlined as SendIcon } from "@mui/icons-material";
 
 // library imports
 import { toast } from "react-toastify";
@@ -163,14 +163,14 @@ function CreateRequestForm() {
       <div style={{ marginRight: "auto" }} className="flex-row">
         <LoadingButton
           dir="ltr"
-          endIcon={<SaveIcon />}
+          endIcon={<SendIcon />}
           variant="contained"
           onClick={handleInsertRequest}
           loading={isInserting}
           color="success"
           sx={{ fontFamily: "sahel" }}
         >
-          <span>ذخیره</span>
+          <span>ارسال درخواست</span>
         </LoadingButton>
       </div>
     </section>

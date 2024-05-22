@@ -253,7 +253,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
       let personBirthDate;
       let personBaseFinishDate;
 
-      if (personBirthDate) {
+      if (selectedBirthDate) {
         personBirthDate = new Date(selectedBirthDate);
         personBirthDate.setMinutes(
           personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
@@ -262,7 +262,7 @@ function UpdateHeirForm({ setShowEditHeirModal }) {
         personBirthDate = null;
       }
 
-      if (personBaseFinishDate) {
+      if (selectedBaseFinishDate) {
         personBaseFinishDate = new Date(selectedBaseFinishDate);
         personBaseFinishDate.setMinutes(
           personBaseFinishDate.getMinutes() -

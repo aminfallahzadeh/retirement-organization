@@ -148,13 +148,11 @@ function RetiredPensionaryForm() {
       // Adjusting for timezone difference
       let retirementDate;
 
-      if (retirementDate && !pensionaryData.retirementDate) {
+      if (selectedRetriementDate) {
         retirementDate = new Date(selectedRetriementDate);
         retirementDate.setMinutes(
           retirementDate.getMinutes() - retirementDate.getTimezoneOffset()
         );
-      } else if (pensionaryData.retirementDate) {
-        retirementDate = pensionaryData.retirementDate;
       } else {
         retirementDate = null;
       }
@@ -193,8 +191,8 @@ function RetiredPensionaryForm() {
   };
 
   useEffect(() => {
-    console.log(pensionaryData);
-  }, [pensionaryData]);
+    console.log(selectedRetriementDate);
+  }, [selectedRetriementDate]);
 
   const content = (
     <section className="formContainer flex-col">

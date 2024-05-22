@@ -23,8 +23,8 @@ export const payApiSlice = apiSlice.injectEndpoints({
     }),
 
     issuePay: builder.mutation({
-      query: ({ currentYear, currentMonth, requestID }) => ({
-        url: `${PAY_URL_HTTPS}/IssuePayForMunicipality?currentYear=${currentYear}&currentMonth=${currentMonth}&requestID=${requestID}`,
+      query: ({ currentYear, currentMonth, requestID, payDate }) => ({
+        url: `${PAY_URL_HTTPS}/IssuePayForMunicipality?currentYear=${currentYear}&currentMonth=${currentMonth}&requestID=${requestID}&payDate=${payDate}`,
         method: "POST",
       }),
     }),

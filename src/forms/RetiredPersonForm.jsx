@@ -234,24 +234,20 @@ function RetiredPersonForm() {
       let personDeathDate;
       let personBirthDate;
 
-      if (personDeathDate && !personData.personDeathDate) {
+      if (selectedBirthDate) {
         personDeathDate = new Date(selectedDeathDate);
         personDeathDate.setMinutes(
           personDeathDate.getMinutes() - personDeathDate.getTimezoneOffset()
         );
-      } else if (personData.personDeathDate) {
-        personDeathDate = personData.personDeathDate;
       } else {
         personDeathDate = null;
       }
 
-      if (personBirthDate && !personData.personBirthDate) {
+      if (selectedDeathDate) {
         personBirthDate = new Date(selectedBirthDate);
         personBirthDate.setMinutes(
           personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
         );
-      } else if (personData.personBirthDate) {
-        personBirthDate = personData.personBirthDate;
       } else {
         personBirthDate = null;
       }
@@ -294,8 +290,8 @@ function RetiredPersonForm() {
   };
 
   useEffect(() => {
-    console.log("personObject", personData);
-  }, [personData]);
+    console.log("death date", selectedDeathDate);
+  }, [selectedDeathDate]);
 
   const content = (
     <section className="formContainer flex-col">

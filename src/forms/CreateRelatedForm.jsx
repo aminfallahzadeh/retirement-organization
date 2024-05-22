@@ -194,7 +194,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
       let selfEmployeeStartDate;
       let selfEmployeeEndDate;
 
-      if (personBirthDate) {
+      if (selectedBirthDate) {
         personBirthDate = new Date(selectedBirthDate);
         personBirthDate.setMinutes(
           personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
@@ -203,7 +203,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
         personBirthDate = null;
       }
 
-      if (personMaritalDate) {
+      if (selectedMritialDate) {
         personMaritalDate = new Date(selectedMritialDate);
         personMaritalDate.setMinutes(
           personMaritalDate.getMinutes() - personMaritalDate.getTimezoneOffset()
@@ -211,7 +211,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
       } else {
         personMaritalDate = null;
       }
-      if (selfEmployeeStartDate) {
+      if (selectedSelfEmployeeStartDate) {
         selfEmployeeStartDate = new Date(selectedSelfEmployeeStartDate);
         selfEmployeeStartDate.setMinutes(
           selfEmployeeStartDate.getMinutes() -
@@ -220,7 +220,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
       } else {
         selfEmployeeStartDate = null;
       }
-      if (selfEmployeeEndDate) {
+      if (selectedSelfEmployeeEndDate) {
         selfEmployeeEndDate = new Date(selectedSelfEmployeeEndDate);
         selfEmployeeEndDate.setMinutes(
           selfEmployeeEndDate.getMinutes() -
