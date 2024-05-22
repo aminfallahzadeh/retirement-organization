@@ -82,10 +82,6 @@ function RequestsGrid() {
     }
   }, [error]);
 
-  useEffect(() => {
-    console.log(requestTableData);
-  }, [requestTableData]);
-
   const columns = useMemo(
     () => [
       {

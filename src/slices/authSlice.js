@@ -2,17 +2,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  token: sessionStorage.getItem("userInfo")
-    ? JSON.parse(sessionStorage.getItem("userInfo")).token
+  token: localStorage.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo")).token
     : null,
-  refreshToken: sessionStorage.getItem("userInfo")
-    ? JSON.parse(sessionStorage.getItem("userInfo")).refreshToken
+  refreshToken: localStorage.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo")).refreshToken
     : null,
-  error: sessionStorage.getItem("userInfo")
-    ? JSON.parse(sessionStorage.getItem("userInfo")).error
+  error: localStorage.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo")).error
     : null,
-  expiredate: sessionStorage.getItem("userInfo")
-    ? JSON.parse(sessionStorage.getItem("userInfo")).expiredate
+  expiredate: localStorage.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo")).expiredate
     : null,
 };
 
@@ -27,7 +27,7 @@ const authSlice = createSlice({
       state.refreshToken = refreshToken;
       state.error = error;
       state.expiredate = expiredate;
-      sessionStorage.setItem(
+      localStorage.setItem(
         "userInfo",
         JSON.stringify({
           token,
@@ -40,11 +40,11 @@ const authSlice = createSlice({
 
     setNewCredentials: (state, action) => {
       const { token, expiredate } = action.payload.itemList[0];
-      const oldCredentials = JSON.parse(sessionStorage.getItem("userInfo"));
+      const oldCredentials = JSON.parse(localStorage.getItem("userInfo"));
       state.token = token;
       state.expiredate = expiredate;
-      sessionStorage.clear();
-      sessionStorage.setItem(
+      localStorage.clear();
+      localStorage.setItem(
         "userInfo",
         JSON.stringify({ ...oldCredentials, token, expiredate })
       );
@@ -55,7 +55,7 @@ const authSlice = createSlice({
       state.refreshToken = null;
       state.error = null;
       state.expiredate = null;
-      sessionStorage.removeItem("userInfo");
+      localStorage.removeItem("userInfo");
     },
   },
 });
