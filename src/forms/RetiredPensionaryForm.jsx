@@ -165,8 +165,6 @@ function RetiredPensionaryForm() {
         retiredOrganizationID: convertToEnglishNumber(
           pensionaryData.retiredOrganizationID
         ),
-        pensionaryIsActive:
-          pensionaryData.pensionaryIsActive === "true" ? true : false,
         retiredJobDegreeCoef: parseInt(
           convertToEnglishNumber(pensionaryData.retiredJobDegreeCoef)
         ),
@@ -177,6 +175,7 @@ function RetiredPensionaryForm() {
           convertToEnglishNumber(pensionaryData.retiredGrantDuration)
         ),
         retirementDate,
+        personID,
       }).unwrap();
       refetchPensionary();
       setEditable(false);
