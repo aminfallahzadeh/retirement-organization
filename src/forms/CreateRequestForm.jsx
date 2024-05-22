@@ -87,6 +87,7 @@ function CreateRequestForm() {
             type="text"
             id="requestTypeID"
             className="inputBox__form--input"
+            value={requestObject?.requestTypeID || " "}
             onChange={handleRequestObjectChange}
             name="requestTypeID"
             required
