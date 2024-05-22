@@ -61,7 +61,7 @@ function RequestsGrid() {
         requestTypeID: item.requestTypeID,
         personID: item.personID,
         requestTypeNameFa: item.requestTypeNameFa,
-        sender: item.requestFrom || "-",
+        personName: item.personName || "-",
         date: item.requestDate,
         body: item.requestText,
       }));
@@ -91,6 +91,7 @@ function RequestsGrid() {
       {
         accessorKey: "requestNO",
         header: "شماره درخواست",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
@@ -98,14 +99,17 @@ function RequestsGrid() {
       {
         accessorKey: "requestTypeNameFa",
         header: "نوع درخواست",
+        size: 20,
       },
       {
-        accessorKey: "sender",
+        accessorKey: "personName",
         header: "ارسال کننده",
+        size: 20,
       },
       {
         accessorKey: "date",
         header: "تاریخ درخواست",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianDateFormatted(renderedCellValue)}</div>
         ),

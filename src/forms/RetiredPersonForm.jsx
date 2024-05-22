@@ -234,20 +234,24 @@ function RetiredPersonForm() {
       let personDeathDate;
       let personBirthDate;
 
-      if (personDeathDate) {
+      if (personDeathDate && !personData.personDeathDate) {
         personDeathDate = new Date(selectedDeathDate);
         personDeathDate.setMinutes(
           personDeathDate.getMinutes() - personDeathDate.getTimezoneOffset()
         );
+      } else if (personData.personDeathDate) {
+        personDeathDate = personData.personDeathDate;
       } else {
         personDeathDate = null;
       }
 
-      if (personBirthDate) {
+      if (personBirthDate && !personData.personBirthDate) {
         personBirthDate = new Date(selectedBirthDate);
         personBirthDate.setMinutes(
           personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
         );
+      } else if (personData.personBirthDate) {
+        personBirthDate = personData.personBirthDate;
       } else {
         personBirthDate = null;
       }
@@ -275,7 +279,6 @@ function RetiredPersonForm() {
         maritalStatusID: convertToEnglishNumber(personData.maritalStatusID),
         personBirthDate,
         personDeathDate,
-        personID,
       }).unwrap();
       refetch();
       setEditable(false);
@@ -291,8 +294,8 @@ function RetiredPersonForm() {
   };
 
   useEffect(() => {
-    console.log(selectedDeathDate);
-  }, [selectedDeathDate]);
+    console.log("personObject", personData);
+  }, [personData]);
 
   const content = (
     <section className="formContainer flex-col">
