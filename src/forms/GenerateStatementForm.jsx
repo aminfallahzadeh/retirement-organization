@@ -35,6 +35,7 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
 
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
+  const requestID = searchParams.get("requestID");
 
   const [generateNewRetirementStatement, { isLoading }] =
     useGenerateNewRetirementStatementMutation();
@@ -83,6 +84,7 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
         retirementStatementRunDate,
         personID,
         pensionaryID,
+        requestID,
       }).unwrap();
       console.log(generateRes);
       setShowGenerateStatementModal(false);

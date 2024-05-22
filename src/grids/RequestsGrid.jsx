@@ -126,7 +126,7 @@ function RequestsGrid() {
               row.original.requestTypeID ===
               "62A54585-F331-434A-9027-C9F3060F683A"
                 ? `/retirement-organization/slips?requestID=${row.original.id}`
-                : `/retirement-organization/retired?personID=${row.original.personID}&role=${selectedRole}`
+                : `/retirement-organization/retired?personID=${row.original.personID}&role=${selectedRole}&requestID=${row.original.id}`
             }
           >
             <IconButton color="primary">
