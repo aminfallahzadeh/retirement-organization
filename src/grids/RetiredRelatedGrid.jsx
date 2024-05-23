@@ -140,7 +140,13 @@ function RetiredRelatedGrid() {
     if (isPensionary) {
       getchRelatedList();
     }
-  }, [isPensionary, getchRelatedList]);
+  }, [
+    isPensionary,
+    getchRelatedList,
+    showEditRelatedModal,
+    showDeleteRelatedModal,
+    showCreateRelatedModal,
+  ]);
 
   const columns = useMemo(
     () => [

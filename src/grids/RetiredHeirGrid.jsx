@@ -139,45 +139,13 @@ function RetiredHeirGrid() {
     if (isPensionary) {
       getHeirList();
     }
-  }, [isPensionary, getHeirList]);
-
-  // useEffect(() => {
-  //   refetch();
-  //   if (isSuccess) {
-  //     const data = heirs.itemList.map((heir) => ({
-  //       id: heir.personID,
-  //       pensionaryID: heir.pensionaryID,
-  //       personNationalCode: heir.personNationalCode,
-  //       personFirstName: heir.personFirstName,
-  //       personLastName: heir.personLastName,
-  //       pensionaryIsUnderGauranteeText: heir.pensionaryIsUnderGauranteeText,
-  //       personBirthDate: heir.personBirthDate,
-  //       relationshipWithParentName: heir.relationshipWithParentName,
-  //       parentPersonNationalCode: heir.parentPersonNationalCode,
-  //     }));
-  //     dispatch(setHeirTableData(data));
-  //   }
-  //   return () => {
-  //     dispatch(setHeirTableData([]));
-  //   };
-  // }, [
-  //   isSuccess,
-  //   refetch,
-  //   heirs,
-  //   dispatch,
-  //   showEditHeirModal,
-  //   showDeleteHeirModal,
-  //   showCreateHeirModal,
-  // ]);
-
-  // useEffect(() => {
-  //   if (error) {
-  //     console.log(error);
-  //     toast.error(error?.data?.message || error.error, {
-  //       autoClose: 2000,
-  //     });
-  //   }
-  // }, [error]);
+  }, [
+    isPensionary,
+    getHeirList,
+    showEditHeirModal,
+    showCreateHeirModal,
+    showDeleteHeirModal,
+  ]);
 
   const columns = useMemo(
     () => [
