@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useSelector } from "react-redux";
 import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
 import { useGenerateNewRetirementStatementMutation } from "../slices/retirementStatementApiSlice.js";
 
@@ -22,8 +21,6 @@ import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
 function GenerateStatementForm({ setShowGenerateStatementModal }) {
-  const { pensionaryID } = useSelector((state) => state.retiredState);
-
   const [slectedRunDate, setSelectedRunDate] = useState(null);
   const [isRunDateCalenderOpen, setIsRunDateCalenderOpen] = useState(false);
 
@@ -83,7 +80,6 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
         ...statementObject,
         retirementStatementRunDate,
         personID,
-        pensionaryID,
         requestID,
       }).unwrap();
       console.log(generateRes);

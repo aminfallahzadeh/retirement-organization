@@ -222,23 +222,6 @@ function SlipsForm() {
             <option value=" " disabled>
               انتخاب کنید
             </option>
-            <option value="1420">۱۴۲۰</option>
-            <option value="1419">۱۴۱۹</option>
-            <option value="1418">۱۴۱۸</option>
-            <option value="1417">۱۴۱۷</option>
-            <option value="1416">۱۴۱۶</option>
-            <option value="1415">۱۴۱۵</option>
-            <option value="1414">۱۴۱۴</option>
-            <option value="1413">۱۴۱۳</option>
-            <option value="1412">۱۴۱۲</option>
-            <option value="1411">۱۴۱۱</option>
-            <option value="1410">۱۴۱۰</option>
-            <option value="1409">۱۴۰۹</option>
-            <option value="1408">۱۴۰۸</option>
-            <option value="1407">۱۴۰۷</option>
-            <option value="1406">۱۴۰۶</option>
-            <option value="1405">۱۴۰۵</option>
-            <option value="1404">۱۴۰۴</option>
             <option value="1403">۱۴۰۳</option>
             <option value="1402">۱۴۰۲</option>
             <option value="1401">۱۴۰۱</option>
