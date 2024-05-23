@@ -59,10 +59,6 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
     }));
   };
 
-  useEffect(() => {
-    console.log(retirementStatementTypesComboItems);
-  }, [retirementStatementTypesComboItems]);
-
   const handleRunDateChange = (date) => {
     setSelectedRunDate(date);
     setIsRunDateCalenderOpen(false);
