@@ -7,7 +7,7 @@ import { apiSlice } from "./apiSlice";
 export const heirApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getHeirListByParentPersonID: builder.query({
-      query: ({ parentPersonID }) => ({
+      query: (parentPersonID) => ({
         url: `${HEIR_URL_HTTPS}/GetHeirListByParentPersonID?parentPersonID=${parentPersonID}`,
       }),
     }),

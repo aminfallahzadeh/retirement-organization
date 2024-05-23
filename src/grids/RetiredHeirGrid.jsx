@@ -68,7 +68,7 @@ function RetiredHeirGrid() {
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
-  const personID = searchParams.get("personID");
+  const parentPersonID = searchParams.get("personID");
 
   // ACCESS THE PENSIONARY STATE FROM STORE
   const { isPensionary } = useSelector((state) => state.retiredState);
@@ -94,7 +94,7 @@ function RetiredHeirGrid() {
 
   const getHeirList = useCallback(async () => {
     try {
-      const getListRes = await getListOfHeir(personID).unwrap();
+      const getListRes = await getListOfHeir(parentPersonID).unwrap();
 
       const mappedData = getListRes?.itemList?.map((item) => ({
         id: item.personID,
@@ -115,7 +115,7 @@ function RetiredHeirGrid() {
         autoClose: 2000,
       });
     }
-  }, [dispatch, personID, getListOfHeir]);
+  }, [dispatch, parentPersonID, getListOfHeir]);
 
   const handleRemoveHeir = async () => {
     try {
