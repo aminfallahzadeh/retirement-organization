@@ -34,7 +34,7 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
   const personID = searchParams.get("personID");
   const requestID = searchParams.get("requestID");
 
-  const [generateNewRetirementStatement, { isLoading }] =
+  const [generateNewRetirementStatement, { isLoading: isGenerating }] =
     useGenerateNewRetirementStatementMutation();
 
   const { data: retirementStatementTypesComboItems, isSuccess } =
@@ -78,7 +78,6 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
         personID,
         requestID,
       }).unwrap();
-      console.log(generateRes);
       setShowGenerateStatementModal(false);
       toast.success(generateRes.message, {
         autoClose: 2000,
@@ -168,7 +167,7 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
           dir="ltr"
           endIcon={<SaveIcon />}
           onClick={handleGenerateStatement}
-          loading={isLoading}
+          loading={isGenerating}
           variant="contained"
           color="success"
           sx={{ fontFamily: "sahel" }}

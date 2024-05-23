@@ -144,7 +144,13 @@ function RetiredStatementsGrid() {
     if (isPensionary) {
       getList();
     }
-  }, [isPensionary, getList]);
+  }, [
+    isPensionary,
+    getList,
+    showGenerateStatementModal,
+    showViewStatementModal,
+    showDeleteStatementModal,
+  ]);
 
   const columns = useMemo(
     () => [
