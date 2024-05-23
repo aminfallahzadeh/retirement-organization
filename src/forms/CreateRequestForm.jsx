@@ -17,9 +17,6 @@ import { ArrowUpwardOutlined as SendIcon } from "@mui/icons-material";
 // library imports
 import { toast } from "react-toastify";
 
-// helpers
-import { convertToEnglishNumber } from "../helper";
-
 function CreateRequestForm() {
   const [insertRequest, { isLoading: isInserting }] =
     useInsertRequestMutation();
@@ -59,7 +56,7 @@ function CreateRequestForm() {
       const insertRes = await insertRequest({
         ...requestObject,
         requestFrom: 1,
-        personID: convertToEnglishNumber(requestObject.personID),
+        personID: requestObject.personID || "49e66fb39a124555b9329c9b7994509a",
       }).unwrap();
       navigate("/retirement-organization/dashboard");
       console.log(insertRes);
@@ -113,7 +110,9 @@ function CreateRequestForm() {
           <select
             id="personID"
             name="personID"
-            value={requestObject?.personID || " "}
+            value={
+              requestObject?.personID || "49e66fb39a124555b9329c9b7994509a"
+            }
             onChange={handleRequestObjectChange}
             className="inputBox__form--input"
             required
