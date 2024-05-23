@@ -52,6 +52,7 @@ export const heirApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetHeirListByParentPersonIDQuery,
+  useLazyGetHeirListByParentPersonIDQuery,
   useGetHeirQuery,
   useRemoveHeirMutation,
   useUpdateHeirMutation,

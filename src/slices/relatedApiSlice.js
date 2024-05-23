@@ -41,6 +41,7 @@ export const relatedApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetRelatedListByParentPersonIDQuery,
+  useLazyGetRelatedListByParentPersonIDQuery,
   useGetRelatedQuery,
   useInsertRelatedMutation,
   useUpdateRelatedMutation,

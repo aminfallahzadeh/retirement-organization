@@ -4,6 +4,7 @@ const initialState = {
   personDeathDate: null,
   personID: "",
   pensionaryID: "",
+  isPensionary: false,
 };
 
 const retiredStateSlice = createSlice({
@@ -19,10 +20,18 @@ const retiredStateSlice = createSlice({
     setPensionaryID: (state, action) => {
       state.pensionaryID = action.payload;
     },
+
+    setIsPensionary: (state, action) => {
+      state.isPensionary = action.payload;
+    },
   },
 });
 
-export const { setPersonDeathDate, setPersonID, setPensionaryID } =
-  retiredStateSlice.actions;
+export const {
+  setPersonDeathDate,
+  setPersonID,
+  setPensionaryID,
+  setIsPensionary,
+} = retiredStateSlice.actions;
 
 export default retiredStateSlice.reducer;

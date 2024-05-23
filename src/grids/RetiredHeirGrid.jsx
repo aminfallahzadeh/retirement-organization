@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import {
-  useGetHeirListByParentPersonIDQuery,
+  useLazyGetHeirListByParentPersonIDQuery,
   useRemoveHeirMutation,
 } from "../slices/heirApiSlice";
 import {
@@ -70,21 +70,15 @@ function RetiredHeirGrid() {
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
+  // ACCESS THE PENSIONARY STATE FROM STORE
+  const { isPensionary } = useSelector((state) => state.retiredState);
+
   // access the data from redux store
   const { heirTableData } = useSelector((state) => state.heirData);
 
+  const [getListOfHeir, { isLoading, isFetching }] =
+    useLazyGetHeirListByParentPersonIDQuery();
   const [removeHeir, { isLoading: isDeleting }] = useRemoveHeirMutation();
-
-  const {
-    data: heirs,
-    isSuccess,
-    isLoading,
-    isFetching,
-    error,
-    refetch,
-  } = useGetHeirListByParentPersonIDQuery({
-    parentPersonID: personID,
-  });
 
   const handleShowCreateHeirModal = () => {
     setShowCreateHeirModal(true);
@@ -98,9 +92,30 @@ function RetiredHeirGrid() {
     setShowDeleteHeirModal(true);
   };
 
-  const handleRefresh = () => {
-    refetch();
-  };
+  const getHeirList = useCallback(async () => {
+    try {
+      const getListRes = await getListOfHeir(personID).unwrap();
+
+      const mappedData = getListRes?.itemList?.map((item) => ({
+        id: item.personID,
+        pensionaryID: item.pensionaryID,
+        personNationalCode: item.personNationalCode,
+        personFirstName: item.personFirstName,
+        personLastName: item.personLastName,
+        pensionaryIsUnderGauranteeText: item.pensionaryIsUnderGauranteeText,
+        personBirthDate: item.personBirthDate,
+        relationshipWithParentName: item.relationshipWithParentName,
+        parentPersonNationalCode: item.parentPersonNationalCode,
+      }));
+
+      dispatch(setHeirTableData(mappedData));
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [dispatch, personID, getListOfHeir]);
 
   const handleRemoveHeir = async () => {
     try {
@@ -108,7 +123,7 @@ function RetiredHeirGrid() {
         pensionaryID: selectedHeirData?.pensionaryID,
       }).unwrap();
       setShowDeleteHeirModal(false);
-      refetch();
+      getHeirList();
       toast.success(deleteRes.message, {
         autoClose: 2000,
       });
@@ -121,42 +136,48 @@ function RetiredHeirGrid() {
   };
 
   useEffect(() => {
-    refetch();
-    if (isSuccess) {
-      const data = heirs.itemList.map((heir) => ({
-        id: heir.personID,
-        pensionaryID: heir.pensionaryID,
-        personNationalCode: heir.personNationalCode,
-        personFirstName: heir.personFirstName,
-        personLastName: heir.personLastName,
-        pensionaryIsUnderGauranteeText: heir.pensionaryIsUnderGauranteeText,
-        personBirthDate: heir.personBirthDate,
-        relationshipWithParentName: heir.relationshipWithParentName,
-        parentPersonNationalCode: heir.parentPersonNationalCode,
-      }));
-      dispatch(setHeirTableData(data));
+    if (isPensionary) {
+      getHeirList();
     }
-    return () => {
-      dispatch(setHeirTableData([]));
-    };
-  }, [
-    isSuccess,
-    refetch,
-    heirs,
-    dispatch,
-    showEditHeirModal,
-    showDeleteHeirModal,
-    showCreateHeirModal,
-  ]);
+  }, [isPensionary, getHeirList]);
 
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-      toast.error(error?.data?.message || error.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   refetch();
+  //   if (isSuccess) {
+  //     const data = heirs.itemList.map((heir) => ({
+  //       id: heir.personID,
+  //       pensionaryID: heir.pensionaryID,
+  //       personNationalCode: heir.personNationalCode,
+  //       personFirstName: heir.personFirstName,
+  //       personLastName: heir.personLastName,
+  //       pensionaryIsUnderGauranteeText: heir.pensionaryIsUnderGauranteeText,
+  //       personBirthDate: heir.personBirthDate,
+  //       relationshipWithParentName: heir.relationshipWithParentName,
+  //       parentPersonNationalCode: heir.parentPersonNationalCode,
+  //     }));
+  //     dispatch(setHeirTableData(data));
+  //   }
+  //   return () => {
+  //     dispatch(setHeirTableData([]));
+  //   };
+  // }, [
+  //   isSuccess,
+  //   refetch,
+  //   heirs,
+  //   dispatch,
+  //   showEditHeirModal,
+  //   showDeleteHeirModal,
+  //   showCreateHeirModal,
+  // ]);
+
+  // useEffect(() => {
+  //   if (error) {
+  //     console.log(error);
+  //     toast.error(error?.data?.message || error.error, {
+  //       autoClose: 2000,
+  //     });
+  //   }
+  // }, [error]);
 
   const columns = useMemo(
     () => [
@@ -258,6 +279,7 @@ function RetiredHeirGrid() {
         <Button
           dir="ltr"
           endIcon={<AddIcon />}
+          disabled={!isPensionary}
           onClick={handleShowCreateHeirModal}
           variant="contained"
           color="primary"
@@ -270,7 +292,8 @@ function RetiredHeirGrid() {
           dir="ltr"
           endIcon={<RefreshIcon />}
           loading={isFetching}
-          onClick={handleRefresh}
+          disabled={!isPensionary}
+          onClick={getHeirList}
           variant="contained"
           color="primary"
           sx={{ fontFamily: "sahel" }}

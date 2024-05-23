@@ -1,5 +1,5 @@
 // react imports
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import {
-  useGetListOfRetirementStatementsQuery,
+  useLazyGetListOfRetirementStatementsQuery,
   useRemoveRetirementStatementMutation,
 } from "../slices/retirementStatementApiSlice.js";
 import { setStatementTableData } from "../slices/statementDataSlice.js";
@@ -74,20 +74,17 @@ function RetiredStatementsGrid() {
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
+  // ACCESS THE PENSIONARY STATE FROM STORE
+  const { isPensionary } = useSelector((state) => state.retiredState);
+
+  const [getStatementList, { isLoading, isFetching }] =
+    useLazyGetListOfRetirementStatementsQuery();
+
   const [removeRetirmentStatement, { isLoading: isDeleting }] =
     useRemoveRetirementStatementMutation();
 
   // access the data from redux store
   const { statementTableData } = useSelector((state) => state.statementData);
-
-  const {
-    data: statements,
-    isSuccess,
-    isLoading,
-    isFetching,
-    error,
-    refetch,
-  } = useGetListOfRetirementStatementsQuery(personID);
 
   // HANDLERS
   const handleGenerateStatementModalChange = () => {
@@ -102,16 +99,35 @@ function RetiredStatementsGrid() {
     setShowDeleteStatementModal(true);
   };
 
-  const handleRefresh = () => {
-    refetch();
-  };
+  const getList = useCallback(async () => {
+    try {
+      const getListRes = await getStatementList(personID).unwrap();
+      const mappedDate = getListRes.map((item) => ({
+        id: item.retirementStatementID,
+        retirementStatementSerial: item.retirementStatementSerial,
+        retirementStatementTypeName: item.retirementStatementTypeName,
+        retirementStatementNo: item.retirementStatementNo,
+        retirementStatementIssueDate: item.retirementStatementIssueDate,
+        retirementStatementRunDate: item.retirementStatementRunDate,
+        retirementStatementIssueConfirmDate:
+          item.retirementStatementIssueConfirmDate,
+      }));
+
+      dispatch(setStatementTableData(mappedDate));
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [dispatch, getStatementList, personID]);
 
   const handleRemoveStatement = async () => {
     try {
       const deleteRes = await removeRetirmentStatement({
         rsID: statementID,
       }).unwrap();
-      console.log(deleteRes);
+      getList();
       setShowDeleteStatementModal(false);
       toast.success(deleteRes.message, {
         autoClose: 2000,
@@ -125,41 +141,10 @@ function RetiredStatementsGrid() {
   };
 
   useEffect(() => {
-    refetch();
-    if (isSuccess) {
-      const data = statements.map((item) => ({
-        id: item.retirementStatementID,
-        retirementStatementSerial: item.retirementStatementSerial,
-        retirementStatementTypeName: item.retirementStatementTypeName,
-        retirementStatementNo: item.retirementStatementNo,
-        retirementStatementIssueDate: item.retirementStatementIssueDate,
-        retirementStatementRunDate: item.retirementStatementRunDate,
-        retirementStatementIssueConfirmDate:
-          item.retirementStatementIssueConfirmDate,
-      }));
-      dispatch(setStatementTableData(data));
+    if (isPensionary) {
+      getList();
     }
-
-    return () => {
-      dispatch(setStatementTableData([]));
-    };
-  }, [
-    isSuccess,
-    refetch,
-    dispatch,
-    statements,
-    showGenerateStatementModal,
-    showDeleteStatementModal,
-  ]);
-
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-      toast.error(error?.data?.message || error.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [error]);
+  }, [isPensionary, getList]);
 
   const columns = useMemo(
     () => [
@@ -271,6 +256,7 @@ function RetiredStatementsGrid() {
           dir="ltr"
           endIcon={<AddIcon />}
           variant="contained"
+          disabled={!isPensionary}
           onClick={handleGenerateStatementModalChange}
           color="primary"
           sx={{ fontFamily: "sahel" }}
@@ -282,7 +268,8 @@ function RetiredStatementsGrid() {
           dir="ltr"
           endIcon={<RefreshIcon />}
           loading={isFetching}
-          onClick={handleRefresh}
+          disabled={!isPensionary}
+          onClick={getList}
           variant="contained"
           color="primary"
           sx={{ fontFamily: "sahel" }}

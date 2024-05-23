@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import {
-  useGetRelatedListByParentPersonIDQuery,
+  useLazyGetRelatedListByParentPersonIDQuery,
   useRemoveRelatedMutation,
 } from "../slices/relatedApiSlice";
 import {
@@ -65,6 +65,9 @@ function RetiredRelatedGrid() {
 
   const { selectedRelatedData } = useSelector((state) => state.relatedData);
 
+  const [getListOdRelated, { isLoading, isFetching }] =
+    useLazyGetRelatedListByParentPersonIDQuery();
+
   const [removeRelated, { isLoading: isDeleting }] = useRemoveRelatedMutation();
 
   const dispatch = useDispatch();
@@ -73,17 +76,11 @@ function RetiredRelatedGrid() {
   const searchParams = new URLSearchParams(location.search);
   const parentPersonID = searchParams.get("personID");
 
+  // ACCESS THE PENSIONARY STATE FROM STORE
+  const { isPensionary } = useSelector((state) => state.retiredState);
+
   // access the data from redux store
   const { relatedTableData } = useSelector((state) => state.relatedData);
-
-  const {
-    data: relateds,
-    isSuccess,
-    isLoading,
-    isFetching,
-    error,
-    refetch,
-  } = useGetRelatedListByParentPersonIDQuery(parentPersonID);
 
   const handleShowCreateRelatedModal = () => {
     setShowCreateRelatedModal(true);
@@ -97,17 +94,37 @@ function RetiredRelatedGrid() {
     setShowDeleteRelatedModal(true);
   };
 
-  const handleRefresh = () => {
-    refetch();
-  };
+  const getchRelatedList = useCallback(async () => {
+    try {
+      const getListRes = await getListOdRelated(parentPersonID).unwrap();
+
+      const mappedData = getListRes?.itemList?.map((item) => ({
+        id: item.personID,
+        pensionaryID: item.pensionaryID,
+        relatedBirthDate: item.personBirthDate,
+        relatedNtionalCode: item.personNationalCode,
+        relatedFirstName: item.personFirstName,
+        relatedLastName: item.personLastName,
+        relatedStatus: item.pensionaryIsUnderGauranteeText,
+        relation: item.relationshipWithParentName,
+      }));
+
+      dispatch(setRelatedTableData(mappedData));
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [dispatch, getListOdRelated, parentPersonID]);
 
   const handleRemoveRelated = async () => {
     try {
       const deleteRes = await removeRelated({
         pensionaryID: selectedRelatedData?.pensionaryID,
       }).unwrap();
+      getchRelatedList();
       setShowDeleteRelatedModal(false);
-      refetch();
       toast.success(deleteRes.message, {
         autoClose: 2000,
       });
@@ -120,41 +137,10 @@ function RetiredRelatedGrid() {
   };
 
   useEffect(() => {
-    refetch();
-    if (isSuccess) {
-      const data = relateds.itemList.map((related) => ({
-        id: related.personID,
-        pensionaryID: related.pensionaryID,
-        relatedBirthDate: related.personBirthDate,
-        relatedNtionalCode: related.personNationalCode,
-        relatedFirstName: related.personFirstName,
-        relatedLastName: related.personLastName,
-        relatedStatus: related.pensionaryIsUnderGauranteeText,
-        relation: related.relationshipWithParentName,
-      }));
-      dispatch(setRelatedTableData(data));
+    if (isPensionary) {
+      getchRelatedList();
     }
-    return () => {
-      dispatch(setRelatedTableData([]));
-    };
-  }, [
-    isSuccess,
-    refetch,
-    relateds,
-    dispatch,
-    showCreateRelatedModal,
-    showEditRelatedModal,
-    showDeleteRelatedModal,
-  ]);
-
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-      toast.error(error?.data?.message || error.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [error]);
+  }, [isPensionary, getchRelatedList]);
 
   const columns = useMemo(
     () => [
@@ -248,6 +234,7 @@ function RetiredRelatedGrid() {
         <Button
           dir="ltr"
           endIcon={<AddIcon />}
+          disabled={!isPensionary}
           onClick={handleShowCreateRelatedModal}
           variant="contained"
           color="primary"
@@ -259,8 +246,9 @@ function RetiredRelatedGrid() {
         <LoadingButton
           dir="ltr"
           endIcon={<RefreshIcon />}
+          disabled={!isPensionary}
           loading={isFetching}
-          onClick={handleRefresh}
+          onClick={getchRelatedList}
           variant="contained"
           color="primary"
           sx={{ fontFamily: "sahel" }}
