@@ -63,7 +63,7 @@ function PersonnelStatementGrid() {
         ),
       },
       {
-        accessorKey: "payDebitAmount",
+        accessorKey: "payCreditAmount",
         header: "بستانکاری",
         size: 20,
         Cell: ({ renderedCellValue }) => (
@@ -71,7 +71,7 @@ function PersonnelStatementGrid() {
         ),
       },
       {
-        accessorKey: "payCreditAmount",
+        accessorKey: "payDebitAmount",
         header: "بدهکاری",
         size: 20,
         Cell: ({ renderedCellValue }) => (

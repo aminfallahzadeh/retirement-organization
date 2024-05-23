@@ -128,6 +128,8 @@ function SlipsForm() {
         requestID,
         payDate: new Date().toISOString(),
       }).unwrap();
+      setIsSlipExists(true);
+      getPayListHandler();
       toast.success(res.message, {
         autoClose: 2000,
       });
