@@ -290,8 +290,8 @@ function RetiredPersonForm() {
   };
 
   useEffect(() => {
-    console.log("death date", selectedDeathDate);
-  }, [selectedDeathDate]);
+    console.log("personData", personData);
+  }, [personData]);
 
   const content = (
     <section className="formContainer flex-col">
@@ -398,11 +398,13 @@ function RetiredPersonForm() {
             name="genderID"
             id="genderID"
             className="inputBox__form--input"
-            value={personData?.genderID || "2"}
+            value={personData?.genderID || " "}
             onChange={handlePersonDataChange}
             required
           >
-            <option value="0">انتخاب</option>
+            <option value=" " disabled>
+              انتخاب
+            </option>
             {genderCombo.map((gender) => (
               <option key={gender.lookUpID} value={gender.lookUpID}>
                 {gender.lookUpName}

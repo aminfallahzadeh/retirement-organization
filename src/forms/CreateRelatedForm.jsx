@@ -282,6 +282,10 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
     }
   };
 
+  useEffect(() => {
+    console.log(relatedObject);
+  }, [relatedObject]);
+
   const content = (
     <section className="formContainer formContainer--width-lg flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>
@@ -479,7 +483,9 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           <select
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
-            value={relatedObject?.maritalStatusID || " "}
+            value={
+              convertToEnglishNumber(relatedObject?.maritalStatusID) || " "
+            }
             name="maritalStatusID"
             required
             id="maritalStatusID1"
@@ -506,7 +512,9 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             type="text"
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
-            value={relatedObject?.educationTypeID || " "}
+            value={
+              convertToEnglishNumber(relatedObject?.educationTypeID) || " "
+            }
             name="educationTypeID"
             required
             id="educationTypeID1"
@@ -550,7 +558,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             type="text"
             className="inputBox__form--input"
             onChange={handleRealtedObjectChange}
-            value={relatedObject?.universityID || " "}
+            value={convertToEnglishNumber(relatedObject?.universityID) || " "}
             name="universityID"
             required
             id="universityID1"
@@ -659,7 +667,9 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             type="text"
             id="personCountry"
             name="personCountryID"
-            value={relatedObject?.personCountryID || " "}
+            value={
+              convertToEnglishNumber(relatedObject?.personCountryID) || " "
+            }
             className="inputBox__form--input field"
             onChange={handleRealtedObjectChange}
             required
@@ -683,7 +693,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             id="personState"
             name="personStateID"
             className="inputBox__form--input"
-            value={relatedObject?.personStateID || " "}
+            value={convertToEnglishNumber(relatedObject?.personStateID) || " "}
             onChange={handleRealtedObjectChange}
             required
           >
@@ -706,7 +716,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             id="personCity"
             name="personCityID"
             className="inputBox__form--input"
-            value={relatedObject?.personCityID || " "}
+            value={convertToEnglishNumber(relatedObject?.personCityID) || " "}
             onChange={handleRealtedObjectChange}
             required
           >

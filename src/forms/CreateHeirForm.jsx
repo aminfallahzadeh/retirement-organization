@@ -266,7 +266,10 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
           <select
             type="text"
             className="inputBox__form--input"
-            value={heirObject?.relationshipWithParentID || " "}
+            value={
+              convertToEnglishNumber(heirObject?.relationshipWithParentID) ||
+              " "
+            }
             required
             name="relationshipWithParentID"
             onChange={handleHeirObjectChange}
@@ -409,7 +412,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             className="inputBox__form--input"
             name="maritalStatusID"
             onChange={handleHeirObjectChange}
-            value={heirObject?.maritalStatusID || " "}
+            value={convertToEnglishNumber(heirObject?.maritalStatusID) || " "}
             required
             id="maritalStatusID1"
           >
@@ -492,7 +495,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             type="text"
             id="personCountry"
             name="personCountryID"
-            value={heirObject.personCountryID || " "}
+            value={convertToEnglishNumber(heirObject.personCountryID) || " "}
             className="inputBox__form--input field"
             onChange={handleHeirObjectChange}
             required
@@ -517,7 +520,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
             id="personState"
             name="personStateID"
             className="inputBox__form--input"
-            value={heirObject.personStateID || " "}
+            value={convertToEnglishNumber(heirObject.personStateID) || " "}
             onChange={handleHeirObjectChange}
             required
           >
