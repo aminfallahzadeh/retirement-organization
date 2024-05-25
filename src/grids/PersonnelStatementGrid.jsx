@@ -16,7 +16,6 @@ import {
   FirstPage,
   LastPage,
   RemoveRedEye as RemoveRedEyeIcon,
-  Print as PrintIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -56,13 +55,13 @@ function PersonnelStatementGrid() {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(statements);
       const data = statements.itemList.map((item) => ({
         id: item.personnelStatementID,
-        personnelStatementSerial: item.personnelStatementSerial || "-",
-        personnelStatementTypeName: item.personnelStatementTypeName || "-",
-        personnelStatementIssueDate: item.personnelStatementIssueDate || "-",
-        personnelStatementRunDate: item.personnelStatementRunDate || "-",
+        personnelStatementSerial: item.personnelStatementSerial,
+
+        personnelStatementTypeName: item.personnelStatementTypeName,
+        personnelStatementIssueDate: item.personnelStatementIssueDate,
+        personnelStatementRunDate: item.personnelStatementRunDate,
       }));
       setPersonnelStatementTableData(data);
     }
@@ -82,6 +81,7 @@ function PersonnelStatementGrid() {
       {
         accessorKey: "personnelStatementSerial",
         header: "سریال حکم",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
@@ -89,6 +89,7 @@ function PersonnelStatementGrid() {
       {
         accessorKey: "personnelStatementNo",
         header: "شماره حکم",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
@@ -96,39 +97,22 @@ function PersonnelStatementGrid() {
       {
         accessorKey: "personnelStatementTypeName",
         header: "نوع حکم",
+        size: 20,
       },
       {
         accessorKey: "personnelStatementIssueDate",
         header: "تاریخ صدور",
+        size: 20,
         Cell: ({ renderedCellValue }) => (
-          <div>
-            {convertToPersianNumber(
-              convertToPersianDateFormatted(renderedCellValue)
-            )}
-          </div>
+          <div>{convertToPersianDateFormatted(renderedCellValue)}</div>
         ),
       },
       {
         accessorKey: "personnelStatementRunDate",
         header: "تاریخ اجرا",
-        Cell: ({ renderedCellValue }) => (
-          <div>
-            {convertToPersianNumber(
-              convertToPersianDateFormatted(renderedCellValue)
-            )}
-          </div>
-        ),
-      },
-      {
-        accessorKey: "printStaffStatementAction",
-        header: "چاپ",
-        enableSorting: false,
-        enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <IconButton color="success">
-            <PrintIcon />
-          </IconButton>
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianDateFormatted(renderedCellValue)}</div>
         ),
       },
       {
