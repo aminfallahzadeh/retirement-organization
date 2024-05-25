@@ -8,6 +8,13 @@
     background-color: var(--color-fg-primary);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
+    /* ONLY FOR DEMO */
+    &__exit {
+        position: absolute;
+        left: 7rem;
+        top: 0;
+    }
+
     &__container {
         display: flex;
         column-gap: 50px;

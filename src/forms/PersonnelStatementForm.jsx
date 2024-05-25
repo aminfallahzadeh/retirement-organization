@@ -1,5 +1,5 @@
 // react imports
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // redux imports
 import { useDispatch } from "react-redux";
@@ -24,6 +24,7 @@ function PersonnelStatementForm() {
   const [searchPersons, { isLoading, isFetching }] = useLazyGetPersonsQuery();
   const dispatch = useDispatch();
 
+  // PERSONNEL OBJECT STATES
   const [personnelObject, setPersonnelObject] = useState(null);
 
   const hadnlePersonnelObjectChange = (e) => {
@@ -37,6 +38,7 @@ function PersonnelStatementForm() {
       !personnelObject.personLastName &&
       !personnelObject.personNationalCode);
 
+  // SEARCH HANDLER
   const handleSearchPersonnels = async () => {
     try {
       const personFirstName = personnelObject?.personFirstName || "";
@@ -70,10 +72,6 @@ function PersonnelStatementForm() {
       });
     }
   };
-
-  useEffect(() => {
-    console.log(personnelObject);
-  }, [personnelObject]);
 
   const content = (
     <>

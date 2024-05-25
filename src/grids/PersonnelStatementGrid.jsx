@@ -7,8 +7,11 @@ import { useLocation } from "react-router-dom";
 // redux imports
 import { useGetPersonnelStatementQuery } from "../slices/personnelStatementApiSlice";
 
+// components
+import Modal from "../components/Modal";
+
 // mui imports
-import { IconButton } from "@mui/material";
+import { IconButton, Button } from "@mui/material";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -16,6 +19,7 @@ import {
   FirstPage,
   LastPage,
   RemoveRedEye as RemoveRedEyeIcon,
+  Print as PrintIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -42,6 +46,9 @@ function PersonnelStatementGrid() {
   const [personnelStatementTableData, setPersonnelStatementTableData] =
     useState([]);
 
+  // MODAL STATES
+  const [showStatementModal, setShowStatementModal] = useState(false);
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
@@ -58,7 +65,7 @@ function PersonnelStatementGrid() {
       const data = statements.itemList.map((item) => ({
         id: item.personnelStatementID,
         personnelStatementSerial: item.personnelStatementSerial,
-
+        personnelStatementNumber: item.personnelStatementNumber,
         personnelStatementTypeName: item.personnelStatementTypeName,
         personnelStatementIssueDate: item.personnelStatementIssueDate,
         personnelStatementRunDate: item.personnelStatementRunDate,
@@ -76,6 +83,11 @@ function PersonnelStatementGrid() {
     }
   }, [error]);
 
+  // HANDLERS
+  const handleShowStatementModal = () => {
+    setShowStatementModal(true);
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -87,11 +99,11 @@ function PersonnelStatementGrid() {
         ),
       },
       {
-        accessorKey: "personnelStatementNo",
+        accessorKey: "personnelStatementNumber",
         header: "شماره حکم",
         size: 20,
         Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianNumber(renderedCellValue)}</div>
+          <div>{convertToPersianNumber(renderedCellValue) || "-"}</div>
         ),
       },
       {
@@ -122,7 +134,7 @@ function PersonnelStatementGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="primary">
+          <IconButton color="primary" onClick={handleShowStatementModal}>
             <RemoveRedEyeIcon />
           </IconButton>
         ),
@@ -181,7 +193,27 @@ function PersonnelStatementGrid() {
           />
         </div>
       ) : (
-        <MaterialReactTable table={table} />
+        <>
+          {showStatementModal ? (
+            <Modal title="حکم" closeModal={() => setShowStatementModal(false)}>
+              <div className="flex-col flex-center">
+                <img src="./images/hokm-sample.png" alt="نمونه حکم" />
+
+                <Button
+                  dir="ltr"
+                  endIcon={<PrintIcon />}
+                  variant="contained"
+                  color="success"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>چاپ</span>
+                </Button>
+              </div>
+            </Modal>
+          ) : null}
+
+          <MaterialReactTable table={table} />
+        </>
       )}
     </>
   );

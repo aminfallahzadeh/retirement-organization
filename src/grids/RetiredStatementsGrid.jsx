@@ -32,6 +32,7 @@ import {
   Delete as DeleteIcon,
   Close as CloseIcon,
   Done as DoneIcon,
+  Print as PrintIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -62,6 +63,9 @@ function RetiredStatementsGrid() {
   const [statementID, setStatementID] = useState(null);
 
   const [rowSelection, setRowSelection] = useState({});
+
+  // MODAL STATES
+  const [showStatementModal, setShowStatementModal] = useState(false);
   const [showGenerateStatementModal, setShowGenerateStatementModal] =
     useState(false);
   const [showViewStatementModal, setShowViewStatementModal] = useState(false);
@@ -97,6 +101,10 @@ function RetiredStatementsGrid() {
 
   const handleDeleteStatementModalChange = () => {
     setShowDeleteStatementModal(true);
+  };
+
+  const handleShowStatementModal = () => {
+    setShowStatementModal(true);
   };
 
   const getList = useCallback(async () => {
@@ -200,7 +208,7 @@ function RetiredStatementsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="primary" onClick={handleViewStatementModalChange}>
+          <IconButton color="primary" onClick={handleShowStatementModal}>
             <RemoveRedEyeIcon />
           </IconButton>
         ),
@@ -328,7 +336,23 @@ function RetiredStatementsGrid() {
         </div>
       ) : (
         <>
-          {showViewStatementModal ? (
+          {showStatementModal ? (
+            <Modal title="حکم" closeModal={() => setShowStatementModal(false)}>
+              <div className="flex-col flex-center">
+                <img src="./images/hokm-sample.png" alt="نمونه حکم" />
+
+                <Button
+                  dir="ltr"
+                  endIcon={<PrintIcon />}
+                  variant="contained"
+                  color="success"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>چاپ</span>
+                </Button>
+              </div>
+            </Modal>
+          ) : showViewStatementModal ? (
             <Modal
               title={"مشاهده حکم"}
               closeModal={() => setShowViewStatementModal(false)}

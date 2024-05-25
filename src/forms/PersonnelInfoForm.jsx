@@ -20,6 +20,10 @@ import {
 function PersonnelInfoForm() {
   const [personObject, setPersonObject] = useState({});
 
+  const [education, setEducation] = useState("");
+  const [marital, setMarital] = useState("");
+  const [gender, setGender] = useState("");
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
@@ -44,20 +48,45 @@ function PersonnelInfoForm() {
   }, [error]);
 
   // GET LOOKUP DATA
-  const { data: gender } = useGetLookupDataQuery({
+  const { data: genderData, isSuccess: genderSuccess } = useGetLookupDataQuery({
     lookUpType: "Gender",
     lookUpID: personObject?.genderID,
   });
 
-  const { data: maritalStatus } = useGetLookupDataQuery({
-    lookUpType: "MaritialStatus",
-    lookUpID: personObject?.maritalStatusID,
-  });
+  const { data: maritalStatusData, isSuccess: maritalStatusSuccess } =
+    useGetLookupDataQuery({
+      lookUpType: "MaritialStatus",
+      lookUpID: personObject?.maritalStatusID,
+    });
 
-  const { data: education } = useGetLookupDataQuery({
-    lookUpType: "EducationType",
-    lookUpID: personObject?.educationTypeID,
-  });
+  const { data: educationData, isSuccess: educationSuccess } =
+    useGetLookupDataQuery({
+      lookUpType: "EducationType",
+      lookUpID: personObject?.educationTypeID,
+    });
+
+  // FETCH LOOKUP DATA
+  useEffect(() => {
+    if (educationSuccess) {
+      setEducation(educationData.itemList[0].lookUpName);
+    }
+  }, [educationSuccess, educationData?.itemList]);
+
+  useEffect(() => {
+    if (maritalStatusSuccess) {
+      setMarital(maritalStatusData.itemList[0].lookUpName);
+    }
+  }, [maritalStatusSuccess, maritalStatusData?.itemList]);
+
+  useEffect(() => {
+    if (genderSuccess) {
+      setGender(genderData.itemList[0].lookUpName);
+    }
+  }, [genderSuccess, genderData?.itemList]);
+
+  useEffect(() => {
+    console.log(gender);
+  }, [gender]);
 
   const content = (
     <section className="formContainer">
@@ -91,7 +120,7 @@ function PersonnelInfoForm() {
 
         <div className="inputBox__form">
           <div className="inputBox__form--readOnly-input">
-            <div className="inputBox__form--readOnly-label">نام</div>
+            <div className="inputBox__form--readOnly-label">نام خانوادگی</div>
             <div className="inputBox__form--readOnly-content">
               {personObject.personLastName}
             </div>
@@ -139,31 +168,21 @@ function PersonnelInfoForm() {
         <div className="inputBox__form">
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">جنسیت</div>
-            <div className="inputBox__form--readOnly-content">
-              {gender?.itemList[0].lookUpName || "-"}
-            </div>
+            <div className="inputBox__form--readOnly-content">{gender}</div>
           </div>
         </div>
 
         <div className="inputBox__form">
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">وضعیت تاهل</div>
-            <div className="inputBox__form--readOnly-content">
-              {maritalStatus?.itemList.lenghth === 1
-                ? maritalStatus?.itemList[0].lookUpName
-                : "-"}
-            </div>
+            <div className="inputBox__form--readOnly-content">{marital}</div>
           </div>
         </div>
 
         <div className="inputBox__form">
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">مدرک تحصیلی</div>
-            <div className="inputBox__form--readOnly-content">
-              {education?.itemList.lenghth === 1
-                ? education?.itemList[0].lookUpName
-                : "-"}
-            </div>
+            <div className="inputBox__form--readOnly-content">{education}</div>
           </div>
         </div>
 

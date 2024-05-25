@@ -82,7 +82,7 @@ function TopbarNav({ userName, userID }) {
 
           <ul className="topnav__container--links-list">
             <li>{userName}</li>
-            <li onClick={logoutHandler}>
+            <li onClick={logoutHandler} className="topnav__exit">
               <LogoutIcon sx={{ fontSize: 18 }} /> خروج
             </li>
             <li className={cartablePath ? "topnav__active" : ""}>
