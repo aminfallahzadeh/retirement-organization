@@ -5,7 +5,6 @@ import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useSelector } from "react-redux";
 import {
   useGetRelationshipQuery,
   useGetLookupDataQuery,
@@ -38,10 +37,7 @@ import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
-function UpdateHeirForm({ setShowEditHeirModal }) {
-  const { selectedHeirData } = useSelector((state) => state.heirData);
-  const personID = selectedHeirData?.id;
-
+function UpdateHeirForm({ setShowEditHeirModal, personID }) {
   // LOOK UP STATES
   const [relationCombo, setRelationCombo] = useState([]);
   const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);

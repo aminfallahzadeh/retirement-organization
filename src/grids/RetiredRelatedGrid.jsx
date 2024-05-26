@@ -10,10 +10,7 @@ import {
   useLazyGetRelatedListByParentPersonIDQuery,
   useRemoveRelatedMutation,
 } from "../slices/relatedApiSlice";
-import {
-  setRelatedTableData,
-  setSelectedRelatedData,
-} from "../slices/relatedDataSlice";
+import { setRelatedTableData } from "../slices/relatedDataSlice";
 
 // mui imports
 import { IconButton, Button, Box } from "@mui/material";
@@ -51,7 +48,6 @@ import { toast } from "react-toastify";
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
-  findById,
 } from "../helper.js";
 
 // utils imports
@@ -62,6 +58,8 @@ function RetiredRelatedGrid() {
   const [showCreateRelatedModal, setShowCreateRelatedModal] = useState(false);
   const [showEditRelatedModal, setShowEditRelatedModal] = useState(false);
   const [showDeleteRelatedModal, setShowDeleteRelatedModal] = useState(false);
+
+  const [personID, setPersonID] = useState("");
 
   const { selectedRelatedData } = useSelector((state) => state.relatedData);
 
@@ -287,19 +285,11 @@ function RetiredRelatedGrid() {
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedRelated = findById(relatedTableData, id);
 
     if (id) {
-      dispatch(setSelectedRelatedData(selectedRelated));
-    } else {
-      dispatch(setSelectedRelatedData([]));
+      setPersonID(id);
     }
-
-    return () => {
-      // Cleanup function to clear selected group
-      dispatch(setSelectedRelatedData([]));
-    };
-  }, [dispatch, table, rowSelection, relatedTableData]);
+  }, [table, rowSelection]);
 
   const content = (
     <>
@@ -331,6 +321,7 @@ function RetiredRelatedGrid() {
             >
               <UpdateRelatedForm
                 setShowEditRelatedModal={setShowEditRelatedModal}
+                personID={personID}
               />
             </Modal>
           ) : showDeleteRelatedModal ? (

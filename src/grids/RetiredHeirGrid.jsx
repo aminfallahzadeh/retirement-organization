@@ -10,10 +10,7 @@ import {
   useLazyGetHeirListByParentPersonIDQuery,
   useRemoveHeirMutation,
 } from "../slices/heirApiSlice";
-import {
-  setHeirTableData,
-  setSelectedHeirData,
-} from "../slices/heirDataSlice.js";
+import { setHeirTableData } from "../slices/heirDataSlice.js";
 
 // mui imports
 import { IconButton, Button, Box } from "@mui/material";
@@ -50,7 +47,6 @@ import { toast } from "react-toastify";
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
-  findById,
 } from "../helper.js";
 
 // utils imports
@@ -61,6 +57,8 @@ function RetiredHeirGrid() {
   const [showEditHeirModal, setShowEditHeirModal] = useState(false);
   const [showCreateHeirModal, setShowCreateHeirModal] = useState(false);
   const [showDeleteHeirModal, setShowDeleteHeirModal] = useState(false);
+
+  const [personID, setPersonID] = useState("");
 
   const { selectedHeirData } = useSelector((state) => state.heirData);
 
@@ -294,19 +292,11 @@ function RetiredHeirGrid() {
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedGroup = findById(heirTableData, id);
 
     if (id) {
-      dispatch(setSelectedHeirData(selectedGroup));
-    } else {
-      dispatch(setSelectedHeirData([]));
+      setPersonID(id);
     }
-
-    return () => {
-      // Cleanup function to clear selected group
-      dispatch(setSelectedHeirData([]));
-    };
-  }, [dispatch, table, rowSelection, heirTableData]);
+  }, [table, rowSelection]);
 
   const content = (
     <>
@@ -327,7 +317,10 @@ function RetiredHeirGrid() {
               title={"ویرایش اطلاعات موظف"}
               closeModal={() => setShowEditHeirModal(false)}
             >
-              <UpdateHeirForm setShowEditHeirModal={setShowEditHeirModal} />
+              <UpdateHeirForm
+                setShowEditHeirModal={setShowEditHeirModal}
+                personID={personID}
+              />
             </Modal>
           ) : showDeleteHeirModal ? (
             <Modal

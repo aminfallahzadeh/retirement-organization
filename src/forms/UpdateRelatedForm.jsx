@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useSelector } from "react-redux";
 import {
   useGetRelatedQuery,
   useUpdateRelatedMutation,
@@ -36,10 +35,7 @@ import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
-function UpdateRelatedForm({ setShowEditRelatedModal }) {
-  const { selectedRelatedData } = useSelector((state) => state.relatedData);
-  const personID = selectedRelatedData?.id;
-
+function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
   // LOOK UP STATES
   const [relationCombo, setRelationCombo] = useState([]);
   const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);

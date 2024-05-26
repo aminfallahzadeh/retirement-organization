@@ -225,7 +225,7 @@ function UsersGrid() {
     if (id) {
       setUserID(id);
     }
-  }, [dispatch, table, rowSelection, usersTableData]);
+  }, [table, rowSelection]);
 
   const content = (
     <>
