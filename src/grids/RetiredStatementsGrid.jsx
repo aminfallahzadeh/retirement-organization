@@ -64,6 +64,8 @@ function RetiredStatementsGrid() {
 
   const [rowSelection, setRowSelection] = useState({});
 
+  const { personDeathDate } = useSelector((state) => state.retiredState);
+
   // MODAL STATES
   const [showStatementModal, setShowStatementModal] = useState(false);
   const [showGenerateStatementModal, setShowGenerateStatementModal] =
@@ -339,7 +341,14 @@ function RetiredStatementsGrid() {
           {showStatementModal ? (
             <Modal title="حکم" closeModal={() => setShowStatementModal(false)}>
               <div className="flex-col flex-center">
-                <img src="./images/hokm-sample.png" alt="نمونه حکم" />
+                <img
+                  src={
+                    personDeathDate
+                      ? "./images/hokm-movazzaf.png"
+                      : "./images/hokm-sample.png"
+                  }
+                  alt="نمونه حکم"
+                />
 
                 <Button
                   dir="ltr"

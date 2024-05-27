@@ -212,6 +212,9 @@ function ArchiveTree() {
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
+  const baseInfoPath =
+    location.pathname === "/retirement-organization/electronic-statement";
+
   const { archiveStructureData } = useSelector((state) => state.archiveData);
 
   const [deleteArhiveStructure, { isLoading: isDeletingStructure }] =
@@ -519,80 +522,86 @@ function ArchiveTree() {
                 </Tooltip>
               )}
 
-              <Tooltip title="اضافه کردن پوشه">
-                <span>
-                  <IconButton
-                    aria-label="addFolder"
-                    color="success"
-                    disabled={selectedArchiveData.length === 0}
-                    onClick={handleCreateArchiveStructureModalChange}
-                  >
-                    <AddFolderIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
+              {baseInfoPath ? (
+                <>
+                  <Tooltip title="اضافه کردن پوشه">
+                    <span>
+                      <IconButton
+                        aria-label="addFolder"
+                        color="success"
+                        disabled={selectedArchiveData.length === 0}
+                        onClick={handleCreateArchiveStructureModalChange}
+                      >
+                        <AddFolderIcon />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
 
-              <Tooltip title="حذف پوشه">
-                <span>
-                  <IconButton
-                    aria-label="delete"
-                    color="error"
-                    onClick={handleDeleteArchiveStructureModalChange}
-                    disabled={
-                      selectedArchiveData.parentID === "0" ||
-                      selectedArchiveData.length === 0
-                    }
-                  >
-                    <DeleteFolderIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
+                  <Tooltip title="حذف پوشه">
+                    <span>
+                      <IconButton
+                        aria-label="delete"
+                        color="error"
+                        onClick={handleDeleteArchiveStructureModalChange}
+                        disabled={
+                          selectedArchiveData.parentID === "0" ||
+                          selectedArchiveData.length === 0
+                        }
+                      >
+                        <DeleteFolderIcon />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
 
-              <Tooltip title="اضافه کردن برگه">
-                <span>
-                  <IconButton
-                    aria-label="addFile"
-                    color="success"
-                    onClick={handleAddImageModalChange}
-                    disabled={
-                      selectedArchiveData.parentID === "0" ||
-                      selectedArchiveData.length === 0
-                    }
-                  >
-                    <AddFileIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
+                  <Tooltip title="ویرایش نام پوشه">
+                    <span>
+                      <IconButton
+                        aria-label="edit"
+                        color="warning"
+                        onClick={handleEditArchiveStructureModalChange}
+                        disabled={
+                          selectedArchiveData.parentID === "0" ||
+                          selectedArchiveData.length === 0 ||
+                          selectedImageData.length > 0
+                        }
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
+                </>
+              ) : (
+                <>
+                  <Tooltip title="اضافه کردن برگه">
+                    <span>
+                      <IconButton
+                        aria-label="addFile"
+                        color="success"
+                        onClick={handleAddImageModalChange}
+                        disabled={
+                          selectedArchiveData.parentID === "0" ||
+                          selectedArchiveData.length === 0
+                        }
+                      >
+                        <AddFileIcon />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
 
-              <Tooltip title="حذف برگه">
-                <span>
-                  <IconButton
-                    aria-label="delete"
-                    color="error"
-                    onClick={handleDeleteImageModalChange}
-                    disabled={selectedImageData.length === 0}
-                  >
-                    <DeleteFileIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
-
-              <Tooltip title="ویرایش نام پوشه">
-                <span>
-                  <IconButton
-                    aria-label="edit"
-                    color="warning"
-                    onClick={handleEditArchiveStructureModalChange}
-                    disabled={
-                      selectedArchiveData.parentID === "0" ||
-                      selectedArchiveData.length === 0 ||
-                      selectedImageData.length > 0
-                    }
-                  >
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
+                  <Tooltip title="حذف برگه">
+                    <span>
+                      <IconButton
+                        aria-label="delete"
+                        color="error"
+                        onClick={handleDeleteImageModalChange}
+                        disabled={selectedImageData.length === 0}
+                      >
+                        <DeleteFileIcon />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
+                </>
+              )}
 
               {renderTreeItems(archiveStructureData, imageData, "0")}
             </SimpleTreeView>
@@ -659,7 +668,14 @@ function ArchiveTree() {
 
       {showAddImageModal && (
         <Modal
-          title="افزودن برگه جدید"
+          title={
+            <>
+              اضافه کردن برگه به{" "}
+              <span style={{ fontStyle: "italic" }}>
+                {selectedArchiveData.name}
+              </span>
+            </>
+          }
           closeModal={() => setShowAddImageModal(false)}
         >
           <p className="paragraph-primary">روش بارگزاری را انتخاب کنید</p>
