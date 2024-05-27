@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 const useLogout = () => {
   const dispatch = useDispatch();
-  const [logoutApiCall] = useLogoutMutation();
+  const [logoutApiCall, { isLoading: logoutLoading }] = useLogoutMutation();
   const { refreshToken, expDate } = useSelector((state) => state.auth);
   const logoutHandler = async () => {
     try {
@@ -31,7 +31,7 @@ const useLogout = () => {
     }
   };
 
-  return logoutHandler;
+  return { logoutHandler, logoutLoading };
 };
 
 export default useLogout;

@@ -10,24 +10,32 @@ import {
   useUpdateUserThemeMutation,
 } from "../slices/usersApiSlice";
 
+// components
+import Modal from "./Modal";
+
 // hooks
 import useLogout from "../hooks/useLogout";
 
 // mui iomports
-import { Box, CircularProgress, Tooltip } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Box, CircularProgress, Tooltip, Button } from "@mui/material";
 import {
   Logout as LogoutIcon,
   DarkModeOutlined as DarkModeIcon,
   LightModeOutlined as LightModeIcon,
   PersonOutlined as PersonIcon,
+  Done as DoneIcon,
+  Close as CloseIcon,
 } from "@mui/icons-material";
 
 function Nav({ userName, userID }) {
   const { data: user } = useGetUserQuery({ userID });
 
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
   const [theme, setTheme] = useState("default");
 
-  const logoutHandler = useLogout();
+  const { logoutHandler, logoutLoading } = useLogout();
   const location = useLocation();
 
   const [updateUserTheme, { isLoading }] = useUpdateUserThemeMutation();
@@ -41,6 +49,10 @@ function Nav({ userName, userID }) {
   const personnelStatementsPath = location.pathname.startsWith(
     "/retirement-organization/personnel-statements"
   );
+
+  const handleShowLogoutModalChange = () => {
+    setShowLogoutModal(true);
+  };
 
   const handleThemeChange = async () => {
     try {
@@ -67,145 +79,176 @@ function Nav({ userName, userID }) {
   }, [user]);
 
   return (
-    <nav className="nav">
-      <div className="nav__links">
-        <ul className="nav__links--list">
-          <li className={dashboardPath ? "active" : ""}>
-            <Link to={"/retirement-organization/dashboard"}>کارتابل</Link>
-          </li>
-          <li className={createRequestPath ? "active" : ""}>
-            <Link to={"/retirement-organization/create-request"}>
-              ایجات درخواست
-            </Link>
-          </li>
-          <li className={personnelStatementsPath ? "active" : ""}>
-            <Link to={"/retirement-organization/personnel-statements"}>
-              رویت احکام و تعرفه
-            </Link>
-          </li>
-          <li>
-            <a href="#contact">کسورات</a>
-          </li>
-          <li>
-            <a href="#contact">گزارشات</a>
-          </li>
-          <li>
-            <a href="#contact">داشبورد مدیریتی</a>
-          </li>
-          <li>
-            <a href="#contact">گزارش ساز</a>
-          </li>
-          <li>
-            <a href="#contact">مدیریت سیستم</a>
-          </li>
-          <li>
-            <a href="#contact">اطلاعات پایه</a>
-          </li>
-        </ul>
-      </div>
+    <>
+      {showLogoutModal && (
+        <Modal onClose={() => setShowLogoutModal(false)} title="خروج">
+          <p className="paragraph-primary">آیا از خروج اطمینان دارید؟</p>
 
-      <div className="nav__profile">
-        <ul className="nav__profile--list">
-          <li onClick={logoutHandler}>
-            <Tooltip
-              title={
-                <span style={{ fontFamily: "sahel", fontSize: "12px" }}>
-                  خروج
-                </span>
-              }
+          <div className="flex-row flex-center">
+            <LoadingButton
+              dir="ltr"
+              endIcon={<DoneIcon />}
+              loading={logoutLoading}
+              onClick={logoutHandler}
+              variant="contained"
+              color="success"
+              sx={{ fontFamily: "sahel" }}
             >
-              <LogoutIcon
-                sx={[
-                  { color: "#fff", transition: "all 0.25s ease" },
-                  {
-                    "&:hover": {
-                      color: "#ff6700",
-                    },
-                  },
-                ]}
-              />
-            </Tooltip>
-          </li>
+              <span>بله</span>
+            </LoadingButton>
+            <Button
+              dir="ltr"
+              endIcon={<CloseIcon />}
+              onClick={() => setShowLogoutModal(false)}
+              variant="contained"
+              color="error"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>خیر</span>
+            </Button>
+          </div>
+        </Modal>
+      )}
+      <nav className="nav">
+        <div className="nav__links">
+          <ul className="nav__links--list">
+            <li className={dashboardPath ? "active" : ""}>
+              <Link to={"/retirement-organization/dashboard"}>کارتابل</Link>
+            </li>
+            <li className={createRequestPath ? "active" : ""}>
+              <Link to={"/retirement-organization/create-request"}>
+                ایجاد درخواست
+              </Link>
+            </li>
+            <li className={personnelStatementsPath ? "active" : ""}>
+              <Link to={"/retirement-organization/personnel-statements"}>
+                رویت احکام و تعرفه
+              </Link>
+            </li>
+            <li>
+              <a>کسورات</a>
+            </li>
+            <li>
+              <a>گزارشات</a>
+            </li>
+            <li>
+              <a>داشبورد مدیریتی</a>
+            </li>
+            <li>
+              <a>گزارش ساز</a>
+            </li>
+            <li>
+              <a>مدیریت سیستم</a>
+            </li>
+            <li>
+              <a>اطلاعات پایه</a>
+            </li>
+          </ul>
+        </div>
 
-          <li>
-            {isLoading ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <CircularProgress color="warning" size={20} />
-              </Box>
-            ) : (
+        <div className="nav__profile">
+          <ul className="nav__profile--list">
+            <li onClick={handleShowLogoutModalChange}>
               <Tooltip
                 title={
                   <span style={{ fontFamily: "sahel", fontSize: "12px" }}>
-                    تغییر تم
+                    خروج
                   </span>
                 }
               >
+                <LogoutIcon
+                  sx={[
+                    { color: "#fff", transition: "all 0.25s ease" },
+                    {
+                      "&:hover": {
+                        color: "#ff6700",
+                      },
+                    },
+                  ]}
+                />
+              </Tooltip>
+            </li>
+
+            <li>
+              {isLoading ? (
                 <Box
                   sx={{
-                    cursor: "pointer",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
-                  onClick={handleThemeChange}
                 >
-                  {theme === "default" ? (
-                    <DarkModeIcon
-                      sx={[
-                        { color: "#fff", transition: "all 0.25s ease" },
-                        {
-                          "&:hover": {
-                            color: "#ff6700",
-                          },
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <LightModeIcon
-                      sx={[
-                        { color: "#fff", transition: "all 0.25s ease" },
-                        {
-                          "&:hover": {
-                            color: "#ff6700",
-                          },
-                        },
-                      ]}
-                    />
-                  )}
+                  <CircularProgress color="warning" size={20} />
                 </Box>
-              </Tooltip>
-            )}
-          </li>
+              ) : (
+                <Tooltip
+                  title={
+                    <span style={{ fontFamily: "sahel", fontSize: "12px" }}>
+                      تغییر تم
+                    </span>
+                  }
+                >
+                  <Box
+                    sx={{
+                      cursor: "pointer",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                    onClick={handleThemeChange}
+                  >
+                    {theme === "default" ? (
+                      <DarkModeIcon
+                        sx={[
+                          { color: "#fff", transition: "all 0.25s ease" },
+                          {
+                            "&:hover": {
+                              color: "#ff6700",
+                            },
+                          },
+                        ]}
+                      />
+                    ) : (
+                      <LightModeIcon
+                        sx={[
+                          { color: "#fff", transition: "all 0.25s ease" },
+                          {
+                            "&:hover": {
+                              color: "#ff6700",
+                            },
+                          },
+                        ]}
+                      />
+                    )}
+                  </Box>
+                </Tooltip>
+              )}
+            </li>
 
-          <li>
-            <Tooltip
-              title={
-                <span style={{ fontFamily: "sahel", fontSize: "12px" }}>
-                  پروفایل {userName}
-                </span>
-              }
-            >
-              <PersonIcon
-                sx={[
-                  { color: "#fff", transition: "all 0.25s ease" },
-                  {
-                    "&:hover": {
-                      color: "#ff6700",
+            <li>
+              <Tooltip
+                title={
+                  <span style={{ fontFamily: "sahel", fontSize: "12px" }}>
+                    پروفایل {userName}
+                  </span>
+                }
+              >
+                <PersonIcon
+                  sx={[
+                    { color: "#fff", transition: "all 0.25s ease" },
+                    {
+                      "&:hover": {
+                        color: "#ff6700",
+                      },
                     },
-                  },
-                ]}
-              />
-            </Tooltip>
-          </li>
-        </ul>
-      </div>
-    </nav>
+                  ]}
+                />
+              </Tooltip>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </>
   );
 }
 
