@@ -185,10 +185,7 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
 });
 
 function ArchiveTree() {
-  // const inputFileRef = useRef(null);
   const [imageData, setImageData] = useState([]);
-  // const [image, setImage] = useState(null);
-  // const [selectedImageData, setSelectedImageData] = useState([]);
 
   // modal states
   const [showCreateArchiveStructureModal, setShowCreateArchiveStructureModal] =
@@ -218,13 +215,10 @@ function ArchiveTree() {
   const [deleteArhiveStructure, { isLoading: isDeletingStructure }] =
     useDeleteArchiveStructureMutation();
 
-  // const [insertArchive, { isLoading: isInsertingImage }] =
-  //   useInsertArchiveMutation();
-
   const [deleteArchive, { isLoading: isDeletingImage }] =
     useDeleteArchiveMutation();
 
-  // archive structure and archive images queries
+  // ARCHIVE QUERIES
   const {
     data: archiveStructure,
     isLoading,
@@ -243,7 +237,7 @@ function ArchiveTree() {
     refetch: imageRefetch,
   } = useGetArchiveQuery(personID);
 
-  // handle selected tree item
+  // HANDLE SELECTED TREE ITEM
   const handleChangeSelectedItemParentID = (_, id) => {
     const selected = findById(archiveStructureData, id);
 
@@ -257,7 +251,7 @@ function ArchiveTree() {
     }
   };
 
-  // all handlers
+  // OTHER HANDLERS
   const handleCreateArchiveStructureModalChange = () => {
     setShowCreateArchiveStructureModal(true);
   };
@@ -274,10 +268,6 @@ function ArchiveTree() {
     setShowAddImageModal(true);
   };
 
-  // const handleUploadButtonClick = () => {
-  //   inputFileRef.current.click();
-  // };
-
   const handleDeleteImageModalChange = () => {
     setShowDeleteImageModal(true);
   };
@@ -287,57 +277,7 @@ function ArchiveTree() {
     refetch();
   };
 
-  // insert image post request handler
-  // const handleInsertImage = async () => {
-  //   try {
-  //     const insertImageRes = await insertArchive({
-  //       id: "",
-  //       personID,
-  //       insertUserID: "",
-  //       contentType: "",
-  //       archiveStructureID: selectedArchiveData?.id,
-  //       attachment: image,
-  //     }).unwrap();
-  //     setShowAddImageModal(false);
-  //     toast.success(insertImageRes.message, {
-  //       autoClose: 2000,
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //     toast.error(err?.data?.message || err.error, {
-  //       autoClose: 2000,
-  //     });
-  //   }
-  // };
-
-  // // handle user image selection
-  // // convert to base64 format
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   const reader = new FileReader();
-
-  //   reader.onloadend = () => {
-  //     // Get the base64 string
-  //     const base64String = reader.result;
-
-  //     // Remove the prefix(data:image/png;base64)
-  //     const base64Data = base64String.split(",")[1];
-
-  //     // Set the image state to the base64 data
-  //     setImage(base64Data);
-  //   };
-  //   reader.readAsDataURL(file);
-  // };
-
-  // // check if the image is not null then send the post request
-  // useEffect(() => {
-  //   if (image !== null) {
-  //     handleInsertImage();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [image]);
-
-  // delete archive structure handler
+  // DELETE ARCHIVE STRUCTURE HANDLER
   const handleDeleteStructure = async () => {
     try {
       const deleteRes = await deleteArhiveStructure({
@@ -358,7 +298,7 @@ function ArchiveTree() {
     }
   };
 
-  // delete image handler
+  // DELETE ARCHIVE IMAGE HANDLER
   const handleDeleteImage = async () => {
     try {
       const deleteImgRes = await deleteArchive({
@@ -367,6 +307,7 @@ function ArchiveTree() {
         contentType: "",
         archiveStructureID: "",
         insertUserID: "",
+        documentID: "",
         personID: "",
       }).unwrap();
       setShowDeleteImageModal(false);
