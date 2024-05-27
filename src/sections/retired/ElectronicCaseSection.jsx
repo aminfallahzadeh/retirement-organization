@@ -7,9 +7,14 @@ import ArchiveTree from "../../components/ArchiveTree";
 // redux imports
 import { useSelector } from "react-redux";
 
+// library imports
+import Viewer from "react-viewer";
+
 function ElectronicCaseSection() {
   const [previewImage, setPreviewImage] = useState(null);
   const { selectedImageData } = useSelector((state) => state.archiveData);
+
+  const [showImageTools, setShowImageTools] = useState(false);
 
   useEffect(() => {
     if (selectedImageData?.attachment) {
@@ -55,7 +60,24 @@ function ElectronicCaseSection() {
       <div className="flex-row">
         <ArchiveTree />
         {previewImage && (
-          <img src={previewImage} alt="پیش نمایش" style={{ width: "400px" }} />
+          // <img src={previewImage} alt="پیش نمایش" style={{ width: "400px" }} />
+
+          <div>
+            <button
+              onClick={() => {
+                setShowImageTools(true);
+              }}
+            >
+              show
+            </button>
+            <Viewer
+              visible={showImageTools}
+              onClose={() => {
+                setShowImageTools(false);
+              }}
+              images={[{ src: previewImage, alt: "پیش نمایش" }]}
+            />
+          </div>
         )}
       </div>
     </section>

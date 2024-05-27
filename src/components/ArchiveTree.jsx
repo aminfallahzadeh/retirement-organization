@@ -1,5 +1,5 @@
 // react imports
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -14,7 +14,6 @@ import {
 import {
   useGetArchiveStructureQuery,
   useDeleteArchiveStructureMutation,
-  useInsertArchiveMutation,
   useGetArchiveQuery,
   useDeleteArchiveMutation,
 } from "../slices/archiveApiSlice";
@@ -45,8 +44,6 @@ import {
   Refresh as RefreshIcon,
   Done as DoneIcon,
   Close as CloseIcon,
-  AdfScannerOutlined as ScanIcon,
-  DriveFolderUploadOutlined as UploadIcon,
 } from "@mui/icons-material";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem, treeItemClasses } from "@mui/x-tree-view/TreeItem";
@@ -56,6 +53,7 @@ import { LoadingButton } from "@mui/lab";
 import Modal from "./Modal";
 import CreateArchiveStructureForm from "../forms/CreateArchiveStructureForm";
 import EditArchiveStructureForm from "../forms/EditArchiveStructureForm";
+import InsertArchiveForm from "../forms/InsertArchiveForm.jsx";
 
 // library imports
 import { toast } from "react-toastify";
@@ -187,9 +185,9 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
 });
 
 function ArchiveTree() {
-  const inputFileRef = useRef(null);
+  // const inputFileRef = useRef(null);
   const [imageData, setImageData] = useState([]);
-  const [image, setImage] = useState(null);
+  // const [image, setImage] = useState(null);
   // const [selectedImageData, setSelectedImageData] = useState([]);
 
   // modal states
@@ -220,8 +218,8 @@ function ArchiveTree() {
   const [deleteArhiveStructure, { isLoading: isDeletingStructure }] =
     useDeleteArchiveStructureMutation();
 
-  const [insertArchive, { isLoading: isInsertingImage }] =
-    useInsertArchiveMutation();
+  // const [insertArchive, { isLoading: isInsertingImage }] =
+  //   useInsertArchiveMutation();
 
   const [deleteArchive, { isLoading: isDeletingImage }] =
     useDeleteArchiveMutation();
@@ -276,9 +274,9 @@ function ArchiveTree() {
     setShowAddImageModal(true);
   };
 
-  const handleUploadButtonClick = () => {
-    inputFileRef.current.click(); // Trigger the file input click event
-  };
+  // const handleUploadButtonClick = () => {
+  //   inputFileRef.current.click();
+  // };
 
   const handleDeleteImageModalChange = () => {
     setShowDeleteImageModal(true);
@@ -290,54 +288,54 @@ function ArchiveTree() {
   };
 
   // insert image post request handler
-  const handleInsertImage = async () => {
-    try {
-      const insertImageRes = await insertArchive({
-        id: "",
-        personID,
-        insertUserID: "",
-        contentType: "",
-        archiveStructureID: selectedArchiveData?.id,
-        attachment: image,
-      }).unwrap();
-      setShowAddImageModal(false);
-      toast.success(insertImageRes.message, {
-        autoClose: 2000,
-      });
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-      });
-    }
-  };
+  // const handleInsertImage = async () => {
+  //   try {
+  //     const insertImageRes = await insertArchive({
+  //       id: "",
+  //       personID,
+  //       insertUserID: "",
+  //       contentType: "",
+  //       archiveStructureID: selectedArchiveData?.id,
+  //       attachment: image,
+  //     }).unwrap();
+  //     setShowAddImageModal(false);
+  //     toast.success(insertImageRes.message, {
+  //       autoClose: 2000,
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //     toast.error(err?.data?.message || err.error, {
+  //       autoClose: 2000,
+  //     });
+  //   }
+  // };
 
-  // handle user image selection
-  // convert to base64 format
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
+  // // handle user image selection
+  // // convert to base64 format
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   const reader = new FileReader();
 
-    reader.onloadend = () => {
-      // Get the base64 string
-      const base64String = reader.result;
+  //   reader.onloadend = () => {
+  //     // Get the base64 string
+  //     const base64String = reader.result;
 
-      // Remove the prefix(data:image/png;base64)
-      const base64Data = base64String.split(",")[1];
+  //     // Remove the prefix(data:image/png;base64)
+  //     const base64Data = base64String.split(",")[1];
 
-      // Set the image state to the base64 data
-      setImage(base64Data);
-    };
-    reader.readAsDataURL(file);
-  };
+  //     // Set the image state to the base64 data
+  //     setImage(base64Data);
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
 
-  // check if the image is not null then send the post request
-  useEffect(() => {
-    if (image !== null) {
-      handleInsertImage();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [image]);
+  // // check if the image is not null then send the post request
+  // useEffect(() => {
+  //   if (image !== null) {
+  //     handleInsertImage();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [image]);
 
   // delete archive structure handler
   const handleDeleteStructure = async () => {
@@ -671,47 +669,14 @@ function ArchiveTree() {
           title={
             <>
               اضافه کردن برگه به{" "}
-              <span style={{ fontStyle: "italic" }}>
-                {selectedArchiveData.name}
+              <span style={{ color: "#fe6700" }}>
+                &quot;{selectedArchiveData.name}&quot;
               </span>
             </>
           }
           closeModal={() => setShowAddImageModal(false)}
         >
-          <p className="paragraph-primary">روش بارگزاری را انتخاب کنید</p>
-
-          <div className="flex-row flex-center">
-            <LoadingButton
-              dir="ltr"
-              endIcon={<ScanIcon />}
-              loading={isInsertingImage}
-              variant="contained"
-              color="primary"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>اسکن</span>
-            </LoadingButton>
-
-            <input
-              type="file"
-              ref={inputFileRef}
-              style={{ display: "none" }}
-              onChange={handleImageChange}
-            />
-
-            <LoadingButton
-              dir="ltr"
-              endIcon={<UploadIcon />}
-              loading={isInsertingImage}
-              aria-label="upload"
-              onClick={handleUploadButtonClick}
-              variant="contained"
-              color="primary"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>کامپیوتر</span>
-            </LoadingButton>
-          </div>
+          <InsertArchiveForm setShowAddImageModal={setShowAddImageModal} />
         </Modal>
       )}
 
