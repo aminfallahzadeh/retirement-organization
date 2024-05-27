@@ -11,7 +11,7 @@ import { setRequestTableData } from "../slices/requestsDataSlice.js";
 import { setSelectedRequestData } from "../slices/requestsDataSlice.js";
 
 // mui imports
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import {
   RemoveRedEye as RemoveRedEyeIcon,
   Feed as FeedIcon,
@@ -125,9 +125,19 @@ function RequestsGrid() {
                 : `/retirement-organization/retired?personID=${row.original.personID}&role=${selectedRole}&requestID=${row.original.id}`
             }
           >
-            <IconButton color="primary">
-              <FeedIcon />
-            </IconButton>
+            <Tooltip
+              title={
+                <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
+                  مشاهده اطلاعات درخواست کننده
+                </span>
+              }
+            >
+              <span>
+                <IconButton color="primary" sx={{ padding: "0" }}>
+                  <FeedIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
           </Link>
         ),
       },
@@ -139,9 +149,19 @@ function RequestsGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Link to={`/retirement-organization/request?id=${row.id}`}>
-            <IconButton color="primary">
-              <RemoveRedEyeIcon />
-            </IconButton>
+            <Tooltip
+              title={
+                <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
+                  مشاهده جزئیات درخواست
+                </span>
+              }
+            >
+              <span>
+                <IconButton color="primary" sx={{ padding: "0" }}>
+                  <RemoveRedEyeIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
           </Link>
         ),
       },
