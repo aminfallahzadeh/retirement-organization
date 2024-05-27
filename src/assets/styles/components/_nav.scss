@@ -1,0 +1,96 @@
+.nav {
+    background-color: var(--color-fg-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    position: relative;
+
+    -webkit-box-shadow: 0 7px 26.5px -10.5px #000000;
+    -moz-box-shadow: 0 7px 26.5px -10.5px #000000;
+    box-shadow: 0 7px 26.5px -10.5px #000000;
+
+    &__links {
+        &--list {
+            display: flex;
+            column-gap: 1.5rem;
+            list-style: none;
+
+            li {
+                position: relative;
+
+                a {
+                    transition: all 0.3s;
+                    &:hover {
+                        color: var(--color-accent);
+                    }
+                }
+
+                &:after {
+                    content: "";
+                    display: block;
+                    height: 0.1rem;
+                    position: absolute;
+                    bottom: -0.3rem;
+                    right: 0;
+                    left: 0;
+                    transition: all 0.3s;
+                }
+
+                &:hover::after {
+                    left: 1.2rem;
+                    background-color: var(--color-accent);
+                }
+            }
+        }
+    }
+
+    &__profile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        direction: ltr;
+
+        &--list {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            column-gap: 1rem;
+            list-style: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s;
+            font-size: 1rem;
+
+            li {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                color: var(--color-bg-label);
+                transition: all 0.25s;
+
+                &:hover {
+                    color: var(--color-accent);
+                }
+            }
+        }
+    }
+}
+
+.active {
+    &::after {
+        content: "";
+        display: block;
+        height: 0.1rem;
+        position: absolute;
+        bottom: -0.3rem;
+        right: 0;
+        transition: all 0.3s;
+        background-color: var(--color-accent);
+    }
+
+    & > * {
+        color: var(--color-accent);
+    }
+}

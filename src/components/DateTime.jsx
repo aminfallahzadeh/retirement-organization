@@ -17,7 +17,7 @@ function DateTime() {
     <>
       <div className="datetime">
         <AnalogClock />
-        <div style={{ color: "white" }}>{persianDate}</div>
+        <div style={{ color: "#252422" }}>{persianDate}</div>
       </div>
     </>
   );

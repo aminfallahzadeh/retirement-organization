@@ -24,6 +24,12 @@ select {
     padding: 0 0.5rem !important;
 }
 
+.heading-primary {
+    font-size: 2.5rem;
+    color: var(--color-txt-primary);
+    margin-bottom: 1rem;
+}
+
 .title-primary {
     background-color: var(--color-bg-title-primary);
     color: var(--color-text-title-primary);

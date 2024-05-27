@@ -1,13 +1,13 @@
-.react-clock__face {
-    border: none !important;
-}
+// .react-clock__face {
+//     border: none !important;
+// }
 
 .react-clock__mark__body {
-    background-color: $color-white !important;
+    background-color: var(--color-txt-primary) !important;
 }
 
 .react-clock__hand__body {
-    background-color: $color-white !important;
+    background-color: var(--color-txt-primary) !important;
 }
 
 .react-clock__second-hand__body {

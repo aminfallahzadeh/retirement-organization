@@ -19,6 +19,7 @@ import { useIdleTimer } from "react-idle-timer";
 import { jwtDecode } from "jwt-decode";
 
 // components
+import Header from "./components/Header";
 import SidebarNav from "./components/SidebarNav";
 import TopbarNav from "./components/TopbarNav";
 
@@ -102,8 +103,9 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        {!isLoginPage && <TopbarNav userName={userName} userID={userID} />}
-        {!isLoginPage && <SidebarNav />}
+        {/* {!isLoginPage && <TopbarNav userName={userName} userID={userID} />} */}
+        {/*{!isLoginPage && <SidebarNav />} */}
+        {!isLoginPage && <Header userName={userName} userID={userID} />}
         <main style={{ height: "100%" }}>
           <Outlet />
         </main>
