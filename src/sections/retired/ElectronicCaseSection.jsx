@@ -7,14 +7,26 @@ import ArchiveTree from "../../components/ArchiveTree";
 // redux imports
 import { useSelector } from "react-redux";
 
+// mui imports
+import { Button } from "@mui/material";
+import { RemoveRedEyeOutlined as ViewIcon } from "@mui/icons-material";
+
 // library imports
-import Viewer from "react-viewer";
+import { RViewer, RViewerTrigger } from "react-viewerjs";
 
 function ElectronicCaseSection() {
   const [previewImage, setPreviewImage] = useState(null);
   const { selectedImageData } = useSelector((state) => state.archiveData);
 
-  const [showImageTools, setShowImageTools] = useState(false);
+  const options = {
+    toolbar: {
+      prev: false,
+      next: false,
+    },
+
+    title: (imageData) =>
+      `(${imageData.naturalWidth} × ${imageData.naturalHeight})`,
+  };
 
   useEffect(() => {
     if (selectedImageData?.attachment) {
@@ -60,24 +72,28 @@ function ElectronicCaseSection() {
       <div className="flex-row">
         <ArchiveTree />
         {previewImage && (
-          // <img src={previewImage} alt="پیش نمایش" style={{ width: "400px" }} />
-
-          <div>
-            <button
-              onClick={() => {
-                setShowImageTools(true);
-              }}
-            >
-              show
-            </button>
-            <Viewer
-              visible={showImageTools}
-              onClose={() => {
-                setShowImageTools(false);
-              }}
-              images={[{ src: previewImage, alt: "پیش نمایش" }]}
+          <>
+            <img
+              src={previewImage}
+              alt="پیش نمایش"
+              style={{ width: "400px" }}
             />
-          </div>
+            <div className="flex-center">
+              <RViewer options={options} imageUrls={previewImage}>
+                <RViewerTrigger>
+                  <Button
+                    dir="ltr"
+                    endIcon={<ViewIcon />}
+                    variant="contained"
+                    color="primary"
+                    sx={{ fontFamily: "sahel" }}
+                  >
+                    <span>مشاهده</span>
+                  </Button>
+                </RViewerTrigger>
+              </RViewer>
+            </div>
+          </>
         )}
       </div>
     </section>
