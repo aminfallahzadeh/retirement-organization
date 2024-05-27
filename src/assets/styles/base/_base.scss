@@ -11,11 +11,12 @@ body {
     -webkit-text-size-adjust: none;
     -moz-text-size-adjust: none;
     -ms-text-size-adjust: none;
+
+    background-color: var(--color-bg-primary);
 }
 
 html {
     scroll-behavior: smooth;
-    background-color: var(--color-bg-primary);
 
     textarea {
         resize: none;

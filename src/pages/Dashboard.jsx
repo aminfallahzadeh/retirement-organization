@@ -42,7 +42,7 @@ function Dashboard() {
   }, [isRolesSuccess, dispatch, roles]);
 
   return (
-    <section className="main flex-col">
+    <section className="flex-col">
       <h4 className="title-primary">کارتابل</h4>
       <RoleSelectionForm isLoading={isLoading} roles={roles} />
 

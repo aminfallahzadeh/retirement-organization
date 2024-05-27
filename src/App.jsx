@@ -20,8 +20,6 @@ import { jwtDecode } from "jwt-decode";
 
 // components
 import Header from "./components/Header";
-import SidebarNav from "./components/SidebarNav";
-import TopbarNav from "./components/TopbarNav";
 
 function App() {
   const dispatch = useDispatch();
@@ -106,7 +104,7 @@ function App() {
         {/* {!isLoginPage && <TopbarNav userName={userName} userID={userID} />} */}
         {/*{!isLoginPage && <SidebarNav />} */}
         {!isLoginPage && <Header userName={userName} userID={userID} />}
-        <main style={{ height: "100%" }}>
+        <main className="main">
           <Outlet />
         </main>
         <ToastContainer />

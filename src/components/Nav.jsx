@@ -26,12 +26,14 @@ import {
   PersonOutlined as PersonIcon,
   Done as DoneIcon,
   Close as CloseIcon,
+  ArrowLeftOutlined as ArrowIcon,
 } from "@mui/icons-material";
 
 function Nav({ userName, userID }) {
   const { data: user } = useGetUserQuery({ userID });
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showBaseInfoPannel, setShowBaseInfoPannel] = useState(false);
 
   const [theme, setTheme] = useState("default");
 
@@ -50,8 +52,17 @@ function Nav({ userName, userID }) {
     "/retirement-organization/personnel-statements"
   );
 
+  const groupsPath = location.pathname === "/retirement-organization/groups";
+  const userPath = location.pathname === "/retirement-organization/users";
+  const electronicStatementPath =
+    location.pathname === "/retirement-organization/electronic-statement";
+
   const handleShowLogoutModalChange = () => {
     setShowLogoutModal(true);
+  };
+
+  const handleShowBaseInfoPannelChange = () => {
+    setShowBaseInfoPannel(!showBaseInfoPannel);
   };
 
   const handleThemeChange = async () => {
@@ -112,36 +123,63 @@ function Nav({ userName, userID }) {
       <nav className="nav">
         <div className="nav__links">
           <ul className="nav__links--list">
-            <li className={dashboardPath ? "active" : ""}>
+            <li
+              className={dashboardPath ? "active" : ""}
+              onClick={() => setShowBaseInfoPannel(false)}
+            >
               <Link to={"/retirement-organization/dashboard"}>کارتابل</Link>
             </li>
-            <li className={createRequestPath ? "active" : ""}>
+            <li
+              className={createRequestPath ? "active" : ""}
+              onClick={() => setShowBaseInfoPannel(false)}
+            >
               <Link to={"/retirement-organization/create-request"}>
                 ایجاد درخواست
               </Link>
             </li>
-            <li className={personnelStatementsPath ? "active" : ""}>
+            <li
+              className={personnelStatementsPath ? "active" : ""}
+              onClick={() => setShowBaseInfoPannel(false)}
+            >
               <Link to={"/retirement-organization/personnel-statements"}>
                 رویت احکام و تعرفه
               </Link>
             </li>
-            <li>
+            <li onClick={() => setShowBaseInfoPannel(false)}>
               <a>کسورات</a>
             </li>
-            <li>
+            <li onClick={() => setShowBaseInfoPannel(false)}>
               <a>گزارشات</a>
             </li>
-            <li>
+            <li onClick={() => setShowBaseInfoPannel(false)}>
               <a>داشبورد مدیریتی</a>
             </li>
-            <li>
+            <li onClick={() => setShowBaseInfoPannel(false)}>
               <a>گزارش ساز</a>
             </li>
-            <li>
+            <li onClick={() => setShowBaseInfoPannel(false)}>
               <a>مدیریت سیستم</a>
             </li>
-            <li>
-              <a>اطلاعات پایه</a>
+            <li
+              onClick={handleShowBaseInfoPannelChange}
+              className={
+                userPath ||
+                groupsPath ||
+                electronicStatementPath ||
+                showBaseInfoPannel
+                  ? "active"
+                  : ""
+              }
+            >
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span>اطلاعات پایه</span>
+                <ArrowIcon
+                  sx={{
+                    transition: "all 0.25s ease",
+                    transform: showBaseInfoPannel ? "rotate(-90deg)" : "",
+                  }}
+                />
+              </div>
             </li>
           </ul>
         </div>
@@ -248,6 +286,26 @@ function Nav({ userName, userID }) {
           </ul>
         </div>
       </nav>
+
+      <div
+        className={
+          showBaseInfoPannel ? "nav__baseInfo" : "nav__baseInfo--hidden"
+        }
+      >
+        <ul className="nav__baseInfo--list">
+          <li className={groupsPath ? "active" : ""}>
+            <Link to="/retirement-organization/groups">گروه ها</Link>
+          </li>
+          <li className={userPath ? "active" : ""}>
+            <Link to="/retirement-organization/users">کارمندان</Link>
+          </li>
+          <li className={electronicStatementPath ? "active" : ""}>
+            <Link to="/retirement-organization/electronic-statement">
+              پرونده الکترونیک
+            </Link>
+          </li>
+        </ul>
+      </div>
     </>
   );
 }
