@@ -70,7 +70,7 @@ function ElectronicCaseSection() {
   const content = (
     <section className="flex-col">
       <div className="flex-row">
-        <ArchiveTree />
+        <ArchiveTree setPreviewImage={setPreviewImage} />
         {previewImage && (
           <>
             <img

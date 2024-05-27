@@ -64,7 +64,7 @@ import createCache from "@emotion/cache";
 import { animated, useSpring } from "@react-spring/web";
 
 // helpers
-import { findById } from "../helper.js";
+import { findById, convertToPersianNumber } from "../helper.js";
 
 function DotIcon() {
   return (
@@ -184,7 +184,7 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
   );
 });
 
-function ArchiveTree() {
+function ArchiveTree({ setPreviewImage }) {
   const [imageData, setImageData] = useState([]);
 
   // modal states
@@ -311,6 +311,7 @@ function ArchiveTree() {
         personID: "",
       }).unwrap();
       setShowDeleteImageModal(false);
+      setPreviewImage(null);
       toast.success(deleteImgRes.message, {
         autoClose: 2000,
       });
@@ -406,7 +407,7 @@ function ArchiveTree() {
               <StyledTreeItem
                 key={image.id}
                 itemId={image.id}
-                labelText={"برگه"}
+                labelText={convertToPersianNumber(image.documentID)}
                 labelIcon={DotIcon}
               />
             ))}
