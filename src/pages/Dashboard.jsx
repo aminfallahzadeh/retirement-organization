@@ -43,7 +43,12 @@ function Dashboard() {
 
   return (
     <section className="flex-col">
-      <h4 className="title-primary">کارتابل</h4>
+      <div className="flex-row flex-center">
+        <div className="title-lines"></div>
+        <h4 className="title-primary">کارتابل درخواست ها</h4>
+        <div className="title-lines"></div>
+      </div>
+
       <RoleSelectionForm isLoading={isLoading} roles={roles} />
 
       {isRolesSuccess && selectedRole && <RequestsGrid />}

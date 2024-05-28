@@ -5,6 +5,7 @@ function Hero() {
   return (
     <div className="hero">
       <div className="hero__title">
+        <img src="logo.png" alt="لوگو" />
         <h1 className="heading-primary">سامانه بازنشستگان و وظیفه بگیران</h1>
       </div>
 

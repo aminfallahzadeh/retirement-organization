@@ -193,16 +193,7 @@ function Nav({ userName, userID }) {
                   </span>
                 }
               >
-                <LogoutIcon
-                  sx={[
-                    { color: "#fff", transition: "all 0.25s ease" },
-                    {
-                      "&:hover": {
-                        color: "#ff6700",
-                      },
-                    },
-                  ]}
-                />
+                <LogoutIcon />
               </Tooltip>
             </li>
 
@@ -234,29 +225,7 @@ function Nav({ userName, userID }) {
                     }}
                     onClick={handleThemeChange}
                   >
-                    {theme === "default" ? (
-                      <DarkModeIcon
-                        sx={[
-                          { color: "#fff", transition: "all 0.25s ease" },
-                          {
-                            "&:hover": {
-                              color: "#ff6700",
-                            },
-                          },
-                        ]}
-                      />
-                    ) : (
-                      <LightModeIcon
-                        sx={[
-                          { color: "#fff", transition: "all 0.25s ease" },
-                          {
-                            "&:hover": {
-                              color: "#ff6700",
-                            },
-                          },
-                        ]}
-                      />
-                    )}
+                    {theme === "default" ? <DarkModeIcon /> : <LightModeIcon />}
                   </Box>
                 </Tooltip>
               )}
@@ -270,16 +239,7 @@ function Nav({ userName, userID }) {
                   </span>
                 }
               >
-                <PersonIcon
-                  sx={[
-                    { color: "#fff", transition: "all 0.25s ease" },
-                    {
-                      "&:hover": {
-                        color: "#ff6700",
-                      },
-                    },
-                  ]}
-                />
+                <PersonIcon />
               </Tooltip>
             </li>
           </ul>

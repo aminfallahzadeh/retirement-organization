@@ -1,6 +1,7 @@
 .flex-row {
     display: flex;
     column-gap: 15px;
+    align-items: center;
 
     &--grow {
         & > * {
@@ -33,7 +34,6 @@
 
 .flex-center {
     justify-content: center;
-    align-items: center;
 }
 
 .flex-end {
