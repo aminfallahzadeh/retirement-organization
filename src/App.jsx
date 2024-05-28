@@ -42,7 +42,7 @@ function App() {
   const location = useLocation();
 
   const isLoginPage = location.pathname === "/retirement-organization/";
-  const logoutHandler = useLogout();
+  const { logoutHandler } = useLogout();
 
   const onIdle = () => {
     setIsActive(false);

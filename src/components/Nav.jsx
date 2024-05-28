@@ -171,15 +171,14 @@ function Nav({ userName, userID }) {
                   : ""
               }
             >
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span>اطلاعات پایه</span>
-                <ArrowIcon
-                  sx={{
-                    transition: "all 0.25s ease",
-                    transform: showBaseInfoPannel ? "rotate(-90deg)" : "",
-                  }}
-                />
-              </div>
+              <a>اطلاعات پایه</a>
+              <ArrowIcon
+                sx={{
+                  color: "#fff",
+                  transition: "all 0.25s ease",
+                  transform: showBaseInfoPannel ? "rotate(-90deg)" : "",
+                }}
+              />
             </li>
           </ul>
         </div>

@@ -20,18 +20,21 @@
                 position: relative;
                 cursor: pointer;
                 transition: all 0.3s;
-                color: var(--color-sidebar-hover);
-
-                &:hover {
-                    color: var(--color-accent);
-                }
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
                 a {
                     transition: all 0.3s;
+                    color: var(--color-txt-secondary);
 
                     &:hover {
                         color: var(--color-accent);
                     }
+                }
+
+                &:hover > * {
+                    color: var(--color-accent);
                 }
 
                 &:after {
@@ -91,6 +94,16 @@
         max-height: 200px;
         padding: 1rem;
 
+        &--link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:hover > * {
+                color: var(--color-accent);
+            }
+        }
+
         &--list {
             list-style: none;
             display: flex;
@@ -100,10 +113,10 @@
                 position: relative;
                 cursor: pointer;
                 transition: all 0.3s;
-                color: var(--color-sidebar-hover);
 
                 a {
                     transition: all 0.3s;
+                    color: var(--color-txt-secondary);
 
                     &:hover {
                         color: var(--color-accent);
@@ -149,6 +162,6 @@
     }
 
     & > * {
-        color: var(--color-accent);
+        color: var(--color-accent) !important;
     }
 }
