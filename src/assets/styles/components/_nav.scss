@@ -90,9 +90,13 @@
 
     &__baseInfo {
         transition: all 0.25s ease;
-        background-color: var(--color-bg-nav-secondary);
+        background-color: var(--color-bg-nav-primary);
         max-height: 200px;
         padding: 1rem;
+
+        -webkit-box-shadow: 0 7px 26.5px -10.5px #000000;
+        -moz-box-shadow: 0 7px 26.5px -10.5px #000000;
+        box-shadow: 0 7px 26.5px -10.5px #000000;
 
         &--link {
             display: flex;

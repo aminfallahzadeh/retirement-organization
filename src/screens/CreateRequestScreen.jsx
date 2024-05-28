@@ -18,7 +18,11 @@ function CreateRequestScreen() {
 
   const content = (
     <section className="main">
-      <h4 className="title-primary">ایجاد درخواست</h4>
+      <div className="title-primary--container flex-row flex-center">
+        <h4 className="title-primary">
+          <span className="title-primary--underline"></span>ایجاد درخواست
+        </h4>
+      </div>
 
       <div className="u-margin-top-md">
         <TabContext value={value}>

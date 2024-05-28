@@ -74,6 +74,10 @@ select {
         top: 100%;
     }
 
+    &--container {
+        background: linear-gradient(90deg, var(--color-bg-primary), var(--color-white), var(--color-bg-primary));
+    }
+
     &--underline {
         &::before {
             content: "";

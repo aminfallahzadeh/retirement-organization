@@ -5,7 +5,12 @@ import PersonnelGrid from "../grids/PersonnelGrid";
 function PersonnelStatementsScreen() {
   const content = (
     <section className="main flex-col">
-      <h4 className="title-primary">احکام کارمندان</h4>
+      <div className="title-primary--container flex-row flex-center">
+        <h4 className="title-primary">
+          <span className="title-primary--underline"></span>احکام کارمندان
+        </h4>
+      </div>
+
       <PersonnelStatementForm />
       <PersonnelGrid />
     </section>
