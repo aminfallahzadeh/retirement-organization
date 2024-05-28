@@ -11,9 +11,8 @@ import {
 } from "../slices/usersApiSlice";
 
 // mui imports
-import { Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Save as SaveIcon, ArrowBack as BackIcon } from "@mui/icons-material";
+import { Save as SaveIcon } from "@mui/icons-material";
 
 // library imports
 import { toast } from "react-toastify";
@@ -70,7 +69,7 @@ function CreateGroupForm({ addedItems }) {
 
   const content = (
     <section className="formContainer flex-col">
-      <form method="POST" className="grid grid--col-4">
+      <form method="POST" className="flex-row">
         <div className="inputBox__form">
           <input
             type="text"
@@ -85,30 +84,17 @@ function CreateGroupForm({ addedItems }) {
           </label>
         </div>
 
-        <div className="flex-row">
-          <LoadingButton
-            dir="ltr"
-            endIcon={<SaveIcon />}
-            loading={isCreating || isInserting}
-            onClick={handleCreateGroup}
-            variant="contained"
-            color="success"
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>ذخیره</span>
-          </LoadingButton>
-
-          <Button
-            dir="ltr"
-            endIcon={<BackIcon />}
-            onClick={() => navigate("/retirement-organization/groups")}
-            variant="contained"
-            color="primary"
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>بازگشت</span>
-          </Button>
-        </div>
+        <LoadingButton
+          dir="ltr"
+          endIcon={<SaveIcon />}
+          loading={isCreating || isInserting}
+          onClick={handleCreateGroup}
+          variant="contained"
+          color="success"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>ذخیره</span>
+        </LoadingButton>
       </form>
     </section>
   );

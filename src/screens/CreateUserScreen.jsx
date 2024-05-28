@@ -30,7 +30,13 @@ function CreateUserScreen() {
   };
 
   const content = (
-    <section className="main">
+    <section className="flex-col">
+      <div className="title-primary--container flex-row flex-center">
+        <h4 className="title-primary">
+          <span className="title-primary--underline"></span> ایجاد کاربر جدید
+        </h4>
+      </div>
+
       <form className="formContainer grid grid--col-4">
         <div className="inputBox__form">
           <input

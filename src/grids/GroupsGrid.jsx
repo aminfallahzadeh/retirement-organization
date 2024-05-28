@@ -268,13 +268,11 @@ function GroupsGrid() {
       },
     }),
     renderTopToolbarCustomActions: () => (
-      <Box
-      // sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
-      >
+      <Box>
         <Link to={"/retirement-organization/create-group"}>
           {isFetching ? (
             <IconButton aria-label="refresh" color="info" disabled>
-              <CircularProgress size={20} value={100} />
+              <CircularProgress size={20} value={100} color={"success"} />
             </IconButton>
           ) : (
             <Tooltip

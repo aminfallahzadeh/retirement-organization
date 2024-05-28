@@ -46,7 +46,7 @@ function ItemsGrid() {
     if (isSuccess) {
       const data = items.itemList.map((item) => ({
         id: item.id,
-        name: item.itemName,
+        itemName: item.itemName,
       }));
 
       const filteredData = data.filter(
@@ -67,9 +67,9 @@ function ItemsGrid() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "name",
+        accessorKey: "itemName",
         header: "دسترسی ها",
-        size: 300,
+        size: 20,
       },
     ],
     []

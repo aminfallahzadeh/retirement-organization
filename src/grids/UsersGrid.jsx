@@ -9,8 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useGetUserQuery } from "../slices/usersApiSlice";
 
 // mui imports
-import { IconButton, Box, Button } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
+import { IconButton, Box, Tooltip, CircularProgress } from "@mui/material";
 import {
   Edit as EditIcon,
   ChecklistRtl as ChecklistRtlIcon,
@@ -102,10 +101,6 @@ function UsersGrid() {
   ]);
 
   useEffect(() => {
-    console.log(usersTableData);
-  }, [usersTableData]);
-
-  useEffect(() => {
     if (error) {
       console.log(error);
       toast.error(error?.data?.message || error.error, {
@@ -122,22 +117,22 @@ function UsersGrid() {
       {
         accessorKey: "username",
         header: "نام کاربری",
-        size: 50,
+        size: 20,
       },
       {
         accessorKey: "firstName",
         header: "نام",
-        size: 50,
+        size: 20,
       },
       {
         accessorKey: "lastName",
         header: "نام خانوادگی",
-        size: 50,
+        size: 20,
       },
       {
         accessorKey: "isActive",
         header: "وضعیت",
-        size: 50,
+        size: 20,
       },
       {
         accessorKey: "editNameAction",
@@ -145,10 +140,30 @@ function UsersGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <IconButton color="success" onClick={handleShowEditNameModal}>
-            <EditIcon />
-          </IconButton>
+        Cell: ({ row }) => (
+          <Tooltip
+            title={
+              <div
+                style={{
+                  fontFamily: "sahel",
+                  fontSize: "0.7rem",
+                  textAlign: "center",
+                }}
+              >
+                ویرایش کاربر
+                <br />
+                {` "${row.original.firstName} ${row.original.lastName}"`}
+              </div>
+            }
+          >
+            <IconButton
+              color="success"
+              onClick={handleShowEditNameModal}
+              sx={{ padding: "0" }}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
         ),
       },
       {
@@ -157,10 +172,30 @@ function UsersGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <IconButton color="primary" onClick={handleShowEditUserGroupsModal}>
-            <ChecklistRtlIcon />
-          </IconButton>
+        Cell: ({ row }) => (
+          <Tooltip
+            title={
+              <div
+                style={{
+                  fontFamily: "sahel",
+                  fontSize: "0.7rem",
+                  textAlign: "center",
+                }}
+              >
+                ویرایش گروه های
+                <br />
+                {` "${row.original.firstName} ${row.original.lastName}"`}
+              </div>
+            }
+          >
+            <IconButton
+              color="info"
+              onClick={handleShowEditUserGroupsModal}
+              sx={{ padding: "0" }}
+            >
+              <ChecklistRtlIcon />
+            </IconButton>
+          </Tooltip>
         ),
       },
     ],
@@ -186,32 +221,56 @@ function UsersGrid() {
       },
     }),
     renderTopToolbarCustomActions: () => (
-      <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
-      >
+      <Box>
         <Link to={"/retirement-organization/create-user"}>
-          <Button
-            dir="ltr"
-            endIcon={<AddIcon />}
-            variant="contained"
-            color="primary"
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>ایجاد کاربر</span>
-          </Button>
+          {isFetching ? (
+            <IconButton aria-label="refresh" color="info" disabled>
+              <CircularProgress size={20} value={100} color={"success"} />
+            </IconButton>
+          ) : (
+            <Tooltip
+              title={
+                <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
+                  ایجاد کاربر
+                </span>
+              }
+            >
+              <span>
+                <IconButton
+                  aria-label="refresh"
+                  color="success"
+                  onClick={handleRefresh}
+                >
+                  <AddIcon fontSize="small" />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
         </Link>
 
-        <LoadingButton
-          dir="ltr"
-          endIcon={<RefreshIcon />}
-          loading={isFetching}
-          onClick={handleRefresh}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>بروز رسانی</span>
-        </LoadingButton>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip
+            title={
+              <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
+                بروز رسانی
+              </span>
+            }
+          >
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="info"
+                onClick={handleRefresh}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
       </Box>
     ),
     getRowId: (originalRow) => originalRow.id,

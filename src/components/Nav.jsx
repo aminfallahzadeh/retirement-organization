@@ -53,7 +53,11 @@ function Nav({ userName, userID }) {
   );
 
   const groupsPath = location.pathname === "/retirement-organization/groups";
+  const createGroupPath =
+    location.pathname === "/retirement-organization/create-group";
   const userPath = location.pathname === "/retirement-organization/users";
+  const createUserPath =
+    location.pathname === "/retirement-organization/create-user";
   const electronicStatementPath =
     location.pathname === "/retirement-organization/electronic-statement";
 
@@ -164,8 +168,10 @@ function Nav({ userName, userID }) {
               onClick={handleShowBaseInfoPannelChange}
               className={
                 userPath ||
+                createUserPath ||
                 groupsPath ||
                 electronicStatementPath ||
+                createGroupPath ||
                 showBaseInfoPannel
                   ? "active"
                   : ""
@@ -252,10 +258,10 @@ function Nav({ userName, userID }) {
         }
       >
         <ul className="nav__baseInfo--list">
-          <li className={groupsPath ? "active" : ""}>
+          <li className={groupsPath || createGroupPath ? "active" : ""}>
             <Link to="/retirement-organization/groups">گروه ها</Link>
           </li>
-          <li className={userPath ? "active" : ""}>
+          <li className={userPath || createUserPath ? "active" : ""}>
             <Link to="/retirement-organization/users">کارمندان</Link>
           </li>
           <li className={electronicStatementPath ? "active" : ""}>
