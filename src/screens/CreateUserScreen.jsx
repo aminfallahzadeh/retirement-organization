@@ -1,6 +1,13 @@
 // react imports
 import { useState } from "react";
 
+// rrd imports
+import { useNavigate } from "react-router-dom";
+
+// mui imports
+import { IconButton } from "@mui/material";
+import { ArrowBack as BackIcon } from "@mui/icons-material";
+
 // components
 import GroupsCreateUserGrid from "../grids/GroupsCreateUserGrid";
 
@@ -24,6 +31,8 @@ function CreateUserScreen() {
     refreshToken: "",
   });
 
+  const navigate = useNavigate();
+
   const handleUserObjectChange = (e) => {
     const { name, value } = e.target;
     setUserObject({ ...userObject, [name]: value });
@@ -35,6 +44,12 @@ function CreateUserScreen() {
         <h4 className="title-primary">
           <span className="title-primary--underline"></span> ایجاد کاربر جدید
         </h4>
+      </div>
+
+      <div style={{ marginRight: "auto" }}>
+        <IconButton color="primary" onClick={() => navigate(-1)}>
+          <BackIcon />
+        </IconButton>
       </div>
 
       <form className="formContainer grid grid--col-4">

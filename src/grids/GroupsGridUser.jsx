@@ -71,7 +71,7 @@ function GroupsGridUser() {
       {
         accessorKey: "name",
         header: "گروه ها",
-        size: 300,
+        size: 20,
       },
     ],
     []

@@ -19,15 +19,9 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 // mui imports
-import {
-  Box,
-  Button,
-  createTheme,
-  ThemeProvider,
-  useTheme,
-} from "@mui/material";
+import { Box, createTheme, ThemeProvider, useTheme } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Save as SaveIcon, ArrowBack as BackIcon } from "@mui/icons-material";
+import { Save as SaveIcon } from "@mui/icons-material";
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -129,7 +123,7 @@ function GroupsCreateUserGrid({ userObject }) {
       {
         accessorKey: "name",
         header: "نام گروه",
-        size: 800,
+        size: 20,
       },
     ],
     []
@@ -163,17 +157,6 @@ function GroupsCreateUserGrid({ userObject }) {
         >
           <span>ذخیره</span>
         </LoadingButton>
-
-        <Button
-          dir="ltr"
-          endIcon={<BackIcon />}
-          onClick={() => navigate("/retirement-organization/users")}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>بازگشت</span>
-        </Button>
       </Box>
     ),
     getRowId: (originalRow) => originalRow.id,
