@@ -31,7 +31,82 @@ select {
 
 .title-primary {
     color: var(--color-text-title-primary);
-    font-size: 2.5rem;
+    font-size: 2rem;
+    position: relative;
+    padding: 0 1rem;
+    width: max-content;
+
+    background: linear-gradient(
+        -90deg,
+        var(--color-accent-primary),
+        var(--color-accnet-gr-primary),
+        var(--color-accent-primary)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    &::before {
+        content: "";
+        position: absolute;
+        transition: all 0.25s ease;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 0.2rem;
+        background-color: var(--color-accent-primary);
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        transition: all 0.25s ease;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0.2rem;
+        background-color: var(--color-accent-primary);
+    }
+
+    &:hover::before,
+    &:hover::after {
+        height: 0;
+        top: 100%;
+    }
+
+    &--underline {
+        &::before {
+            content: "";
+            position: absolute;
+            transition: all 0.25s ease;
+            bottom: 0;
+            left: 0;
+            height: 0.2rem;
+            width: 0;
+            background: linear-gradient(-90deg, var(--color-accnet-gr-primary), var(--color-accent-primary));
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            transition: all 0.25s ease;
+            bottom: 0;
+            right: 0;
+            height: 0.2rem;
+            width: 0;
+            background: linear-gradient(-90deg, var(--color-accent-primary), var(--color-accnet-gr-primary));
+        }
+    }
+
+    &:hover &--underline::before {
+        width: 50%;
+        left: 0;
+    }
+
+    &:hover &--underline::after {
+        width: 50%;
+        right: 0;
+    }
 }
 
 .title-secondary {
@@ -71,28 +146,4 @@ select {
     position: absolute;
     top: -50%;
     left: 0;
-}
-
-.title-lines {
-    position: relative;
-    width: 10rem;
-    min-height: 100%;
-
-    &::after {
-        content: "";
-        position: absolute;
-        top: -0.2rem;
-        width: 100%;
-        height: 0.2rem;
-        background-color: var(--color-txt-tertiary);
-    }
-
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0.2rem;
-        width: 100%;
-        height: 0.2rem;
-        background-color: var(--color-txt-tertiary);
-    }
 }
