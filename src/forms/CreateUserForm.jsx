@@ -117,13 +117,6 @@ function CreateUserForm({ addedGroups }) {
         noValidate
         onSubmit={handleSubmit(onSubmit)}
       >
-        <input
-          autoComplete="false"
-          name="hidden"
-          type="text"
-          style={{ display: "none" }}
-        />
-
         <div className="grid grid--col-4">
           <div className="inputBox__form">
             {errors.username && (
@@ -131,7 +124,6 @@ function CreateUserForm({ addedGroups }) {
             )}
             <input
               type="text"
-              autoComplete="new-username"
               className="inputBox__form--input"
               required
               {...register("username", { required: "نام کاربری را وارد کنید" })}
@@ -155,7 +147,6 @@ function CreateUserForm({ addedGroups }) {
             <input
               type={showPssword ? "text" : "password"}
               className="inputBox__form--input"
-              autoComplete="new-password"
               required
               {...register("password", {
                 required: "رمز عبور را وارد کنید",
