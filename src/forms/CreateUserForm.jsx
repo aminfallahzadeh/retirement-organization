@@ -1,5 +1,5 @@
 // react imports
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 // rrd imports
@@ -108,6 +108,11 @@ function CreateUserForm({ addedGroups }) {
     }
   };
 
+  useEffect(() => {
+    setValue("username", "");
+    setValue("password", "");
+  }, []);
+
   return (
     <section className="formContainer">
       <form
@@ -125,7 +130,6 @@ function CreateUserForm({ addedGroups }) {
               type="text"
               className="inputBox__form--input"
               required
-              defaultValue=""
               {...register("username", { required: "نام کاربری را وارد کنید" })}
               id="usrName"
             />
@@ -148,7 +152,6 @@ function CreateUserForm({ addedGroups }) {
               type={showPssword ? "text" : "password"}
               className="inputBox__form--input"
               required
-              defaultValue=""
               {...register("password", {
                 required: "رمز عبور را وارد کنید",
                 onChange: (e) => {
