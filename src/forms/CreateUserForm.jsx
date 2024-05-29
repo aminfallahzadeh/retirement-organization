@@ -113,6 +113,7 @@ function CreateUserForm({ addedGroups }) {
       <form
         method="POST"
         className="flex-col"
+        autoComplete="off"
         noValidate
         onSubmit={handleSubmit(onSubmit)}
       >

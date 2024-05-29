@@ -124,13 +124,13 @@ function Login() {
             )}
             <input
               type="text"
-              id="username"
+              id="usr"
               {...register("username", { required: "نام کاربری را وارد کنید" })}
               className="inputBox__login--input"
               required
               disabled={isLoading}
             />
-            <label htmlFor="username" className="inputBox__login--label">
+            <label htmlFor="usr" className="inputBox__login--label">
               نام کاربری
             </label>
             <PersonOutlinedIcon style={style} />
@@ -141,13 +141,13 @@ function Login() {
             )}
             <input
               type="password"
-              id="password"
+              id="psw"
               {...register("password", { required: "کلمه عبور را وارد کنید" })}
               className="inputBox__login--input"
               required
               disabled={isLoading}
             />
-            <label htmlFor="password" className="inputBox__login--label">
+            <label htmlFor="psw" className="inputBox__login--label">
               کلمه عبور
             </label>
             <LockOutlinIcon style={style} />
