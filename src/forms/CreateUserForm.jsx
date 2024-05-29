@@ -117,6 +117,13 @@ function CreateUserForm({ addedGroups }) {
         noValidate
         onSubmit={handleSubmit(onSubmit)}
       >
+        <input
+          autoComplete="false"
+          name="hidden"
+          type="text"
+          style="display:none;"
+        />
+
         <div className="grid grid--col-4">
           <div className="inputBox__form">
             {errors.username && (
