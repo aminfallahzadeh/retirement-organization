@@ -121,7 +121,7 @@ function CreateUserForm({ addedGroups }) {
           autoComplete="false"
           name="hidden"
           type="text"
-          style="display:none;"
+          style={{ display: "none" }}
         />
 
         <div className="grid grid--col-4">
