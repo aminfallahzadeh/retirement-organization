@@ -38,6 +38,7 @@ import PersonnelStatementsScreen from "./screens/PersonnelStatementsScreen";
 import ElectronicStatementScreen from "./screens/ElectronicStatementScreen";
 import CreateRequestScreen from "./screens/CreateRequestScreen";
 import PersonnelInfoScreen from "./screens/PersonnelInfoScreen";
+import FractionScreen from "./screens/FractionScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -108,6 +109,11 @@ const router = createBrowserRouter(
         <Route
           path="/retirement-organization/create-request"
           element={<CreateRequestScreen />}
+        />
+
+        <Route
+          path="/retirement-organization/fraction"
+          element={<FractionScreen />}
         />
       </Route>
       <Route path="*" element={<Error />} />

@@ -22,7 +22,6 @@ import {
   CalendarTodayOutlined as CalenderIcon,
   Save as SaveIcon,
   EditOutlined as EditIcon,
-  LockOutlined as LockIcon,
 } from "@mui/icons-material";
 
 // libary imports
@@ -290,10 +289,6 @@ function RetiredPersonForm() {
     }
   };
 
-  useEffect(() => {
-    console.log("personData", personData);
-  }, [personData]);
-
   const content = (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>
@@ -320,11 +315,6 @@ function RetiredPersonForm() {
               >
                 <span>*</span> نام
               </label>
-              {!editable && (
-                <div className="inputBox__form--lock">
-                  <LockIcon />
-                </div>
-              )}
             </div>
             <div className="inputBox__form">
               <input
@@ -340,12 +330,6 @@ function RetiredPersonForm() {
               <label htmlFor="personLastName" className="inputBox__form--label">
                 <span>*</span> نام خانوادگی
               </label>
-
-              {!editable && (
-                <div className="inputBox__form--lock">
-                  <LockIcon />
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -364,12 +348,6 @@ function RetiredPersonForm() {
           <label htmlFor="personNationalCode" className="inputBox__form--label">
             <span>*</span> کد ملی
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -391,12 +369,6 @@ function RetiredPersonForm() {
           >
             <span>*</span> شماره شناسنامه
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -413,12 +385,6 @@ function RetiredPersonForm() {
           <label htmlFor="personFatherName" className="inputBox__form--label">
             نام پدر
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -444,12 +410,6 @@ function RetiredPersonForm() {
           <label htmlFor="genderID" className="inputBox__form--label">
             <span>*</span> جنسیت
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -460,9 +420,7 @@ function RetiredPersonForm() {
             format={"jYYYY/jMM/jDD"}
             onChange={handleBirthDateChange}
             onOpenChange={handleBirthOpenChange}
-            suffixIcon={
-              !editable ? <LockIcon /> : <CalenderIcon color="action" />
-            }
+            suffixIcon={<CalenderIcon color="action" />}
             open={isBirthCalenderOpen}
             style={{
               border: "2px solid #cfcfcf",
@@ -491,12 +449,6 @@ function RetiredPersonForm() {
           <label htmlFor="personBirthPlace" className="inputBox__form--label">
             محل تولد
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -513,12 +465,6 @@ function RetiredPersonForm() {
           <label htmlFor="personPreviousName" className="inputBox__form--label">
             نام و نام خانوادگی قبلی
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="checkboxContainer col-span-3">
@@ -531,12 +477,6 @@ function RetiredPersonForm() {
           >
             وضعیت ایثارگری:
           </p>
-
-          {!editable && (
-            <div className="checkboxContainer__lock">
-              <LockIcon />
-            </div>
-          )}
 
           <div className="checkboxContainer__item">
             <input
@@ -555,7 +495,6 @@ function RetiredPersonForm() {
                   : "checkboxContainer__label"
               }
             >
-              {" "}
               خانواده شهید
             </label>
           </div>
@@ -691,12 +630,6 @@ function RetiredPersonForm() {
           <label htmlFor="personPhone" className="inputBox__form--label">
             تلفن ثابت
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -713,12 +646,6 @@ function RetiredPersonForm() {
           <label htmlFor="personCellPhone" className="inputBox__form--label">
             تلفن همراه
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -735,12 +662,6 @@ function RetiredPersonForm() {
           <label htmlFor="backupNum" className="inputBox__form--label">
             تلفن پشتیبان
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -757,12 +678,6 @@ function RetiredPersonForm() {
           <label htmlFor="backupName" className="inputBox__form--label">
             نام پشتیبان
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -779,12 +694,6 @@ function RetiredPersonForm() {
           <label htmlFor="backupLname" className="inputBox__form--label">
             نام خانوادگی پشتیبان
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -801,12 +710,6 @@ function RetiredPersonForm() {
           <label htmlFor="personEmail" className="inputBox__form--label">
             پست الکترونیک
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -832,12 +735,6 @@ function RetiredPersonForm() {
           <label htmlFor="educationTypeID" className="inputBox__form--label">
             مدرک تحصیلی
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -863,12 +760,6 @@ function RetiredPersonForm() {
           <label htmlFor="personCountry" className="inputBox__form--label">
             کشور
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -894,12 +785,6 @@ function RetiredPersonForm() {
           <label htmlFor="personState" className="inputBox__form--label">
             استان
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -925,12 +810,6 @@ function RetiredPersonForm() {
           <label htmlFor="personCity" className="inputBox__form--label">
             شهر
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -947,12 +826,6 @@ function RetiredPersonForm() {
           <label htmlFor="personRegion" className="inputBox__form--label">
             منطقه سکونت
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
         <div className="inputBox__form">
           <input
@@ -968,12 +841,6 @@ function RetiredPersonForm() {
           <label htmlFor="personArea" className="inputBox__form--label">
             ناحیه سکونت
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -990,12 +857,6 @@ function RetiredPersonForm() {
           <label htmlFor="personPostalCode" className="inputBox__form--label">
             کد پستی
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -1021,12 +882,6 @@ function RetiredPersonForm() {
           <label htmlFor="housingTypeID" className="inputBox__form--label">
             وضعیت مسکن
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -1052,12 +907,6 @@ function RetiredPersonForm() {
           <label htmlFor="maritalStatusID" className="inputBox__form--label">
             وضعیت تاهل
           </label>
-
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form">
@@ -1068,9 +917,7 @@ function RetiredPersonForm() {
             onChange={handleDeathDateChange}
             onOpenChange={handleDeathOpenChange}
             open={isDeathCalenderOpen}
-            suffixIcon={
-              !editable ? <LockIcon /> : <CalenderIcon color="action" />
-            }
+            suffixIcon={<CalenderIcon color="action" />}
             style={{
               border: "2px solid #cfcfcf",
               borderRadius: "6px",
@@ -1098,11 +945,6 @@ function RetiredPersonForm() {
           <label htmlFor="personAddress" className="inputBox__form--label">
             نشانی
           </label>
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
 
         <div className="inputBox__form row-col-span-3">
@@ -1119,11 +961,6 @@ function RetiredPersonForm() {
           <label htmlFor="personDescription" className="inputBox__form--label">
             توضیحات
           </label>
-          {!editable && (
-            <div className="inputBox__form--lock">
-              <LockIcon />
-            </div>
-          )}
         </div>
       </form>
 

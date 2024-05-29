@@ -1,16 +1,9 @@
 // react imports
 import { useMemo, useState, useEffect } from "react";
 
-// rrd imports
-import { useNavigate } from "react-router-dom";
-
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
-import {
-  useGetGroupQuery,
-  useInsertUserMutation,
-  useInsertGroupUsersMutation,
-} from "../slices/usersApiSlice";
+import { useGetGroupQuery } from "../slices/usersApiSlice";
 import { setGroupsTableData } from "../slices/groupsDataSlice";
 
 // library imports
@@ -19,9 +12,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 // mui imports
-import { Box, createTheme, ThemeProvider, useTheme } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { Save as SaveIcon } from "@mui/icons-material";
+import { createTheme, ThemeProvider, useTheme } from "@mui/material";
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -32,18 +23,11 @@ import { faIR } from "@mui/material/locale";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-function GroupsCreateUserGrid({ userObject }) {
+function GroupsCreateUserGrid({ setAddedGroups }) {
   const theme = useTheme();
   const [rowSelection, setRowSelection] = useState({});
-  const [addedGroups, setAddedGroups] = useState([]);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  // recive api reducers
-  const [insertUser, { isLoading: isCreating }] = useInsertUserMutation();
-  const [insertGroupUsers, { isLoading: isInserting }] =
-    useInsertGroupUsersMutation();
 
   // access the data from redux store
   const { groupsTableData } = useSelector((state) => state.groupsData);
@@ -82,42 +66,6 @@ function GroupsCreateUserGrid({ userObject }) {
     }
   }, [error]);
 
-  // handle create user
-  const handleCreateUser = async () => {
-    try {
-      const createUserRes = await insertUser({
-        ...userObject,
-        "sex": userObject.sex === "true" ? true : false,
-        "isActive": userObject.isActive === "true" ? true : false,
-      }).unwrap();
-      try {
-        const userID = createUserRes.itemList[0].userID;
-        const data = addedGroups.map((item) => ({
-          "id": "",
-          userID,
-          "groupID": item.id,
-          "groupName": "",
-        }));
-        const insertRes = await insertGroupUsers(data).unwrap();
-        console.log(insertRes);
-        toast.success(insertRes.message, {
-          autoClose: 2000,
-        });
-        navigate("/retirement-organization/users");
-      } catch (err) {
-        console.log(err);
-        toast.error(err?.data?.message || err.error, {
-          autoClose: 2000,
-        });
-      }
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-      });
-    }
-  };
-
   const columns = useMemo(
     () => [
       {
@@ -142,23 +90,6 @@ function GroupsCreateUserGrid({ userObject }) {
         getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
       sx: { cursor: "pointer" },
     }),
-    renderTopToolbarCustomActions: () => (
-      <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
-      >
-        <LoadingButton
-          dir="ltr"
-          endIcon={<SaveIcon />}
-          loading={isCreating || isInserting}
-          onClick={handleCreateUser}
-          variant="contained"
-          color="success"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>ذخیره</span>
-        </LoadingButton>
-      </Box>
-    ),
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
@@ -167,7 +98,7 @@ function GroupsCreateUserGrid({ userObject }) {
   useEffect(() => {
     const selectedRows = table.getSelectedRowModel().rows;
     setAddedGroups(selectedRows.map((row) => row.original));
-  }, [table, rowSelection]);
+  }, [table, rowSelection, setAddedGroups]);
 
   const content = (
     <>

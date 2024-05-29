@@ -97,10 +97,6 @@ function ItemsCreateGroupGrid({ setAddedItems }) {
   });
 
   useEffect(() => {
-    console.log(rowSelection);
-  }, [rowSelection]);
-
-  useEffect(() => {
     const selectedRows = table.getSelectedRowModel().rows;
     setAddedItems(selectedRows.map((row) => row.original));
   }, [table, rowSelection, setAddedItems]);

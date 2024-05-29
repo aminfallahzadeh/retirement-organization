@@ -49,14 +49,31 @@
 	display: flex;
 	flex-direction: column;
 
-	&--lock {
+	&--icon {
 		position: absolute;
-		top: 50%;
-		left: 2rem;
-		transform: translateY(-50%);
+		top: 50% !important;
+		left: 1.5rem !important;
+		transform: translateY(-50%) !important;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+	}
+
+	&--combo-label {
+		position: absolute;
+		top: -10px;
+		right: 20px;
+		font-size: 12px;
+		background-color: var(--color-bg-label);
+		border-radius: $border-radius-secondary;
+		color: var(--color-label-primary);
+		padding: 0 10px;
+		cursor: text;
+		transition: all 0.25s;
+
+		span {
+			color: $color-accent-red;
+		}
 	}
 
 	&--input {
@@ -80,7 +97,7 @@
 		&:valid ~ .inputBox__form--label,
 		&:disabled ~ .inputBox__form--label {
 			position: absolute;
-			top: -10px;
+			top: -4.5px;
 			right: 20px;
 			font-size: 12px;
 			background-color: var(--color-bg-label);
@@ -89,10 +106,6 @@
 			cursor: text;
 			transition: all 0.25s;
 		}
-
-		// &:disabled {
-		// 	color: var(--color-input-disabled);
-		// }
 	}
 
 	&--readOnly-label {
@@ -136,8 +149,9 @@
 
 	&--label {
 		position: absolute;
-		top: 10px;
+		top: 50%;
 		right: 20px;
+		transform: translateY(-50%);
 		transition: 0.2s;
 		font-size: 12px;
 		cursor: text;

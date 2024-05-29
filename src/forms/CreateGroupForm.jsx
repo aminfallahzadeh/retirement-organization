@@ -1,5 +1,5 @@
 // react imports
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -18,69 +18,78 @@ import { Save as SaveIcon } from "@mui/icons-material";
 import { toast } from "react-toastify";
 
 function CreateGroupForm({ addedItems }) {
-  const [inputGroupName, setInputGroupName] = useState("");
-
   const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   // recive api reducers
   const [insertGroup, { isLoading: isCreating }] = useInsertGroupMutation();
   const [insertGroupItem, { isLoading: isInserting }] =
     useInsertGroupItemMutation();
 
-  const handleInputGroupNameChange = (e) => {
-    setInputGroupName(e.target.value);
-  };
-
   // handle create group
-  const handleCreateGroup = async () => {
-    try {
-      const createGroupRes = await insertGroup({
-        "id": "",
-        "groupName": inputGroupName,
-        "isdeleted": false,
-      }).unwrap();
+  const onSubmit = async (data) => {
+    if (addedItems.length === 0) {
+      toast.warning("!هیچ دسترسی انتخاب نشده است", {
+        autoClose: 2000,
+      });
+    } else {
       try {
-        const groupID = createGroupRes.itemList[0].id;
-        const data = addedItems.map((item) => ({
-          "id": "",
-          "itemID": item.id,
-          "itemName": "",
-          groupID,
-        }));
-        const insertRes = await insertGroupItem(data).unwrap();
-        console.log(insertRes);
-        toast.success(insertRes.message, {
-          autoClose: 2000,
-        });
-        navigate("/retirement-organization/groups");
+        const createGroupRes = await insertGroup(data).unwrap();
+        try {
+          const groupID = createGroupRes.itemList[0].id;
+          const data = addedItems.map((item) => ({
+            "id": "",
+            "itemID": item.id,
+            "itemName": "",
+            groupID,
+          }));
+          const insertRes = await insertGroupItem(data).unwrap();
+          console.log(insertRes);
+          toast.success(insertRes.message, {
+            autoClose: 2000,
+          });
+          navigate("/retirement-organization/groups");
+        } catch (err) {
+          console.log(err);
+          toast.error(err?.data?.message || err.error, {
+            autoClose: 2000,
+          });
+        }
       } catch (err) {
         console.log(err);
         toast.error(err?.data?.message || err.error, {
           autoClose: 2000,
         });
       }
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-      });
     }
   };
 
   const content = (
     <section className="formContainer flex-col">
-      <form method="POST" className="flex-row">
+      <form
+        method="POST"
+        className="flex-row"
+        noValidate
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className="inputBox__form">
+          {errors.groupName && (
+            <span className="error-form">{errors.groupName.message}</span>
+          )}
           <input
             type="text"
             className="inputBox__form--input inputBox__form--input-height-40"
             required
-            name="groupName"
-            onChange={handleInputGroupNameChange}
+            {...register("groupName", { required: "نام گروه را وارد کنید" })}
             id="groupNameCreate"
           />
           <label className="inputBox__form--label" htmlFor="groupNameCreate">
-            نام گروه
+            <span>*</span> نام گروه
           </label>
         </div>
 
@@ -88,8 +97,9 @@ function CreateGroupForm({ addedItems }) {
           dir="ltr"
           endIcon={<SaveIcon />}
           loading={isCreating || isInserting}
-          onClick={handleCreateGroup}
+          onClick={handleSubmit}
           variant="contained"
+          type="submit"
           color="success"
           sx={{ fontFamily: "sahel" }}
         >

@@ -60,6 +60,8 @@ function Nav({ userName, userID }) {
     location.pathname === "/retirement-organization/create-user";
   const electronicStatementPath =
     location.pathname === "/retirement-organization/electronic-statement";
+  const fractionPath =
+    location.pathname === "/retirement-organization/fraction";
 
   const handleShowLogoutModalChange = () => {
     setShowLogoutModal(true);
@@ -149,8 +151,11 @@ function Nav({ userName, userID }) {
                 رویت احکام و تعرفه
               </Link>
             </li>
-            <li onClick={() => setShowBaseInfoPannel(false)}>
-              <a>کسورات</a>
+            <li
+              className={fractionPath ? "active" : ""}
+              onClick={() => setShowBaseInfoPannel(false)}
+            >
+              <Link to={"/retirement-organization/fraction"}>کسورات</Link>
             </li>
             <li onClick={() => setShowBaseInfoPannel(false)}>
               <a>گزارشات</a>

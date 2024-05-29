@@ -182,7 +182,7 @@ function GroupsGrid() {
               sx={{ padding: "0" }}
             >
               <EditIcon />
-            </IconButton>{" "}
+            </IconButton>
           </Tooltip>
         ),
       },
