@@ -124,7 +124,7 @@ function CreateUserForm({ addedGroups }) {
             )}
             <input
               type="text"
-              autoComplete="false"
+              autoComplete="new-username"
               className="inputBox__form--input"
               required
               {...register("username", { required: "نام کاربری را وارد کنید" })}
@@ -148,7 +148,7 @@ function CreateUserForm({ addedGroups }) {
             <input
               type={showPssword ? "text" : "password"}
               className="inputBox__form--input"
-              autoComplete="false"
+              autoComplete="new-password"
               required
               {...register("password", {
                 required: "رمز عبور را وارد کنید",
