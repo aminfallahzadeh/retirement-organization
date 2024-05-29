@@ -72,7 +72,7 @@ function ItemsCreateGroupGrid({ setAddedItems }) {
       {
         accessorKey: "name",
         header: "نام دسترسی",
-        size: 20,
+        size: 800,
       },
     ],
     []

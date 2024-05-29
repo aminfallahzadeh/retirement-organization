@@ -23,13 +23,13 @@ function CreateGroupScreen() {
         <h4 className="title-primary">
           ایجاد گروه جدید<span className="title-primary--underline"></span>
         </h4>
+        <div style={{ marginRight: "auto" }} className="back-button">
+          <IconButton color="primary" onClick={() => navigate(-1)}>
+            <BackIcon />
+          </IconButton>
+        </div>
       </div>
 
-      <div style={{ marginRight: "auto" }}>
-        <IconButton color="primary" onClick={() => navigate(-1)}>
-          <BackIcon />
-        </IconButton>
-      </div>
       <CreateGroupForm addedItems={addedItems} />
       <ItemsCreateGroupGrid setAddedItems={setAddedItems} />
     </section>

@@ -123,7 +123,7 @@ function GroupsCreateUserGrid({ userObject }) {
       {
         accessorKey: "name",
         header: "نام گروه",
-        size: 20,
+        size: 800,
       },
     ],
     []

@@ -262,7 +262,7 @@ function Nav({ userName, userID }) {
             <Link to="/retirement-organization/groups">گروه ها</Link>
           </li>
           <li className={userPath || createUserPath ? "active" : ""}>
-            <Link to="/retirement-organization/users">کارمندان</Link>
+            <Link to="/retirement-organization/users">کاربران</Link>
           </li>
           <li className={electronicStatementPath ? "active" : ""}>
             <Link to="/retirement-organization/electronic-statement">

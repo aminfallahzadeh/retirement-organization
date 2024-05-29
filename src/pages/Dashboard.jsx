@@ -45,7 +45,7 @@ function Dashboard() {
     <section className="flex-col">
       <div className="title-primary--container flex-center flex-row">
         <h4 className="title-primary">
-          <span className="title-primary--underline"></span>کارتابل درخواست ها
+          <span className="title-primary--underline"></span>کارتابل
         </h4>
       </div>
 

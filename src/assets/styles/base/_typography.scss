@@ -31,7 +31,7 @@ select {
 
 .title-primary {
     color: var(--color-text-title-primary);
-    font-size: 2rem;
+    font-size: 1.7rem;
     position: relative;
     padding: 0 1rem;
     width: max-content;
@@ -54,7 +54,7 @@ select {
         bottom: 0;
         right: 0;
         height: 0;
-        width: 0.2rem;
+        width: 0.15rem;
         background-color: var(--color-accent-primary);
     }
 
@@ -65,7 +65,7 @@ select {
         bottom: 0;
         left: 0;
         height: 0;
-        width: 0.2rem;
+        width: 0.15rem;
         background-color: var(--color-accent-primary);
     }
 
@@ -85,7 +85,7 @@ select {
             transition: all 0.25s ease;
             bottom: 0;
             left: 0;
-            height: 0.2rem;
+            height: 0.15rem;
             width: 50%;
             background: linear-gradient(-90deg, var(--color-accnet-gr-primary), var(--color-accent-primary));
         }
@@ -96,7 +96,7 @@ select {
             transition: all 0.25s ease;
             bottom: 0;
             right: 0;
-            height: 0.2rem;
+            height: 0.15rem;
             width: 50%;
             background: linear-gradient(-90deg, var(--color-accent-primary), var(--color-accnet-gr-primary));
         }

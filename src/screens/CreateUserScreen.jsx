@@ -44,12 +44,12 @@ function CreateUserScreen() {
         <h4 className="title-primary">
           <span className="title-primary--underline"></span> ایجاد کاربر جدید
         </h4>
-      </div>
 
-      <div style={{ marginRight: "auto" }}>
-        <IconButton color="primary" onClick={() => navigate(-1)}>
-          <BackIcon />
-        </IconButton>
+        <div style={{ marginRight: "auto" }} className="back-button">
+          <IconButton color="primary" onClick={() => navigate(-1)}>
+            <BackIcon />
+          </IconButton>
+        </div>
       </div>
 
       <form className="formContainer grid grid--col-4">
