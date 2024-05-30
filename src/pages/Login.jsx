@@ -1,5 +1,5 @@
 // react imports
-import { useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 // component imports
@@ -26,13 +26,17 @@ import { toast } from "react-toastify";
 
 // mui imports
 import {
-  LockOutlined as LockOutlinIcon,
   PersonOutlined as PersonOutlinedIcon,
   Login as LoginIcon,
+  RemoveRedEyeOutlined as EyeOpenIcon,
+  VisibilityOffOutlined as EyeClosIcon,
 } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
 function Login() {
+  const [showPssword, setShowPssword] = useState(false);
+
   const { captcha } = useSelector((state) => state.captcha);
 
   const navigate = useNavigate();
@@ -83,25 +87,24 @@ function Login() {
     }
   };
 
-  const style = {
-    position: "absolute",
-    top: "15px",
-    left: "20px",
+  // 3D EFFECT
+  // useEffect(() => {
+  //   const form = document.getElementById("form");
+  //   form.addEventListener("mouseover", (e) => {
+  //     const x = (window.innerWidth / 2 - e.pageX) / 35;
+  //     const y = (window.innerHeight / 2 - e.pageY) / 35;
+
+  //     form.style.transform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
+  //   });
+
+  //   form.addEventListener("mouseleave", () => {
+  //     form.style.transform = "rotateX(0deg) rotateY(0deg)";
+  //   });
+  // }, []);
+
+  const handleShowPasswordChange = () => {
+    setShowPssword(!showPssword);
   };
-
-  useEffect(() => {
-    const form = document.getElementById("form");
-    form.addEventListener("mouseover", (e) => {
-      const x = (window.innerWidth / 2 - e.pageX) / 35;
-      const y = (window.innerHeight / 2 - e.pageY) / 35;
-
-      form.style.transform = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
-    });
-
-    form.addEventListener("mouseleave", () => {
-      form.style.transform = "rotateX(0deg) rotateY(0deg)";
-    });
-  }, []);
 
   const content = (
     <>
@@ -133,14 +136,16 @@ function Login() {
             <label htmlFor="usr" className="inputBox__login--label">
               نام کاربری
             </label>
-            <PersonOutlinedIcon style={style} />
+            <div className="inputBox__login--icon" style={{ padding: "8px" }}>
+              <PersonOutlinedIcon />
+            </div>
           </div>
           <div className="inputBox__login">
             {errors.password && (
               <span className="error-form">{errors.password.message}</span>
             )}
             <input
-              type="password"
+              type={showPssword ? "text" : "password"}
               id="psw"
               {...register("password", { required: "کلمه عبور را وارد کنید" })}
               className="inputBox__login--input"
@@ -150,7 +155,12 @@ function Login() {
             <label htmlFor="psw" className="inputBox__login--label">
               کلمه عبور
             </label>
-            <LockOutlinIcon style={style} />
+
+            <div className="inputBox__login--icon">
+              <IconButton onClick={handleShowPasswordChange} color="inherit">
+                {showPssword ? <EyeClosIcon /> : <EyeOpenIcon />}
+              </IconButton>
+            </div>
           </div>
           <div className="loginContainer__box--inputBox">
             <Captcha />

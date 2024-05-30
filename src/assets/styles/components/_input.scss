@@ -5,6 +5,13 @@
 	flex-direction: column;
 	margin: 30px 0;
 
+	&--icon {
+		position: absolute;
+		left: 1.3rem;
+		top: 0.5rem;
+		cursor: pointer;
+	}
+
 	&--input {
 		width: 100%;
 		height: $inputBox-height;

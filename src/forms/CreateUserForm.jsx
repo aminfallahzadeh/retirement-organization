@@ -1,5 +1,4 @@
 // react imports
-import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 // rrd imports
@@ -12,13 +11,8 @@ import {
 } from "../slices/usersApiSlice";
 
 // mui imports
-import { IconButton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import {
-  Save as SaveIcon,
-  RemoveRedEyeOutlined as EyeOpenIcon,
-  VisibilityOffOutlined as EyeClosIcon,
-} from "@mui/icons-material";
+import { Save as SaveIcon } from "@mui/icons-material";
 
 // library imports
 import { toast } from "react-toastify";
@@ -27,8 +21,6 @@ import { toast } from "react-toastify";
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
 function CreateUserForm({ addedGroups }) {
-  const [showPssword, setShowPssword] = useState(false);
-
   const navigate = useNavigate();
 
   const {
@@ -42,10 +34,6 @@ function CreateUserForm({ addedGroups }) {
   const [insertUser, { isLoading: isCreating }] = useInsertUserMutation();
   const [insertGroupUsers, { isLoading: isInserting }] =
     useInsertGroupUsersMutation();
-
-  const handleShowPasswordChange = () => {
-    setShowPssword(!showPssword);
-  };
 
   // handle create user
   const onSubmit = async (data) => {
@@ -108,17 +96,13 @@ function CreateUserForm({ addedGroups }) {
     }
   };
 
-  useEffect(() => {
-    setValue("username", "");
-    setValue("password", "");
-  }, []);
-
   return (
     <section className="formContainer">
       <form
         method="POST"
         className="flex-col"
         noValidate
+        autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="grid grid--col-4">
@@ -130,6 +114,7 @@ function CreateUserForm({ addedGroups }) {
               type="text"
               className="inputBox__form--input"
               required
+              autoComplete="off"
               {...register("username", { required: "نام کاربری را وارد کنید" })}
               id="usrName"
             />
@@ -139,19 +124,14 @@ function CreateUserForm({ addedGroups }) {
           </div>
 
           <div className="inputBox__form">
-            <div className="inputBox__form--icon">
-              <IconButton onClick={handleShowPasswordChange}>
-                {showPssword ? <EyeClosIcon /> : <EyeOpenIcon />}
-              </IconButton>
-            </div>
-
             {errors.password && (
               <span className="error-form">{errors.password.message}</span>
             )}
             <input
-              type={showPssword ? "text" : "password"}
+              type="text"
               className="inputBox__form--input"
               required
+              autoComplete="off"
               {...register("password", {
                 required: "رمز عبور را وارد کنید",
                 onChange: (e) => {
@@ -226,13 +206,16 @@ function CreateUserForm({ addedGroups }) {
 
           <div className="inputBox__form">
             {errors.email && (
-              <span className="error-form">ایمیل معتبر نیست</span>
+              <span className="error-form">{errors.email.message}</span>
             )}
             <input
               type="text"
               className="inputBox__form--input"
               {...register("email", {
-                pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: "ایمیل معتبر نیست",
+                },
               })}
               required
               id="postE"
@@ -269,22 +252,24 @@ function CreateUserForm({ addedGroups }) {
             {errors.tel && (
               <span className="error-form">{errors.tel.message}</span>
             )}
-
             <input
               type="text"
               className="inputBox__form--input"
-              required
               {...register("tel", {
-                required: "تلفن را وارد کنید",
+                pattern: {
+                  value: /^[0-9\u06F0-\u06F9]+$/,
+                  message: "تلفن ثابت معتبر نیست",
+                },
                 onChange: (e) => {
                   let value = convertToPersianNumber(e.target.value);
                   setValue("tel", value);
                 },
               })}
+              required
               id="Tell"
             />
             <label className="inputBox__form--label" htmlFor="Tell">
-              <span>*</span> تلفن ثابت
+              پست الکترونیک
             </label>
           </div>
 
