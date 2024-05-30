@@ -71,11 +71,6 @@ function CreateRequestForm() {
     }
   };
 
-  // DEBUGGING
-  useEffect(() => {
-    console.log(requestObject);
-  }, [requestObject]);
-
   const content = (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-4 u-margin-top-md">
@@ -117,10 +112,6 @@ function CreateRequestForm() {
             className="inputBox__form--input"
             required
           >
-            {/* <option value=" " disabled>
-              انتخاب کنید
-            </option> */}
-
             <option value="49e66fb39a124555b9329c9b7994509a">----</option>
             <option value="810e59798cc54b94b45cd0c776fff16b">علی اسدی</option>
             <option value="4fba2ae8420348fc9d16b21a55fef23f">
@@ -159,6 +150,7 @@ function CreateRequestForm() {
           </label>
         </div>
       </form>
+
       <div style={{ marginRight: "auto" }} className="flex-row">
         <LoadingButton
           dir="ltr"
