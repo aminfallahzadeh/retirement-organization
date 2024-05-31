@@ -62,6 +62,8 @@ function Nav({ userName, userID }) {
     location.pathname === "/retirement-organization/electronic-statement";
   const fractionPath =
     location.pathname === "/retirement-organization/fraction";
+  const reportCreatorPath =
+    location.pathname === "/retirement-organization/report-creator";
 
   const handleShowLogoutModalChange = () => {
     setShowLogoutModal(true);
@@ -163,8 +165,13 @@ function Nav({ userName, userID }) {
             <li onClick={() => setShowBaseInfoPannel(false)}>
               <a>داشبورد مدیریتی</a>
             </li>
-            <li onClick={() => setShowBaseInfoPannel(false)}>
-              <a>گزارش ساز</a>
+            <li
+              onClick={() => setShowBaseInfoPannel(false)}
+              className={reportCreatorPath ? "active" : ""}
+            >
+              <Link to={"/retirement-organization/report-creator"}>
+                گزارش ساز
+              </Link>
             </li>
             <li onClick={() => setShowBaseInfoPannel(false)}>
               <a>مدیریت سیستم</a>

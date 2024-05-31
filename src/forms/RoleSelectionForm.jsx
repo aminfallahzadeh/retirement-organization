@@ -10,7 +10,7 @@ function RoleSelectionForm({ isLoading, roles }) {
   };
 
   return (
-    <div className="formContainer">
+    <section className="formContainer">
       <form className="grid grid--col-3" noValidate>
         <div className="inputBox__form">
           <select
@@ -30,7 +30,7 @@ function RoleSelectionForm({ isLoading, roles }) {
           </label>
         </div>
       </form>
-    </div>
+    </section>
   );
 }
 

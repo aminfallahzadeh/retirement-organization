@@ -24,7 +24,7 @@ function FractionForm() {
     setFrMode(e.target.value);
   };
 
-  return (
+  const content = (
     <section className="formContainer">
       <form method="POST" className="flex-col">
         <div className="grid grid--col-5">
@@ -326,6 +326,8 @@ function FractionForm() {
       </form>
     </section>
   );
+
+  return content;
 }
 
 export default FractionForm;

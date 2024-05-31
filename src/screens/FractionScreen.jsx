@@ -2,7 +2,7 @@
 import FractionForm from "../forms/FractionForm";
 
 function FractionScreen() {
-  return (
+  const content = (
     <section className="flex-col">
       <div className="title-primary--container flex-row flex-center">
         <h4 className="title-primary">
@@ -13,6 +13,7 @@ function FractionScreen() {
       <FractionForm />
     </section>
   );
+  return content;
 }
 
 export default FractionScreen;

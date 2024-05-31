@@ -30,7 +30,6 @@ select {
 }
 
 .title-primary {
-    color: var(--color-text-title-primary);
     font-size: 1.7rem;
     position: relative;
     padding: 0 1rem;
@@ -40,7 +39,7 @@ select {
     background: linear-gradient(
         -90deg,
         var(--color-accent-primary),
-        var(--color-accnet-gr-primary),
+        var(--color-accent-gr-primary),
         var(--color-accent-primary)
     );
     -webkit-background-clip: text;
@@ -87,7 +86,7 @@ select {
             left: 0;
             height: 2px;
             width: 50%;
-            background: linear-gradient(-90deg, var(--color-accnet-gr-primary), var(--color-accent-primary));
+            background: linear-gradient(-90deg, var(--color-accent-gr-primary), var(--color-accent-primary));
         }
 
         &::after {
@@ -98,7 +97,7 @@ select {
             right: 0;
             height: 2px;
             width: 50%;
-            background: linear-gradient(-90deg, var(--color-accent-primary), var(--color-accnet-gr-primary));
+            background: linear-gradient(-90deg, var(--color-accent-primary), var(--color-accent-gr-primary));
         }
     }
 
@@ -128,14 +127,46 @@ select {
 }
 
 .title-tertiary {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    color: $color-accent-red;
-    transition: text-shadow 0.25s;
+    font-size: 1.2rem;
+    position: relative;
+    padding: 0 0.8rem 0.5rem 0;
+    text-align: right;
+    width: max-content;
     cursor: default;
 
-    &:hover {
-        text-shadow: 2px 2px 5px $color-grey-4;
+    background: linear-gradient(-90deg, var(--color-accent-gr-secondary), var(--color-accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    &::before {
+        content: "";
+        position: absolute;
+        transition: all 0.25s ease;
+        bottom: 0;
+        right: 0;
+        height: 80%;
+        width: 2px;
+        background-color: var(--color-accent-gr-secondary);
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        transition: all 0.25s ease;
+        bottom: 0;
+        right: 0;
+        height: 2px;
+        width: 80%;
+        background: linear-gradient(-90deg, var(--color-accent-gr-secondary), var(--color-accent-secondary));
+    }
+
+    &:hover::before {
+        height: 0;
+    }
+
+    &:hover::after {
+        width: 100%;
     }
 }
 
