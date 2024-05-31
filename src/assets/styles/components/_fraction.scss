@@ -1,0 +1,36 @@
+.fraction--total {
+    background-color: var(--color-bg-primary);
+    border-radius: $border-radius-secondary;
+    display: flex;
+    padding: 1rem 2rem;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 30px;
+
+    &__items {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        column-gap: 100px;
+    }
+
+    p {
+        text-align: center;
+        position: relative;
+        color: var(--color-accent-primary);
+
+        &::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: -8px;
+            height: 25px;
+            border-radius: 20px;
+            width: 2px;
+            background-color: var(--color-accent-primary);
+        }
+        span {
+            color: var(--color-txt-primary);
+        }
+    }
+}

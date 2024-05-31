@@ -6,7 +6,10 @@ import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
 // mui imports
-import { CalendarTodayOutlined as CalenderIcon } from "@mui/icons-material";
+import {
+  CalendarTodayOutlined as CalenderIcon,
+  CalculateOutlined as CalculateIcon,
+} from "@mui/icons-material";
 import { Button } from "@mui/material";
 import {
   UploadOutlined as UploadIcon,
@@ -184,6 +187,7 @@ function FractionForm() {
               </label>
             </div>
           </div>
+
           {frType === "solo" && (
             <>
               <div className="inputBox__form">
@@ -235,6 +239,40 @@ function FractionForm() {
                 <label className="inputBox__form--label" htmlFor="personID">
                   شماره کارمندی
                 </label>
+              </div>
+
+              <div></div>
+              <div></div>
+              <div></div>
+
+              <div className="fraction--total col-span-4 row-span-2">
+                <div className="fraction--total__items">
+                  <p>
+                    جمع مشمول کسور : <span>۱۰۰۰۰۰</span>
+                  </p>
+                  <p>
+                    سهم کارفرما : <span>۱۰۰۰۰۰</span>
+                  </p>
+                  <p>
+                    سهم کارمند : <span>۱۰۰۰۰۰</span>
+                  </p>
+                  <p>
+                    مانده بدهی : <span>۱۰۰۰۰۰</span>
+                  </p>
+                </div>
+
+                <div className="fraction--total__btn">
+                  <Button
+                    dir="ltr"
+                    endIcon={<CalculateIcon />}
+                    variant="contained"
+                    type="submit"
+                    color="warning"
+                    sx={{ fontFamily: "sahel" }}
+                  >
+                    <span>محاسبه</span>
+                  </Button>
+                </div>
               </div>
             </>
           )}
