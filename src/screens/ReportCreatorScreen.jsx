@@ -10,8 +10,6 @@ function ReportCreatorScreen() {
         </h4>
       </div>
 
-      <h3 className="title-tertiary">انتخاب جدول</h3>
-
       <section className="formContainer">
         <form className="grid grid--col-3" noValidate>
           <div className="inputBox__form">
@@ -27,8 +25,6 @@ function ReportCreatorScreen() {
           </div>
         </form>
       </section>
-
-      <h3 className="title-tertiary">انتخاب شرط</h3>
 
       <ConditionSelectionForm />
     </section>

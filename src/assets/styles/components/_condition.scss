@@ -1,0 +1,36 @@
+.condition {
+    margin-top: 2rem;
+
+    &__box {
+        background-color: var(--color-bg-primary);
+        border-radius: $border-radius-secondary;
+        padding: 1rem;
+
+        &--title {
+            font-size: 1rem;
+            font-weight: 100;
+            color: var(--color-accent-primary);
+        }
+    }
+
+    &__features {
+        padding: 1rem;
+
+        &--container {
+            margin-top: 1rem;
+        }
+
+        &--box {
+            background-color: var(--color-bg-primary);
+            border-radius: $border-radius-secondary;
+            padding: 1rem;
+        }
+        &--btns {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            row-gap: 1rem;
+        }
+    }
+}
