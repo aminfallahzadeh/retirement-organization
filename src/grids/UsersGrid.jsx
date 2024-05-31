@@ -317,7 +317,7 @@ function UsersGrid() {
             >
               <div className="flex-row">
                 <div>
-                  <div className="Modal__header">
+                  <div className="modal__header">
                     <h4 className="title-tertiary">گروه ها</h4>
                   </div>
 
@@ -325,7 +325,7 @@ function UsersGrid() {
                 </div>
 
                 <div>
-                  <div className="Modal__header">
+                  <div className="modal__header">
                     <h4 className="title-tertiary">عملیات</h4>
                   </div>
 
@@ -335,7 +335,7 @@ function UsersGrid() {
                 </div>
 
                 <div>
-                  <div className="Modal__header">
+                  <div className="modal__header">
                     <h4 className="title-tertiary">گروه های کاربر</h4>
                   </div>
 

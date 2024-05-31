@@ -132,6 +132,7 @@ select {
     text-align: center;
     width: max-content;
     cursor: default;
+    padding-bottom: 0.2rem;
 
     background: linear-gradient(-90deg, var(--color-accent-gr-secondary), var(--color-accent-secondary));
     -webkit-background-clip: text;
