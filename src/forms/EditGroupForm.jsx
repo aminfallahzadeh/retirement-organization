@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 
 // redux imports
-import { useSelector } from "react-redux";
 import { useUpdateGroupMutation } from "../slices/usersApiSlice";
 
 // library imports
@@ -12,9 +11,8 @@ import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
 import { Save as SaveIcon } from "@mui/icons-material";
 
-function GroupNameInput({ setShowEditModal }) {
-  const { selectedGroupData } = useSelector((state) => state.groupsData);
-  const [groupName, setGroupName] = useState(selectedGroupData?.name || "");
+function GroupNameInput({ setShowEditModal, selectedGroup }) {
+  const [groupName, setGroupName] = useState("");
 
   const [updateGroup, { isLoading }] = useUpdateGroupMutation();
 
@@ -22,10 +20,16 @@ function GroupNameInput({ setShowEditModal }) {
     setGroupName(e.target.value);
   };
 
+  useEffect(() => {
+    if (selectedGroup) {
+      setGroupName(selectedGroup.groupName);
+    }
+  }, [selectedGroup]);
+
   const updateGroupHandler = async () => {
     try {
       const res = await updateGroup({
-        "id": selectedGroupData?.id,
+        "id": selectedGroup.id,
         "groupName": groupName,
       }).unwrap();
       setShowEditModal(false);
@@ -38,10 +42,6 @@ function GroupNameInput({ setShowEditModal }) {
       });
     }
   };
-
-  useEffect(() => {
-    setGroupName(selectedGroupData?.name);
-  }, [selectedGroupData]);
 
   const content = (
     <section className="formContainer flex-col flex-center">
@@ -66,7 +66,7 @@ function GroupNameInput({ setShowEditModal }) {
         onClick={updateGroupHandler}
         variant="contained"
         color="success"
-        disabled={groupName === selectedGroupData?.name || !groupName}
+        disabled={groupName === selectedGroup?.name || !groupName}
         sx={{ fontFamily: "sahel" }}
       >
         <span>ذخیره</span>

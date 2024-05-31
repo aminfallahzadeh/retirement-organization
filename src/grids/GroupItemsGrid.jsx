@@ -26,17 +26,19 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-function GroupItemGrid() {
+function GroupItemGrid({ selectedGroup }) {
   const [rowSelection, setRowSelection] = useState({});
+  const [groupID, setGroupID] = useState(null);
   const dispatch = useDispatch();
-
-  // access selected row info
-  const { selectedGroupData } = useSelector((state) => state.groupsData);
 
   // access the data from redux store
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
 
-  const groupID = selectedGroupData?.id;
+  useEffect(() => {
+    if (selectedGroup) {
+      setGroupID(selectedGroup.id);
+    }
+  }, [selectedGroup]);
 
   // fetch data from the API
   const {
@@ -53,7 +55,7 @@ function GroupItemGrid() {
     if (isSuccess) {
       const data = groupItems.itemList.map((item) => ({
         id: item.itemID,
-        name: item.itemName,
+        itemName: item.itemName,
       }));
 
       dispatch(setGroupItemsTableData(data));
@@ -70,19 +72,19 @@ function GroupItemGrid() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "name",
+        accessorKey: "itemName",
+        size: 300,
         header: (
           <span>
             دسترسی های گروه:{" "}
             <span style={{ fontStyle: "italic", color: "#03620a" }}>
-              {selectedGroupData?.name}
+              {selectedGroup?.groupName}
             </span>
           </span>
         ),
-        size: 300,
       },
     ],
-    [selectedGroupData?.name]
+    [selectedGroup?.groupName]
   );
 
   const table = useMaterialReactTable({

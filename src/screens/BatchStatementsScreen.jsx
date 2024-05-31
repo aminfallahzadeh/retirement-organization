@@ -29,8 +29,13 @@ function BatchStatementsScreen() {
 
   const content = (
     <>
-      <section className="main flex-col">
-        <h4 className="title-primary">احکام گروهی</h4>
+      <section className="flex-col">
+        <div className="title-primary--container flex-row flex-center">
+          <h4 className="title-primary">
+            <span className="title-primary--underline">احکام گروهی</span>
+          </h4>
+        </div>
+
         <div>
           <BatchStatementsForm />
         </div>

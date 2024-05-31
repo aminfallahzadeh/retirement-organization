@@ -5,15 +5,11 @@ import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   useGetGroupQuery,
   useDeleteGroupMutation,
 } from "../slices/usersApiSlice";
-import {
-  setGroupsTableData,
-  setSelectedGroupData,
-} from "../slices/groupsDataSlice";
 
 // mui imports
 import {
@@ -57,6 +53,9 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "react-toastify";
 
 function GroupsGrid() {
+  const [tableData, setTableData] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+
   const [rowSelection, setRowSelection] = useState({});
 
   const [showEditNameModal, setShowEditNameModal] = useState(false);
@@ -66,11 +65,6 @@ function GroupsGrid() {
   const [deleteGroup, { isLoading: isDeleting }] = useDeleteGroupMutation();
 
   const dispatch = useDispatch();
-
-  // access the data from redux store
-  const { groupsTableData, selectedGroupData } = useSelector(
-    (state) => state.groupsData
-  );
 
   const {
     data: groups,
@@ -100,8 +94,8 @@ function GroupsGrid() {
   const deleteGroupHandler = async () => {
     try {
       const res = await deleteGroup({
-        "id": selectedGroupData?.id,
-        "groupName": selectedGroupData?.name,
+        "id": selectedGroup?.id,
+        "groupName": selectedGroup?.groupName,
         "isdeleted": true,
       }).unwrap();
       setShowDeleteGroupModal(false);
@@ -129,12 +123,9 @@ function GroupsGrid() {
         id: group.id,
         groupName: group.groupName,
       }));
-      dispatch(setGroupsTableData(data));
-    }
 
-    return () => {
-      dispatch(setGroupsTableData([]));
-    };
+      setTableData(data);
+    }
   }, [
     groups,
     isSuccess,
@@ -249,7 +240,7 @@ function GroupsGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: groupsTableData,
+    data: tableData,
     enablePagination: false,
     enableBottomToolbar: false,
     muiTableContainerProps: { sx: { height: "500px" } },
@@ -327,19 +318,13 @@ function GroupsGrid() {
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedGroup = findById(groupsTableData, id);
 
-    if (id) {
-      dispatch(setSelectedGroupData(selectedGroup));
-    } else {
-      dispatch(setSelectedGroupData([]));
+    const group = findById(tableData, id);
+
+    if (group) {
+      setSelectedGroup(group);
     }
-
-    return () => {
-      // Cleanup function to clear selected group
-      dispatch(setSelectedGroupData([]));
-    };
-  }, [dispatch, table, rowSelection, groupsTableData]);
+  }, [table, tableData, rowSelection]);
 
   const content = (
     <>
@@ -360,7 +345,10 @@ function GroupsGrid() {
               title={"ویرایش نام گروه"}
               closeModal={() => setShowEditNameModal(false)}
             >
-              <EditGroupForm setShowEditModal={setShowEditNameModal} />
+              <EditGroupForm
+                setShowEditModal={setShowEditNameModal}
+                selectedGroup={selectedGroup}
+              />
             </Modal>
           ) : showDeleteGroupModal ? (
             <Modal
@@ -396,31 +384,30 @@ function GroupsGrid() {
             </Modal>
           ) : showEditItemsModal ? (
             <Modal
-              title={"ویرایش آیتم ها"}
+              title={"ویرایش دسترسی ها"}
               closeModal={() => setShowEditItemsModal(false)}
             >
-              <div className="flex-row">
+              <div className="formContainer flex-row">
                 <div>
-                  <div className="Modal__header">
+                  <div className="modal__header">
                     <h4 className="title-tertiary">دسترسی ها</h4>
                   </div>
                   <ItemsGrid />
                 </div>
-
-                <div>
-                  <div className="Modal__header">
+                <div className="flex-col">
+                  <div className="modal__header">
                     <h4 className="title-tertiary">عملیات</h4>
                   </div>
                   <div style={{ marginTop: "6rem" }}>
-                    <ArrowButtonsGroups />
+                    <ArrowButtonsGroups selectedGroup={selectedGroup} />
                   </div>
                 </div>
 
                 <div>
-                  <div className="Modal__header">
+                  <div className="modal__header">
                     <h4 className="title-tertiary">دسترسی های گروه</h4>
                   </div>
-                  <GroupItemsGrid />
+                  <GroupItemsGrid selectedGroup={selectedGroup} />
                 </div>
               </div>
             </Modal>

@@ -1,3 +1,6 @@
+// react imports
+import { useEffect, useState } from "react";
+
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { useInsertGroupItemMutation } from "../slices/usersApiSlice";
@@ -20,7 +23,8 @@ import {
 } from "../slices/itemsDataSlice";
 import { addGroupItems, removeGroupItems } from "../slices/groupItemsDataSlice";
 
-function ArrowButtonsGroups() {
+function ArrowButtonsGroups({ selectedGroup }) {
+  const [groupID, setGroupID] = useState(null);
   const dispatch = useDispatch();
 
   const { selectedItemData } = useSelector((state) => state.itemsData);
@@ -28,7 +32,13 @@ function ArrowButtonsGroups() {
     (state) => state.groupItemsData
   );
 
-  const { selectedGroupData } = useSelector((state) => state.groupsData);
+  useEffect(() => {
+    if (selectedGroup) {
+      setGroupID(selectedGroup.id);
+    }
+  }, [selectedGroup]);
+
+  // const { selectedGroupData } = useSelector((state) => state.groupsData);
   const { groupItemsTableData } = useSelector((state) => state.groupItemsData);
 
   const [insertGroupItem, { isLoading: isInserting }] =
@@ -36,7 +46,7 @@ function ArrowButtonsGroups() {
 
   const saveChangesHandler = async () => {
     try {
-      const groupID = selectedGroupData?.id;
+      // const groupID = selectedGroup?.id;
       const data = groupItemsTableData.map((item) => ({
         "id": "",
         "itemID": item.id,

@@ -11,10 +11,11 @@ import { setRequestTableData } from "../slices/requestsDataSlice.js";
 import { setSelectedRequestData } from "../slices/requestsDataSlice.js";
 
 // mui imports
-import { IconButton, Tooltip } from "@mui/material";
+import { Box, IconButton, Tooltip, CircularProgress } from "@mui/material";
 import {
   RemoveRedEye as RemoveRedEyeIcon,
   Feed as FeedIcon,
+  Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import {
   MaterialReactTable,
@@ -48,9 +49,14 @@ function RequestsGrid() {
     data: requests,
     isSuccess,
     isLoading,
+    isFetching,
     error,
     refetch,
   } = useGetRequestQuery({ role: selectedRole });
+
+  const handleRefresh = () => {
+    refetch();
+  };
 
   useEffect(() => {
     refetch();
@@ -122,6 +128,9 @@ function RequestsGrid() {
               row.original.requestTypeID ===
               "62A54585-F331-434A-9027-C9F3060F683A"
                 ? `/retirement-organization/slips?requestID=${row.original.id}`
+                : row.original.requestTypeID ===
+                  "6E7BA26E-A1DC-4A5E-9700-17820A36158D"
+                ? "/retirement-organization/batch-statements"
                 : `/retirement-organization/retired?personID=${row.original.personID}&role=${selectedRole}&requestID=${row.original.id}`
             }
           >
@@ -176,6 +185,33 @@ function RequestsGrid() {
     enablePagination: false,
     enableBottomToolbar: false,
     muiTableContainerProps: { sx: { height: "500px" } },
+    renderTopToolbarCustomActions: () => (
+      <Box>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip
+            title={
+              <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
+                بروز رسانی
+              </span>
+            }
+          >
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="info"
+                onClick={handleRefresh}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
+      </Box>
+    ),
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>

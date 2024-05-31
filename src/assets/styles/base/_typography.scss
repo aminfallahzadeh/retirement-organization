@@ -129,8 +129,7 @@ select {
 .title-tertiary {
     font-size: 1.2rem;
     position: relative;
-    padding: 0 0.8rem 0.5rem 0;
-    text-align: right;
+    text-align: center;
     width: max-content;
     cursor: default;
 
@@ -139,30 +138,16 @@ select {
     -webkit-text-fill-color: transparent;
     background-clip: text;
 
-    &::before {
-        content: "";
-        position: absolute;
-        transition: all 0.25s ease;
-        bottom: 0;
-        right: 0;
-        height: 80%;
-        width: 2px;
-        background-color: var(--color-accent-gr-secondary);
-    }
-
     &::after {
         content: "";
         position: absolute;
         transition: all 0.25s ease;
         bottom: 0;
-        right: 0;
+        left: 50%;
+        transform: translateX(-50%);
         height: 2px;
-        width: 80%;
+        width: 50%;
         background: linear-gradient(-90deg, var(--color-accent-gr-secondary), var(--color-accent-secondary));
-    }
-
-    &:hover::before {
-        height: 0;
     }
 
     &:hover::after {

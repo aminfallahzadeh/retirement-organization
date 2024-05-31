@@ -50,7 +50,7 @@ function ItemsGrid() {
       }));
 
       const filteredData = data.filter(
-        (a) => !groupItemsTableData.map((b) => b.name).includes(a.name)
+        (a) => !groupItemsTableData.map((b) => b.id).includes(a.id)
       );
 
       dispatch(setItemsTableData(filteredData));
@@ -69,7 +69,7 @@ function ItemsGrid() {
       {
         accessorKey: "itemName",
         header: "دسترسی ها",
-        size: 20,
+        size: 300,
       },
     ],
     []
