@@ -33,6 +33,11 @@ input[type="checkbox"] + label {
     cursor: pointer;
 }
 
+input[type="radio"],
+input[type="radio"] + label {
+    cursor: pointer;
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
     transition:

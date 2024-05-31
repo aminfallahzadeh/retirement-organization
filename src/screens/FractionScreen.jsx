@@ -1,3 +1,6 @@
+// components
+import FractionForm from "../forms/FractionForm";
+
 function FractionScreen() {
   return (
     <section className="flex-col">
@@ -6,6 +9,8 @@ function FractionScreen() {
           <span className="title-primary--underline">کسورات</span>
         </h4>
       </div>
+
+      <FractionForm />
     </section>
   );
 }

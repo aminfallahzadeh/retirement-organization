@@ -3,13 +3,16 @@ import ArchiveTree from "../components/ArchiveTree";
 
 function ElectronicStatementScreen() {
   return (
-    <section className="main">
+    <section className="flex-col">
       <div className="title-primary--container flex-row flex-center">
         <h4 className="title-primary">
           <span className="title-primary--underline"></span>پرونده الکترونیک
         </h4>
       </div>
-      <ArchiveTree />
+
+      <div className="formContainer">
+        <ArchiveTree />
+      </div>
     </section>
   );
 }

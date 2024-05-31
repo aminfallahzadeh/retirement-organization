@@ -69,32 +69,41 @@ function ElectronicCaseSection() {
 
   const content = (
     <section className="flex-col">
-      <div className="flex-row">
+      <div className="formContainer flex-row">
         <ArchiveTree setPreviewImage={setPreviewImage} />
-        {previewImage && (
-          <>
-            <img
-              src={previewImage}
-              alt="پیش نمایش"
-              style={{ width: "400px" }}
-            />
-            <div className="flex-center">
-              <RViewer options={options} imageUrls={previewImage}>
-                <RViewerTrigger>
-                  <Button
-                    dir="ltr"
-                    endIcon={<ViewIcon />}
-                    variant="contained"
-                    color="primary"
-                    sx={{ fontFamily: "sahel" }}
-                  >
-                    <span>مشاهده</span>
-                  </Button>
-                </RViewerTrigger>
-              </RViewer>
-            </div>
-          </>
-        )}
+
+        <div>
+          {previewImage && (
+            <>
+              <img
+                src={previewImage}
+                alt="پیش نمایش"
+                style={{
+                  width: "350px",
+                  borderRadius: "5px",
+                  border: "1px solid black",
+                }}
+              />
+              <div className="flex-col">
+                <RViewer options={options} imageUrls={previewImage}>
+                  <RViewerTrigger>
+                    <div style={{ marginRight: "auto" }}>
+                      <Button
+                        dir="ltr"
+                        endIcon={<ViewIcon />}
+                        variant="contained"
+                        color="primary"
+                        sx={{ fontFamily: "sahel" }}
+                      >
+                        <span>مشاهده</span>
+                      </Button>
+                    </div>
+                  </RViewerTrigger>
+                </RViewer>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </section>
   );
