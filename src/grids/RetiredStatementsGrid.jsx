@@ -49,6 +49,8 @@ import RetirementStatementViewForm from "../forms/RetirementStatementViewForm.js
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "react-toastify";
+import { PDFDocument } from "pdf-lib";
+import { saveAs } from "file-saver";
 
 // helper imports
 import {
@@ -97,10 +99,6 @@ function RetiredStatementsGrid() {
     setShowGenerateStatementModal(true);
   };
 
-  const handleViewStatementModalChange = () => {
-    setShowViewStatementModal(true);
-  };
-
   const handleDeleteStatementModalChange = () => {
     setShowDeleteStatementModal(true);
   };
@@ -108,6 +106,35 @@ function RetiredStatementsGrid() {
   const handleShowStatementModal = () => {
     setShowStatementModal(true);
   };
+
+  const handleSowViewStatementModalChange = () => {
+    setShowViewStatementModal(true);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  // FUNCTION TO FILL THE STATEMENT PDF
+  const fillPDF = async () => {
+    const url = "./pdfs/related-placeholder.pdf";
+    const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
+
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+    const form = pdfDoc.getForm();
+
+    form.getTextField("personNationalCode").setText("1234567890");
+
+    form.flatten();
+
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    saveAs(blob, "حکم.pdf");
+  };
+
+  const handleDownload = useCallback(() => {
+    fillPDF();
+  }, []);
 
   const getList = useCallback(async () => {
     try {
@@ -210,7 +237,10 @@ function RetiredStatementsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="primary" onClick={handleShowStatementModal}>
+          <IconButton
+            color="primary"
+            onClick={handleSowViewStatementModalChange}
+          >
             <RemoveRedEyeIcon />
           </IconButton>
         ),
@@ -246,7 +276,7 @@ function RetiredStatementsGrid() {
         ),
       },
     ],
-    []
+    [handleDownload]
   );
 
   const table = useMaterialReactTable({
@@ -353,6 +383,17 @@ function RetiredStatementsGrid() {
                 <Button
                   dir="ltr"
                   endIcon={<PrintIcon />}
+                  onClick={handleDownload}
+                  variant="contained"
+                  color="success"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>دانلود</span>
+                </Button>
+                <Button
+                  dir="ltr"
+                  endIcon={<PrintIcon />}
+                  onClick={handlePrint}
                   variant="contained"
                   color="success"
                   sx={{ fontFamily: "sahel" }}

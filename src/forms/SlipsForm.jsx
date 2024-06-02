@@ -75,10 +75,6 @@ function SlipsForm() {
     setIssueType(e.target.value);
   };
 
-  useEffect(() => {
-    console.log(isSlipExists);
-  }, [isSlipExists, slipObject]);
-
   // CHECK SLIP EXISTANCE ON USER DATA ENTER
   useEffect(() => {
     if (
@@ -162,10 +158,6 @@ function SlipsForm() {
       });
     }
   };
-
-  useEffect(() => {
-    console.log(slipObject);
-  }, [slipObject, issueType]);
 
   const content = (
     <section className="formContainer flex-col">
