@@ -118,11 +118,12 @@ function SlipsForm() {
   // ISSUE GROUP SLIP HANDLER
   const insertGroupPayHandler = async () => {
     try {
+      const date = new Date();
       const res = await issuePay({
         currentYear: parseInt(slipObject.currentYear),
         currentMonth: parseInt(slipObject.currentMonth),
         requestID,
-        payDate: new Date().toISOString(),
+        payDate: date.toISOString(),
       }).unwrap();
       setIsSlipExists(true);
       getPayListHandler();
@@ -139,13 +140,13 @@ function SlipsForm() {
 
   const insertSoloPayHandler = async () => {
     try {
+      const date = new Date();
       const res = await insertPay({
-        ...slipObject,
-        requestID,
+        payDate: date.toISOString(),
         currentYear: parseInt(slipObject.currentYear),
         currentMonth: parseInt(slipObject.currentMonth),
+        requestID,
         personID: convertToEnglishNumber(slipObject.personID),
-        payDate: new Date(),
       }).unwrap();
       setIsSlipExists(true);
       toast.success(res.message, {
