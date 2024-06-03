@@ -58,4 +58,5 @@ export const {
   useUpdateRetiredPensionaryMutation,
   useUpdateRetiredAccountMutation,
   useGetRetiredQuery,
+  useLazyGetRetiredQuery,
 } = retiredApiSlice;

@@ -1,11 +1,13 @@
 // components
 import DateTime from "./DateTime";
+import { Logo } from "./SVGs";
 
 function Hero() {
   return (
     <div className="hero">
       <div className="hero__title">
-        <img src="logo.png" alt="لوگو" />
+        {/* <img src="logo.png" alt="لوگو" /> */}
+        <Logo />
         <h1 className="heading-primary">سامانه بازنشستگان و وظیفه بگیران</h1>
       </div>
 

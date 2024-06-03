@@ -11,6 +11,7 @@ import {
   useRemoveRetirementStatementMutation,
 } from "../slices/retirementStatementApiSlice.js";
 import { setStatementTableData } from "../slices/statementDataSlice.js";
+import { useLazyGetRetiredQuery } from "../slices/retiredApiSlice";
 
 // mui imports
 import {
@@ -27,7 +28,7 @@ import {
   FirstPage,
   LastPage,
   Add as AddIcon,
-  RemoveRedEye as RemoveRedEyeIcon,
+  Download as DownloadIcon,
   Refresh as RefreshIcon,
   Delete as DeleteIcon,
   Close as CloseIcon,
@@ -49,8 +50,6 @@ import RetirementStatementViewForm from "../forms/RetirementStatementViewForm.js
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "react-toastify";
-import { PDFDocument } from "pdf-lib";
-import { saveAs } from "file-saver";
 
 // helper imports
 import {
@@ -58,14 +57,14 @@ import {
   convertToPersianDateFormatted,
 } from "../helper.js";
 
+import { createStatmentPDF } from "../generateStatementPDF.js";
+
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
 function RetiredStatementsGrid() {
   const [statementID, setStatementID] = useState(null);
-
   const [rowSelection, setRowSelection] = useState({});
-
   const { personDeathDate } = useSelector((state) => state.retiredState);
 
   // MODAL STATES
@@ -75,12 +74,12 @@ function RetiredStatementsGrid() {
   const [showViewStatementModal, setShowViewStatementModal] = useState(false);
   const [showDeleteStatementModal, setShowDeleteStatementModal] =
     useState(false);
-
   const dispatch = useDispatch();
   const location = useLocation();
-
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
+
+  const [getRetired] = useLazyGetRetiredQuery();
 
   // ACCESS THE PENSIONARY STATE FROM STORE
   const { isPensionary } = useSelector((state) => state.retiredState);
@@ -115,26 +114,47 @@ function RetiredStatementsGrid() {
     window.print();
   };
 
-  // FUNCTION TO FILL THE STATEMENT PDF
-  const fillPDF = async () => {
-    const url = "./pdfs/related-placeholder.pdf";
-    const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
+  // // FUNCTION TO FILL THE STATEMENT PDF
+  // const fillPDF = async (retired) => {
+  //   const url = "./pdfs/related-placeholder.pdf";
+  //   const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
 
-    const pdfDoc = await PDFDocument.load(existingPdfBytes);
-    const form = pdfDoc.getForm();
+  //   const pdfDoc = await PDFDocument.load(existingPdfBytes);
 
-    form.getTextField("personNationalCode").setText("1234567890");
+  //   pdfDoc.registerFontkit(fontkit);
+  //   const fontUrl = "src/assets/fonts/Vazir.ttf";
+  //   const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
+  //   const customFont = await pdfDoc.embedFont(fontBytes);
 
-    form.flatten();
+  //   const form = pdfDoc.getForm();
 
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: "application/pdf" });
-    saveAs(blob, "حکم.pdf");
-  };
+  //   const textField = form.getTextField("personNationalCode");
 
-  const handleDownload = useCallback(() => {
-    fillPDF();
-  }, []);
+  //   // Set the text and update its appearance with the custom font
+  //   textField.setText(convertToPersianNumber(retired.personNationalCode));
+  //   textField.updateAppearances(customFont);
+
+  //   // form
+  //   //   .getTextField("personNationalCode")
+  //   //   .updateAppearances(customFont)
+  //   //   .setText(convertToPersianNumber(retired.personNationalCode));
+
+  //   form.flatten();
+
+  //   const pdfBytes = await pdfDoc.save();
+  //   const blob = new Blob([pdfBytes], { type: "application/pdf" });
+  //   saveAs(blob, "حکم.pdf");
+  // };
+
+  const handleDownload = useCallback(async () => {
+    try {
+      const res = await getRetired(personID).unwrap();
+      createStatmentPDF(res.itemList[0]);
+    } catch (err) {
+      console.log(err);
+      toast.error("خطایی رخ داده است", { autoClose: 2000 });
+    }
+  }, [getRetired, personID]);
 
   const getList = useCallback(async () => {
     try {
@@ -232,16 +252,13 @@ function RetiredStatementsGrid() {
       },
       {
         accessorKey: "observeStatement",
-        header: "مشاهده حکم",
+        header: "مشاهده/چاپ",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton
-            color="primary"
-            onClick={handleSowViewStatementModalChange}
-          >
-            <RemoveRedEyeIcon />
+          <IconButton color="primary" onClick={handleDownload}>
+            <DownloadIcon />
           </IconButton>
         ),
       },
