@@ -9,7 +9,7 @@ import {
   convertToPersianDateFormatted,
 } from "./helper";
 
-export const createStatmentPDF = async (retired) => {
+export const createStatmentPDF = async (retired, statement) => {
   const url = "./pdfs/related-placeholder.pdf";
   const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
 
@@ -46,7 +46,7 @@ export const createStatmentPDF = async (retired) => {
     personIsSacrificedFamily: retired.personIsSacrificedFamily || false,
     personIsValiant: retired.personIsValiant || false,
     personIsCaptive: retired.personIsCaptive || false,
-    personIsWarrior: retired.personIsWarrior || false,
+    oersonIsWarrior: retired.personIsWarrior || false,
     personIsSacrificed: retired.personIsSacrificed || false,
     personIsChildOfSacrificed: retired.personIsChildOfSacrificed || false,
   };
@@ -58,6 +58,13 @@ export const createStatmentPDF = async (retired) => {
       textField.updateAppearances(customFont);
     }
   }
+
+  //   const fields = form.getFields();
+  //   fields.forEach((field) => {
+  //     const type = field.constructor.name;
+  //     const name = field.getName();
+  //     console.log(`${type}: ${name}`);
+  //   });
 
   for (const [fieldName, fieldValue] of Object.entries(checkboxes)) {
     const checkBox = form.getCheckBox(fieldName);

@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   useLazyGetListOfRetirementStatementsQuery,
   useRemoveRetirementStatementMutation,
+  useLazyGetRetirementStatementQuery,
 } from "../slices/retirementStatementApiSlice.js";
 import { setStatementTableData } from "../slices/statementDataSlice.js";
 import { useLazyGetRetiredQuery } from "../slices/retiredApiSlice";
@@ -80,6 +81,7 @@ function RetiredStatementsGrid() {
   const personID = searchParams.get("personID");
 
   const [getRetired] = useLazyGetRetiredQuery();
+  const [getRetirementStatement] = useLazyGetRetirementStatementQuery();
 
   // ACCESS THE PENSIONARY STATE FROM STORE
   const { isPensionary } = useSelector((state) => state.retiredState);
@@ -114,47 +116,21 @@ function RetiredStatementsGrid() {
     window.print();
   };
 
-  // // FUNCTION TO FILL THE STATEMENT PDF
-  // const fillPDF = async (retired) => {
-  //   const url = "./pdfs/related-placeholder.pdf";
-  //   const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
-
-  //   const pdfDoc = await PDFDocument.load(existingPdfBytes);
-
-  //   pdfDoc.registerFontkit(fontkit);
-  //   const fontUrl = "src/assets/fonts/Vazir.ttf";
-  //   const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
-  //   const customFont = await pdfDoc.embedFont(fontBytes);
-
-  //   const form = pdfDoc.getForm();
-
-  //   const textField = form.getTextField("personNationalCode");
-
-  //   // Set the text and update its appearance with the custom font
-  //   textField.setText(convertToPersianNumber(retired.personNationalCode));
-  //   textField.updateAppearances(customFont);
-
-  //   // form
-  //   //   .getTextField("personNationalCode")
-  //   //   .updateAppearances(customFont)
-  //   //   .setText(convertToPersianNumber(retired.personNationalCode));
-
-  //   form.flatten();
-
-  //   const pdfBytes = await pdfDoc.save();
-  //   const blob = new Blob([pdfBytes], { type: "application/pdf" });
-  //   saveAs(blob, "حکم.pdf");
-  // };
-
-  const handleDownload = useCallback(async () => {
-    try {
-      const res = await getRetired(personID).unwrap();
-      createStatmentPDF(res.itemList[0]);
-    } catch (err) {
-      console.log(err);
-      toast.error("خطایی رخ داده است", { autoClose: 2000 });
-    }
-  }, [getRetired, personID]);
+  const handleDownload = useCallback(
+    async (RetirementStatementID) => {
+      try {
+        const retiredRes = await getRetired(personID).unwrap();
+        const statementRes = await getRetirementStatement({
+          RetirementStatementID,
+        }).unwrap();
+        createStatmentPDF(retiredRes.itemList[0], statementRes);
+      } catch (err) {
+        console.log(err);
+        toast.error("خطایی رخ داده است", { autoClose: 2000 });
+      }
+    },
+    [getRetired, personID, getRetirementStatement]
+  );
 
   const getList = useCallback(async () => {
     try {
@@ -256,8 +232,11 @@ function RetiredStatementsGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <IconButton color="primary" onClick={handleDownload}>
+        Cell: ({ row }) => (
+          <IconButton
+            color="primary"
+            onClick={() => handleDownload(row.original.id)}
+          >
             <DownloadIcon />
           </IconButton>
         ),
