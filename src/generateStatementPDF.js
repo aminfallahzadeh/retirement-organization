@@ -7,6 +7,7 @@ import fontkit from "@pdf-lib/fontkit";
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
+  separateByThousands,
 } from "./helper";
 
 export const createStatmentPDF = async (retired, statement) => {
@@ -16,7 +17,7 @@ export const createStatmentPDF = async (retired, statement) => {
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
 
   pdfDoc.registerFontkit(fontkit);
-  const fontUrl = "src/assets/fonts/Vazir.ttf";
+  const fontUrl = "./src/assets/fonts/Vazir.ttf";
   const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
   const customFont = await pdfDoc.embedFont(fontBytes);
 
@@ -24,23 +25,35 @@ export const createStatmentPDF = async (retired, statement) => {
 
   const fields = {
     personNationalCode:
-      convertToPersianNumber(retired.personNationalCode) || "",
-    personLastName: retired.personLastName || "",
-    personFirstName: retired.personFirstName || "",
-    retiredID: retired.retiredID || "",
+      convertToPersianNumber(retired.personNationalCode) ?? "-",
+    personLastName: retired.personLastName || "-",
+    personFirstName: retired.personFirstName || "-",
+    retiredID: retired.retiredID || "-",
     personCertificateNo:
-      convertToPersianNumber(retired.personCertificateNo) || "",
-    personFatherName: retired.personFatherName || "",
+      convertToPersianNumber(retired.personCertificateNo) ?? "-",
+    personFatherName: retired.personFatherName || "-",
     personBirthDay:
-      convertToPersianDateFormatted(retired.personBirthDate) || "",
-    personBirthPlace: retired.personBirthPlace || "",
-    gender: retired.gender || "",
+      convertToPersianDateFormatted(retired.personBirthDate) ?? "-",
+    personBirthPlace: retired.personBirthPlace || "-",
+    gender: retired.gender || "-",
     retirementStatementChildrenCount:
-      convertToPersianNumber(retired.retirementStatementChildrenCount) || "",
-    insuranceCode: convertToPersianNumber(retired.insuranceCode) || "",
-    maritialStatus: retired.maritialStatus || "",
-    personPostalCode: convertToPersianNumber(retired.personPostalCode) || "",
+      convertToPersianNumber(retired.retirementStatementChildrenCount) ?? "-",
+    insuranceCode: convertToPersianNumber(retired.insuranceCode) ?? "-",
+    maritialStatus: retired.maritialStatus || "-",
+    personPostalCode: convertToPersianNumber(retired.personPostalCode) ?? "-",
+    retirementStatementSerial:
+      convertToPersianNumber(statement.retirementStatementSerial) ?? "-",
+    retirementDate:
+      convertToPersianDateFormatted(retired.retirementDate) ?? "-",
+    retiredLastPosition: retired.retiredLastPosition || "-",
+    // lastOrganization: retired.lastOrganization || "-",
+    retiredRealDuration:
+      separateByThousands(
+        convertToPersianNumber(retired.retiredRealDuration)
+      ) ?? "-",
   };
+
+  console.log(convertToPersianDateFormatted(retired.retirementDate));
 
   const checkboxes = {
     personIsSacrificedFamily: retired.personIsSacrificedFamily || false,
@@ -55,6 +68,7 @@ export const createStatmentPDF = async (retired, statement) => {
     const textField = form.getTextField(fieldName);
     if (textField) {
       textField.setText(fieldValue);
+      textField.setFontSize(9);
       textField.updateAppearances(customFont);
     }
   }

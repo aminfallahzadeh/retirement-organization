@@ -91,3 +91,17 @@ export const convertObjectToPersianDate = (obj) => {
   const result = momentj(obj).format("jYYYY/jMM/jDD");
   return result;
 };
+
+export const separateByThousands = (n) => {
+  // return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  var m = "";
+  for (var i = 0; i < n.length; i++) {
+    var c = n.substr(n.length - i - 1, 1);
+    if ((i % 3 == 0) & (i > 0)) {
+      m = c + "," + m;
+    } else {
+      m = c + m;
+    }
+  }
+  return m;
+};

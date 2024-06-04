@@ -27,7 +27,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 // helper imports
-import { convertToPersianNumber } from "../helper.js";
+import { convertToPersianNumber, separateByThousands } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -147,7 +147,9 @@ export const PersonnelFractionGrid = () => {
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
