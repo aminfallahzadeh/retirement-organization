@@ -105,3 +105,13 @@ export const separateByThousands = (n) => {
   }
   return m;
 };
+
+export const reverseString = (str) => {
+  var splitString = str.split("");
+
+  var reverseArray = splitString.reverse();
+
+  var joinArray = reverseArray.join("");
+
+  return joinArray;
+};

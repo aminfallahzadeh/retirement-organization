@@ -1,5 +1,5 @@
 // library imports
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, TextAlignment } from "pdf-lib";
 import { saveAs } from "file-saver";
 import fontkit from "@pdf-lib/fontkit";
 
@@ -8,6 +8,7 @@ import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
   separateByThousands,
+  reverseString,
 } from "./helper";
 
 export const createStatmentPDF = async (retired, statement) => {
@@ -17,7 +18,7 @@ export const createStatmentPDF = async (retired, statement) => {
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
 
   pdfDoc.registerFontkit(fontkit);
-  const fontUrl = "./src/assets/fonts/Vazir.ttf";
+  const fontUrl = "./fonts/Vazir.ttf";
   const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
   const customFont = await pdfDoc.embedFont(fontBytes);
 
@@ -44,12 +45,13 @@ export const createStatmentPDF = async (retired, statement) => {
     retirementStatementSerial:
       convertToPersianNumber(statement.retirementStatementSerial) ?? "-",
     retirementDate:
-      convertToPersianDateFormatted(retired.retirementDate) ?? "-",
+      reverseString(convertToPersianDateFormatted(retired.retirementDate)) ??
+      "-",
     retiredLastPosition: retired.retiredLastPosition || "-",
     // lastOrganization: retired.lastOrganization || "-",
     retiredRealDuration:
-      separateByThousands(
-        convertToPersianNumber(retired.retiredRealDuration)
+      reverseString(
+        separateByThousands(convertToPersianNumber(retired.retiredRealDuration))
       ) ?? "-",
   };
 
@@ -68,6 +70,7 @@ export const createStatmentPDF = async (retired, statement) => {
     const textField = form.getTextField(fieldName);
     if (textField) {
       textField.setText(fieldValue);
+      textField.setAlignment(TextAlignment.Right);
       textField.setFontSize(9);
       textField.updateAppearances(customFont);
     }
