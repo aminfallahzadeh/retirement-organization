@@ -18,7 +18,7 @@ export const createStatmentPDF = async (retired, statement) => {
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
 
   pdfDoc.registerFontkit(fontkit);
-  const fontUrl = "./fonts/Vazir.ttf";
+  const fontUrl = "./src/fonts/Vazir.ttf";
   const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
   const customFont = await pdfDoc.embedFont(fontBytes);
 
