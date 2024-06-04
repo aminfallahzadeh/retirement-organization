@@ -293,7 +293,10 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           <select
             type="text"
             className="inputBox__form--input"
-            value={relatedObject?.relationshipWithParentID || " "}
+            value={
+              convertToEnglishNumber(relatedObject?.relationshipWithParentID) ||
+              " "
+            }
             required
             name="relationshipWithParentID"
             onChange={handleRealtedObjectChange}
