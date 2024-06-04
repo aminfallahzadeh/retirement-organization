@@ -126,7 +126,6 @@ export const createHeirStatmentPDF = async (retired, statement) => {
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
 
   pdfDoc.registerFontkit(fontkit);
-  // const fontUrl = "./src/fonts/Vazir.ttf";
   const fontUrl = `./fonts/Vazir.ttf`;
 
   const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
@@ -135,9 +134,10 @@ export const createHeirStatmentPDF = async (retired, statement) => {
   const form = pdfDoc.getForm();
 
   const fields = {
-    // personNationalCode:
-    //   convertToPersianNumber(retired.personNationalCode) ?? "-",
-    personNationalCode: "11111",
+    personNationalCode:
+      retired.personNationalCode === null
+        ? "-"
+        : reverseString(convertToPersianNumber(retired.personNationalCode)),
     personLastName: retired.personLastName || "-",
     personFirstName: retired.personFirstName || "-",
     retiredID: retired.retiredID || "-",
@@ -184,8 +184,9 @@ export const createHeirStatmentPDF = async (retired, statement) => {
     educationTypeName: retired.educationTypeName || "-",
     retirementStatementTypeName: statement.retirementStatementTypeName || "-",
     personDeathDate:
-      reverseString(convertToPersianDateFormatted(retired.personDeathDate)) ??
-      "-",
+      retired.personDeathDate === null
+        ? "-"
+        : reverseString(convertToPersianDateFormatted(retired.personDeathDate)),
     retirementStatementDesc: statement.retirementStatementDesc || "-",
     retirementStatementRunDate:
       convertToPersianDateFormatted(statement.retirementStatementRunDate) ||
@@ -210,11 +211,71 @@ export const createHeirStatmentPDF = async (retired, statement) => {
     personIsChildOfSacrificed: retired.personIsChildOfSacrificed || false,
   };
 
+  const table = statement.retirementStatementRelatedList.map(
+    (related, index) => ({
+      [`heirRowNumber-${index}`]: convertToPersianNumber(index + 1),
+      [`heirNationalCode-${index}`]: reverseString(
+        convertToPersianNumber(related.personNationalCode)
+      ),
+      [`heirFirstName-${index}`]: related.personFirstName || "-",
+      [`heirLastName-${index}`]: related.personLastName || "-",
+      [`heirFatherName-${index}`]: related.personFatherName || "-",
+      [`heirRelation-${index}`]: related.relationshipWithParentName || "-",
+      [`heirBirthDate-${index}`]:
+        reverseString(convertToPersianDateFormatted(related.personBirthDate)) ||
+        "-",
+      [`heirRight-${index}`]:
+        related.heirRight === null
+          ? "-"
+          : reverseString(
+              separateByThousands(convertToPersianNumber(related.heirRight))
+            ),
+
+      [`supplementaryRight-${index}`]:
+        related.supplementaryRight === null
+          ? "-"
+          : reverseString(
+              separateByThousands(
+                convertToPersianNumber(related.supplementaryRight)
+              )
+            ),
+
+      [`maritalRight-${index}`]:
+        related.maritalRight === null
+          ? "-"
+          : reverseString(
+              separateByThousands(convertToPersianNumber(related.maritalRight))
+            ),
+
+      [`childRight-${index}`]:
+        related.childRight === null
+          ? "-"
+          : reverseString(
+              separateByThousands(convertToPersianNumber(related.childRight))
+            ),
+    })
+  );
+
+  for (let i = 0; i < 6; i++) {
+    const row = table[i];
+    if (row) {
+      for (const [fieldName, fieldValue] of Object.entries(row)) {
+        const textField = form.getTextField(fieldName);
+        if (textField) {
+          textField.setText(fieldValue);
+          textField.setAlignment(TextAlignment.Center);
+          textField.setFontSize(7);
+          textField.updateAppearances(customFont);
+        }
+      }
+    }
+  }
+
   for (const [fieldName, fieldValue] of Object.entries(fields)) {
     const textField = form.getTextField(fieldName);
     if (textField) {
       textField.setText(fieldValue);
-      textField.setAlignment(TextAlignment.Right);
+      textField.setAlignment(TextAlignment.Center);
       textField.setFontSize(9);
       textField.updateAppearances(customFont);
     }

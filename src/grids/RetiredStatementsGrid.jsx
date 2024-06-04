@@ -34,7 +34,6 @@ import {
   Delete as DeleteIcon,
   Close as CloseIcon,
   Done as DoneIcon,
-  Print as PrintIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -45,7 +44,6 @@ import {
 // components
 import Modal from "../components/Modal";
 import GenerateStatementForm from "../forms/GenerateStatementForm.jsx";
-import RetirementStatementViewForm from "../forms/RetirementStatementViewForm.jsx";
 
 // library imports
 import Skeleton from "react-loading-skeleton";
@@ -72,10 +70,8 @@ function RetiredStatementsGrid() {
   const { personDeathDate } = useSelector((state) => state.retiredState);
 
   // MODAL STATES
-  const [showStatementModal, setShowStatementModal] = useState(false);
   const [showGenerateStatementModal, setShowGenerateStatementModal] =
     useState(false);
-  const [showViewStatementModal, setShowViewStatementModal] = useState(false);
   const [showDeleteStatementModal, setShowDeleteStatementModal] =
     useState(false);
   const dispatch = useDispatch();
@@ -105,18 +101,6 @@ function RetiredStatementsGrid() {
 
   const handleDeleteStatementModalChange = () => {
     setShowDeleteStatementModal(true);
-  };
-
-  const handleShowStatementModal = () => {
-    setShowStatementModal(true);
-  };
-
-  const handleSowViewStatementModalChange = () => {
-    setShowViewStatementModal(true);
-  };
-
-  const handlePrint = () => {
-    window.print();
   };
 
   const handleDownload = useCallback(
@@ -189,7 +173,6 @@ function RetiredStatementsGrid() {
     isPensionary,
     getList,
     showGenerateStatementModal,
-    showViewStatementModal,
     showDeleteStatementModal,
   ]);
 
@@ -372,48 +355,7 @@ function RetiredStatementsGrid() {
         </div>
       ) : (
         <>
-          {showStatementModal ? (
-            <Modal title="حکم" closeModal={() => setShowStatementModal(false)}>
-              <div className="flex-col flex-center">
-                <img
-                  src={
-                    personDeathDate
-                      ? "./images/hokm-movazzaf.png"
-                      : "./images/hokm-sample.png"
-                  }
-                  alt="نمونه حکم"
-                />
-
-                <Button
-                  dir="ltr"
-                  endIcon={<PrintIcon />}
-                  onClick={handleDownload}
-                  variant="contained"
-                  color="success"
-                  sx={{ fontFamily: "sahel" }}
-                >
-                  <span>دانلود</span>
-                </Button>
-                <Button
-                  dir="ltr"
-                  endIcon={<PrintIcon />}
-                  onClick={handlePrint}
-                  variant="contained"
-                  color="success"
-                  sx={{ fontFamily: "sahel" }}
-                >
-                  <span>چاپ</span>
-                </Button>
-              </div>
-            </Modal>
-          ) : showViewStatementModal ? (
-            <Modal
-              title={"مشاهده حکم"}
-              closeModal={() => setShowViewStatementModal(false)}
-            >
-              <RetirementStatementViewForm statementID={statementID} />
-            </Modal>
-          ) : showDeleteStatementModal ? (
+          {showDeleteStatementModal ? (
             <Modal
               title={"حذف حکم"}
               closeModal={() => setShowDeleteStatementModal(false)}
