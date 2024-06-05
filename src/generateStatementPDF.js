@@ -133,6 +133,43 @@ export const createHeirStatmentPDF = async (retired, statement) => {
 
   const form = pdfDoc.getForm();
 
+  const statementItems = {};
+
+  const searchKey = "retirementStatementItemID";
+  const searchValues = {
+    first: "1001",
+    second: "1002",
+    third: "1003",
+    forth: "1004",
+  };
+  const newKeys = {
+    first: "basicSalary",
+    second: "suplementaryPension",
+    third: "familyAllowance",
+    forth: "childAllowance",
+  };
+
+  const findAndAssign = (arr, target, key, searchValues, newKeys) => {
+    arr.forEach((obj) => {
+      Object.keys(searchValues).forEach((keyName) => {
+        if (obj[key] === searchValues[keyName]) {
+          const itemKey = "retirementStatementItemAmount";
+          if (itemKey in obj) {
+            target[newKeys[keyName]] = String(obj[itemKey]);
+          }
+        }
+      });
+    });
+  };
+
+  findAndAssign(
+    statement.retirementStatementAmountList,
+    statementItems,
+    searchKey,
+    searchValues,
+    newKeys
+  );
+
   const fields = {
     personNationalCode:
       retired.personNationalCode === null
@@ -200,6 +237,37 @@ export const createHeirStatmentPDF = async (retired, statement) => {
           convertToPersianNumber(statement.retirementStatementNo)
         )
       ) ?? "-",
+    basicSalary: statementItems.basicSalary
+      ? reverseString(
+          separateByThousands(
+            convertToPersianNumber(statementItems.basicSalary)
+          )
+        )
+      : "-",
+
+    supplementaryPension: statementItems.suplementaryPension
+      ? reverseString(
+          separateByThousands(
+            convertToPersianNumber(statementItems.suplementaryPension)
+          )
+        )
+      : "-",
+
+    familyAllowance: statementItems.familyAllowance
+      ? reverseString(
+          separateByThousands(
+            convertToPersianNumber(statementItems.familyAllowance)
+          )
+        )
+      : "-",
+
+    childAllowance: statementItems.childAllowance
+      ? reverseString(
+          separateByThousands(
+            convertToPersianNumber(statementItems.childAllowance)
+          )
+        )
+      : "-",
   };
 
   const checkboxes = {
@@ -275,7 +343,6 @@ export const createHeirStatmentPDF = async (retired, statement) => {
     const textField = form.getTextField(fieldName);
     if (textField) {
       textField.setText(fieldValue);
-      textField.setAlignment(TextAlignment.Center);
       textField.setFontSize(9);
       textField.updateAppearances(customFont);
     }

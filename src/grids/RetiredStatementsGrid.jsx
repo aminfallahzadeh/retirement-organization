@@ -21,6 +21,7 @@ import {
   Box,
   Tooltip,
   PaginationItem,
+  CircularProgress,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -79,8 +80,10 @@ function RetiredStatementsGrid() {
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
-  const [getRetired] = useLazyGetRetiredQuery();
-  const [getRetirementStatement] = useLazyGetRetirementStatementQuery();
+  const [getRetired, { isFetching: isRetiredFetching }] =
+    useLazyGetRetiredQuery();
+  const [getRetirementStatement, { isFetching: isStatementFetching }] =
+    useLazyGetRetirementStatementQuery();
 
   // ACCESS THE PENSIONARY STATE FROM STORE
   const { isPensionary } = useSelector((state) => state.retiredState);
@@ -395,6 +398,18 @@ function RetiredStatementsGrid() {
               <GenerateStatementForm
                 setShowGenerateStatementModal={setShowGenerateStatementModal}
               />
+            </Modal>
+          ) : isStatementFetching || isRetiredFetching ? (
+            <Modal title="در حال بارگذاری ...">
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  padding: "2rem 10rem",
+                }}
+              >
+                <CircularProgress color="primary" />
+              </Box>
             </Modal>
           ) : null}
           <MaterialReactTable table={table} />
