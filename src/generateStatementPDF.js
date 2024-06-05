@@ -83,7 +83,10 @@ export const createStatementPDF = async (retired, statement, isDead) => {
       reverseString(
         convertToPersianNumber(statement.retirementStatementChildrenCount)
       ) ?? "-",
-    insuranceCode: convertToPersianNumber(retired.insuranceCode) ?? "-",
+    insuranceCode:
+      retired.insuranceCode === null
+        ? "-"
+        : reverseString(convertToPersianNumber(retired.insuranceCode)),
     relatedCount:
       convertToPersianNumber(statement.retirementStatementRelatedCount) ?? "-",
     maritialStatus: retired.maritialStatus || "-",
@@ -96,28 +99,37 @@ export const createStatementPDF = async (retired, statement, isDead) => {
       reverseString(convertToPersianDateFormatted(retired.retirementDate)) ??
       "-",
     retiredLastPosition: retired.retiredLastPosition || "-",
+    retiredOrganizationName: retired.retiredOrganizationName || "-",
     retiredRealDuration:
-      reverseString(
-        separateByThousands(convertToPersianNumber(retired.retiredRealDuration))
-      ) ?? "-",
+      retired.retiredRealDuration === null
+        ? "-"
+        : reverseString(
+            separateByThousands(
+              convertToPersianNumber(retired.retiredRealDuration)
+            )
+          ),
     retiredGrantDuration:
-      reverseString(
-        separateByThousands(
-          convertToPersianNumber(retired.retiredGrantDuration)
-        )
-      ) ?? "-",
+      retired.retiredGrantDuration === null
+        ? "-"
+        : reverseString(
+            separateByThousands(
+              convertToPersianNumber(retired.retiredGrantDuration)
+            )
+          ),
     retiredGroup:
-      reverseString(
-        separateByThousands(
-          convertToPersianNumber(retired.retiredGrandDuration)
-        )
-      ) ?? "-",
+      retired.retiredGroup === null
+        ? "-"
+        : reverseString(
+            separateByThousands(convertToPersianNumber(retired.retiredGroup))
+          ),
     retiredJobDegree:
-      reverseString(
-        separateByThousands(
-          convertToPersianNumber(retired.retiredGrandDuration)
-        )
-      ) ?? "-",
+      retired.retiredJobDegree === null
+        ? "-"
+        : reverseString(
+            separateByThousands(
+              convertToPersianNumber(retired.retiredJobDegree)
+            )
+          ),
     educationTypeName: retired.educationTypeName || "-",
     retirementStatementTypeName: statement.retirementStatementTypeName || "-",
     personDeathDate:
