@@ -41,8 +41,8 @@ export const createStatementPDF = async (retired, statement, isDead) => {
   const newKeys = {
     first: "basicSalary",
     second: "suplementaryPension",
-    third: "familyAllowance",
-    forth: "childAllowance",
+    third: "childAllowance",
+    forth: "familyAllowance",
   };
   const findAndAssign = (arr, target, key, itemKey, searchValues, newKeys) => {
     arr.forEach((obj) => {
@@ -78,14 +78,20 @@ export const createStatementPDF = async (retired, statement, isDead) => {
     personBirthDate:
       convertToPersianDateFormatted(retired.personBirthDate) ?? "-",
     personBirthPlace: retired.personBirthPlace || "-",
-    gender: retired.gender || "-",
+    gender: retired.genderName || "-",
     retirementStatementChildrenCount:
-      convertToPersianNumber(retired.retirementStatementChildrenCount) ?? "-",
+      reverseString(
+        convertToPersianNumber(statement.retirementStatementChildrenCount)
+      ) ?? "-",
     insuranceCode: convertToPersianNumber(retired.insuranceCode) ?? "-",
+    relatedCount:
+      convertToPersianNumber(statement.retirementStatementRelatedCount) ?? "-",
     maritialStatus: retired.maritialStatus || "-",
     personPostalCode: convertToPersianNumber(retired.personPostalCode) || "-",
     retirementStatementSerial:
-      convertToPersianNumber(statement.retirementStatementSerial) ?? "-",
+      reverseString(
+        convertToPersianNumber(statement.retirementStatementSerial)
+      ) ?? "-",
     retirementDate:
       reverseString(convertToPersianDateFormatted(retired.retirementDate)) ??
       "-",
@@ -120,11 +126,13 @@ export const createStatementPDF = async (retired, statement, isDead) => {
         : reverseString(convertToPersianDateFormatted(retired.personDeathDate)),
     retirementStatementDesc: statement.retirementStatementDesc || "-",
     retirementStatementRunDate:
-      convertToPersianDateFormatted(statement.retirementStatementRunDate) ||
-      "-",
+      reverseString(
+        convertToPersianDateFormatted(statement.retirementStatementRunDate)
+      ) || "-",
     retirementStatementIssueDate:
-      convertToPersianDateFormatted(statement.retirementStatementIssueDate) ||
-      "-",
+      reverseString(
+        convertToPersianDateFormatted(statement.retirementStatementIssueDate)
+      ) || "-",
     retirementStatementNo:
       reverseString(
         separateByThousands(
