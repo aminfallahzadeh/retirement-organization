@@ -170,6 +170,15 @@ export const createStatementPDF = async (retired, statement, isDead) => {
           )
         )
       : "-",
+
+    totalAmount:
+      statement.sumRetirementStatementAmount === null
+        ? "-"
+        : reverseString(
+            separateByThousands(
+              convertToPersianNumber(statement.sumRetirementStatementAmount)
+            )
+          ),
   };
 
   const checkboxes = {
