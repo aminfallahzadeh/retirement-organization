@@ -57,10 +57,7 @@ import {
   convertToPersianDateFormatted,
 } from "../helper.js";
 
-import {
-  createRelatedStatmentPDF,
-  createHeirStatmentPDF,
-} from "../generateStatementPDF.js";
+import { createStatementPDF } from "../generateStatementPDF.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -113,11 +110,12 @@ function RetiredStatementsGrid() {
         const statementRes = await getRetirementStatement({
           RetirementStatementID,
         }).unwrap();
-        if (personDeathDate) {
-          createHeirStatmentPDF(retiredRes.itemList[0], statementRes);
-        } else {
-          createRelatedStatmentPDF(retiredRes.itemList[0], statementRes);
-        }
+
+        createStatementPDF(
+          retiredRes.itemList[0],
+          statementRes,
+          personDeathDate
+        );
       } catch (err) {
         console.log(err);
         toast.error("خطایی رخ داده است", { autoClose: 2000 });
