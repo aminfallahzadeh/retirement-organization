@@ -1,20 +1,24 @@
 // components
 import DateTime from "./DateTime";
-import { Logo } from "./SVGs";
+import { Logo, Banner } from "./SVGs";
 
 function Hero() {
   return (
-    <div className="hero">
-      <div className="hero__title">
-        {/* <img src="logo.png" alt="لوگو" /> */}
-        <Logo />
-        <h1 className="heading-primary">سامانه بازنشستگان و وظیفه بگیران</h1>
+    <section className="hero">
+      <div className="hero__bg">
+        <Banner />
       </div>
-
-      <div className="hero__time">
-        <DateTime />
+      <div className="hero__content">
+        <div className="hero__title">
+          <Logo />
+          <h1 className="heading-primary">سامانه بازنشستگان و وظیفه بگیران</h1>
+        </div>
+        {/* 
+        <div className="hero__time">
+          <DateTime />
+        </div> */}
       </div>
-    </div>
+    </section>
   );
 }
 
