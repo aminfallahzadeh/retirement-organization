@@ -1,10 +1,52 @@
-// componsnets
-import StatementItemsGrid from "../grids/StatementItemsGrid";
+// react imports
+import { useState, useEffect } from "react";
+
+// redux imports
+import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
+
+// mui imports
+import { CalendarTodayOutlined as CalenderIcon } from "@mui/icons-material";
+
+// libary imports
+import "jalaali-react-date-picker/lib/styles/index.css";
+import { InputDatePicker } from "jalaali-react-date-picker";
 
 function BatchStatementsForm() {
+  // DATE STATES
+  const [selectedRunDate, setSelectedRunDate] = useState(null);
+  const [isRunCalenderOpen, setIsRunCalenderOpen] = useState(false);
+
+  // LOOKUP STATEs
+  const [statementTypeCombo, setStatementTypeCombo] = useState([]);
+
+  const {
+    data: retirementStatementTypesComboItems,
+    isSuccess: isStatementTypeSuccess,
+  } = useGetRetirementStatementTypeQuery({});
+
+  useEffect(() => {
+    if (isStatementTypeSuccess) {
+      setStatementTypeCombo(retirementStatementTypesComboItems.itemList);
+    }
+  }, [isStatementTypeSuccess, retirementStatementTypesComboItems]);
+
+  // DATE HANDLERS
+  const handleRunDateChange = (date) => {
+    setSelectedRunDate(date);
+    setIsRunCalenderOpen(false);
+  };
+
+  const handleRunDateOpenChange = (open) => {
+    setIsRunCalenderOpen(open);
+  };
+
   const content = (
-    <section className="formContainer">
-      <form method="POST" className="grid grid--col-4 u-margin-top-md">
+    <section className="formContainer flex-col">
+      <form
+        method="POST"
+        className="grid grid--col-5 u-margin-top-md"
+        noValidate
+      >
         <div className="inputBox__form">
           <input
             type="text"
@@ -39,54 +81,57 @@ function BatchStatementsForm() {
           </label>
         </div>
         <div className="inputBox__form">
-          <input
-            type="text"
-            id="runTime"
-            className="inputBox__form--input"
-            required
+          <InputDatePicker
+            value={selectedRunDate}
+            onChange={handleRunDateChange}
+            format={"jYYYY/jMM/jDD"}
+            onOpenChange={handleRunDateOpenChange}
+            suffixIcon={<CalenderIcon color="action" />}
+            open={isRunCalenderOpen}
+            style={{
+              border: "2px solid #cfcfcf",
+              borderRadius: "6px",
+              marginLeft: "0.5rem",
+            }}
+            wrapperStyle={{
+              border: "none",
+              cursor: "pointer",
+            }}
           />
-          <label htmlFor="runTime" className="inputBox__form--label">
-            <span>*</span> تاریخ اجرا
-          </label>
+          <div className="inputBox__form--readOnly-label">تاریخ اجرا</div>
         </div>
 
-        <div className="inputBox__form col-span-2">
-          <input
+        <div className="inputBox__form">
+          <select
             type="text"
-            id="statementType"
             className="inputBox__form--input"
+            name="retirementStatementTypeID"
+            // onChange={handleStatementDataChange}
+            // value={statementObject?.retirementStatementTypeID}
             required
-          />
-          <label htmlFor="statementType" className="inputBox__form--label">
+            id="retirementStatementTypeID"
+          >
+            <option value=" ">انتخاب نوع حکم</option>
+            {statementTypeCombo?.map((type) => (
+              <option
+                value={type.retirementStatementTypeID}
+                key={type.retirementStatementTypeID}
+              >
+                {type.retirementStatementTypeName}
+              </option>
+            ))}
+          </select>
+          <label
+            className="inputBox__form--label"
+            htmlFor="retirementStatementTypeID"
+          >
             <span>*</span> نوع حکم
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            id="confirmDate"
-            className="inputBox__form--input"
-            required
-          />
-          <label htmlFor="confirmDate" className="inputBox__form--label">
-            <span>*</span> تاریخ تایید
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            id="monthNum"
-            className="inputBox__form--input"
-            required
-          />
-          <label htmlFor="monthNum" className="inputBox__form--label">
-            <span>*</span> تعداد ماه برای محاسبه تفاوت
           </label>
         </div>
       </form>
 
       <div className="u-margin-top-md flex-row flex-row--grow">
-        <StatementItemsGrid />
+        <div></div>
 
         <div className="inputBox__form col-span-4 row-span-3">
           <textarea

@@ -37,14 +37,16 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
   const [generateNewRetirementStatement, { isLoading: isGenerating }] =
     useGenerateNewRetirementStatementMutation();
 
-  const { data: retirementStatementTypesComboItems, isSuccess } =
-    useGetRetirementStatementTypeQuery({ RetirementStatementTypeID: null });
+  const {
+    data: retirementStatementTypesComboItems,
+    isSuccess: isStatementTypeSuccess,
+  } = useGetRetirementStatementTypeQuery({});
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isStatementTypeSuccess) {
       setStatementTypeCombo(retirementStatementTypesComboItems.itemList);
     }
-  }, [isSuccess, retirementStatementTypesComboItems]);
+  }, [isStatementTypeSuccess, retirementStatementTypesComboItems]);
 
   // CHANGE HANDLERS
   const handleRunDateOpenChange = (open) => {

@@ -4,7 +4,7 @@ import { apiSlice } from "./slices/apiSlice";
 import authSliceReducer from "./slices/authSlice";
 import captchaSliceReducer from "./slices/captchaSlice";
 import retiredStateSliceReducer from "./slices/retiredStateSlice";
-import groupsDataSliceReducer from "./slices/groupsDataSlice";
+// import groupsDataSliceReducer from "./slices/groupsDataSlice";
 import itemsDataSliceReducer from "./slices/itemsDataSlice";
 import groupItemsDataSliceReducer from "./slices/groupItemsDataSlice";
 import usersDataSliceReducer from "./slices/usersDataSlice";
@@ -25,7 +25,7 @@ const store = configureStore({
     auth: authSliceReducer,
     captcha: captchaSliceReducer,
     retiredState: retiredStateSliceReducer,
-    groupsData: groupsDataSliceReducer,
+    // groupsData: groupsDataSliceReducer,
     itemsData: itemsDataSliceReducer,
     groupItemsData: groupItemsDataSliceReducer,
     usersData: usersDataSliceReducer,

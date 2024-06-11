@@ -1,26 +1,22 @@
 // mui imports
 import { IconButton } from "@mui/material";
-import {
-  CloseOutlined as CloseIcon,
-  ErrorOutlineOutlined as ErrorIcon,
-} from "@mui/icons-material";
+import { CloseOutlined as CloseIcon } from "@mui/icons-material";
 
-function Modal({ title, closeModal, children, mode }) {
+function Modal({ title, closeModal, children }) {
   const content = (
     <>
       <section className="modal">
-        <div className="moda__icons">
-          {closeModal && (
-            <IconButton color="error" onClick={closeModal}>
-              <CloseIcon />
-            </IconButton>
-          )}
-
-          {mode === "warning" ? <ErrorIcon color="warning" /> : null}
-        </div>
-
         <div className="modal__header">
-          <h4 className="title-secondary">{title}</h4>
+          {closeModal && (
+            <div className="modal__close">
+              <IconButton color="error" onClick={closeModal}>
+                <CloseIcon />
+              </IconButton>
+            </div>
+          )}
+          <div className="modal__title">
+            <h4 className="title-secondary">{title}</h4>
+          </div>
         </div>
         <div className="modal__body">{children}</div>
       </section>
