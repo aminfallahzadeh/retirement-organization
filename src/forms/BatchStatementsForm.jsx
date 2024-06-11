@@ -158,7 +158,7 @@ function BatchStatementsForm() {
             <option>عائله مندی موظف</option>
           </select>
           <label htmlFor="statementType" className="inputBox__form--label">
-            <span>*</span> جنسیت
+            تنظیمات آیتم های حکم
           </label>
         </div>
 
