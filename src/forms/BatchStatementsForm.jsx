@@ -5,7 +5,11 @@ import { useState, useEffect } from "react";
 import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
 
 // mui imports
-import { CalendarTodayOutlined as CalenderIcon } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
+import {
+  CalendarTodayOutlined as CalenderIcon,
+  Outbox as OutboxIcon,
+} from "@mui/icons-material";
 
 // libary imports
 import "jalaali-react-date-picker/lib/styles/index.css";
@@ -111,7 +115,9 @@ function BatchStatementsForm() {
             required
             id="retirementStatementTypeID"
           >
-            <option value=" ">انتخاب نوع حکم</option>
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
             {statementTypeCombo?.map((type) => (
               <option
                 value={type.retirementStatementTypeID}
@@ -130,10 +136,33 @@ function BatchStatementsForm() {
         </div>
       </form>
 
-      <div className="u-margin-top-md flex-row flex-row--grow">
-        <div></div>
+      <div className="u-margin-top-md grid grid--col-2">
+        <div className="inputBox__form">
+          <select
+            id="statementType"
+            className="inputBox__form--input"
+            required
+            value=" "
+          >
+            <option value=" " disabled>
+              انتخاب کنید
+            </option>
+            <option>حقوق مبنا</option>
+            <option>حقوق مبنای بازنشسته</option>
+            <option>حقوق مبنای موظف</option>
+            <otpion>تکمیلی بازنشسته</otpion>
+            <option>تکمیلی موظف</option>
+            <option>حق اولاد بازنشسته</option>
+            <option>حق اولاد موظف</option>
+            <option>عائله مندی بازنشسته</option>
+            <option>عائله مندی موظف</option>
+          </select>
+          <label htmlFor="statementType" className="inputBox__form--label">
+            <span>*</span> جنسیت
+          </label>
+        </div>
 
-        <div className="inputBox__form col-span-4 row-span-3">
+        <div className="inputBox__form row-span-3">
           <textarea
             type="text"
             id="StatemnetDisc"
@@ -144,6 +173,18 @@ function BatchStatementsForm() {
             شرح حکم
           </label>
         </div>
+      </div>
+
+      <div style={{ marginRight: "auto" }}>
+        <LoadingButton
+          dir="ltr"
+          endIcon={<OutboxIcon />}
+          variant="contained"
+          color="primary"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>ارسال</span>
+        </LoadingButton>
       </div>
     </section>
   );
