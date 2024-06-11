@@ -4,7 +4,7 @@ import PersonnelGrid from "../grids/PersonnelGrid";
 
 function PersonnelStatementsScreen() {
   const content = (
-    <section className="main flex-col">
+    <section className="flex-col">
       <div className="title-primary--container flex-row flex-center">
         <h4 className="title-primary">
           <span className="title-primary--underline"></span>احکام کارمندان

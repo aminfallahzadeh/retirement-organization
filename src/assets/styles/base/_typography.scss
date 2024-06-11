@@ -7,12 +7,21 @@
         url("../../fonts/Sahel.woff2") format("woff2");
 }
 
+@font-face {
+    font-family: sahel;
+    src:
+        url("../../fonts/Vazir.eot") format("embedded-opentype"),
+        url("../../fonts/Vazir.ttf") format("truetype"),
+        url("../../fonts/Vazir.woff") format("woff"),
+        url("../../fonts/Vazir.woff2") format("woff2");
+}
+
 body {
-    font-family: sahel, sans-serif !important;
+    font-family: Vazir, sans-serif !important;
 }
 
 html {
-    font-family: sahel, sans-serif !important;
+    font-family: Vazir, sans-serif !important;
 }
 
 textarea {
@@ -20,7 +29,7 @@ textarea {
 }
 
 select {
-    font-family: "sahel" !important;
+    font-family: Vazir !important;
     padding: 0 0.5rem !important;
 }
 

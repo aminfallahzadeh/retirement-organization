@@ -12,14 +12,14 @@ export const defaultTableOptions = {
   enableDensityToggle: false,
   muiTableBodyCellProps: {
     sx: {
-      fontFamily: "sahel",
+      fontFamily: "Vazir",
       borderRight: "1px solid #cfcfcf",
     },
   },
   muiTableHeadCellProps: {
     sx: {
       color: "#001a57",
-      fontFamily: "sahel",
+      fontFamily: "Vazir",
       backgroundColor: "rgba(47, 255, 66, .4)",
       borderRight: "1px solid #cfcfcf",
       fontWeight: "600",

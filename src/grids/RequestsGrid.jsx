@@ -136,7 +136,13 @@ function RequestsGrid() {
           >
             <Tooltip
               title={
-                <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
+                <span
+                  style={{
+                    fontFamily: "Vazir",
+                    fontSize: "0.8rem",
+                    fontWeight: "100",
+                  }}
+                >
                   مشاهده اطلاعات درخواست کننده
                 </span>
               }
@@ -160,7 +166,13 @@ function RequestsGrid() {
           <Link to={`/retirement-organization/request?id=${row.id}`}>
             <Tooltip
               title={
-                <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
+                <span
+                  style={{
+                    fontFamily: "Vazir",
+                    fontSize: "0.8rem",
+                    fontWeight: "100",
+                  }}
+                >
                   مشاهده جزئیات درخواست
                 </span>
               }
@@ -194,7 +206,13 @@ function RequestsGrid() {
         ) : (
           <Tooltip
             title={
-              <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
+              <span
+                style={{
+                  fontFamily: "Vazir",
+                  fontSize: "0.8rem",
+                  fontWeight: "100",
+                }}
+              >
                 بروز رسانی
               </span>
             }
