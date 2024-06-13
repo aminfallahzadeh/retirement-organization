@@ -13,6 +13,7 @@ import RetiredRelatedGrid from "../../grids/RetiredRelatedGrid";
 import RetiredStatementsGrid from "../../grids/RetiredStatementsGrid";
 import RetiredHeirGrid from "../../grids/RetiredHeirGrid";
 import AllRequestsGrid from "../../grids/AllRequestsGrid";
+import RetiredSlipsGrid from "../../grids/RetiredSlipsGrid";
 
 function RelatedInfoSection() {
   const [value, setValue] = useState("1");
@@ -59,7 +60,9 @@ function RelatedInfoSection() {
           sx={{
             padding: "0",
           }}
-        ></TabPanel>
+        >
+          <RetiredSlipsGrid />
+        </TabPanel>
         <TabPanel
           value="4"
           sx={{

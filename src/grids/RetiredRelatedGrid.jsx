@@ -1,19 +1,24 @@
 // react imports
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
 import {
-  useLazyGetRelatedListByParentPersonIDQuery,
+  useGetRelatedListByParentPersonIDQuery,
   useRemoveRelatedMutation,
 } from "../slices/relatedApiSlice";
-import { setRelatedTableData } from "../slices/relatedDataSlice";
 
 // mui imports
-import { IconButton, Button, Box } from "@mui/material";
+import {
+  IconButton,
+  Button,
+  Box,
+  CircularProgress,
+  Tooltip,
+  PaginationItem,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
   ChevronLeft,
@@ -27,7 +32,6 @@ import {
   Delete as DeleteIcon,
   Refresh as RefreshIcon,
 } from "@mui/icons-material";
-import { PaginationItem } from "@mui/material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
   MaterialReactTable,
@@ -48,6 +52,7 @@ import { toast } from "react-toastify";
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
+  findById,
 } from "../helper.js";
 
 // utils imports
@@ -55,30 +60,68 @@ import { defaultTableOptions } from "../utils.js";
 
 function RetiredRelatedGrid() {
   const [rowSelection, setRowSelection] = useState({});
+
+  const [relatedTableData, setRelatedTableData] = useState([]);
+
   const [showCreateRelatedModal, setShowCreateRelatedModal] = useState(false);
   const [showEditRelatedModal, setShowEditRelatedModal] = useState(false);
   const [showDeleteRelatedModal, setShowDeleteRelatedModal] = useState(false);
 
   const [personID, setPersonID] = useState("");
-
-  const { selectedRelatedData } = useSelector((state) => state.relatedData);
-
-  const [getListOdRelated, { isLoading, isFetching }] =
-    useLazyGetRelatedListByParentPersonIDQuery();
+  const [pensionaryID, setPensionaryID] = useState("");
 
   const [removeRelated, { isLoading: isDeleting }] = useRemoveRelatedMutation();
 
-  const dispatch = useDispatch();
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
   const parentPersonID = searchParams.get("personID");
 
-  // ACCESS THE PENSIONARY STATE FROM STORE
-  const { isPensionary } = useSelector((state) => state.retiredState);
+  const {
+    data: relateds,
+    isSuccess,
+    isLoading,
+    isFetching,
+    refetch,
+    error,
+  } = useGetRelatedListByParentPersonIDQuery(parentPersonID);
 
-  // access the data from redux store
-  const { relatedTableData } = useSelector((state) => state.relatedData);
+  useEffect(() => {
+    refetch();
+    if (isSuccess) {
+      const data = relateds.itemList.map((item) => ({
+        id: item.personID,
+        pensionaryID: item.pensionaryID,
+        relatedBirthDate: item.personBirthDate,
+        relatedNtionalCode: item.personNationalCode,
+        relatedFirstName: item.personFirstName,
+        relatedLastName: item.personLastName,
+        relatedStatus: item.pensionaryIsUnderGauranteeText,
+        relation: item.relationshipWithParentName,
+      }));
+      setRelatedTableData(data);
+    }
+  }, [
+    isSuccess,
+    relateds,
+    refetch,
+    showCreateRelatedModal,
+    showEditRelatedModal,
+    showDeleteRelatedModal,
+  ]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
+
+  const handleRefresh = () => {
+    refetch();
+  };
 
   const handleShowCreateRelatedModal = () => {
     setShowCreateRelatedModal(true);
@@ -92,36 +135,12 @@ function RetiredRelatedGrid() {
     setShowDeleteRelatedModal(true);
   };
 
-  const getchRelatedList = useCallback(async () => {
-    try {
-      const getListRes = await getListOdRelated(parentPersonID).unwrap();
-
-      const mappedData = getListRes?.itemList?.map((item) => ({
-        id: item.personID,
-        pensionaryID: item.pensionaryID,
-        relatedBirthDate: item.personBirthDate,
-        relatedNtionalCode: item.personNationalCode,
-        relatedFirstName: item.personFirstName,
-        relatedLastName: item.personLastName,
-        relatedStatus: item.pensionaryIsUnderGauranteeText,
-        relation: item.relationshipWithParentName,
-      }));
-
-      dispatch(setRelatedTableData(mappedData));
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [dispatch, getListOdRelated, parentPersonID]);
-
   const handleRemoveRelated = async () => {
     try {
       const deleteRes = await removeRelated({
-        pensionaryID: selectedRelatedData?.pensionaryID,
+        pensionaryID,
       }).unwrap();
-      getchRelatedList();
+      refetch();
       setShowDeleteRelatedModal(false);
       toast.success(deleteRes.message, {
         autoClose: 2000,
@@ -133,18 +152,6 @@ function RetiredRelatedGrid() {
       });
     }
   };
-
-  useEffect(() => {
-    if (isPensionary) {
-      getchRelatedList();
-    }
-  }, [
-    isPensionary,
-    getchRelatedList,
-    showEditRelatedModal,
-    showDeleteRelatedModal,
-    showCreateRelatedModal,
-  ]);
 
   const columns = useMemo(
     () => [
@@ -195,7 +202,11 @@ function RetiredRelatedGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="success" onClick={handleShowRelatedModal}>
+          <IconButton
+            color="success"
+            onClick={handleShowRelatedModal}
+            sx={{ padding: "0" }}
+          >
             <EditIcon />
           </IconButton>
         ),
@@ -207,7 +218,11 @@ function RetiredRelatedGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="error" onClick={handleShowDeleteRelatedModal}>
+          <IconButton
+            color="error"
+            onClick={handleShowDeleteRelatedModal}
+            sx={{ padding: "0" }}
+          >
             <DeleteIcon />
           </IconButton>
         ),
@@ -232,33 +247,60 @@ function RetiredRelatedGrid() {
       },
     }),
     renderTopToolbarCustomActions: () => (
-      <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
-      >
-        <Button
-          dir="ltr"
-          endIcon={<AddIcon />}
-          disabled={!isPensionary}
-          onClick={handleShowCreateRelatedModal}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>ایجاد</span>
-        </Button>
+      <Box>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip
+            title={
+              <span
+                style={{
+                  fontFamily: "Vazir",
+                  fontSize: "0.8rem",
+                  fontWeight: "100",
+                }}
+              >
+                بروز رسانی
+              </span>
+            }
+          >
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="info"
+                onClick={handleRefresh}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
 
-        <LoadingButton
-          dir="ltr"
-          endIcon={<RefreshIcon />}
-          disabled={!isPensionary}
-          loading={isFetching}
-          onClick={getchRelatedList}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>بروز رسانی</span>
-        </LoadingButton>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip
+            title={
+              <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
+                ایجاد وابسته
+              </span>
+            }
+          >
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="success"
+                onClick={handleShowCreateRelatedModal}
+              >
+                <AddIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
       </Box>
     ),
     muiPaginationProps: {
@@ -287,9 +329,11 @@ function RetiredRelatedGrid() {
     const id = Object.keys(table.getState().rowSelection)[0];
 
     if (id) {
+      const selected = findById(relatedTableData, id);
       setPersonID(id);
+      setPensionaryID(selected?.pensionaryID);
     }
-  }, [table, rowSelection]);
+  }, [table, rowSelection, relatedTableData]);
 
   const content = (
     <>

@@ -12,9 +12,23 @@ export const payApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getPayList: builder.query({
-      query: ({ currentYear, currentMonth, payType }) => ({
-        url: `${PAY_URL_HTTPS}/GetPayList?currentYear=${currentYear}&currentMonth=${currentMonth}&payType=${payType}`,
-      }),
+      query: ({ personID, currentYear, currentMonth, payType }) => {
+        let url = `${PAY_URL_HTTPS}/GetPayList?payType=${payType}`;
+
+        if (personID) {
+          url += `&personID=${personID}`;
+        }
+        if (currentYear) {
+          url += `&currentYear=${currentYear}`;
+        }
+        if (currentMonth) {
+          url += `&currentMonth=${currentMonth}`;
+        }
+
+        return {
+          url,
+        };
+      },
     }),
     getPay: builder.query({
       query: ({ payID }) => ({
@@ -41,6 +55,7 @@ export const payApiSlice = apiSlice.injectEndpoints({
 export const {
   useLazyExistPaySlipQuery,
   useLazyGetPayListQuery,
+  useGetPayListQuery,
   useGetPayQuery,
   useIssuePayMutation,
   useInsertPayMutation,

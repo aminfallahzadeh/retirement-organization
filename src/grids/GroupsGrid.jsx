@@ -188,7 +188,7 @@ function GroupsGrid() {
             title={
               <div
                 style={{
-                  fontFamily: "sahel",
+                  fontFamily: "Vazir",
                   fontSize: "0.7rem",
                   textAlign: "center",
                 }}
