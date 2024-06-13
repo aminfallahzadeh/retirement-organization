@@ -28,12 +28,14 @@ import {
   Close as CloseIcon,
   ArrowLeftOutlined as ArrowIcon,
 } from "@mui/icons-material";
+import { toast } from "react-toastify";
 
 function Nav({ userName, userID }) {
   const { data: user } = useGetUserQuery({ userID });
 
+  const [activePanel, setActivePanel] = useState(null);
+
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [showBaseInfoPannel, setShowBaseInfoPannel] = useState(false);
 
   const [theme, setTheme] = useState("default");
 
@@ -42,47 +44,28 @@ function Nav({ userName, userID }) {
 
   const [updateUserTheme, { isLoading }] = useUpdateUserThemeMutation();
 
-  const dashboardPath =
-    location.pathname === "/retirement-organization/dashboard";
-
-  const createRequestPath =
-    location.pathname === "/retirement-organization/create-request";
-
-  const personnelStatementsPath = location.pathname.startsWith(
-    "/retirement-organization/personnel-statements"
-  );
-
-  const groupsPath = location.pathname === "/retirement-organization/groups";
-  const createGroupPath =
-    location.pathname === "/retirement-organization/create-group";
-  const userPath = location.pathname === "/retirement-organization/users";
-  const createUserPath =
-    location.pathname === "/retirement-organization/create-user";
-  const electronicStatementPath =
-    location.pathname === "/retirement-organization/electronic-statement";
-  const fractionPath =
-    location.pathname === "/retirement-organization/fraction";
-  const reportCreatorPath =
-    location.pathname === "/retirement-organization/report-creator";
+  const isActivePath = (path) => location.pathname === path;
 
   const handleShowLogoutModalChange = () => {
     setShowLogoutModal(true);
   };
 
-  const handleShowBaseInfoPannelChange = () => {
-    setShowBaseInfoPannel(!showBaseInfoPannel);
+  const handlePanelToggle = (panel) => {
+    setActivePanel((prev) => (prev === panel ? null : panel));
   };
 
   const handleThemeChange = async () => {
     try {
       const selectedTheme = theme === "default" ? "chocolate" : "default";
       setTheme(selectedTheme);
-      const res = await updateUserTheme({
+      await updateUserTheme({
         userID,
         theme: selectedTheme,
       }).unwrap();
-      console.log(res);
     } catch (err) {
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
       console.log(err);
     }
   };
@@ -132,69 +115,88 @@ function Nav({ userName, userID }) {
         <div className="nav__links">
           <ul className="nav__links--list">
             <li
-              className={dashboardPath ? "active" : ""}
-              onClick={() => setShowBaseInfoPannel(false)}
+              className={
+                isActivePath("/retirement-organization/dashboard")
+                  ? "active"
+                  : ""
+              }
+              onClick={() => handlePanelToggle(null)}
             >
               <Link to={"/retirement-organization/dashboard"}>کارتابل</Link>
             </li>
             <li
-              className={createRequestPath ? "active" : ""}
-              onClick={() => setShowBaseInfoPannel(false)}
+              className={
+                isActivePath("/retirement-organization/create-request")
+                  ? "active"
+                  : ""
+              }
+              onClick={() => handlePanelToggle(null)}
             >
               <Link to={"/retirement-organization/create-request"}>
                 ایجاد درخواست
               </Link>
             </li>
             <li
-              className={personnelStatementsPath ? "active" : ""}
-              onClick={() => setShowBaseInfoPannel(false)}
+              className={
+                isActivePath("/retirement-organization/personnel-statements")
+                  ? "active"
+                  : ""
+              }
+              onClick={() => handlePanelToggle(null)}
             >
               <Link to={"/retirement-organization/personnel-statements"}>
                 رویت احکام و تعرفه
               </Link>
             </li>
             <li
-              className={fractionPath ? "active" : ""}
-              onClick={() => setShowBaseInfoPannel(false)}
+              className={
+                isActivePath("/retirement-organization/fraction")
+                  ? "active"
+                  : ""
+              }
+              onClick={() => handlePanelToggle(null)}
             >
               <Link to={"/retirement-organization/fraction"}>کسورات</Link>
             </li>
-            <li onClick={() => setShowBaseInfoPannel(false)}>
-              <a>گزارشات</a>
-            </li>
-            <li onClick={() => setShowBaseInfoPannel(false)}>
+            <li onClick={() => handlePanelToggle(null)}>
               <a>داشبورد مدیریتی</a>
             </li>
             <li
-              onClick={() => setShowBaseInfoPannel(false)}
-              className={reportCreatorPath ? "active" : ""}
+              onClick={() => handlePanelToggle(null)}
+              className={
+                isActivePath("/retirement-organization/report-creator")
+                  ? "active"
+                  : ""
+              }
             >
               <Link to={"/retirement-organization/report-creator"}>
                 گزارش ساز
               </Link>
             </li>
-            <li onClick={() => setShowBaseInfoPannel(false)}>
+            <li
+              onClick={() => handlePanelToggle("systemManagement")}
+              className={activePanel === "systemManagement" ? "active" : ""}
+            >
               <a>مدیریت سیستم</a>
+              <ArrowIcon
+                sx={{
+                  color: "#fff",
+                  transition: "all 0.25s ease",
+                  transform:
+                    activePanel === "systemManagement" ? "rotate(-90deg)" : "",
+                }}
+              />
             </li>
             <li
-              onClick={handleShowBaseInfoPannelChange}
-              className={
-                userPath ||
-                createUserPath ||
-                groupsPath ||
-                electronicStatementPath ||
-                createGroupPath ||
-                showBaseInfoPannel
-                  ? "active"
-                  : ""
-              }
+              onClick={() => handlePanelToggle("baseInfo")}
+              className={activePanel === "baseInfo" ? "active" : ""}
             >
               <a>اطلاعات پایه</a>
               <ArrowIcon
                 sx={{
                   color: "#fff",
                   transition: "all 0.25s ease",
-                  transform: showBaseInfoPannel ? "rotate(-90deg)" : "",
+                  transform: activePanel === "baseInfo" ? "rotate(-90deg)" : "",
                 }}
               />
             </li>
@@ -264,24 +266,45 @@ function Nav({ userName, userID }) {
         </div>
       </nav>
 
-      <div
-        className={
-          showBaseInfoPannel ? "nav__baseInfo" : "nav__baseInfo--hidden"
-        }
-      >
-        <ul className="nav__baseInfo--list">
-          <li className={groupsPath || createGroupPath ? "active" : ""}>
-            <Link to="/retirement-organization/groups">گروه ها</Link>
-          </li>
-          <li className={userPath || createUserPath ? "active" : ""}>
-            <Link to="/retirement-organization/users">کاربران</Link>
-          </li>
-          <li className={electronicStatementPath ? "active" : ""}>
-            <Link to="/retirement-organization/electronic-statement">
-              پرونده الکترونیک
-            </Link>
-          </li>
-        </ul>
+      <div className={activePanel ? "nav__baseInfo" : "nav__baseInfo--hidden"}>
+        {activePanel === "baseInfo" ? (
+          <ul className="nav__baseInfo--list">
+            <li
+              className={
+                isActivePath("/retirement-organization/groups") ? "active" : ""
+              }
+            >
+              <Link to="/retirement-organization/groups">گروه ها</Link>
+            </li>
+            <li
+              className={
+                isActivePath("/retirement-organization/users") ? "active" : ""
+              }
+            >
+              <Link to="/retirement-organization/users">کاربران</Link>
+            </li>
+          </ul>
+        ) : activePanel === "systemManagement" ? (
+          <ul className="nav__baseInfo--list">
+            <li
+              className={
+                isActivePath("/retirement-organization/electronic-statement")
+                  ? "active"
+                  : ""
+              }
+            >
+              <Link to="/retirement-organization/electronic-statement">
+                پرونده الکترونیک
+              </Link>
+            </li>
+            <li>
+              <Link to="/">اطلاعات پایه ۱</Link>
+            </li>
+            <li>
+              <Link to="/">اطلاعات پایه ۲</Link>
+            </li>
+          </ul>
+        ) : null}
       </div>
     </>
   );
