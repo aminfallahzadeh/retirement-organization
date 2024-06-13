@@ -23,7 +23,6 @@ import { useNavigate } from "react-router-dom";
 
 // library imports
 import { toast } from "react-toastify";
-import ToggleIcon from "material-ui-toggle-icon";
 
 // mui imports
 import {
@@ -159,11 +158,7 @@ function Login() {
 
             <div className="inputBox__login--icon">
               <IconButton onClick={handleShowPasswordChange} color="inherit">
-                <ToggleIcon
-                  on={showPassword}
-                  onIcon={<EyeOpenIcon />}
-                  offIcon={<EyeCloseIcon />}
-                />
+                {showPassword ? <EyeOpenIcon /> : <EyeCloseIcon />}
               </IconButton>
             </div>
           </div>
