@@ -4,3 +4,8 @@
     height: 50px;
     width: 100%;
 }
+
+.rotate {
+    transition: all 0.5s ease;
+    transform: rotate(360deg);
+}

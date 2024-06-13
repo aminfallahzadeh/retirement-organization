@@ -23,19 +23,20 @@ import { useNavigate } from "react-router-dom";
 
 // library imports
 import { toast } from "react-toastify";
+import ToggleIcon from "material-ui-toggle-icon";
 
 // mui imports
 import {
   PersonOutlined as PersonOutlinedIcon,
   Login as LoginIcon,
-  RemoveRedEyeOutlined as EyeOpenIcon,
-  VisibilityOffOutlined as EyeClosIcon,
+  VisibilityOutlined as EyeOpenIcon,
+  VisibilityOffOutlined as EyeCloseIcon,
 } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
 function Login() {
-  const [showPssword, setShowPssword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { captcha } = useSelector((state) => state.captcha);
 
@@ -103,7 +104,7 @@ function Login() {
   // }, []);
 
   const handleShowPasswordChange = () => {
-    setShowPssword(!showPssword);
+    setShowPassword(!showPassword);
   };
 
   const content = (
@@ -145,7 +146,7 @@ function Login() {
               <span className="error-form">{errors.password.message}</span>
             )}
             <input
-              type={showPssword ? "text" : "password"}
+              type={showPassword ? "text" : "password"}
               id="psw"
               {...register("password", { required: "کلمه عبور را وارد کنید" })}
               className="inputBox__login--input"
@@ -158,7 +159,11 @@ function Login() {
 
             <div className="inputBox__login--icon">
               <IconButton onClick={handleShowPasswordChange} color="inherit">
-                {showPssword ? <EyeClosIcon /> : <EyeOpenIcon />}
+                <ToggleIcon
+                  on={showPassword}
+                  onIcon={<EyeOpenIcon />}
+                  offIcon={<EyeCloseIcon />}
+                />
               </IconButton>
             </div>
           </div>

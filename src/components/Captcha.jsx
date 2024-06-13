@@ -1,5 +1,5 @@
 // react imports
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 // redux imports
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,7 @@ import {
 
 // mui imports
 import {
-  VpnKeyOutlined as VpnKeyOutlinedIcon,
+  HttpsOutlined as CaptchaIcon,
   Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
@@ -21,6 +21,8 @@ import { generateCaptcha } from "../helper.js";
 
 function Captcha() {
   const { userInput, captchaText } = useSelector((state) => state.captcha);
+
+  const [isRotated, setIsRotated] = useState(false);
 
   const canvasRef = useRef(null);
 
@@ -71,6 +73,7 @@ function Captcha() {
     dispatch(setCaptchaText(generateCaptcha(4)));
     dispatch(setCaptchaInput(""));
     dispatch(setCaptcha(false));
+    setIsRotated(true);
   }
 
   function handleInputChange(e) {
@@ -86,12 +89,6 @@ function Captcha() {
     }
   }
 
-  const style = {
-    position: "absolute",
-    top: "15px",
-    left: "20px",
-  };
-
   const content = (
     <div>
       <div className="inputBox__login">
@@ -106,7 +103,9 @@ function Captcha() {
         <label htmlFor="captcha" className="inputBox__login--label">
           کد امنیتی
         </label>
-        <VpnKeyOutlinedIcon style={style} />
+        <div className="inputBox__login--icon" style={{ padding: "8px" }}>
+          <CaptchaIcon sx={{ cursor: "default" }} />
+        </div>
       </div>
       <div className="flex-row flex-space-between u-margin-bottom-md">
         <Button
@@ -114,8 +113,15 @@ function Captcha() {
           color="primary"
           variant="contained"
           size="small"
+          onAnimationEnd={() => setIsRotated(false)}
         >
-          <RefreshIcon />
+          <div
+            className={`refresh ${
+              isRotated ? "rotate" : ""
+            } flex-row flex-center`}
+          >
+            <RefreshIcon />
+          </div>
         </Button>
 
         <canvas
