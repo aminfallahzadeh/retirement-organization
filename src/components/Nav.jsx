@@ -271,23 +271,6 @@ function Nav({ userName, userID }) {
           <ul className="nav__baseInfo--list">
             <li
               className={
-                isActivePath("/retirement-organization/groups") ? "active" : ""
-              }
-            >
-              <Link to="/retirement-organization/groups">گروه ها</Link>
-            </li>
-            <li
-              className={
-                isActivePath("/retirement-organization/users") ? "active" : ""
-              }
-            >
-              <Link to="/retirement-organization/users">کاربران</Link>
-            </li>
-          </ul>
-        ) : activePanel === "systemManagement" ? (
-          <ul className="nav__baseInfo--list">
-            <li
-              className={
                 isActivePath("/retirement-organization/electronic-statement")
                   ? "active"
                   : ""
@@ -310,6 +293,23 @@ function Nav({ userName, userID }) {
             </li>
             <li>
               <Link to="/">اطلاعات پایه ۲</Link>
+            </li>
+          </ul>
+        ) : activePanel === "systemManagement" ? (
+          <ul className="nav__baseInfo--list">
+            <li
+              className={
+                isActivePath("/retirement-organization/groups") ? "active" : ""
+              }
+            >
+              <Link to="/retirement-organization/groups">گروه ها</Link>
+            </li>
+            <li
+              className={
+                isActivePath("/retirement-organization/users") ? "active" : ""
+              }
+            >
+              <Link to="/retirement-organization/users">کاربران</Link>
             </li>
           </ul>
         ) : null}

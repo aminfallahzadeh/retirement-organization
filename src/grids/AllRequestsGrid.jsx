@@ -38,7 +38,6 @@ import { defaultTableOptions } from "../utils.js";
 
 // hjelpers
 import {
-  findById,
   convertToPersianNumber,
   convertToPersianDateFormatted,
 } from "../helper.js";
@@ -51,7 +50,7 @@ function AllRequestsGrid() {
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
-  const selectedRole = searchParams.get("role");
+  const Role = searchParams.get("Role");
   const personID = searchParams.get("personID");
 
   const {
@@ -61,7 +60,7 @@ function AllRequestsGrid() {
     isFetching,
     error,
     refetch,
-  } = useGetRequestQuery({ role: selectedRole, personID });
+  } = useGetRequestQuery({ Role, personID });
 
   useEffect(() => {
     refetch();

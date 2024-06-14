@@ -1,9 +1,6 @@
 // react imports
 import { useState } from "react";
 
-// rrd imports
-import { useLocation } from "react-router-dom";
-
 // mui imports
 import { Box, Tab, Button } from "@mui/material";
 import { LoadingButton, TabContext, TabList, TabPanel } from "@mui/lab";
@@ -17,10 +14,7 @@ import {
 // components
 import RequestAttachmentsSection from "../sections/request/RequestAttachmentsSection";
 import RequestHistorySection from "../sections/request/RequestHistorySection";
-import RequestInfoSection from "../sections/request/RequestInfoSection";
-
-// helpers
-import { findById } from "../helper.js";
+import RequestInfoForm from "../forms/RequestInfoForm";
 
 function RequestScreen() {
   const [value, setValue] = useState("1");
@@ -29,15 +23,14 @@ function RequestScreen() {
     setValue(newValue);
   };
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get("id");
-  const requests = JSON.parse(sessionStorage.getItem("requests"));
-
-  const body = findById(requests, id).body;
-
   const content = (
-    <section className="main flex-col">
+    <section className="flex-col">
+      <div className="title-primary--container flex-row flex-center">
+        <h4 className="title-primary">
+          <span className="title-primary--underline"></span> اطلاعات درخواست
+        </h4>
+      </div>
+
       <div>
         <TabContext value={value}>
           <Box sx={{ bgcolor: "background.paper", borderRadius: 1 }}>
@@ -53,7 +46,7 @@ function RequestScreen() {
               padding: "0",
             }}
           >
-            <RequestInfoSection body={body} />
+            <RequestInfoForm />
           </TabPanel>
           <TabPanel
             value="2"

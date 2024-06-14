@@ -19,13 +19,13 @@ export const requestApiSlice = apiSlice.injectEndpoints({
     }),
     getRequest: builder.query({
       query: ({
-        role,
+        Role,
         personID,
         requestID,
         RequestDateFrom,
         RequestDateTo,
       }) => {
-        let url = `${REQUEST_URL_HTTPS}/GetRequest?Role=${role}`;
+        let url = `${REQUEST_URL_HTTPS}/GetRequest?Role=${Role}`;
 
         if (personID) {
           url += `&personID=${personID}`;

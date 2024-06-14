@@ -58,8 +58,7 @@ function CreateRequestForm() {
         requestFrom: 1,
         personID: requestObject.personID || "49e66fb39a124555b9329c9b7994509a",
       }).unwrap();
-      navigate("/retirement-organization/dashboard");
-      console.log(insertRes);
+      navigate("/retirement-organization/cartable");
       toast.success(insertRes.message, {
         autoClose: 2000,
       });

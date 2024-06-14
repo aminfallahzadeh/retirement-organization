@@ -17,14 +17,14 @@ function CreateRequestScreen() {
   };
 
   const content = (
-    <section className="main">
+    <section className="flex-col">
       <div className="title-primary--container flex-row flex-center">
         <h4 className="title-primary">
           <span className="title-primary--underline"></span>ایجاد درخواست
         </h4>
       </div>
 
-      <div className="u-margin-top-md">
+      <div>
         <TabContext value={value}>
           <Box sx={{ bgcolor: "background.paper", borderRadius: 1 }}>
             <TabList onChange={handleChange} aria-label="tabs">

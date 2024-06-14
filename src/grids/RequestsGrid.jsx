@@ -11,11 +11,21 @@ import { setRequestTableData } from "../slices/requestsDataSlice.js";
 import { setSelectedRequestData } from "../slices/requestsDataSlice.js";
 
 // mui imports
-import { Box, IconButton, Tooltip, CircularProgress } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Tooltip,
+  CircularProgress,
+  PaginationItem,
+} from "@mui/material";
 import {
   RemoveRedEye as RemoveRedEyeIcon,
   Feed as FeedIcon,
   Refresh as RefreshIcon,
+  ChevronLeft,
+  ChevronRight,
+  FirstPage,
+  LastPage,
 } from "@mui/icons-material";
 import {
   MaterialReactTable,
@@ -52,7 +62,7 @@ function RequestsGrid() {
     isFetching,
     error,
     refetch,
-  } = useGetRequestQuery({ role: selectedRole });
+  } = useGetRequestQuery({ Role: selectedRole });
 
   const handleRefresh = () => {
     refetch();
@@ -118,7 +128,7 @@ function RequestsGrid() {
       },
       {
         accessorKey: "senderInfo",
-        header: "رسیدگی",
+        header: "بررسی درخواست",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
@@ -131,10 +141,10 @@ function RequestsGrid() {
                 : row.original.requestTypeID ===
                   "6E7BA26E-A1DC-4A5E-9700-17820A36158D"
                 ? "/retirement-organization/batch-statements"
-                : `/retirement-organization/retired?personID=${row.original.personID}&role=${selectedRole}&requestID=${row.original.id}`
+                : `/retirement-organization/retired?personID=${row.original.personID}&Role=${selectedRole}&requestID=${row.original.id}`
             }
           >
-            <Tooltip title={`رسیدگی به "${row.original.requestTypeNameFa}"`}>
+            <Tooltip title={`بررسی  "${row.original.requestTypeNameFa}"`}>
               <span>
                 <IconButton sx={{ padding: "0" }}>
                   <FeedIcon />
@@ -152,7 +162,7 @@ function RequestsGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Link
-            to={`/retirement-organization/request?id=${row.id}&role=${selectedRole}`}
+            to={`/retirement-organization/request?requestID=${row.id}&Role=${selectedRole}`}
           >
             <Tooltip
               title={`مشاهده درخواست "${convertToPersianNumber(
@@ -176,9 +186,6 @@ function RequestsGrid() {
     ...defaultTableOptions,
     columns,
     data: requestTableData,
-    enablePagination: false,
-    enableBottomToolbar: false,
-    muiTableContainerProps: { sx: { height: "500px" } },
     renderTopToolbarCustomActions: () => (
       <Box>
         {isFetching ? (
@@ -211,6 +218,23 @@ function RequestsGrid() {
         cursor: "pointer",
       },
     }),
+    muiPaginationProps: {
+      size: "small",
+      shape: "rounded",
+      showRowsPerPage: false,
+      renderItem: (item) => (
+        <PaginationItem
+          {...item}
+          page={convertToPersianNumber(item.page)}
+          slots={{
+            previous: ChevronRight,
+            next: ChevronLeft,
+            first: LastPage,
+            last: FirstPage,
+          }}
+        />
+      ),
+    },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
@@ -232,7 +256,7 @@ function RequestsGrid() {
       {isLoading ? (
         <div className="skeleton-lg">
           <Skeleton
-            count={7}
+            count={5}
             baseColor="#dfdfdf"
             highlightColor="#9f9f9f"
             duration={1}
