@@ -134,19 +134,7 @@ function RequestsGrid() {
                 : `/retirement-organization/retired?personID=${row.original.personID}&role=${selectedRole}&requestID=${row.original.id}`
             }
           >
-            <Tooltip
-              title={
-                <span
-                  style={{
-                    fontFamily: "Vazir",
-                    fontSize: "0.8rem",
-                    fontWeight: "100",
-                  }}
-                >
-                  مشاهده اطلاعات درخواست کننده
-                </span>
-              }
-            >
+            <Tooltip title="مشاهده اطلاعات درخواست کننده">
               <span>
                 <IconButton color="primary" sx={{ padding: "0" }}>
                   <FeedIcon />
@@ -164,19 +152,7 @@ function RequestsGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Link to={`/retirement-organization/request?id=${row.id}`}>
-            <Tooltip
-              title={
-                <span
-                  style={{
-                    fontFamily: "Vazir",
-                    fontSize: "0.8rem",
-                    fontWeight: "100",
-                  }}
-                >
-                  مشاهده جزئیات درخواست
-                </span>
-              }
-            >
+            <Tooltip title="مشاهده جزئیات درخواست">
               <span>
                 <IconButton color="primary" sx={{ padding: "0" }}>
                   <RemoveRedEyeIcon />
@@ -204,19 +180,7 @@ function RequestsGrid() {
             <CircularProgress size={20} value={100} />
           </IconButton>
         ) : (
-          <Tooltip
-            title={
-              <span
-                style={{
-                  fontFamily: "Vazir",
-                  fontSize: "0.8rem",
-                  fontWeight: "100",
-                }}
-              >
-                بروز رسانی
-              </span>
-            }
-          >
+          <Tooltip title="بروز رسانی">
             <span>
               <IconButton
                 aria-label="refresh"

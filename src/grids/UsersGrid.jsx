@@ -142,19 +142,9 @@ function UsersGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Tooltip
-            title={
-              <div
-                style={{
-                  fontFamily: "sahel",
-                  fontSize: "0.7rem",
-                  textAlign: "center",
-                }}
-              >
+            title={`
                 ویرایش کاربر
-                <br />
-                {` "${row.original.firstName} ${row.original.lastName}"`}
-              </div>
-            }
+                ${` "${row.original.firstName} ${row.original.lastName}"`}`}
           >
             <IconButton
               color="success"
@@ -174,19 +164,9 @@ function UsersGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Tooltip
-            title={
-              <div
-                style={{
-                  fontFamily: "sahel",
-                  fontSize: "0.7rem",
-                  textAlign: "center",
-                }}
-              >
+            title={`
                 ویرایش گروه های
-                <br />
-                {` "${row.original.firstName} ${row.original.lastName}"`}
-              </div>
-            }
+                ${` "${row.original.firstName} ${row.original.lastName}"`}`}
           >
             <IconButton
               color="info"
@@ -222,19 +202,30 @@ function UsersGrid() {
     }),
     renderTopToolbarCustomActions: () => (
       <Box>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip title="بروز رسانی">
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="info"
+                onClick={handleRefresh}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
         <Link to={"/retirement-organization/create-user"}>
           {isFetching ? (
             <IconButton aria-label="refresh" color="info" disabled>
               <CircularProgress size={20} value={100} color={"success"} />
             </IconButton>
           ) : (
-            <Tooltip
-              title={
-                <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
-                  ایجاد کاربر
-                </span>
-              }
-            >
+            <Tooltip title="ایجاد کاربر">
               <span>
                 <IconButton
                   aria-label="refresh"
@@ -247,30 +238,6 @@ function UsersGrid() {
             </Tooltip>
           )}
         </Link>
-
-        {isFetching ? (
-          <IconButton aria-label="refresh" color="info" disabled>
-            <CircularProgress size={20} value={100} />
-          </IconButton>
-        ) : (
-          <Tooltip
-            title={
-              <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
-                بروز رسانی
-              </span>
-            }
-          >
-            <span>
-              <IconButton
-                aria-label="refresh"
-                color="info"
-                onClick={handleRefresh}
-              >
-                <RefreshIcon fontSize="small" />
-              </IconButton>
-            </span>
-          </Tooltip>
-        )}
       </Box>
     ),
     getRowId: (originalRow) => originalRow.id,

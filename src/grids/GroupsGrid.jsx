@@ -160,13 +160,7 @@ function GroupsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip
-            title={
-              <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
-                {`ویرایش گروه "${row.original.groupName}"`}
-              </span>
-            }
-          >
+          <Tooltip title={`ویرایش گروه "${row.original.groupName}"`}>
             <IconButton
               color="success"
               onClick={handleShowEditNameModal}
@@ -185,19 +179,9 @@ function GroupsGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Tooltip
-            title={
-              <div
-                style={{
-                  fontFamily: "Vazir",
-                  fontSize: "0.7rem",
-                  textAlign: "center",
-                }}
-              >
+            title={`
                 ویرایش دسترسی های
-                <br />
-                {`گروه "${row.original.groupName}"`}
-              </div>
-            }
+                ${`گروه "${row.original.groupName}"`}`}
           >
             <IconButton
               color="primary"
@@ -216,13 +200,7 @@ function GroupsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip
-            title={
-              <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
-                {` حذف گروه "${row.original.groupName}"`}
-              </span>
-            }
-          >
+          <Tooltip title={` حذف گروه "${row.original.groupName}"`}>
             <IconButton
               color="error"
               onClick={handlShowDeleteGroupModal}
@@ -260,19 +238,30 @@ function GroupsGrid() {
     }),
     renderTopToolbarCustomActions: () => (
       <Box>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip title="بروز رسانی">
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="info"
+                onClick={handleRefresh}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
         <Link to={"/retirement-organization/create-group"}>
           {isFetching ? (
             <IconButton aria-label="refresh" color="info" disabled>
               <CircularProgress size={20} value={100} color={"success"} />
             </IconButton>
           ) : (
-            <Tooltip
-              title={
-                <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
-                  ایجاد گروه
-                </span>
-              }
-            >
+            <Tooltip title="ایجاد گروه">
               <span>
                 <IconButton
                   aria-label="refresh"
@@ -285,30 +274,6 @@ function GroupsGrid() {
             </Tooltip>
           )}
         </Link>
-
-        {isFetching ? (
-          <IconButton aria-label="refresh" color="info" disabled>
-            <CircularProgress size={20} value={100} />
-          </IconButton>
-        ) : (
-          <Tooltip
-            title={
-              <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
-                بروز رسانی
-              </span>
-            }
-          >
-            <span>
-              <IconButton
-                aria-label="refresh"
-                color="info"
-                onClick={handleRefresh}
-              >
-                <RefreshIcon fontSize="small" />
-              </IconButton>
-            </span>
-          </Tooltip>
-        )}
       </Box>
     ),
     getRowId: (originalRow) => originalRow.id,

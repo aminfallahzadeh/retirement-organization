@@ -5,13 +5,12 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
-  useLazyGetListOfRetirementStatementsQuery,
+  useGetListOfRetirementStatementsQuery,
   useRemoveRetirementStatementMutation,
   useLazyGetRetirementStatementQuery,
 } from "../slices/retirementStatementApiSlice.js";
-import { setStatementTableData } from "../slices/statementDataSlice.js";
 import { useLazyGetRetiredQuery } from "../slices/retiredApiSlice";
 
 // mui imports
@@ -63,6 +62,8 @@ import { createStatementPDF } from "../generateStatementPDF.js";
 import { defaultTableOptions } from "../utils.js";
 
 function RetiredStatementsGrid() {
+  const [statementTableData, setStatementTableData] = useState([]);
+
   const [statementID, setStatementID] = useState(null);
   const [rowSelection, setRowSelection] = useState({});
   const { personDeathDate } = useSelector((state) => state.retiredState);
@@ -72,29 +73,67 @@ function RetiredStatementsGrid() {
     useState(false);
   const [showDeleteStatementModal, setShowDeleteStatementModal] =
     useState(false);
-  const dispatch = useDispatch();
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
+  // ACTION QUERIES
   const [getRetired, { isFetching: isRetiredFetching }] =
     useLazyGetRetiredQuery();
   const [getRetirementStatement, { isFetching: isStatementFetching }] =
     useLazyGetRetirementStatementQuery();
-
-  // ACCESS THE PENSIONARY STATE FROM STORE
-  const { isPensionary } = useSelector((state) => state.retiredState);
-
-  const [getStatementList, { isLoading, isFetching }] =
-    useLazyGetListOfRetirementStatementsQuery();
-
   const [removeRetirmentStatement, { isLoading: isDeleting }] =
     useRemoveRetirementStatementMutation();
 
-  // access the data from redux store
-  const { statementTableData } = useSelector((state) => state.statementData);
+  // GET & FETCH STATMENTS LIST
+  const {
+    data: statementList,
+    isSuccess,
+    isLoading,
+    isFetching,
+    error,
+    refetch,
+  } = useGetListOfRetirementStatementsQuery(personID);
+
+  useEffect(() => {
+    refetch();
+    if (isSuccess) {
+      const data = statementList.map((item) => ({
+        id: item.retirementStatementID,
+        retirementStatementSerial: item.retirementStatementSerial,
+        retirementStatementTypeName: item.retirementStatementTypeName,
+        retirementStatementNo: item.retirementStatementNo,
+        retirementStatementIssueDate: item.retirementStatementIssueDate,
+        retirementStatementRunDate: item.retirementStatementRunDate,
+        retirementStatementIssueConfirmDate:
+          item.retirementStatementIssueConfirmDate,
+      }));
+
+      setStatementTableData(data);
+    }
+  }, [
+    isSuccess,
+    refetch,
+    statementList,
+    showGenerateStatementModal,
+    showDeleteStatementModal,
+  ]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
 
   // HANDLERS
+  const handleRefresh = () => {
+    refetch();
+  };
+
   const handleGenerateStatementModalChange = () => {
     setShowGenerateStatementModal(true);
   };
@@ -125,35 +164,12 @@ function RetiredStatementsGrid() {
     [getRetired, personID, getRetirementStatement, personDeathDate]
   );
 
-  const getList = useCallback(async () => {
-    try {
-      const getListRes = await getStatementList(personID).unwrap();
-      const mappedDate = getListRes.map((item) => ({
-        id: item.retirementStatementID,
-        retirementStatementSerial: item.retirementStatementSerial,
-        retirementStatementTypeName: item.retirementStatementTypeName,
-        retirementStatementNo: item.retirementStatementNo,
-        retirementStatementIssueDate: item.retirementStatementIssueDate,
-        retirementStatementRunDate: item.retirementStatementRunDate,
-        retirementStatementIssueConfirmDate:
-          item.retirementStatementIssueConfirmDate,
-      }));
-
-      dispatch(setStatementTableData(mappedDate));
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [dispatch, getStatementList, personID]);
-
   const handleRemoveStatement = async () => {
     try {
       const deleteRes = await removeRetirmentStatement({
         rsID: statementID,
       }).unwrap();
-      getList();
+      refetch();
       setShowDeleteStatementModal(false);
       toast.success(deleteRes.message, {
         autoClose: 2000,
@@ -165,17 +181,6 @@ function RetiredStatementsGrid() {
       });
     }
   };
-
-  useEffect(() => {
-    if (isPensionary) {
-      getList();
-    }
-  }, [
-    isPensionary,
-    getList,
-    showGenerateStatementModal,
-    showDeleteStatementModal,
-  ]);
 
   const columns = useMemo(
     () => [
@@ -225,12 +230,19 @@ function RetiredStatementsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <IconButton
-            color="primary"
-            onClick={() => handleDownload(row.original.id)}
+          <Tooltip
+            title={`دانلود و مشاهده حکم با سریال ${convertToPersianNumber(
+              row.original.retirementStatementSerial
+            )}`}
           >
-            <DownloadIcon />
-          </IconButton>
+            <IconButton
+              color="primary"
+              onClick={() => handleDownload(row.original.id)}
+              sx={{ padding: "0" }}
+            >
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
         ),
       },
       {
@@ -256,6 +268,7 @@ function RetiredStatementsGrid() {
                     : false
                 }
                 onClick={handleDeleteStatementModalChange}
+                sx={{ padding: "0" }}
               >
                 <DeleteIcon />
               </IconButton>
@@ -283,38 +296,46 @@ function RetiredStatementsGrid() {
       },
     }),
     renderTopToolbarCustomActions: () => (
-      <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
-      >
-        <Button
-          dir="ltr"
-          endIcon={<AddIcon />}
-          variant="contained"
-          disabled={!isPensionary}
-          onClick={handleGenerateStatementModalChange}
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>صدور</span>
-        </Button>
-
-        <LoadingButton
-          dir="ltr"
-          endIcon={<RefreshIcon />}
-          loading={isFetching}
-          disabled={!isPensionary}
-          onClick={getList}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>بروز رسانی</span>
-        </LoadingButton>
+      <Box>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip title="بروز رسانی">
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="info"
+                onClick={handleRefresh}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} color={"success"} />
+          </IconButton>
+        ) : (
+          <Tooltip title="صدور حکم">
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="success"
+                onClick={handleGenerateStatementModalChange}
+              >
+                <AddIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
       </Box>
     ),
     muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
+      size: "small",
+      shape: "rounded",
       showRowsPerPage: false,
       renderItem: (item) => (
         <PaginationItem
@@ -340,7 +361,7 @@ function RetiredStatementsGrid() {
     if (id) {
       setStatementID(id);
     }
-  }, [dispatch, table, rowSelection, statementTableData]);
+  }, [table, rowSelection, statementTableData]);
 
   const content = (
     <>

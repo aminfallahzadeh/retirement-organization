@@ -201,14 +201,18 @@ function RetiredRelatedGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <IconButton
-            color="success"
-            onClick={handleShowRelatedModal}
-            sx={{ padding: "0" }}
+        Cell: ({ row }) => (
+          <Tooltip
+            title={`ویرایس وابسته "${row.original.relatedFirstName} ${row.original.relatedLastName}"`}
           >
-            <EditIcon />
-          </IconButton>
+            <IconButton
+              color="success"
+              onClick={handleShowRelatedModal}
+              sx={{ padding: "0" }}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
         ),
       },
       {
@@ -217,14 +221,18 @@ function RetiredRelatedGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <IconButton
-            color="error"
-            onClick={handleShowDeleteRelatedModal}
-            sx={{ padding: "0" }}
+        Cell: ({ row }) => (
+          <Tooltip
+            title={`حذف وابسته "${row.original.relatedFirstName} ${row.original.relatedLastName}"`}
           >
-            <DeleteIcon />
-          </IconButton>
+            <IconButton
+              color="error"
+              onClick={handleShowDeleteRelatedModal}
+              sx={{ padding: "0" }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         ),
       },
     ],
@@ -253,19 +261,7 @@ function RetiredRelatedGrid() {
             <CircularProgress size={20} value={100} />
           </IconButton>
         ) : (
-          <Tooltip
-            title={
-              <span
-                style={{
-                  fontFamily: "Vazir",
-                  fontSize: "0.8rem",
-                  fontWeight: "100",
-                }}
-              >
-                بروز رسانی
-              </span>
-            }
-          >
+          <Tooltip title="بروز رسانی">
             <span>
               <IconButton
                 aria-label="refresh"
@@ -304,9 +300,9 @@ function RetiredRelatedGrid() {
       </Box>
     ),
     muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
+      shape: "rounded",
       showRowsPerPage: false,
+      size: "small",
       renderItem: (item) => (
         <PaginationItem
           {...item}

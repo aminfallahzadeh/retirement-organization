@@ -34,7 +34,6 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetListOfRetirementStatementsQuery,
-  useLazyGetListOfRetirementStatementsQuery,
   useGenerateNewRetirementStatementMutation,
   useRemoveRetirementStatementMutation,
   useGetRetirementStatementQuery,

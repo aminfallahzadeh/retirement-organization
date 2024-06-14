@@ -92,18 +92,19 @@ export const convertObjectToPersianDate = (obj) => {
   return result;
 };
 
-export const separateByThousands = (n) => {
-  // return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-  var m = "";
-  for (var i = 0; i < n.length; i++) {
-    var c = n.substr(n.length - i - 1, 1);
+export const separateByThousands = (num) => {
+  var result = "";
+  const [integerPart, decimalPart] = num.toString().split(".");
+
+  for (var i = 0; i < integerPart.length; i++) {
+    var c = integerPart.substr(integerPart.length - i - 1, 1);
     if ((i % 3 == 0) & (i > 0)) {
-      m = c + "," + m;
+      result = c + "," + result;
     } else {
-      m = c + m;
+      result = c + result;
     }
   }
-  return m;
+  return decimalPart ? result + "." + decimalPart : result;
 };
 
 export const reverseString = (str) => {
