@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import RequestsGrid from "../grids/RequestsGrid";
 import RoleSelectionForm from "../forms/RoleSelectionForm";
 
-function Dashboard() {
+function CartableScreen() {
   const { selectedRole } = useSelector((state) => state.requestsData);
 
   const dispatch = useDispatch();
@@ -56,4 +56,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default CartableScreen;

@@ -1,5 +1,5 @@
 // react imports
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 // component imports
@@ -50,6 +50,13 @@ function Login() {
 
   const [login, { isLoading }] = useLoginMutation();
 
+  // CHECK IF USER IS ALREADY LOGGED IN
+  useEffect(() => {
+    if (sessionStorage.getItem("userInfo")) {
+      navigate("/retirement-organization/cartable");
+    }
+  }, [navigate]);
+
   const onSubmit = async (data) => {
     // user authentication logic
     try {
@@ -58,7 +65,7 @@ function Login() {
       setValue("username", "");
       setValue("password", "");
       if (captcha) {
-        navigate("/retirement-organization/dashboard");
+        navigate("/retirement-organization/cartable");
         toast.success(res.message, {
           fontSize: "18px",
           autoClose: 2000,

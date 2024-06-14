@@ -21,11 +21,12 @@ import store from "./store";
 import App from "./App.jsx";
 
 // pages
-import Dashboard from "./pages/Dashboard";
+// import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login.jsx";
 import Error from "./pages/Error";
 
 // screens
+import CartableScreen from "./screens/CartableScreen";
 import CreateGroupScreen from "./screens/CreateGroupScreen";
 import CreateUserScreen from "./screens/CreateUserScreen";
 import RetiredScreen from "./screens/RetiredScreen";
@@ -49,8 +50,8 @@ const router = createBrowserRouter(
         <Route index path="/retirement-organization/" element={<Login />} />
 
         <Route
-          path="/retirement-organization/dashboard"
-          element={<Dashboard />}
+          path="/retirement-organization/cartable"
+          element={<CartableScreen />}
         />
 
         <Route

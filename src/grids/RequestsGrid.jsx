@@ -118,7 +118,7 @@ function RequestsGrid() {
       },
       {
         accessorKey: "senderInfo",
-        header: "درخواست کننده",
+        header: "رسیدگی",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
@@ -134,9 +134,9 @@ function RequestsGrid() {
                 : `/retirement-organization/retired?personID=${row.original.personID}&role=${selectedRole}&requestID=${row.original.id}`
             }
           >
-            <Tooltip title="مشاهده اطلاعات درخواست کننده">
+            <Tooltip title={`رسیدگی به "${row.original.requestTypeNameFa}"`}>
               <span>
-                <IconButton color="primary" sx={{ padding: "0" }}>
+                <IconButton sx={{ padding: "0" }}>
                   <FeedIcon />
                 </IconButton>
               </span>
@@ -151,8 +151,14 @@ function RequestsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Link to={`/retirement-organization/request?id=${row.id}`}>
-            <Tooltip title="مشاهده جزئیات درخواست">
+          <Link
+            to={`/retirement-organization/request?id=${row.id}&role=${selectedRole}`}
+          >
+            <Tooltip
+              title={`مشاهده درخواست "${convertToPersianNumber(
+                row.original.requestNO
+              )}"`}
+            >
               <span>
                 <IconButton color="primary" sx={{ padding: "0" }}>
                   <RemoveRedEyeIcon />
