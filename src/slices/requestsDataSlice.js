@@ -23,23 +23,10 @@ const requestsDataSlice = createSlice({
     setSelectedRole: (state, action) => {
       state.selectedRole = action.payload;
     },
-
-    setAllRequestTableData: (state, action) => {
-      state.allRequestTableData = action.payload;
-    },
-
-    setSelectedRequestAllRequests: (state, action) => {
-      state.selectedRequestAllRequests = action.payload;
-    },
   },
 });
 
-export const {
-  setRequestTableData,
-  setSelectedRequestData,
-  setSelectedRole,
-  setAllRequestTableData,
-  setSelectedRequestAllRequests,
-} = requestsDataSlice.actions;
+export const { setRequestTableData, setSelectedRequestData, setSelectedRole } =
+  requestsDataSlice.actions;
 
 export default requestsDataSlice.reducer;

@@ -368,7 +368,7 @@ function RetiredStatementsGrid() {
       {isLoading ? (
         <div className="skeleton-lg">
           <Skeleton
-            count={7}
+            count={5}
             baseColor="#dfdfdf"
             highlightColor="#9f9f9f"
             duration={1}

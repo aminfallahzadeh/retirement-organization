@@ -5,16 +5,24 @@ import { useMemo, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
 import { useGetRequestQuery } from "../slices/requestApiSlice";
-import {
-  setAllRequestTableData,
-  setSelectedRequestAllRequests,
-} from "../slices/requestsDataSlice.js";
 
 // mui imports
-import { IconButton } from "@mui/material";
-import { RemoveRedEye as RemoveRedEyeIcon } from "@mui/icons-material";
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  PaginationItem,
+  Tooltip,
+} from "@mui/material";
+import {
+  ChevronLeft,
+  ChevronRight,
+  FirstPage,
+  LastPage,
+  RemoveRedEye as RemoveRedEyeIcon,
+  Refresh as RefreshIcon,
+} from "@mui/icons-material";
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -38,20 +46,19 @@ import {
 function AllRequestsGrid() {
   const [rowSelection, setRowSelection] = useState({});
 
-  const dispatch = useDispatch();
+  const [requestTableData, setRequestTableData] = useState([]);
+
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
   const selectedRole = searchParams.get("role");
   const personID = searchParams.get("personID");
 
-  // access redux state
-  const { allRequestTableData } = useSelector((state) => state.requestsData);
-
   const {
     data: requests,
     isSuccess,
     isLoading,
+    isFetching,
     error,
     refetch,
   } = useGetRequestQuery({ role: selectedRole, personID });
@@ -69,13 +76,10 @@ function AllRequestsGrid() {
         body: item.requestText,
       }));
 
-      dispatch(setAllRequestTableData(data));
+      setRequestTableData(data);
       sessionStorage.setItem("requests", JSON.stringify(data));
     }
-    return () => {
-      dispatch(setAllRequestTableData([]));
-    };
-  }, [requests, isSuccess, dispatch, refetch]);
+  }, [requests, isSuccess, refetch]);
 
   useEffect(() => {
     if (error) {
@@ -84,6 +88,11 @@ function AllRequestsGrid() {
       });
     }
   }, [error]);
+
+  // HANDLERS
+  const handleRefresh = () => {
+    refetch();
+  };
 
   const columns = useMemo(
     () => [
@@ -124,11 +133,17 @@ function AllRequestsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Link to={`/retirement-organization/request?id=${row.id}`}>
-            <IconButton color="primary">
-              <RemoveRedEyeIcon />
-            </IconButton>
-          </Link>
+          <Tooltip
+            title={`مشاهده درخواست "${convertToPersianNumber(
+              row.original.requestNO
+            )}"`}
+          >
+            <Link to={`/retirement-organization/request?id=${row.id}`}>
+              <IconButton color="primary" sx={{ padding: "0" }}>
+                <RemoveRedEyeIcon />
+              </IconButton>
+            </Link>
+          </Tooltip>
         ),
       },
     ],
@@ -138,10 +153,7 @@ function AllRequestsGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: allRequestTableData,
-    enablePagination: false,
-    enableBottomToolbar: false,
-    muiTableContainerProps: { sx: { height: "500px" } },
+    data: requestTableData,
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -153,28 +165,66 @@ function AllRequestsGrid() {
         cursor: "pointer",
       },
     }),
+    renderTopToolbarCustomActions: () => (
+      <Box>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip title="بروز رسانی">
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="info"
+                onClick={handleRefresh}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
+      </Box>
+    ),
+    muiPaginationProps: {
+      size: "small",
+      shape: "rounded",
+      showRowsPerPage: false,
+      renderItem: (item) => (
+        <PaginationItem
+          {...item}
+          page={convertToPersianNumber(item.page)}
+          slots={{
+            previous: ChevronRight,
+            next: ChevronLeft,
+            first: LastPage,
+            last: FirstPage,
+          }}
+        />
+      ),
+    },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
 
-  useEffect(() => {
-    const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedRequest = findById(allRequestTableData, id);
+  // useEffect(() => {
+  //   const id = Object.keys(table.getState().rowSelection)[0];
+  //   const selectedRequest = findById(allRequestTableData, id);
 
-    if (id) {
-      dispatch(setSelectedRequestAllRequests(selectedRequest));
-    } else {
-      dispatch(setSelectedRequestAllRequests([]));
-    }
-  }, [dispatch, table, rowSelection, allRequestTableData]);
+  //   if (id) {
+  //     dispatch(setSelectedRequestAllRequests(selectedRequest));
+  //   } else {
+  //     dispatch(setSelectedRequestAllRequests([]));
+  //   }
+  // }, [dispatch, table, rowSelection, allRequestTableData]);
 
   const content = (
     <>
       {isLoading ? (
         <div className="skeleton-lg">
           <Skeleton
-            count={7}
+            count={5}
             baseColor="#dfdfdf"
             highlightColor="#9f9f9f"
             duration={1}

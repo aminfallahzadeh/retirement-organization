@@ -12,7 +12,7 @@ import userGroupsDataSliceReducer from "./slices/userGroupsDataSlice";
 import groupsUserDataSliceReducer from "./slices/groupsUserDataSlice";
 import requestsDataSliceReducer from "./slices/requestsDataSlice";
 // import relatedDataSliceReducer from "./slices/relatedDataSlice";
-import statementDataSliceReducer from "./slices/statementDataSlice";
+// import statementDataSliceReducer from "./slices/statementDataSlice";
 import archiveDataSliceReducer from "./slices/archiveDataSlice";
 import heirDataSliceReducer from "./slices/heirDataSlice";
 import personDataSliceReducer from "./slices/personDataSlice";
@@ -33,7 +33,7 @@ const store = configureStore({
     groupsUserData: groupsUserDataSliceReducer,
     requestsData: requestsDataSliceReducer,
     // relatedData: relatedDataSliceReducer,
-    statementData: statementDataSliceReducer,
+    // statementData: statementDataSliceReducer,
     archiveData: archiveDataSliceReducer,
     heirData: heirDataSliceReducer,
     personData: personDataSliceReducer,

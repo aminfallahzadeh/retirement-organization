@@ -20,6 +20,7 @@ import {
   ChevronRight,
   FirstPage,
   LastPage,
+  Download as DownloadIcon,
 } from "@mui/icons-material";
 import {
   MaterialReactTable,
@@ -158,6 +159,20 @@ function RetiredSlipsGrid() {
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
       },
+      {
+        accessorKey: "observeStatement",
+        header: "مشاهده/چاپ",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        Cell: () => (
+          <Tooltip title="دانلود و مشاهده فیش">
+            <IconButton color="primary" sx={{ padding: "0" }}>
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
+        ),
+      },
     ],
     []
   );
@@ -173,19 +188,7 @@ function RetiredSlipsGrid() {
             <CircularProgress size={20} value={100} />
           </IconButton>
         ) : (
-          <Tooltip
-            title={
-              <span
-                style={{
-                  fontFamily: "Vazir",
-                  fontSize: "0.8rem",
-                  fontWeight: "100",
-                }}
-              >
-                بروز رسانی
-              </span>
-            }
-          >
+          <Tooltip title="بروز رسانی">
             <span>
               <IconButton
                 aria-label="refresh"
@@ -200,8 +203,8 @@ function RetiredSlipsGrid() {
       </Box>
     ),
     muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
+      size: "small",
+      shape: "rounded",
       showRowsPerPage: false,
       renderItem: (item) => (
         <PaginationItem
@@ -248,7 +251,7 @@ function RetiredSlipsGrid() {
       {isLoading ? (
         <div className="skeleton-lg">
           <Skeleton
-            count={7}
+            count={5}
             baseColor="#dfdfdf"
             highlightColor="#9f9f9f"
             duration={1}
