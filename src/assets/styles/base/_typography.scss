@@ -8,7 +8,7 @@
 }
 
 @font-face {
-    font-family: sahel;
+    font-family: Vazir;
     src:
         url("../../fonts/Vazir.eot") format("embedded-opentype"),
         url("../../fonts/Vazir.ttf") format("truetype"),
@@ -24,6 +24,9 @@ input {
     font-family: Vazir, sans-serif !important;
 }
 
+.picker-input-fa {
+    font-family: Vazir, sans-serif !important;
+}
 html {
     font-family: Vazir, sans-serif !important;
 }
