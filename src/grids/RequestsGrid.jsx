@@ -10,6 +10,9 @@ import { useGetRequestQuery } from "../slices/requestApiSlice";
 import { setRequestTableData } from "../slices/requestsDataSlice.js";
 import { setSelectedRequestData } from "../slices/requestsDataSlice.js";
 
+// components
+import RoleSelectionForm from "../forms/RoleSelectionForm";
+
 // mui imports
 import {
   Box,
@@ -47,7 +50,7 @@ import {
   convertToPersianNumber,
 } from "../helper.js";
 
-function RequestsGrid() {
+function RequestsGrid({ isLoading, roles }) {
   const [rowSelection, setRowSelection] = useState({});
   const { selectedRole } = useSelector((state) => state.requestsData);
 
@@ -58,7 +61,7 @@ function RequestsGrid() {
   const {
     data: requests,
     isSuccess,
-    isLoading,
+    isLoading: isRequestsLoading,
     isFetching,
     error,
     refetch,
@@ -187,7 +190,14 @@ function RequestsGrid() {
     columns,
     data: requestTableData,
     renderTopToolbarCustomActions: () => (
-      <Box>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "0.5rem",
+          alignItems: "center",
+          justifyContent: "flex-end",
+        }}
+      >
         {isFetching ? (
           <IconButton aria-label="refresh" color="info" disabled>
             <CircularProgress size={20} value={100} />
@@ -205,6 +215,8 @@ function RequestsGrid() {
             </span>
           </Tooltip>
         )}
+
+        <RoleSelectionForm isLoading={isLoading} roles={roles} />
       </Box>
     ),
     muiTableBodyRowProps: ({ row }) => ({
@@ -253,7 +265,7 @@ function RequestsGrid() {
 
   const content = (
     <>
-      {isLoading ? (
+      {isRequestsLoading ? (
         <div className="skeleton-lg">
           <Skeleton
             count={5}

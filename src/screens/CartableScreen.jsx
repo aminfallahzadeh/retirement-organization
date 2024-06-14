@@ -11,7 +11,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 // component imports
 import RequestsGrid from "../grids/RequestsGrid";
-import RoleSelectionForm from "../forms/RoleSelectionForm";
 
 function CartableScreen() {
   const { selectedRole } = useSelector((state) => state.requestsData);
@@ -49,9 +48,9 @@ function CartableScreen() {
         </h4>
       </div>
 
-      <RoleSelectionForm isLoading={isLoading} roles={roles} />
-
-      {isRolesSuccess && selectedRole && <RequestsGrid />}
+      {isRolesSuccess && selectedRole && (
+        <RequestsGrid isLoading={isLoading} roles={roles} />
+      )}
     </section>
   );
 }

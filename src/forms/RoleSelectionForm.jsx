@@ -10,27 +10,26 @@ function RoleSelectionForm({ isLoading, roles }) {
   };
 
   return (
-    <section className="formContainer">
-      <form className="grid grid--col-3" noValidate>
-        <div className="inputBox__form">
-          <select
-            disabled={isLoading}
-            className="inputBox__form--input"
-            id="role"
-            onChange={handleRoleSelection}
-          >
-            {roles?.itemList?.map((role) => (
-              <option key={role.itemName} value={role.url}>
-                {role.itemName}
-              </option>
-            ))}
-          </select>
-          <label className="inputBox__form--label" htmlFor="role">
-            انتخاب نقش
-          </label>
-        </div>
-      </form>
-    </section>
+    <div
+      className="inputBox__form"
+      style={{ width: "300px", height: "40px", margin: "10px auto" }}
+    >
+      <select
+        disabled={isLoading}
+        className="inputBox__form--input"
+        id="role"
+        onChange={handleRoleSelection}
+      >
+        {roles?.itemList?.map((role) => (
+          <option key={role.itemName} value={role.url}>
+            {role.itemName}
+          </option>
+        ))}
+      </select>
+      <label className="inputBox__form--label" htmlFor="role">
+        انتخاب نقش
+      </label>
+    </div>
   );
 }
 
