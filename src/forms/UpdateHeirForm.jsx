@@ -331,7 +331,7 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
           <CircularProgress color="primary" />
         </Box>
       ) : (
-        <section className="formContainer formContainer--width-lg flex-col">
+        <section className="formContainer-transparent formContainer--width-lg flex-col">
           <form method="POST" className="grid grid--col-3">
             <div className="inputBox__form">
               <select

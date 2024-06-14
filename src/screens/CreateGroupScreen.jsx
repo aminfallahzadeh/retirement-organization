@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // mui imports
-import { IconButton } from "@mui/material";
+import { IconButton, Toolbar, Tooltip } from "@mui/material";
 import { ArrowBack as BackIcon } from "@mui/icons-material";
 
 // components
@@ -24,9 +24,13 @@ function CreateGroupScreen() {
           ایجاد گروه جدید<span className="title-primary--underline"></span>
         </h4>
         <div style={{ marginRight: "auto" }} className="back-button">
-          <IconButton color="primary" onClick={() => navigate(-1)}>
-            <BackIcon />
-          </IconButton>
+          <Tooltip title="بازگشت">
+            <span>
+              <IconButton color="primary" onClick={() => navigate(-1)}>
+                <BackIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
         </div>
       </div>
 

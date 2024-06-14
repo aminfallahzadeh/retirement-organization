@@ -219,12 +219,8 @@ function RetiredPensionaryForm() {
     }
   };
 
-  useEffect(() => {
-    console.log(pensionaryData);
-  }, [pensionaryData]);
-
   const content = (
-    <section className="formContainer flex-col">
+    <section className="formContainer-transparent flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>
         <div className="inputBox__form">
           <input

@@ -266,9 +266,9 @@ function Nav({ userName, userID }) {
         </div>
       </nav>
 
-      <div className={activePanel ? "nav__baseInfo" : "nav__baseInfo--hidden"}>
+      <div className={activePanel ? "nav__panel" : "nav__panel--hidden"}>
         {activePanel === "baseInfo" ? (
-          <ul className="nav__baseInfo--list">
+          <ul className="nav__panel--list">
             <li
               className={
                 isActivePath("/retirement-organization/electronic-statement")
@@ -296,7 +296,7 @@ function Nav({ userName, userID }) {
             </li>
           </ul>
         ) : activePanel === "systemManagement" ? (
-          <ul className="nav__baseInfo--list">
+          <ul className="nav__panel--list">
             <li
               className={
                 isActivePath("/retirement-organization/groups") ? "active" : ""

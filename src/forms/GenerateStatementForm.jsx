@@ -93,7 +93,7 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
   };
 
   return (
-    <section className="formContainer flex-col">
+    <section className="formContainer-transparent flex-col">
       <form method="POST" className="grid grid--col-2">
         <div className="inputBox__form">
           <InputDatePicker

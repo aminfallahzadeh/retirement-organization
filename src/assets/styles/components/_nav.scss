@@ -88,9 +88,9 @@
         }
     }
 
-    &__baseInfo {
+    &__panel {
         transition: all 0.25s ease;
-        background-color: var(--color-bg-nav-primary);
+        background-color: var(--color-bg-nav-secondary);
         height: 60px;
         padding: 1rem;
 
@@ -146,7 +146,7 @@
         }
     }
 
-    &__baseInfo--hidden {
+    &__panel--hidden {
         transition: all 0.25s ease;
         height: 0;
         // overflow: hidden;

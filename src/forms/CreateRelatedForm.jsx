@@ -287,7 +287,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   }, [relatedObject]);
 
   const content = (
-    <section className="formContainer formContainer--width-lg flex-col">
+    <section className="formContainer-transparent formContainer--width-lg flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>
         <div className="inputBox__form">
           <select

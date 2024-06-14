@@ -1,13 +1,17 @@
 // react imports
 import { useState } from "react";
 
+// rrd imports
+import { useNavigate } from "react-router-dom";
+
 // mui imports
-import { Box, Tab, Button } from "@mui/material";
+import { Box, Tab, Button, IconButton, Tooltip } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import {
   ArrowUpwardOutlined as SendIcon,
   Print as PrintIcon,
   Redo as RedoIcon,
+  ArrowBack as BackIcon,
 } from "@mui/icons-material";
 
 // components
@@ -23,6 +27,8 @@ function RequestScreen() {
   // MODAL STATES
   const [showSendRequestModal, setShowSendRequestModal] = useState(false);
   const [returenRequestModal, setReturenRequestModal] = useState(false);
+
+  const navigate = useNavigate();
 
   // HANDLERS
   const handleChange = (event, newValue) => {
@@ -44,6 +50,16 @@ function RequestScreen() {
           <h4 className="title-primary">
             <span className="title-primary--underline"></span> اطلاعات درخواست
           </h4>
+
+          <div style={{ marginRight: "auto" }} className="back-button">
+            <Tooltip title="بازگشت">
+              <span>
+                <IconButton color="primary" onClick={() => navigate(-1)}>
+                  <BackIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </div>
         </div>
 
         <div>
@@ -100,7 +116,7 @@ function RequestScreen() {
             color="success"
             sx={{ fontFamily: "Vazir" }}
           >
-            <span>ارسال</span>
+            <span>ارسال درخواست</span>
           </Button>
           <Button
             dir="ltr"
@@ -109,7 +125,7 @@ function RequestScreen() {
             color="warning"
             sx={{ fontFamily: "Vazir" }}
           >
-            <span>برگشت</span>
+            <span>برگشت درخواست</span>
           </Button>
         </div>
       </section>
