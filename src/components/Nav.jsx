@@ -297,8 +297,16 @@ function Nav({ userName, userID }) {
                 پرونده الکترونیک
               </Link>
             </li>
-            <li>
-              <Link to="/">اطلاعات پایه ۱</Link>
+            <li
+              className={
+                isActivePath("/retirement-organization/base-info")
+                  ? "active"
+                  : ""
+              }
+            >
+              <Link to="/retirement-organization/base-info">
+                اطلاعات پایه ۱
+              </Link>
             </li>
             <li>
               <Link to="/">اطلاعات پایه ۲</Link>
