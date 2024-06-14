@@ -116,13 +116,13 @@ function Nav({ userName, userID }) {
           <ul className="nav__links--list">
             <li
               className={
-                isActivePath("/retirement-organization/dashboard")
+                isActivePath("/retirement-organization/cartable")
                   ? "active"
                   : ""
               }
               onClick={() => handlePanelToggle(null)}
             >
-              <Link to={"/retirement-organization/dashboard"}>کارتابل</Link>
+              <Link to={"/retirement-organization/cartable"}>کارتابل</Link>
             </li>
             <li
               className={
