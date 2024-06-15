@@ -87,7 +87,7 @@ select {
 
     &:hover::before,
     &:hover::after {
-        height: 100%;
+        height: 80%;
     }
 
     &--container {
@@ -103,6 +103,7 @@ select {
             left: 0;
             height: 2px;
             width: 50%;
+            // background-color: var(--color-accent-primary);
             background: linear-gradient(-90deg, var(--color-accent-gr-primary), var(--color-accent-primary));
         }
 
@@ -114,6 +115,7 @@ select {
             right: 0;
             height: 2px;
             width: 50%;
+            // background-color: var(--color-accent-primary);
             background: linear-gradient(-90deg, var(--color-accent-primary), var(--color-accent-gr-primary));
         }
     }
