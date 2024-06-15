@@ -15,7 +15,6 @@
 @import "components/input";
 @import "components/topnav";
 @import "components/sidebar";
-@import "components/table";
 @import "components/formContainer";
 @import "components/formPic";
 @import "components/button";
@@ -28,13 +27,13 @@
 @import "components/fraction";
 @import "components/condition";
 @import "components/SVGs";
-@import "components/tooltip";
-@import "layouts/grid";
-@import "layouts/flex";
+@import "components/mui";
 
 @import "components/skeleton";
-@import "components/muitabs";
 
 @import "components/ProfilePicture";
 @import "components/clock";
 @import "components/datetime";
+
+@import "layouts/grid";
+@import "layouts/flex";

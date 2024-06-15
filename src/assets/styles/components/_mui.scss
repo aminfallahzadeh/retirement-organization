@@ -1,0 +1,33 @@
+/* tooltip */
+.MuiTooltip-tooltip {
+    font-family: Vazir !important;
+    font-weight: 100 !important;
+    font-size: 0.78rem !important;
+    text-align: center !important;
+}
+
+/* tabs */
+.MuiTabs-indicator {
+    background-color: $color-accent-red !important;
+    color: $color-accent-red !important;
+}
+
+.MuiTab-root.Mui-selected {
+    color: $color-accent-red !important;
+}
+
+.MuiTab-root {
+    font-family: sahel !important;
+    font-size: 20px !important;
+}
+
+/* button */
+.MuiButton-root {
+    direction: ltr !important;
+    font-family: Vazir, sans-serif !important;
+}
+
+/* grids */
+.MuiTableCell-head {
+    background-color: var(--color-cell-bg) !important;
+}

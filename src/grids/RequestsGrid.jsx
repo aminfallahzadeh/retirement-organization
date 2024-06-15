@@ -23,8 +23,6 @@ import {
   Button,
 } from "@mui/material";
 import {
-  RemoveRedEye as RemoveRedEyeIcon,
-  Feed as FeedIcon,
   Refresh as RefreshIcon,
   ChevronLeft,
   ChevronRight,
@@ -152,23 +150,11 @@ function RequestsGrid({ isLoading, roles }) {
           >
             <Tooltip title={row.original.requestTypeNameFa}>
               <span>
-                <Button
-                  dir="ltr"
-                  variant="contained"
-                  color="success"
-                  sx={{ fontFamily: "Vazir" }}
-                >
+                <Button variant="contained" color="success">
                   <span>بررسی درخواست</span>
                 </Button>
               </span>
             </Tooltip>
-            {/* <Tooltip title={`بررسی  "${row.original.requestTypeNameFa}"`}>
-              <span>
-                <IconButton sx={{ padding: "0" }}>
-                  <FeedIcon />
-                </IconButton>
-              </span>
-            </Tooltip> */}
           </Link>
         ),
       },
@@ -186,12 +172,7 @@ function RequestsGrid({ isLoading, roles }) {
           >
             <Tooltip title={convertToPersianNumber(row.original.requestNO)}>
               <span>
-                <Button
-                  dir="ltr"
-                  variant="contained"
-                  color="info"
-                  sx={{ fontFamily: "Vazir" }}
-                >
+                <Button variant="contained" color="info">
                   <span>مشاهده درخواست</span>
                 </Button>
               </span>
