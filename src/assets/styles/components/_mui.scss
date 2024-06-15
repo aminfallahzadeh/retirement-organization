@@ -32,8 +32,18 @@
     background-color: var(--color-cell-bg) !important;
 }
 
+.Mui-TableHeadCell-Content {
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.Mui-TableHeadCell-Content-Actions {
+    margin-right: auto !important;
+}
+
 .Mui-TableHeadCell-Content-Labels {
     padding-left: 0 !important;
+    margin-right: auto !important;
 }
 
 .Mui-TableHeadCell-Content-Wrapper {
