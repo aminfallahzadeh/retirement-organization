@@ -11,6 +11,7 @@ export const defaultTableOptions = {
   enableStickyFooter: true,
   enableDensityToggle: false,
   muiTableBodyCellProps: {
+    align: "right",
     sx: {
       fontFamily: "Vazir",
       borderRight: "1px solid #cfcfcf",

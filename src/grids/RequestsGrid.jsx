@@ -20,6 +20,7 @@ import {
   Tooltip,
   CircularProgress,
   PaginationItem,
+  Button,
 } from "@mui/material";
 import {
   RemoveRedEye as RemoveRedEyeIcon,
@@ -131,9 +132,11 @@ function RequestsGrid({ isLoading, roles }) {
       },
       {
         accessorKey: "senderInfo",
-        header: "بررسی درخواست",
         enableSorting: false,
         enableColumnActions: false,
+        muiTableBodyCellProps: {
+          align: "center",
+        },
         size: 20,
         Cell: ({ row }) => (
           <Link
@@ -147,35 +150,50 @@ function RequestsGrid({ isLoading, roles }) {
                 : `/retirement-organization/retired?personID=${row.original.personID}&Role=${selectedRole}&requestID=${row.original.id}`
             }
           >
-            <Tooltip title={`بررسی  "${row.original.requestTypeNameFa}"`}>
+            <Tooltip title={row.original.requestTypeNameFa}>
+              <span>
+                <Button
+                  dir="ltr"
+                  variant="contained"
+                  color="success"
+                  sx={{ fontFamily: "Vazir" }}
+                >
+                  <span>بررسی درخواست</span>
+                </Button>
+              </span>
+            </Tooltip>
+            {/* <Tooltip title={`بررسی  "${row.original.requestTypeNameFa}"`}>
               <span>
                 <IconButton sx={{ padding: "0" }}>
                   <FeedIcon />
                 </IconButton>
               </span>
-            </Tooltip>
+            </Tooltip> */}
           </Link>
         ),
       },
       {
         accessorKey: "observe",
-        header: "مشاهده درخواست",
         enableSorting: false,
         enableColumnActions: false,
+        muiTableBodyCellProps: {
+          align: "center",
+        },
         size: 20,
         Cell: ({ row }) => (
           <Link
             to={`/retirement-organization/request?requestID=${row.id}&Role=${selectedRole}`}
           >
-            <Tooltip
-              title={`مشاهده درخواست "${convertToPersianNumber(
-                row.original.requestNO
-              )}"`}
-            >
+            <Tooltip title={convertToPersianNumber(row.original.requestNO)}>
               <span>
-                <IconButton color="primary" sx={{ padding: "0" }}>
-                  <RemoveRedEyeIcon />
-                </IconButton>
+                <Button
+                  dir="ltr"
+                  variant="contained"
+                  color="info"
+                  sx={{ fontFamily: "Vazir" }}
+                >
+                  <span>مشاهده درخواست</span>
+                </Button>
               </span>
             </Tooltip>
           </Link>
