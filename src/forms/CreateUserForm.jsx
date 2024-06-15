@@ -105,7 +105,7 @@ function CreateUserForm({ addedGroups }) {
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="grid grid--col-4">
+        <div className="grid grid--col-3">
           <div className="inputBox__form">
             {errors.username && (
               <span className="error-form">{errors.username.message}</span>

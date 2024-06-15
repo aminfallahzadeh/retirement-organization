@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // mui imports
-import { IconButton, Toolbar, Tooltip } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { ArrowBack as BackIcon } from "@mui/icons-material";
 
 // components
@@ -34,8 +34,14 @@ function CreateGroupScreen() {
         </div>
       </div>
 
-      <CreateGroupForm addedItems={addedItems} />
-      <ItemsCreateGroupGrid setAddedItems={setAddedItems} />
+      <div className="flex-col flex-center">
+        <div>
+          <CreateGroupForm addedItems={addedItems} />
+        </div>
+        <div style={{ width: "500px" }}>
+          <ItemsCreateGroupGrid setAddedItems={setAddedItems} />
+        </div>
+      </div>
     </section>
   );
 

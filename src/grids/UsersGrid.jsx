@@ -11,8 +11,8 @@ import { useGetUserQuery } from "../slices/usersApiSlice";
 // mui imports
 import { IconButton, Box, Tooltip, CircularProgress } from "@mui/material";
 import {
-  Edit as EditIcon,
-  ChecklistRtl as ChecklistRtlIcon,
+  EditOutlined as EditIcon,
+  ChecklistRtlOutlined as ChecklistRtlIcon,
   Add as AddIcon,
   Refresh as RefreshIcon,
 } from "@mui/icons-material";
@@ -141,11 +141,7 @@ function UsersGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip
-            title={`
-                ویرایش کاربر
-                ${` "${row.original.firstName} ${row.original.lastName}"`}`}
-          >
+          <Tooltip title={`${row.original.firstName} ${row.original.lastName}`}>
             <IconButton
               color="success"
               onClick={handleShowEditNameModal}
@@ -163,11 +159,7 @@ function UsersGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip
-            title={`
-                ویرایش گروه های
-                ${` "${row.original.firstName} ${row.original.lastName}"`}`}
-          >
+          <Tooltip title={`${row.original.firstName} ${row.original.lastName}`}>
             <IconButton
               color="info"
               onClick={handleShowEditUserGroupsModal}

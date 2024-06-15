@@ -31,9 +31,16 @@ function CreateUserScreen() {
         </div>
       </div>
 
-      <CreateUserForm addedGroups={addedGroups} />
+      <div
+        className="flex-row flex-center"
+        style={{ alignItems: "flex-start" }}
+      >
+        <CreateUserForm addedGroups={addedGroups} />
 
-      <GroupsCreateUserGrid setAddedGroups={setAddedGroups} />
+        <div style={{ width: "500px" }}>
+          <GroupsCreateUserGrid setAddedGroups={setAddedGroups} />
+        </div>
+      </div>
     </section>
   );
 

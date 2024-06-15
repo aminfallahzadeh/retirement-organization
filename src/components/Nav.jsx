@@ -299,14 +299,20 @@ function Nav({ userName, userID }) {
           <ul className="nav__panel--list">
             <li
               className={
-                isActivePath("/retirement-organization/groups") ? "active" : ""
+                isActivePath("/retirement-organization/groups") ||
+                isActivePath("/retirement-organization/create-group")
+                  ? "active"
+                  : ""
               }
             >
               <Link to="/retirement-organization/groups">گروه ها</Link>
             </li>
             <li
               className={
-                isActivePath("/retirement-organization/users") ? "active" : ""
+                isActivePath("/retirement-organization/users") ||
+                isActivePath("/retirement-organization/create-user")
+                  ? "active"
+                  : ""
               }
             >
               <Link to="/retirement-organization/users">کاربران</Link>

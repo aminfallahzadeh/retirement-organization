@@ -21,9 +21,9 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  ChecklistRtl as ChecklistRtlIcon,
+  EditOutlined as EditIcon,
+  DeleteOutline as DeleteIcon,
+  ChecklistRtlOutlined as ChecklistRtlIcon,
   Add as AddIcon,
   Refresh as RefreshIcon,
   Close as CloseIcon,
@@ -160,7 +160,7 @@ function GroupsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip title={`ویرایش گروه "${row.original.groupName}"`}>
+          <Tooltip title={row.original.groupName}>
             <IconButton
               color="success"
               onClick={handleShowEditNameModal}
@@ -178,11 +178,7 @@ function GroupsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip
-            title={`
-                ویرایش دسترسی های
-                ${`گروه "${row.original.groupName}"`}`}
-          >
+          <Tooltip title={row.original.groupName}>
             <IconButton
               color="primary"
               onClick={handleShowEditItemsModal}
@@ -200,7 +196,7 @@ function GroupsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip title={` حذف گروه "${row.original.groupName}"`}>
+          <Tooltip title={row.original.groupName}>
             <IconButton
               color="error"
               onClick={handlShowDeleteGroupModal}

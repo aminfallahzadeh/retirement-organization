@@ -72,7 +72,7 @@ function ItemsCreateGroupGrid({ setAddedItems }) {
       {
         accessorKey: "name",
         header: "نام دسترسی",
-        size: 800,
+        size: 20,
       },
     ],
     []
@@ -85,22 +85,7 @@ function ItemsCreateGroupGrid({ setAddedItems }) {
     enableRowSelection: true,
     enablePagination: false,
     enableBottomToolbar: false,
-    muiTableContainerProps: { sx: { height: "500px" } },
-    muiTableBodyCellProps: {
-      align: "right",
-      sx: {
-        fontFamily: "Vazir",
-        borderRight: "1px solid #cfcfcf",
-      },
-    },
-    muiTableHeadCellProps: {
-      align: "left",
-      sx: {
-        borderRight: "1px solid #cfcfcf",
-        fontFamily: "Vazir",
-        fontWeight: "600",
-      },
-    },
+    muiTableContainerProps: { sx: { height: "400px" } },
     muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
       onClick: (event) =>
         getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
