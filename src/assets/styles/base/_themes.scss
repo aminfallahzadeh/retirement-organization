@@ -57,6 +57,8 @@
 
     /* grid colors */
     --color-cell-bg: #b7f5ff;
+    --color-cell-header: #00295c;
+    --color-table-bg: #fffcf8;
 }
 
 :root[color-scheme="chocolate"] {
@@ -109,4 +111,6 @@
 
     /* grid colors */
     --color-cell-bg: #ece9e2;
+    --color-cell-header: #373737;
+    --color-table-bg: #ece9e2;
 }

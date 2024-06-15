@@ -20,10 +20,7 @@ export const defaultTableOptions = {
   muiTableHeadCellProps: {
     align: "center",
     sx: {
-      color: "#001a57",
       fontFamily: "Vazir",
-      backgroundColor: "rgba(47, 255, 66, .4)",
-      borderRight: "1px solid #cfcfcf",
       fontWeight: "600",
     },
   },

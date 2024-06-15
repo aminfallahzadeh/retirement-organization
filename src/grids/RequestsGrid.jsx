@@ -5,11 +5,8 @@ import { useMemo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useGetRequestQuery } from "../slices/requestApiSlice";
-import { setRequestTableData } from "../slices/requestsDataSlice.js";
-import { setSelectedRequestData } from "../slices/requestsDataSlice.js";
-
 // components
 import RoleSelectionForm from "../forms/RoleSelectionForm";
 
@@ -20,7 +17,6 @@ import {
   Tooltip,
   CircularProgress,
   PaginationItem,
-  Button,
 } from "@mui/material";
 import {
   Refresh as RefreshIcon,
@@ -28,6 +24,8 @@ import {
   ChevronRight,
   FirstPage,
   LastPage,
+  VisibilityOutlined as EyeIcon,
+  TextSnippetOutlined as CheckIcon,
 } from "@mui/icons-material";
 import {
   MaterialReactTable,
@@ -44,24 +42,21 @@ import { defaultTableOptions } from "../utils.js";
 
 // helpers
 import {
-  findById,
   convertToPersianDateFormatted,
   convertToPersianNumber,
 } from "../helper.js";
 
 function RequestsGrid({ isLoading, roles }) {
   const [rowSelection, setRowSelection] = useState({});
-  const { selectedRole } = useSelector((state) => state.requestsData);
+  const [requestTableData, setRequestTableData] = useState([]);
 
-  const dispatch = useDispatch();
-
-  const { requestTableData } = useSelector((state) => state.requestsData);
+  const { selectedRole } = useSelector((state) => state.roleData);
 
   const {
     data: requests,
     isSuccess,
     isLoading: isRequestsLoading,
-    isFetching,
+    isFetching: isRequestsFetching,
     error,
     refetch,
   } = useGetRequestQuery({ Role: selectedRole });
@@ -84,13 +79,10 @@ function RequestsGrid({ isLoading, roles }) {
         body: item.requestText,
       }));
 
-      dispatch(setRequestTableData(data));
+      setRequestTableData(data);
       sessionStorage.setItem("requests", JSON.stringify(data));
     }
-    return () => {
-      dispatch(setRequestTableData([]));
-    };
-  }, [requests, isSuccess, dispatch, refetch]);
+  }, [requests, isSuccess, refetch]);
 
   useEffect(() => {
     if (error) {
@@ -130,6 +122,7 @@ function RequestsGrid({ isLoading, roles }) {
       },
       {
         accessorKey: "senderInfo",
+        header: "بررسی درخواست",
         enableSorting: false,
         enableColumnActions: false,
         muiTableBodyCellProps: {
@@ -137,29 +130,30 @@ function RequestsGrid({ isLoading, roles }) {
         },
         size: 20,
         Cell: ({ row }) => (
-          <Link
-            to={
-              row.original.requestTypeID ===
-              "62A54585-F331-434A-9027-C9F3060F683A"
-                ? `/retirement-organization/slips?requestID=${row.original.id}`
-                : row.original.requestTypeID ===
-                  "6E7BA26E-A1DC-4A5E-9700-17820A36158D"
-                ? "/retirement-organization/batch-statements"
-                : `/retirement-organization/retired?personID=${row.original.personID}&Role=${selectedRole}&requestID=${row.original.id}`
-            }
-          >
-            <Tooltip title={row.original.requestTypeNameFa}>
+          <Tooltip title={row.original.requestTypeNameFa}>
+            <Link
+              to={
+                row.original.requestTypeID ===
+                "62A54585-F331-434A-9027-C9F3060F683A"
+                  ? `/retirement-organization/slips?requestID=${row.original.id}`
+                  : row.original.requestTypeID ===
+                    "6E7BA26E-A1DC-4A5E-9700-17820A36158D"
+                  ? "/retirement-organization/batch-statements"
+                  : `/retirement-organization/retired?personID=${row.original.personID}&Role=${selectedRole}&requestID=${row.original.id}`
+              }
+            >
               <span>
-                <Button variant="contained" color="success">
-                  <span>بررسی درخواست</span>
-                </Button>
+                <IconButton>
+                  <CheckIcon color="success" />
+                </IconButton>
               </span>
-            </Tooltip>
-          </Link>
+            </Link>
+          </Tooltip>
         ),
       },
       {
         accessorKey: "observe",
+        header: "مشاهده درخواست",
         enableSorting: false,
         enableColumnActions: false,
         muiTableBodyCellProps: {
@@ -167,17 +161,17 @@ function RequestsGrid({ isLoading, roles }) {
         },
         size: 20,
         Cell: ({ row }) => (
-          <Link
-            to={`/retirement-organization/request?requestID=${row.id}&Role=${selectedRole}`}
-          >
-            <Tooltip title={convertToPersianNumber(row.original.requestNO)}>
+          <Tooltip title={convertToPersianNumber(row.original.requestNO)}>
+            <Link
+              to={`/retirement-organization/request?requestID=${row.id}&Role=${selectedRole}`}
+            >
               <span>
-                <Button variant="contained" color="info">
-                  <span>مشاهده درخواست</span>
-                </Button>
+                <IconButton>
+                  <EyeIcon color="info" />
+                </IconButton>
               </span>
-            </Tooltip>
-          </Link>
+            </Link>
+          </Tooltip>
         ),
       },
     ],
@@ -197,7 +191,7 @@ function RequestsGrid({ isLoading, roles }) {
           justifyContent: "flex-end",
         }}
       >
-        {isFetching ? (
+        {isRequestsFetching ? (
           <IconButton aria-label="refresh" color="info" disabled>
             <CircularProgress size={20} value={100} />
           </IconButton>
@@ -251,20 +245,9 @@ function RequestsGrid({ isLoading, roles }) {
     state: { rowSelection },
   });
 
-  useEffect(() => {
-    const id = Object.keys(table.getState().rowSelection)[0];
-    const selectedRequest = findById(requestTableData, id);
-
-    if (id) {
-      dispatch(setSelectedRequestData(selectedRequest));
-    } else {
-      dispatch(setSelectedRequestData([]));
-    }
-  }, [dispatch, table, rowSelection, requestTableData]);
-
   const content = (
     <>
-      {isRequestsLoading ? (
+      {isRequestsLoading || isRequestsFetching ? (
         <div className="skeleton-lg">
           <Skeleton
             count={5}

@@ -1,37 +1,28 @@
 // react imports
 import { useEffect } from "react";
 
-// library imports
-import { toast } from "react-toastify";
-
-// redux imports
-import { setSelectedRole } from "../slices/requestsDataSlice";
+// redux improts
+import { setSelectedRole } from "../slices/roleDataSlice.js";
 import { useGetRoleQuery } from "../slices/requestApiSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // component imports
 import RequestsGrid from "../grids/RequestsGrid";
 
-function CartableScreen() {
-  const { selectedRole } = useSelector((state) => state.requestsData);
+// library imports
+import { toast } from "react-toastify";
 
+function CartableScreen() {
   const dispatch = useDispatch();
+
+  const { selectedRole } = useSelector((state) => state.roleData);
 
   const {
     data: roles,
     isLoading,
-    error,
+    error: rolesError,
     isSuccess: isRolesSuccess,
   } = useGetRoleQuery();
-
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-      toast.error(error?.data?.message || error.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [error]);
 
   // set selected role default to first role
   useEffect(() => {
@@ -39,6 +30,15 @@ function CartableScreen() {
       dispatch(setSelectedRole(roles?.itemList[0].url));
     }
   }, [isRolesSuccess, dispatch, roles]);
+
+  useEffect(() => {
+    if (rolesError) {
+      console.log(rolesError);
+      toast.error(rolesError?.data?.message || rolesError.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [rolesError]);
 
   return (
     <section className="flex-col">
@@ -48,9 +48,7 @@ function CartableScreen() {
         </h4>
       </div>
 
-      {isRolesSuccess && selectedRole && (
-        <RequestsGrid isLoading={isLoading} roles={roles} />
-      )}
+      {selectedRole && <RequestsGrid isLoading={isLoading} roles={roles} />}
     </section>
   );
 }

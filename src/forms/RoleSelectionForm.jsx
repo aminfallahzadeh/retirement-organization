@@ -1,9 +1,11 @@
 // redux imports
-import { setSelectedRole } from "../slices/requestsDataSlice";
-import { useDispatch } from "react-redux";
+import { setSelectedRole } from "../slices/roleDataSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function RoleSelectionForm({ isLoading, roles }) {
   const dispatch = useDispatch();
+
+  const { selectedRole } = useSelector((state) => state.roleData);
 
   const handleRoleSelection = (e) => {
     dispatch(setSelectedRole(e.target.value));
@@ -17,6 +19,7 @@ function RoleSelectionForm({ isLoading, roles }) {
       <select
         disabled={isLoading}
         className="inputBox__form--input"
+        value={selectedRole}
         id="role"
         onChange={handleRoleSelection}
       >
@@ -27,7 +30,7 @@ function RoleSelectionForm({ isLoading, roles }) {
         ))}
       </select>
       <label className="inputBox__form--label" htmlFor="role">
-        انتخاب نقش
+        نقش
       </label>
     </div>
   );
