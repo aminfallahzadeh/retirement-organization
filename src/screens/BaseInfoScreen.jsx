@@ -49,11 +49,22 @@ function BaseInfoScreen() {
             aria-controls="panel-content"
             expandIcon={<ArrowDropDownIcon />}
           >
-            فرم اطلاعات پایه شعبه بانک
+            فرم اطلاعات پایه شعب بانک
           </AccordionSummary>
           <AccordionDetails>
             <BaseBankBranchForm />
           </AccordionDetails>
+        </Accordion>
+
+        <Accordion>
+          <AccordionSummary
+            id="panel-header"
+            aria-controls="panel-content"
+            expandIcon={<ArrowDropDownIcon />}
+          >
+            فرم اطلاعات پایه شغل
+          </AccordionSummary>
+          <AccordionDetails>shoghl</AccordionDetails>
         </Accordion>
       </div>
     </section>
