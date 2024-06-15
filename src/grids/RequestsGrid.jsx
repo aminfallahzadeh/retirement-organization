@@ -143,7 +143,7 @@ function RequestsGrid({ isLoading, roles }) {
               }
             >
               <span>
-                <IconButton>
+                <IconButton color="success" sx={{ padding: "0" }}>
                   <CheckIcon color="success" />
                 </IconButton>
               </span>
@@ -166,7 +166,7 @@ function RequestsGrid({ isLoading, roles }) {
               to={`/retirement-organization/request?requestID=${row.id}&Role=${selectedRole}`}
             >
               <span>
-                <IconButton>
+                <IconButton sx={{ padding: "0" }} color="info">
                   <EyeIcon color="info" />
                 </IconButton>
               </span>
