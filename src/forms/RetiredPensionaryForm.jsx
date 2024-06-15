@@ -220,7 +220,7 @@ function RetiredPensionaryForm() {
   };
 
   const content = (
-    <section className="formContainer-transparent flex-col">
+    <section className="flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>
         <div className="inputBox__form">
           <input

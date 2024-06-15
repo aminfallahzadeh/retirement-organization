@@ -20,7 +20,7 @@ function IndividualInfoSection() {
   }, [theme]);
 
   const content = (
-    <section className="pensionersAffairs">
+    <section>
       <Accordion>
         <AccordionSummary
           id="panel-header"
