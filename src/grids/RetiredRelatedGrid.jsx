@@ -28,8 +28,8 @@ import {
   Add as AddIcon,
   Close as CloseIcon,
   Done as DoneIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
+  EditOutlined as EditIcon,
+  DeleteOutline as DeleteIcon,
   Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -203,7 +203,7 @@ function RetiredRelatedGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Tooltip
-            title={`ویرایس وابسته "${row.original.relatedFirstName} ${row.original.relatedLastName}"`}
+            title={`ویرایش "${row.original.relatedFirstName} ${row.original.relatedLastName}"`}
           >
             <IconButton
               color="success"
@@ -223,7 +223,7 @@ function RetiredRelatedGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Tooltip
-            title={`حذف وابسته "${row.original.relatedFirstName} ${row.original.relatedLastName}"`}
+            title={`حذف "${row.original.relatedFirstName} ${row.original.relatedLastName}"`}
           >
             <IconButton
               color="error"

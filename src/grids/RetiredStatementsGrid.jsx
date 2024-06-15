@@ -29,9 +29,9 @@ import {
   FirstPage,
   LastPage,
   Add as AddIcon,
-  Download as DownloadIcon,
+  DownloadOutlined as DownloadIcon,
   Refresh as RefreshIcon,
-  Delete as DeleteIcon,
+  DeleteOutline as DeleteIcon,
   Close as CloseIcon,
   Done as DoneIcon,
 } from "@mui/icons-material";
@@ -231,7 +231,7 @@ function RetiredStatementsGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Tooltip
-            title={`دانلود و مشاهده حکم با سریال ${convertToPersianNumber(
+            title={`سریال ${convertToPersianNumber(
               row.original.retirementStatementSerial
             )}`}
           >

@@ -15,7 +15,6 @@ import { setHeirTableData } from "../slices/heirDataSlice.js";
 // mui imports
 import { IconButton, Button, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -26,6 +25,8 @@ import {
   Close as CloseIcon,
   Done as DoneIcon,
   Refresh as RefreshIcon,
+  EditOutlined as EditIcon,
+  DeleteOutline as DeleteIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {

@@ -20,7 +20,7 @@ import {
   ChevronRight,
   FirstPage,
   LastPage,
-  Download as DownloadIcon,
+  DownloadOutlined as DownloadIcon,
 } from "@mui/icons-material";
 import {
   MaterialReactTable,

@@ -20,7 +20,7 @@ import {
   ChevronRight,
   FirstPage,
   LastPage,
-  RemoveRedEye as RemoveRedEyeIcon,
+  VisibilityOutlined as RemoveRedEyeIcon,
   Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import {
@@ -132,11 +132,7 @@ function AllRequestsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip
-            title={`مشاهده درخواست "${convertToPersianNumber(
-              row.original.requestNO
-            )}"`}
-          >
+          <Tooltip title={convertToPersianNumber(row.original.requestNO)}>
             <Link to={`/retirement-organization/request?id=${row.id}`}>
               <IconButton color="primary" sx={{ padding: "0" }}>
                 <RemoveRedEyeIcon />

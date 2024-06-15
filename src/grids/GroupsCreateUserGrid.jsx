@@ -2,9 +2,8 @@
 import { useMemo, useState, useEffect } from "react";
 
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
 import { useGetGroupQuery } from "../slices/usersApiSlice";
-import { setGroupsTableData } from "../slices/groupsDataSlice";
+// import { setGroupsTableData } from "../slices/groupsDataSlice";
 
 // library imports
 import { toast } from "react-toastify";
@@ -27,10 +26,7 @@ function GroupsCreateUserGrid({ setAddedGroups }) {
   const theme = useTheme();
   const [rowSelection, setRowSelection] = useState({});
 
-  const dispatch = useDispatch();
-
-  // access the data from redux store
-  const { groupsTableData } = useSelector((state) => state.groupsData);
+  const [groupsTableData, setGroupsTableData] = useState([]);
 
   const {
     data: groups,
@@ -48,13 +44,9 @@ function GroupsCreateUserGrid({ setAddedGroups }) {
         id: group.id,
         name: group.groupName,
       }));
-      dispatch(setGroupsTableData(data));
+      setGroupsTableData(data);
     }
-
-    return () => {
-      dispatch(setGroupsTableData([]));
-    };
-  }, [groups, isSuccess, dispatch, refetch]);
+  }, [groups, isSuccess, refetch]);
 
   // handle error
   useEffect(() => {
@@ -85,6 +77,21 @@ function GroupsCreateUserGrid({ setAddedGroups }) {
     enablePagination: false,
     enableBottomToolbar: false,
     muiTableContainerProps: { sx: { height: "500px" } },
+    muiTableBodyCellProps: {
+      align: "right",
+      sx: {
+        fontFamily: "Vazir",
+        borderRight: "1px solid #cfcfcf",
+      },
+    },
+    muiTableHeadCellProps: {
+      align: "left",
+      sx: {
+        borderRight: "1px solid #cfcfcf",
+        fontFamily: "Vazir",
+        fontWeight: "600",
+      },
+    },
     muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
       onClick: (event) =>
         getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),
