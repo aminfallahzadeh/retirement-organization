@@ -100,6 +100,10 @@
 			height: 40px !important;
 		}
 
+		&-width-200 {
+			width: 200px !important;
+		}
+
 		&:focus ~ .inputBox__form--label,
 		&:valid ~ .inputBox__form--label,
 		&:disabled ~ .inputBox__form--label {

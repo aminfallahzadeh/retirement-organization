@@ -19,6 +19,7 @@ import RequestAttachmentsSection from "../sections/request/RequestAttachmentsSec
 import RequestHistorySection from "../sections/request/RequestHistorySection";
 import RequestInfoForm from "../forms/RequestInfoForm";
 import SendRequestFrom from "../forms/SendRequestForm";
+import ReturnRequestForm from "../forms/ReturnRequestForm";
 import Modal from "../components/Modal";
 
 function RequestScreen() {
@@ -26,7 +27,7 @@ function RequestScreen() {
 
   // MODAL STATES
   const [showSendRequestModal, setShowSendRequestModal] = useState(false);
-  const [returenRequestModal, setReturenRequestModal] = useState(false);
+  const [showReturnRequestModal, setShowReturnRequestModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -39,8 +40,8 @@ function RequestScreen() {
     setShowSendRequestModal(true);
   };
 
-  const handleReturnRequestModal = () => {
-    setReturenRequestModal(true);
+  const handleShowReturnRequestModal = () => {
+    setShowReturnRequestModal(true);
   };
 
   const content = (
@@ -121,6 +122,7 @@ function RequestScreen() {
           <Button
             dir="ltr"
             endIcon={<RedoIcon />}
+            onClick={handleShowReturnRequestModal}
             variant="contained"
             color="warning"
             sx={{ fontFamily: "Vazir" }}
@@ -135,11 +137,18 @@ function RequestScreen() {
           title="ارسال درخواست"
           closeModal={() => setShowSendRequestModal(false)}
         >
-          <p className="paragraph-primary">
-            کارشناس مورد نظر خود را انتخاب کنید
-          </p>
+          <p className="paragraph-primary">کارشناس مورد نظر را انتخاب کنید</p>
 
           <SendRequestFrom />
+        </Modal>
+      ) : showReturnRequestModal ? (
+        <Modal
+          title="برگشت درخواست"
+          closeModal={() => setShowReturnRequestModal(false)}
+        >
+          <p className="paragraph-primary">کارشناس مورد نظر را انتخاب کنید</p>
+
+          <ReturnRequestForm />
         </Modal>
       ) : null}
     </>

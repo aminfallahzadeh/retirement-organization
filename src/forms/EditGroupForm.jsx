@@ -71,7 +71,7 @@ function GroupNameInput({ setShowEditModal, selectedGroup }) {
           <CircularProgress color="primary" />
         </Box>
       ) : (
-        <section className="formContainer flex-col flex-center">
+        <section className="formContainer flex-col">
           <form method="POST" className="inputBox__form">
             <input
               type="text"

@@ -12,9 +12,8 @@ export const requestApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getExpert: builder.query({
-      query: (data) => ({
-        url: `${REQUEST_URL_HTTPS}/GetExpert`,
-        body: data,
+      query: ({ RequestID, conditionValue, Role }) => ({
+        url: `${REQUEST_URL_HTTPS}/GetExpert?Requestid=${RequestID}&conditionValue=${conditionValue}&Role=${Role}`,
       }),
     }),
     getRequest: builder.query({

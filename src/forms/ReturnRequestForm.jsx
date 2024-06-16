@@ -12,7 +12,7 @@ import { ArrowUpwardOutlined as SendIcon } from "@mui/icons-material";
 // library imports
 import { toast } from "react-toastify";
 
-function SendRequestForm() {
+function ReturnRequestForm() {
   const [expertCombo, setExpertCombo] = useState([]);
 
   const searchParams = new URLSearchParams(location.search);
@@ -25,7 +25,7 @@ function SendRequestForm() {
     isLoading,
     isFetching,
     error,
-  } = useGetExpertQuery({ RequestID, conditionValue: 1, Role });
+  } = useGetExpertQuery({ RequestID, conditionValue: 0, Role });
 
   useEffect(() => {
     if (isSuccess) {
@@ -96,4 +96,4 @@ function SendRequestForm() {
   return content;
 }
 
-export default SendRequestForm;
+export default ReturnRequestForm;
