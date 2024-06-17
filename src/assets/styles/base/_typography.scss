@@ -16,6 +16,11 @@
         url("../../fonts/Vazir.woff2") format("woff2");
 }
 
+@font-face {
+    font-family: Nastaliq;
+    src: url("../../fonts/IranNastaliq.ttf") format("truetype");
+}
+
 body {
     font-family: Vazir, sans-serif !important;
 }
@@ -42,8 +47,17 @@ select {
 }
 
 .heading-primary {
-    font-size: 1.5rem;
+    font-size: 35px;
     color: var(--color-txt-primary);
+    position: relative;
+    text-align: center;
+    font-family: Nastaliq;
+    font-weight: lighter;
+    line-height: 0;
+    padding-top: 35px;
+    -webkit-text-shadow: -2px 3px 7px rgba(var(--color-txt-primary-rgb), 0.8);
+    -moz-text-shadow: -2px 3px 7px rgba(var(--color-txt-primary-rgb), 0.8);
+    text-shadow: -2px 3px 7px rgba(var(--color-txt-primary-rgb), 0.4);
 }
 
 .title-primary {
