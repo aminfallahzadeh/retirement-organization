@@ -12,7 +12,7 @@ import { CircularProgress, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Save as SaveIcon } from "@mui/icons-material";
 
-function GroupNameInput({ setShowEditModal, selectedGroup }) {
+function UpdateGroupForm({ setShowEditModal, selectedGroup }) {
   const [loading, setLoading] = useState(true);
   const [groupName, setGroupName] = useState("");
 
@@ -106,4 +106,4 @@ function GroupNameInput({ setShowEditModal, selectedGroup }) {
   return content;
 }
 
-export default GroupNameInput;
+export default UpdateGroupForm;

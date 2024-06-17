@@ -28,14 +28,20 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
     isLoading,
     isFetching,
     isSuccess,
+    refetch,
     error,
   } = useGetUserQuery({ userID });
 
   useEffect(() => {
+    refetch();
     if (isSuccess) {
       setUserObject(user.itemList[0]);
     }
-  }, [isSuccess, user]);
+
+    return () => {
+      setUserObject(null);
+    };
+  }, [isSuccess, user, refetch]);
 
   useEffect(() => {
     if (error) {

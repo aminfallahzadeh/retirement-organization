@@ -47,7 +47,7 @@ import { defaultTableOptions } from "../utils.js";
 
 // components
 import Modal from "../components/Modal";
-import EditGroupForm from "../forms/EditGroupForm";
+import UpdateGroupForm from "../forms/UpdateGroupForm";
 import ItemsGrid from "../grids/ItemsGrid";
 import GroupItemsGrid from "../grids/GroupItemsGrid";
 import ArrowButtonsGroups from "../components/ArrowButtonsGroups";
@@ -159,7 +159,7 @@ function GroupsGrid() {
         size: 20,
       },
       {
-        accessorKey: "editNameAction",
+        accessorKey: "editGroupNameAction",
         header: "ویرایش گروه",
         enableSorting: false,
         enableColumnActions: false,
@@ -195,7 +195,7 @@ function GroupsGrid() {
         ),
       },
       {
-        accessorKey: "deleteAction",
+        accessorKey: "deleteGroupAction",
         header: "حذف گروه",
         enableSorting: false,
         enableColumnActions: false,
@@ -322,7 +322,7 @@ function GroupsGrid() {
               title={"ویرایش نام گروه"}
               closeModal={() => setShowEditNameModal(false)}
             >
-              <EditGroupForm
+              <UpdateGroupForm
                 setShowEditModal={setShowEditNameModal}
                 selectedGroup={selectedGroup}
               />

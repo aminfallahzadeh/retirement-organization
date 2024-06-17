@@ -249,18 +249,6 @@ function Nav({ userName, userID }) {
                 </Tooltip>
               )}
             </li>
-            {/* 
-            <li>
-              <Tooltip
-                title={
-                  <span style={{ fontFamily: "sahel", fontSize: "12px" }}>
-                    پروفایل {userName}
-                  </span>
-                }
-              >
-                <PersonIcon />
-              </Tooltip>
-            </li> */}
             <li>
               <Tooltip title="پنل کاربر">
                 <a>{userName}</a>

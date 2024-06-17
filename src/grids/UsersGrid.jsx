@@ -134,7 +134,7 @@ function UsersGrid() {
         size: 20,
       },
       {
-        accessorKey: "editNameAction",
+        accessorKey: "editUserAction",
         header: "ویرایش کاربر",
         enableSorting: false,
         enableColumnActions: false,
@@ -156,7 +156,7 @@ function UsersGrid() {
         },
       },
       {
-        accessorKey: "editItemsAction",
+        accessorKey: "editGroupsAction",
         header: "ویرایش گروه ها",
         enableSorting: false,
         enableColumnActions: false,
