@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useCallback } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -34,6 +34,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
+import { createSlipsPDF } from "../generateSlipsPDF.js";
 
 // helpers
 import {
@@ -91,6 +92,11 @@ function RetiredSlipsGrid() {
       });
     }
   }, [error]);
+
+  // SLIP DOWNLOAD HANDLER
+  const handleDownload = useCallback(() => {
+    createSlipsPDF();
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -167,14 +173,18 @@ function RetiredSlipsGrid() {
         size: 20,
         Cell: () => (
           <Tooltip title="دانلود و مشاهده فیش">
-            <IconButton color="primary" sx={{ padding: "0" }}>
+            <IconButton
+              color="primary"
+              sx={{ padding: "0" }}
+              onClick={handleDownload}
+            >
               <DownloadIcon />
             </IconButton>
           </Tooltip>
         ),
       },
     ],
-    []
+    [handleDownload]
   );
 
   const table = useMaterialReactTable({

@@ -56,9 +56,8 @@ import {
   convertToPersianDateFormatted,
 } from "../helper.js";
 
-import { createStatementPDF } from "../generateStatementPDF.js";
-
 // utils imports
+import { createStatementPDF } from "../generateStatementPDF.js";
 import { defaultTableOptions } from "../utils.js";
 
 function RetiredStatementsGrid() {
