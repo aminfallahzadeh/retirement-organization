@@ -23,7 +23,6 @@ import {
   Logout as LogoutIcon,
   DarkModeOutlined as DarkModeIcon,
   LightModeOutlined as LightModeIcon,
-  PersonOutlined as PersonIcon,
   Done as DoneIcon,
   Close as CloseIcon,
   ArrowLeftOutlined as ArrowIcon,
@@ -250,7 +249,7 @@ function Nav({ userName, userID }) {
                 </Tooltip>
               )}
             </li>
-
+            {/* 
             <li>
               <Tooltip
                 title={
@@ -260,6 +259,11 @@ function Nav({ userName, userID }) {
                 }
               >
                 <PersonIcon />
+              </Tooltip>
+            </li> */}
+            <li>
+              <Tooltip title="پنل کاربر">
+                <a>{userName}</a>
               </Tooltip>
             </li>
           </ul>
