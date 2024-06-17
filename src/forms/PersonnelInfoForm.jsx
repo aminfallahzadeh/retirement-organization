@@ -68,25 +68,33 @@ function PersonnelInfoForm() {
   // FETCH LOOKUP DATA
   useEffect(() => {
     if (educationSuccess) {
-      setEducation(educationData.itemList[0].lookUpName);
+      if (educationData?.itemList?.length > 1) {
+        setEducation(null);
+      } else {
+        setEducation(educationData.itemList[0].lookUpName);
+      }
     }
   }, [educationSuccess, educationData?.itemList]);
 
   useEffect(() => {
     if (maritalStatusSuccess) {
-      setMarital(maritalStatusData.itemList[0].lookUpName);
+      if (maritalStatusData?.itemList?.length > 1) {
+        setMarital(null);
+      } else {
+        setMarital(maritalStatusData.itemList[0].lookUpName);
+      }
     }
   }, [maritalStatusSuccess, maritalStatusData?.itemList]);
 
   useEffect(() => {
     if (genderSuccess) {
-      setGender(genderData.itemList[0].lookUpName);
+      if (genderData?.itemList?.length > 1) {
+        setGender(null);
+      } else {
+        setGender(genderData.itemList[0].lookUpName);
+      }
     }
   }, [genderSuccess, genderData?.itemList]);
-
-  useEffect(() => {
-    console.log(gender);
-  }, [gender]);
 
   const content = (
     <section className="formContainer">
@@ -168,21 +176,27 @@ function PersonnelInfoForm() {
         <div className="inputBox__form">
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">جنسیت</div>
-            <div className="inputBox__form--readOnly-content">{gender}</div>
+            <div className="inputBox__form--readOnly-content">
+              {gender || "-"}
+            </div>
           </div>
         </div>
 
         <div className="inputBox__form">
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">وضعیت تاهل</div>
-            <div className="inputBox__form--readOnly-content">{marital}</div>
+            <div className="inputBox__form--readOnly-content">
+              {marital || "-"}
+            </div>
           </div>
         </div>
 
         <div className="inputBox__form">
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">مدرک تحصیلی</div>
-            <div className="inputBox__form--readOnly-content">{education}</div>
+            <div className="inputBox__form--readOnly-content">
+              {education || "-"}
+            </div>
           </div>
         </div>
 

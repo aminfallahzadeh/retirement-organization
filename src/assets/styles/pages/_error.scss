@@ -3,13 +3,18 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    color: var(--color-accent-primary);
 
     &__message {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        row-gap: 4rem;
+        row-gap: 1rem;
+
+        img {
+            width: 300px;
+        }
     }
 
     &__buttons {
@@ -19,9 +24,4 @@
         align-items: center;
         column-gap: 4rem;
     }
-}
-
-h1 {
-    color: $color-accent-red;
-    font-size: 6rem;
 }
