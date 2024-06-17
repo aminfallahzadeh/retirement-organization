@@ -21,8 +21,7 @@ import {
 
 import { addUserGroup, removeUserGroups } from "../slices/userGroupsDataSlice";
 
-function ArrowButtonsUsers() {
-  const { token } = useSelector((state) => state.auth);
+function ArrowButtonsUsers({ userID }) {
   const dispatch = useDispatch();
 
   const { selectedUserGroupData, userGroupsTableData } = useSelector(
@@ -31,24 +30,19 @@ function ArrowButtonsUsers() {
   const { selectedGroupUserData } = useSelector(
     (state) => state.groupsUserData
   );
-  const { selectedUserData } = useSelector((state) => state.usersData);
 
   const [insertGroupUsers, { isLoading: isInserting }] =
     useInsertGroupUsersMutation();
 
   const saveChangesHandler = async () => {
     try {
-      const userID = selectedUserData.id;
       const data = userGroupsTableData.map((item) => ({
         "id": "",
         userID,
         "groupID": item.id,
         "groupName": "",
       }));
-      const insertRes = await insertGroupUsers({
-        token,
-        data,
-      }).unwrap();
+      const insertRes = await insertGroupUsers(data).unwrap();
       console.log(insertRes);
       toast.success(insertRes.message, {
         autoClose: 2000,

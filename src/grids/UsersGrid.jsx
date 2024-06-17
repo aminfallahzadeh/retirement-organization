@@ -289,7 +289,7 @@ function UsersGrid() {
                   </div>
 
                   <div style={{ marginTop: "6rem" }}>
-                    <ArrowButtonsUsers />
+                    <ArrowButtonsUsers userID={userID} />
                   </div>
                 </div>
 
