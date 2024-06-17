@@ -16,9 +16,13 @@ function DigitalClock() {
   }, []);
 
   function formatTime() {
-    const hours = time.getHours();
-    const minutes = time.getMinutes();
-    const seconds = time.getSeconds();
+    let hours = time.getHours();
+    let minutes = time.getMinutes();
+    let seconds = time.getSeconds();
+
+    hours = hours <= 9 ? "0" + hours : hours;
+    minutes = minutes <= 9 ? "0" + minutes : minutes;
+    seconds = seconds <= 9 ? "0" + seconds : seconds;
 
     return `${convertToPersianNumber(hours)}:${convertToPersianNumber(
       minutes

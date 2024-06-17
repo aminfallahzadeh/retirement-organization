@@ -8,8 +8,14 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // mui imports
-import { IconButton } from "@mui/material";
-import { RemoveRedEye as RemoveRedEyeIcon } from "@mui/icons-material";
+import { IconButton, PaginationItem } from "@mui/material";
+import {
+  RemoveRedEye as RemoveRedEyeIcon,
+  ChevronLeft,
+  ChevronRight,
+  FirstPage,
+  LastPage,
+} from "@mui/icons-material";
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -59,7 +65,7 @@ function PersonnelGrid() {
           <Link
             to={`/retirement-organization/personnel-statements/info?personID=${row.id}`}
           >
-            <IconButton color="primary">
+            <IconButton color="primary" sx={{ padding: "0" }}>
               <RemoveRedEyeIcon />
             </IconButton>
           </Link>
@@ -73,9 +79,23 @@ function PersonnelGrid() {
     ...defaultTableOptions,
     columns,
     data: personTableData,
-    enablePagination: false,
-    enableBottomToolbar: false,
-    muiTableContainerProps: { sx: { height: "500px" } },
+    muiPaginationProps: {
+      size: "small",
+      shape: "rounded",
+      showRowsPerPage: false,
+      renderItem: (item) => (
+        <PaginationItem
+          {...item}
+          page={convertToPersianNumber(item.page)}
+          slots={{
+            previous: ChevronRight,
+            next: ChevronLeft,
+            first: LastPage,
+            last: FirstPage,
+          }}
+        />
+      ),
+    },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>

@@ -7,12 +7,8 @@ import { useLazyGetPersonsQuery } from "../slices/personApiSlice";
 import { setPersonTableData } from "../slices/personDataSlice";
 
 // mui imports
-// import { Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import {
-  SearchOutlined as SearchIcon,
-  // RemoveRedEyeOutlined as EyeIcon,
-} from "@mui/icons-material";
+import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 
 // library imports
 import { toast } from "react-toastify";
@@ -36,17 +32,19 @@ function PersonnelStatementForm() {
     !personnelObject ||
     (!personnelObject.personFirstName &&
       !personnelObject.personLastName &&
-      !personnelObject.personNationalCode);
+      !personnelObject.personNationalCode &&
+      !personnelObject.personID);
 
   // SEARCH HANDLER
   const handleSearchPersonnels = async () => {
     try {
+      const personID = personnelObject?.personID || "";
       const personFirstName = personnelObject?.personFirstName || "";
       const personLastName = personnelObject?.personLastName || "";
       const personNationalCode = personnelObject?.personNationalCode || "";
 
       const searchRes = await searchPersons({
-        personID: "",
+        personID: convertToEnglishNumber(personID),
         personFirstName,
         personLastName,
         personNationalCode: convertToEnglishNumber(personNationalCode),
@@ -99,12 +97,14 @@ function PersonnelStatementForm() {
           <div className="inputBox__form">
             <input
               type="text"
-              id="personelCode"
+              id="personID"
               className="inputBox__form--input"
-              disabled
+              value={convertToPersianNumber(personnelObject?.personID)}
+              name="personID"
+              onChange={hadnlePersonnelObjectChange}
               required
             />
-            <label htmlFor="personelCode" className="inputBox__form--label">
+            <label htmlFor="personID" className="inputBox__form--label">
               شماره کارمندی
             </label>
           </div>

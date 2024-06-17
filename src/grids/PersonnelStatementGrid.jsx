@@ -134,7 +134,11 @@ function PersonnelStatementGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="primary" onClick={handleShowStatementModal}>
+          <IconButton
+            color="primary"
+            sx={{ padding: "0" }}
+            onClick={handleShowStatementModal}
+          >
             <RemoveRedEyeIcon />
           </IconButton>
         ),
@@ -159,8 +163,8 @@ function PersonnelStatementGrid() {
       },
     }),
     muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
+      size: "small",
+      shape: "rounded",
       showRowsPerPage: false,
       renderItem: (item) => (
         <PaginationItem

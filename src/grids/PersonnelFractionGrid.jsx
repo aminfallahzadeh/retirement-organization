@@ -137,12 +137,12 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.farvOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.farvOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.farvPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.farvPersonnel)
                 )}`}
               </div>
             }
@@ -161,17 +161,19 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.ordibOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.ordibOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.ordibPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.ordibPersonnel)
                 )}`}
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
@@ -183,17 +185,19 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.khordOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.khordOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.khordPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.khordPersonnel)
                 )}`}
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
@@ -205,17 +209,19 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.tirOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.tirOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.tirPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.tirPersonnel)
                 )}`}
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
@@ -227,17 +233,19 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.mordadOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.mordadOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.mordadPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.mordadPersonnel)
                 )}`}
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
@@ -249,17 +257,19 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.shahOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.shahOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.shahPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.shahPersonnel)
                 )}`}
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
@@ -271,17 +281,19 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.mehrOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.mehrOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.mehrPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.mehrPersonnel)
                 )}`}
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
@@ -293,17 +305,19 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.abanOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.abanOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.abanPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.abanPersonnel)
                 )}`}
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
@@ -315,17 +329,19 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.azarOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.azarOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.azarPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.azarPersonnel)
                 )}`}
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
@@ -337,17 +353,19 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.deyOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.deyOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.deyPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.deyPersonnel)
                 )}`}
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
@@ -359,17 +377,19 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.bahmanOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.bahmanOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.bahmanPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.bahmanPersonnel)
                 )}`}
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
@@ -381,17 +401,19 @@ export const PersonnelFractionGrid = () => {
           <Tooltip
             title={
               <div style={{ fontFamily: "sahel", fontSize: "1rem" }}>
-                {`سهم کارفرما : ${convertToPersianNumber(
-                  row.original.esfandOrganization
+                {`سهم کارفرما : ${separateByThousands(
+                  convertToPersianNumber(row.original.esfandOrganization)
                 )}`}
                 <br />
-                {`سهم کارمند : ${convertToPersianNumber(
-                  row.original.esfandPersonnel
+                {`سهم کارمند : ${separateByThousands(
+                  convertToPersianNumber(row.original.esfandPersonnel)
                 )}`}
               </div>
             }
           >
-            <div>{convertToPersianNumber(renderedCellValue)}</div>
+            <div>
+              {separateByThousands(convertToPersianNumber(renderedCellValue))}
+            </div>
           </Tooltip>
         ),
       },
@@ -403,15 +425,6 @@ export const PersonnelFractionGrid = () => {
     ...defaultTableOptions,
     columns,
     data: tableData,
-    muiTableHeadCellProps: {
-      sx: {
-        color: "#001a57",
-        fontFamily: "sahel",
-        backgroundColor: "rgba(0, 78, 152, .4)",
-        borderRight: "1px solid #cfcfcf",
-        fontWeight: "600",
-      },
-    },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -424,8 +437,8 @@ export const PersonnelFractionGrid = () => {
       },
     }),
     muiPaginationProps: {
-      color: "primary",
-      variant: "outlined",
+      size: "small",
+      shape: "rounded",
       showRowsPerPage: false,
       renderItem: (item) => (
         <PaginationItem

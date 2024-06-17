@@ -74,6 +74,8 @@ function PersonnelTariffGrid() {
       {
         accessorKey: "rowNum",
         header: "ردیف",
+        enableSorting: false,
+        enableColumnActions: false,
         size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
@@ -144,8 +146,8 @@ function PersonnelTariffGrid() {
       },
     }),
     muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
+      size: "small",
+      shape: "rounded",
       showRowsPerPage: false,
       renderItem: (item) => (
         <PaginationItem

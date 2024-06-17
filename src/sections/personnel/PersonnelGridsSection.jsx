@@ -18,7 +18,7 @@ function PersonnelGridsSection() {
   };
 
   const content = (
-    <section className="u-margin-top-lg u-margin-bottom-lg">
+    <section className="u-margin-top-lg">
       <TabContext value={value}>
         <Box sx={{ bgcolor: "background.paper", borderRadius: 1 }}>
           <TabList
