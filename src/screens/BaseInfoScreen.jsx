@@ -14,10 +14,14 @@ import BaseLegalDocumentForm from "../forms/BaseInfoForms/BaseLegalDocumentForm"
 import BaseFractionMoveTypeForm from "../forms/BaseInfoForms/BaseFractionMoveTypeForm";
 import BaseFractionCheckoutTypeFrom from "../forms/BaseInfoForms/BaseFractionCheckoutTypeForm";
 import BaseFamilyRelationForm from "../forms/BaseInfoForms/BaseFamilyRelationForm";
+import BaseRetiredConditionForm from "../forms/BaseInfoForms/BaseRetiredConditionForm";
+import BaseRelatedConditionForm from "../forms/BaseInfoForms/BaseRelatedConditionForm";
+import BaseHeirConditionForm from "../forms/BaseInfoForms/BaseHeirConditionForm";
+import BaseFixedAmountForm from "../forms/BaseInfoForms/BaseFixedAmountForm";
 
 function BaseInfoScreen() {
   return (
-    <section className="flex-col">
+    <section className="flex-col u-margin-bottom-xl">
       <div className="title-primary--container flex-row flex-center">
         <h4 className="title-primary">
           <span className="title-primary--underline"></span>اطلاعات پایه
@@ -25,7 +29,7 @@ function BaseInfoScreen() {
       </div>
 
       <div>
-        <Accordion>
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
           <AccordionSummary
             id="panel-header"
             aria-controls="panel-content"
@@ -38,7 +42,7 @@ function BaseInfoScreen() {
           </AccordionDetails>
         </Accordion>
 
-        <Accordion>
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
           <AccordionSummary
             id="panel-header"
             aria-controls="panel-content"
@@ -51,7 +55,7 @@ function BaseInfoScreen() {
           </AccordionDetails>
         </Accordion>
 
-        <Accordion>
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
           <AccordionSummary
             id="panel-header"
             aria-controls="panel-content"
@@ -64,7 +68,7 @@ function BaseInfoScreen() {
           </AccordionDetails>
         </Accordion>
 
-        <Accordion>
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
           <AccordionSummary
             id="panel-header"
             aria-controls="panel-content"
@@ -77,7 +81,7 @@ function BaseInfoScreen() {
           </AccordionDetails>
         </Accordion>
 
-        <Accordion>
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
           <AccordionSummary
             id="panel-header"
             aria-controls="panel-content"
@@ -90,7 +94,7 @@ function BaseInfoScreen() {
           </AccordionDetails>
         </Accordion>
 
-        <Accordion>
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
           <AccordionSummary
             id="panel-header"
             aria-controls="panel-content"
@@ -103,7 +107,7 @@ function BaseInfoScreen() {
           </AccordionDetails>
         </Accordion>
 
-        <Accordion>
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
           <AccordionSummary
             id="panel-header"
             aria-controls="panel-content"
@@ -116,7 +120,7 @@ function BaseInfoScreen() {
           </AccordionDetails>
         </Accordion>
 
-        <Accordion>
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
           <AccordionSummary
             id="panel-header"
             aria-controls="panel-content"
@@ -129,7 +133,7 @@ function BaseInfoScreen() {
           </AccordionDetails>
         </Accordion>
 
-        <Accordion>
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
           <AccordionSummary
             id="panel-header"
             aria-controls="panel-content"
@@ -165,6 +169,58 @@ function BaseInfoScreen() {
           </AccordionSummary>
           <AccordionDetails>
             <BaseFamilyRelationForm />
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
+          <AccordionSummary
+            id="panel-header"
+            aria-controls="panel-content"
+            expandIcon={<ArrowDropDownIcon />}
+          >
+            فرم اطلاعات پایه وضعیت بازنشستگان
+          </AccordionSummary>
+          <AccordionDetails>
+            <BaseRetiredConditionForm />
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
+          <AccordionSummary
+            id="panel-header"
+            aria-controls="panel-content"
+            expandIcon={<ArrowDropDownIcon />}
+          >
+            فرم اطلاعات پایه وضعیت وابستگان
+          </AccordionSummary>
+          <AccordionDetails>
+            <BaseRelatedConditionForm />
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
+          <AccordionSummary
+            id="panel-header"
+            aria-controls="panel-content"
+            expandIcon={<ArrowDropDownIcon />}
+          >
+            فرم اطلاعات پایه وضعیت وظیفه بگیران
+          </AccordionSummary>
+          <AccordionDetails>
+            <BaseHeirConditionForm />
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
+          <AccordionSummary
+            id="panel-header"
+            aria-controls="panel-content"
+            expandIcon={<ArrowDropDownIcon />}
+          >
+            فرم اطلاعات پایه دریافت کنندگان مبالغ ثابت
+          </AccordionSummary>
+          <AccordionDetails>
+            <BaseFixedAmountForm />
           </AccordionDetails>
         </Accordion>
       </div>
