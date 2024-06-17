@@ -150,29 +150,9 @@ select {
     position: relative;
     text-align: center;
     width: max-content;
+    color: var(--color-accent-primary);
     cursor: default;
     padding-bottom: 0.2rem;
-
-    background: linear-gradient(-90deg, var(--color-accent-gr-secondary), var(--color-accent-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-
-    &::after {
-        content: "";
-        position: absolute;
-        transition: all 0.25s ease;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        height: 2px;
-        width: 50%;
-        background: linear-gradient(-90deg, var(--color-accent-gr-secondary), var(--color-accent-secondary));
-    }
-
-    &:hover::after {
-        width: 100%;
-    }
 }
 
 .paragraph-primary {

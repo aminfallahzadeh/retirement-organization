@@ -34,7 +34,7 @@ import {
 import { defaultTableOptions } from "../utils.js";
 
 // helpers
-import { convertToPersianNumber } from "../helper.js";
+import { convertToPersianNumber, findById } from "../helper.js";
 
 // components
 import Modal from "../components/Modal";
@@ -50,6 +50,8 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 function UsersGrid() {
   const [usersTableData, setUsersTableData] = useState([]);
+
+  const [userName, setUserName] = useState(null);
 
   const [rowSelection, setRowSelection] = useState({});
   const [userID, setUserID] = useState(null);
@@ -256,9 +258,12 @@ function UsersGrid() {
     const id = Object.keys(table.getState().rowSelection)[0];
 
     if (id) {
+      const userName = findById(usersTableData, id).username;
+
       setUserID(id);
+      setUserName(userName);
     }
-  }, [table, rowSelection]);
+  }, [table, rowSelection, usersTableData]);
 
   const content = (
     <>
@@ -290,7 +295,7 @@ function UsersGrid() {
               closeModal={() => setShowEditUserGroupsModal(false)}
             >
               <div className="flex-row">
-                <div>
+                <div className="flex-col">
                   <div className="modal__header">
                     <h4 className="title-tertiary">گروه ها</h4>
                   </div>
@@ -298,7 +303,7 @@ function UsersGrid() {
                   <GroupsGridUser />
                 </div>
 
-                <div>
+                <div className="flex-col">
                   <div className="modal__header">
                     <h4 className="title-tertiary">عملیات</h4>
                   </div>
@@ -311,12 +316,12 @@ function UsersGrid() {
                   </div>
                 </div>
 
-                <div>
+                <div className="flex-col">
                   <div className="modal__header">
                     <h4 className="title-tertiary">گروه های کاربر</h4>
                   </div>
 
-                  <UserGroupsGrid userID={userID} />
+                  <UserGroupsGrid userID={userID} userName={userName} />
                 </div>
               </div>
             </Modal>

@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 
 function ReturnRequestForm({ setShowReturnRequestModal }) {
   const [selectedExpert, setSelectedExpert] = useState(" ");
+  const [description, setDescription] = useState("");
   const [expertCombo, setExpertCombo] = useState([]);
 
   const navigate = useNavigate();
@@ -61,6 +62,10 @@ function ReturnRequestForm({ setShowReturnRequestModal }) {
     setSelectedExpert(e.target.value);
   };
 
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
   // RETURN REQUEST HANDLER
   const handleReturnRequest = async () => {
     try {
@@ -70,6 +75,7 @@ function ReturnRequestForm({ setShowReturnRequestModal }) {
         expertUserID: selectedExpert,
         role: Role,
         requestTypeID,
+        description,
       });
       setShowReturnRequestModal(false);
       toast.success(sendRes.data.message, {
@@ -97,44 +103,67 @@ function ReturnRequestForm({ setShowReturnRequestModal }) {
           <CircularProgress color="primary" />
         </Box>
       ) : (
-        <section className="formContainer flex-row flex-center">
-          <form method="POST" className="inputBox__form">
-            <select
-              className="inputBox__form--input inputBox__form--input-height-40 inputBox__form--input-width-200"
-              required
-              id="expertList"
-              onChange={handleSelectedExpertChange}
-              value={selectedExpert}
-              disabled={isSendLoading}
-            >
-              <option value=" " disabled>
-                انتخاب کنید
-              </option>
-
-              {expertCombo?.map((expert) => (
-                <option key={expert.userID} value={expert.userID}>
-                  {expert.firstName} {expert.lastName}
+        <section className="formContainer flex-col">
+          <form method="POST" className="grid grid--col-2">
+            <div className="inputBox__form">
+              <select
+                className="inputBox__form--input"
+                required
+                id="expertList"
+                onChange={handleSelectedExpertChange}
+                value={selectedExpert}
+                disabled={isSendLoading}
+              >
+                <option value=" " disabled>
+                  انتخاب کنید
                 </option>
-              ))}
-            </select>
 
-            <label className="inputBox__form--label" htmlFor="expertList">
-              لیست کارشناسان
-            </label>
+                {expertCombo?.map((expert) => (
+                  <option key={expert.userID} value={expert.userID}>
+                    {expert.firstName} {expert.lastName}
+                  </option>
+                ))}
+              </select>
+
+              <label className="inputBox__form--label" htmlFor="expertList">
+                لیست کارشناسان
+              </label>
+            </div>
+
+            <div className="inputBox__form">
+              <textarea
+                className="inputBox__form--input"
+                required
+                id="expertDescription"
+                onChange={handleDescriptionChange}
+                value={description}
+                disabled={isSendLoading}
+              />
+              <label
+                className="inputBox__form--label"
+                htmlFor="expertDescription"
+              >
+                توضیحات
+              </label>
+            </div>
           </form>
 
-          <LoadingButton
-            dir="ltr"
-            loading={isLoading}
-            endIcon={<ReturnIcon />}
-            onClick={handleReturnRequest}
-            disabled={selectedExpert === " " || isSendLoading}
-            variant="contained"
-            color="warning"
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>برگشت</span>
-          </LoadingButton>
+          <div style={{ marginRight: "auto" }}>
+            <LoadingButton
+              dir="ltr"
+              loading={isLoading}
+              endIcon={<ReturnIcon />}
+              onClick={handleReturnRequest}
+              disabled={
+                selectedExpert === " " || isSendLoading || description === ""
+              }
+              variant="contained"
+              color="warning"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>برگشت</span>
+            </LoadingButton>
+          </div>
         </section>
       )}
     </>

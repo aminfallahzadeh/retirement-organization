@@ -26,7 +26,7 @@ import { findById } from "../helper.js";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-function UserGroupsGrid({ userID }) {
+function UserGroupsGrid({ userID, userName }) {
   const [rowSelection, setRowSelection] = useState({});
   const dispatch = useDispatch();
 
@@ -65,11 +65,11 @@ function UserGroupsGrid({ userID }) {
     () => [
       {
         accessorKey: "name",
-        header: "ویرایش گروه ها",
+        header: `ویرایش گروه های ${userName}`,
         size: 300,
       },
     ],
-    []
+    [userName]
   );
 
   const table = useMaterialReactTable({
