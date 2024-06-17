@@ -298,7 +298,7 @@ function UsersGrid() {
                     <h4 className="title-tertiary">گروه های کاربر</h4>
                   </div>
 
-                  <UserGroupsGrid />
+                  <UserGroupsGrid userID={userID} />
                 </div>
               </div>
             </Modal>

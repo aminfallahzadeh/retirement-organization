@@ -26,7 +26,7 @@ import { findById } from "../helper.js";
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-function UserGroupsGrid() {
+function UserGroupsGrid({ userID }) {
   const [rowSelection, setRowSelection] = useState({});
   const dispatch = useDispatch();
 
@@ -35,8 +35,6 @@ function UserGroupsGrid() {
 
   // access the data from redux store
   const { userGroupsTableData } = useSelector((state) => state.userGroupsData);
-
-  const userID = selectedUserData?.id;
 
   // fetch data from the API
   const {

@@ -191,7 +191,7 @@ function Nav({ userName, userID }) {
               onClick={() => handlePanelToggle("baseInfo")}
               className={activePanel === "baseInfo" ? "active" : ""}
             >
-              <a>اطلاعات پایه</a>
+              <a>مدیریت اطلاعات پایه</a>
               <ArrowIcon
                 sx={{
                   color: "#fff",
