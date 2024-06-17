@@ -137,17 +137,21 @@ function UsersGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: ({ row }) => (
-          <Tooltip title={`${row.original.firstName} ${row.original.lastName}`}>
-            <IconButton
-              color="success"
-              onClick={handleShowEditNameModal}
-              sx={{ padding: "0" }}
+        Cell: ({ row }) => {
+          return (
+            <Tooltip
+              title={`${row.original.firstName} ${row.original.lastName}`}
             >
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
-        ),
+              <IconButton
+                color="success"
+                onClick={handleShowEditNameModal}
+                sx={{ padding: "0" }}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+          );
+        },
       },
       {
         accessorKey: "editItemsAction",
