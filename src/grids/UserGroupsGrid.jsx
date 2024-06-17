@@ -31,7 +31,7 @@ function UserGroupsGrid({ userID }) {
   const dispatch = useDispatch();
 
   // access selected row info
-  const { selectedUserData } = useSelector((state) => state.usersData);
+  // const { selectedUserData } = useSelector((state) => state.usersData);
 
   // access the data from redux store
   const { userGroupsTableData } = useSelector((state) => state.userGroupsData);
@@ -71,15 +71,15 @@ function UserGroupsGrid({ userID }) {
         header: (
           <span>
             گروه های کاربر:{" "}
-            <span style={{ fontStyle: "italic", color: "#03620a" }}>
+            {/* <span style={{ fontStyle: "italic", color: "#03620a" }}>
               {selectedUserData?.username}
-            </span>
+            </span> */}
           </span>
         ),
         size: 300,
       },
     ],
-    [selectedUserData?.username]
+    []
   );
 
   const table = useMaterialReactTable({

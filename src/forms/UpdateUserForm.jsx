@@ -74,10 +74,6 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
     }
   };
 
-  useEffect(() => {
-    console.log(userObject);
-  }, [userObject]);
-
   const handleUserObjectChange = (e) => {
     const { name, value } = e.target;
     setUserObject({ ...userObject, [name]: value });

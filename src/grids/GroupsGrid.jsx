@@ -18,6 +18,7 @@ import {
   Button,
   Tooltip,
   CircularProgress,
+  PaginationItem,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -28,6 +29,10 @@ import {
   Refresh as RefreshIcon,
   Close as CloseIcon,
   Done as DoneIcon,
+  ChevronLeft,
+  ChevronRight,
+  FirstPage,
+  LastPage,
 } from "@mui/icons-material";
 import {
   MaterialReactTable,
@@ -35,7 +40,7 @@ import {
 } from "material-react-table";
 
 // helpers
-import { findById } from "../helper.js";
+import { findById, convertToPersianNumber } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
@@ -215,11 +220,22 @@ function GroupsGrid() {
     ...defaultTableOptions,
     columns,
     data: tableData,
-    enablePagination: false,
-    enableBottomToolbar: false,
-    muiTableContainerProps: { sx: { height: "500px" } },
-    initialState: {
-      density: "compact",
+    muiPaginationProps: {
+      size: "small",
+      shape: "rounded",
+      showRowsPerPage: false,
+      renderItem: (item) => (
+        <PaginationItem
+          {...item}
+          page={convertToPersianNumber(item.page)}
+          slots={{
+            previous: ChevronRight,
+            next: ChevronLeft,
+            first: LastPage,
+            last: FirstPage,
+          }}
+        />
+      ),
     },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
