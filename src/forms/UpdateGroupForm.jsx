@@ -86,18 +86,20 @@ function UpdateGroupForm({ setShowEditModal, selectedGroup }) {
             </label>
           </form>
 
-          <LoadingButton
-            dir="ltr"
-            endIcon={<SaveIcon />}
-            loading={isLoading}
-            onClick={updateGroupHandler}
-            variant="contained"
-            color="success"
-            disabled={groupName === selectedGroup?.name || !groupName}
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>ذخیره</span>
-          </LoadingButton>
+          <div style={{ marginRight: "auto" }}>
+            <LoadingButton
+              dir="ltr"
+              endIcon={<SaveIcon />}
+              loading={isLoading}
+              onClick={updateGroupHandler}
+              variant="contained"
+              color="success"
+              disabled={groupName === selectedGroup?.name || !groupName}
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>ذخیره</span>
+            </LoadingButton>
+          </div>
         </section>
       )}
     </>

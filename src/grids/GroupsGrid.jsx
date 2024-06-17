@@ -365,7 +365,7 @@ function GroupsGrid() {
               closeModal={() => setShowEditItemsModal(false)}
             >
               <div className="formContainer flex-row">
-                <div>
+                <div className="flex-col">
                   <div className="modal__header">
                     <h4 className="title-tertiary">دسترسی ها</h4>
                   </div>
@@ -380,7 +380,7 @@ function GroupsGrid() {
                   </div>
                 </div>
 
-                <div>
+                <div className="flex-col">
                   <div className="modal__header">
                     <h4 className="title-tertiary">دسترسی های گروه</h4>
                   </div>
