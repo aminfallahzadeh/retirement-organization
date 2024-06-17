@@ -38,6 +38,8 @@ function App() {
   const [userID, setUserID] = useState("");
 
   const { token } = useSelector((state) => state.auth);
+  const { navPanelOpen } = useSelector((state) => state.themeData);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -101,10 +103,11 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        {/* {!isLoginPage && <TopbarNav userName={userName} userID={userID} />} */}
-        {/*{!isLoginPage && <SidebarNav />} */}
         {!isLoginPage && <Header userName={userName} userID={userID} />}
-        <main className="main">
+        <main
+          className="main"
+          style={{ marginTop: navPanelOpen ? "220px" : "170px" }}
+        >
           <Outlet />
         </main>
         <ToastContainer />

@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 // redux imports
+import { useDispatch } from "react-redux";
+import { setNavPanelOpen } from "../slices/themeDataSlice";
 import {
   useGetUserQuery,
   useUpdateUserThemeMutation,
@@ -32,6 +34,8 @@ import { toast } from "react-toastify";
 function Nav({ userName, userID }) {
   const { data: user } = useGetUserQuery({ userID });
 
+  const dispatch = useDispatch();
+
   const [activePanel, setActivePanel] = useState(null);
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -50,7 +54,11 @@ function Nav({ userName, userID }) {
   };
 
   const handlePanelToggle = (panel) => {
-    setActivePanel((prev) => (prev === panel ? null : panel));
+    setActivePanel((prev) => {
+      const newPanel = prev === panel ? null : panel;
+      dispatch(setNavPanelOpen(newPanel !== null));
+      return newPanel;
+    });
   };
 
   const handleThemeChange = async () => {

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   theme: "default",
+  navPanelOpen: false,
 };
 
 const themeDataSlice = createSlice({
@@ -11,9 +12,13 @@ const themeDataSlice = createSlice({
     setThemeGlobal: (state, action) => {
       state.theme = action.payload;
     },
+
+    setNavPanelOpen: (state, action) => {
+      state.navPanelOpen = action.payload;
+    },
   },
 });
 
-export const { setThemeGlobal } = themeDataSlice.actions;
+export const { setThemeGlobal, setNavPanelOpen } = themeDataSlice.actions;
 
 export default themeDataSlice.reducer;
