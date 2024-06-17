@@ -163,7 +163,7 @@ function RequestsGrid({ isLoading, roles }) {
         Cell: ({ row }) => (
           <Tooltip title={convertToPersianNumber(row.original.requestNO)}>
             <Link
-              to={`/retirement-organization/request?requestID=${row.id}&Role=${selectedRole}`}
+              to={`/retirement-organization/request?requestID=${row.id}&Role=${selectedRole}&type=${row.original.requestTypeID}`}
             >
               <span>
                 <IconButton sx={{ padding: "0" }} color="info">

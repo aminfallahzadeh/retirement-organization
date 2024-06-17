@@ -10,7 +10,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import {
   ArrowUpwardOutlined as SendIcon,
   Print as PrintIcon,
-  Redo as RedoIcon,
+  KeyboardReturn as ReturnIcon,
   ArrowBack as BackIcon,
 } from "@mui/icons-material";
 
@@ -121,7 +121,7 @@ function RequestScreen() {
           </Button>
           <Button
             dir="ltr"
-            endIcon={<RedoIcon />}
+            endIcon={<ReturnIcon />}
             onClick={handleShowReturnRequestModal}
             variant="contained"
             color="warning"
@@ -139,7 +139,7 @@ function RequestScreen() {
         >
           <p className="paragraph-primary">کارشناس مورد نظر را انتخاب کنید</p>
 
-          <SendRequestFrom />
+          <SendRequestFrom setShowSendRequestModal={setShowSendRequestModal} />
         </Modal>
       ) : showReturnRequestModal ? (
         <Modal
@@ -148,7 +148,9 @@ function RequestScreen() {
         >
           <p className="paragraph-primary">کارشناس مورد نظر را انتخاب کنید</p>
 
-          <ReturnRequestForm />
+          <ReturnRequestForm
+            setShowReturnRequestModal={setShowReturnRequestModal}
+          />
         </Modal>
       ) : null}
     </>
