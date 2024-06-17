@@ -21,7 +21,7 @@ import {
 
 import { addUserGroup, removeUserGroups } from "../slices/userGroupsDataSlice";
 
-function ArrowButtonsUsers({ userID }) {
+function ArrowButtonsUsers({ userID, setShowEditUserGroupsModal }) {
   const dispatch = useDispatch();
 
   const { selectedUserGroupData, userGroupsTableData } = useSelector(
@@ -43,7 +43,7 @@ function ArrowButtonsUsers({ userID }) {
         "groupName": "",
       }));
       const insertRes = await insertGroupUsers(data).unwrap();
-      console.log(insertRes);
+      setShowEditUserGroupsModal(false);
       toast.success(insertRes.message, {
         autoClose: 2000,
       });

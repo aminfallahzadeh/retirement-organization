@@ -76,7 +76,7 @@ function GroupsCreateUserGrid({ setAddedGroups }) {
     enableRowSelection: true,
     enablePagination: false,
     enableBottomToolbar: false,
-    muiTableContainerProps: { sx: { height: "400px" } },
+    muiTableContainerProps: { sx: { height: "250px" } },
     muiTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
       onClick: (event) =>
         getMRT_RowSelectionHandler({ row, staticRowIndex, table })(event),

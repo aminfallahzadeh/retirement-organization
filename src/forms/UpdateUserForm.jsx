@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 
 // redux imports
-import { useSelector } from "react-redux";
 import {
   useUpdateUserMutation,
   useGetUserQuery,
@@ -16,15 +15,13 @@ import { Box, CircularProgress } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Save as SaveIcon } from "@mui/icons-material";
 
-function UpdateUserForm({ setShowEditUserModal, userID }) {
-  const { selectedUserData } = useSelector((state) => state.usersData);
+// helpers
+import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
+function UpdateUserForm({ setShowEditUserModal, userID }) {
   const [userObject, setUserObject] = useState(null);
 
-  const handleUserObjectChange = (e) => {
-    const { name, value } = e.target;
-    setUserObject({ ...userObject, [name]: value });
-  };
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
   const {
     data: user,
@@ -36,12 +33,8 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
 
   useEffect(() => {
     if (isSuccess) {
-      setUserObject(user?.itemList[0]);
+      setUserObject(user.itemList[0]);
     }
-
-    return () => {
-      setUserObject({});
-    };
   }, [isSuccess, user]);
 
   useEffect(() => {
@@ -50,24 +43,24 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
     }
   }, [error]);
 
-  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
-
-  useEffect(() => {
-    console.log("userObject", userObject);
-  }, [userObject]);
-
   const updateUserHandler = async () => {
     try {
       const res = await updateUser({
         ...userObject,
-        "sex": userObject.sex === "true" ? true : false,
-        "isActive": userObject.isActive === "true" ? true : false,
-        "editDate": "string",
-        "editUser": "string",
-        "refreshToken": "string",
-        "createDate": "string",
-        "createUser": "string",
-        "isDelete": 0,
+        sex:
+          userObject.sex === "true"
+            ? true
+            : userObject.sex === true
+            ? true
+            : false,
+        isActive:
+          userObject.isActive === "true"
+            ? true
+            : userObject.isActive === true
+            ? true
+            : false,
+        tel: convertToEnglishNumber(userObject.tel),
+        mobile: convertToEnglishNumber(userObject.mobile),
       }).unwrap();
       setShowEditUserModal(false);
       toast.success(res.message, {
@@ -82,14 +75,13 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
   };
 
   useEffect(() => {
-    if (selectedUserData) {
-      setUserObject({
-        ...selectedUserData,
-        isActive: selectedUserData.isActive === "فعال" ? true : false,
-        sex: selectedUserData.sex === true ? "true" : "false",
-      });
-    }
-  }, [selectedUserData]);
+    console.log(userObject);
+  }, [userObject]);
+
+  const handleUserObjectChange = (e) => {
+    const { name, value } = e.target;
+    setUserObject({ ...userObject, [name]: value });
+  };
 
   const content = (
     <>
@@ -110,7 +102,7 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
               <div className="inputBox__form--readOnly-input">
                 <div className="inputBox__form--readOnly-label">نام کاربری</div>
                 <div className="inputBox__form--readOnly-content">
-                  {userObject.username}
+                  {userObject.username || "-"}
                 </div>
               </div>
             </div>
@@ -122,7 +114,7 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
                 className="inputBox__form--input"
                 required
                 id="psw"
-                value={userObject.password || ""}
+                value={userObject.password || "-"}
                 onChange={handleUserObjectChange}
               />
               <label className="inputBox__form--label" htmlFor="psw">
@@ -137,7 +129,7 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
                 required
                 id="fname"
                 name="firstName"
-                value={userObject.firstName}
+                value={userObject.firstName || "-"}
                 onChange={handleUserObjectChange}
               />
               <label className="inputBox__form--label" htmlFor="fname">
@@ -152,7 +144,7 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
                 required
                 id="family"
                 name="lastName"
-                value={userObject.lastName}
+                value={userObject.lastName || "-"}
                 onChange={handleUserObjectChange}
               />
               <label className="inputBox__form--label" htmlFor="familly">
@@ -167,9 +159,18 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
                 style={{ cursor: "pointer" }}
                 name="isActive"
                 required
-                value={userObject.isActive}
+                value={
+                  userObject.isActive === false
+                    ? "false"
+                    : userObject.isActive === "false"
+                    ? "false"
+                    : "true" || " "
+                }
                 onChange={handleUserObjectChange}
               >
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
                 <option value="true">فعال</option>
                 <option value="false">غیر فعال</option>
               </select>
@@ -184,7 +185,7 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
                 className="inputBox__form--input"
                 required
                 id="mail"
-                value={userObject.email}
+                value={userObject.email || "-"}
                 name="email"
                 onChange={handleUserObjectChange}
               />
@@ -200,7 +201,7 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
                 required
                 id="tel"
                 name="tel"
-                value={userObject.tel}
+                value={convertToPersianNumber(userObject.tel) || "-"}
                 onChange={handleUserObjectChange}
               />
               <label className="inputBox__form--label" htmlFor="tel">
@@ -214,7 +215,7 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
                 className="inputBox__form--input"
                 required
                 id="cell"
-                value={userObject.mobile}
+                value={convertToPersianNumber(userObject.mobile) || "-"}
                 name="mobile"
                 onChange={handleUserObjectChange}
               />
@@ -228,10 +229,19 @@ function UpdateUserForm({ setShowEditUserModal, userID }) {
                 className="inputBox__form--input"
                 id="sex"
                 style={{ cursor: "pointer" }}
-                value={userObject.sex || ""}
+                value={
+                  userObject.sex === false
+                    ? "false"
+                    : userObject.sex === "false"
+                    ? "false"
+                    : "true" || " "
+                }
                 name="sex"
                 onChange={handleUserObjectChange}
               >
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
                 <option value="true">مرد</option>
                 <option value="false">زن</option>
               </select>

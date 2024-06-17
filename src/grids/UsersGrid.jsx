@@ -5,16 +5,25 @@ import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
 import { useGetUserQuery } from "../slices/usersApiSlice";
 
 // mui imports
-import { IconButton, Box, Tooltip, CircularProgress } from "@mui/material";
+import {
+  IconButton,
+  Box,
+  Tooltip,
+  CircularProgress,
+  PaginationItem,
+} from "@mui/material";
 import {
   EditOutlined as EditIcon,
   ChecklistRtlOutlined as ChecklistRtlIcon,
   Add as AddIcon,
   Refresh as RefreshIcon,
+  ChevronLeft,
+  ChevronRight,
+  FirstPage,
+  LastPage,
 } from "@mui/icons-material";
 import {
   MaterialReactTable,
@@ -24,7 +33,8 @@ import {
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-import { setUsersTableData } from "../slices/usersDataSlice.js";
+// helpers
+import { convertToPersianNumber } from "../helper.js";
 
 // components
 import Modal from "../components/Modal";
@@ -39,16 +49,13 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 function UsersGrid() {
+  const [usersTableData, setUsersTableData] = useState([]);
+
   const [rowSelection, setRowSelection] = useState({});
   const [userID, setUserID] = useState(null);
 
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [showEditUserGroupsModal, setShowEditUserGroupsModal] = useState(false);
-
-  const dispatch = useDispatch();
-
-  // access the data from redux store
-  const { usersTableData } = useSelector((state) => state.usersData);
 
   const {
     data: users,
@@ -86,19 +93,9 @@ function UsersGrid() {
         tel: user.tel,
         mobile: user.mobile,
       }));
-      dispatch(setUsersTableData(data));
+      setUsersTableData(data);
     }
-    return () => {
-      dispatch(setUsersTableData([]));
-    };
-  }, [
-    users,
-    isSuccess,
-    dispatch,
-    refetch,
-    showEditUserModal,
-    showEditUserGroupsModal,
-  ]);
+  }, [users, isSuccess, refetch, showEditUserModal, showEditUserGroupsModal]);
 
   useEffect(() => {
     if (error) {
@@ -178,9 +175,6 @@ function UsersGrid() {
     ...defaultTableOptions,
     columns,
     data: usersTableData,
-    enablePagination: false,
-    enableBottomToolbar: false,
-    muiTableContainerProps: { sx: { height: "500px" } },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -192,6 +186,23 @@ function UsersGrid() {
         cursor: "pointer",
       },
     }),
+    muiPaginationProps: {
+      size: "small",
+      shape: "rounded",
+      showRowsPerPage: false,
+      renderItem: (item) => (
+        <PaginationItem
+          {...item}
+          page={convertToPersianNumber(item.page)}
+          slots={{
+            previous: ChevronRight,
+            next: ChevronLeft,
+            first: LastPage,
+            last: FirstPage,
+          }}
+        />
+      ),
+    },
     renderTopToolbarCustomActions: () => (
       <Box>
         {isFetching ? (
@@ -289,7 +300,10 @@ function UsersGrid() {
                   </div>
 
                   <div style={{ marginTop: "6rem" }}>
-                    <ArrowButtonsUsers userID={userID} />
+                    <ArrowButtonsUsers
+                      userID={userID}
+                      setShowEditUserGroupsModal={setShowEditUserGroupsModal}
+                    />
                   </div>
                 </div>
 

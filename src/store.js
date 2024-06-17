@@ -7,7 +7,6 @@ import retiredStateSliceReducer from "./slices/retiredStateSlice";
 import roleDataSliceReducer from "./slices/roleDataSlice";
 import itemsDataSliceReducer from "./slices/itemsDataSlice";
 import groupItemsDataSliceReducer from "./slices/groupItemsDataSlice";
-import usersDataSliceReducer from "./slices/usersDataSlice";
 import userGroupsDataSliceReducer from "./slices/userGroupsDataSlice";
 import groupsUserDataSliceReducer from "./slices/groupsUserDataSlice";
 import archiveDataSliceReducer from "./slices/archiveDataSlice";
@@ -24,7 +23,6 @@ const store = configureStore({
     retiredState: retiredStateSliceReducer,
     itemsData: itemsDataSliceReducer,
     groupItemsData: groupItemsDataSliceReducer,
-    usersData: usersDataSliceReducer,
     userGroupsData: userGroupsDataSliceReducer,
     groupsUserData: groupsUserDataSliceReducer,
     roleData: roleDataSliceReducer,
