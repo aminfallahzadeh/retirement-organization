@@ -14,6 +14,8 @@ import {
 
 // components
 import Modal from "./Modal";
+import DigitalClock from "./DigitalClock";
+import Date from "./Date";
 
 // hooks
 import useLogout from "../hooks/useLogout";
@@ -261,6 +263,12 @@ function Nav({ userName, userID }) {
               <Tooltip title="پنل کاربر">
                 <a>{userName}</a>
               </Tooltip>
+            </li>
+
+            <li>
+              <DigitalClock />
+
+              <Date />
             </li>
           </ul>
         </div>
