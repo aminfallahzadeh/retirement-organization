@@ -67,12 +67,13 @@ function AllRequestsGrid() {
     if (isSuccess) {
       const data = requests.itemList.map((item) => ({
         id: item.requestNO,
+        type: item.requestTypeID,
         requestNO: item.requestNO || "-",
         personId: item.personID,
-        requestTypeNameFa: item.requestTypeNameFa,
-        personName: item.personName,
-        date: item.requestDate,
-        body: item.requestText,
+        requestTypeNameFa: item.requestTypeNameFa || "-",
+        personName: item.personName || "-",
+        date: item.requestDate || "-",
+        body: item.requestText || "-",
       }));
 
       setRequestTableData(data);
@@ -133,7 +134,9 @@ function AllRequestsGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Tooltip title={convertToPersianNumber(row.original.requestNO)}>
-            <Link to={`/retirement-organization/request?id=${row.id}`}>
+            <Link
+              to={`/retirement-organization/request?requestID=${row.id}&Role=${Role}&type=${row.original.type}`}
+            >
               <IconButton color="primary" sx={{ padding: "0" }}>
                 <RemoveRedEyeIcon />
               </IconButton>
@@ -142,7 +145,7 @@ function AllRequestsGrid() {
         ),
       },
     ],
-    []
+    [Role]
   );
 
   const table = useMaterialReactTable({

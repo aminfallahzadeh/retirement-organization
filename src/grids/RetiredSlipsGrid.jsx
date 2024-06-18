@@ -166,7 +166,7 @@ function RetiredSlipsGrid() {
         ),
       },
       {
-        accessorKey: "observeStatement",
+        accessorKey: "downloadRetiredSlip",
         header: "مشاهده/چاپ",
         enableSorting: false,
         enableColumnActions: false,

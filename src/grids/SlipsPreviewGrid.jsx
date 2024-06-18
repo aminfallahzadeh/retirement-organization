@@ -1,18 +1,18 @@
 // react imports
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 
 // redux imports
 import { useSelector } from "react-redux";
 
 // mui imports
 import { IconButton } from "@mui/material";
-import { PaginationItem } from "@mui/material";
+import { PaginationItem, Tooltip } from "@mui/material";
 import {
   ChevronLeft,
   ChevronRight,
   FirstPage,
   LastPage,
-  RemoveRedEye as RemoveRedEyeIcon,
+  DownloadOutlined as DownloadIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -24,21 +24,30 @@ import {
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
+  separateByThousands,
 } from "../helper.js";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
+import { createSlipsPDF } from "../generateSlipsPDF.js";
 
 function PersonnelStatementGrid() {
   const [rowSelection, setRowSelection] = useState({});
 
   const { slipsTableData } = useSelector((state) => state.slipsData);
 
+  // SLIP DOWNLOAD HANDLER
+  const handleDownload = useCallback(() => {
+    createSlipsPDF();
+  }, []);
+
   const columns = useMemo(
     () => [
       {
         accessorKey: "rowNum",
         header: "ردیف",
+        enableSorting: false,
+        enableColumnActions: false,
         size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
@@ -67,7 +76,9 @@ function PersonnelStatementGrid() {
         header: "بستانکاری",
         size: 20,
         Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianNumber(renderedCellValue)}</div>
+          <div>
+            {separateByThousands(convertToPersianNumber(renderedCellValue))}
+          </div>
         ),
       },
       {
@@ -75,7 +86,9 @@ function PersonnelStatementGrid() {
         header: "بدهکاری",
         size: 20,
         Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianNumber(renderedCellValue)}</div>
+          <div>
+            {separateByThousands(convertToPersianNumber(renderedCellValue))}
+          </div>
         ),
       },
       {
@@ -95,19 +108,25 @@ function PersonnelStatementGrid() {
         ),
       },
       {
-        accessorKey: "observeSlip",
-        header: "مشاهده",
+        accessorKey: "downloadSlip",
+        header: "مشاهده/چاپ",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="primary">
-            <RemoveRedEyeIcon />
-          </IconButton>
+          <Tooltip title="دانلود و مشاهده فیش">
+            <IconButton
+              color="primary"
+              sx={{ padding: "0" }}
+              onClick={handleDownload}
+            >
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
         ),
       },
     ],
-    []
+    [handleDownload]
   );
 
   const table = useMaterialReactTable({
@@ -126,8 +145,8 @@ function PersonnelStatementGrid() {
       },
     }),
     muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
+      size: "small",
+      shape: "rounded",
       showRowsPerPage: false,
       renderItem: (item) => (
         <PaginationItem

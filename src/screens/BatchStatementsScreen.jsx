@@ -1,6 +1,9 @@
 // react imports
 import { useState } from "react";
 
+// rrd imports
+import { useNavigate } from "react-router-dom";
+
 // componsnets
 import BatchStatementsForm from "../forms/BatchStatementsForm";
 import Modal from "../components/Modal";
@@ -8,16 +11,19 @@ import BatchStatementAddItemForm from "../forms/BatchStatementAddItemForm";
 import StatementDraftGrid from "../grids/StatementDraftGrid";
 
 // mui imports
-import { Button } from "@mui/material";
+import { Button, Tooltip, IconButton } from "@mui/material";
 import {
   EditCalendar as EditCalenderIcon,
   Add as AddIcon,
+  ArrowBack as BackIcon,
   Close as CloseIcon,
 } from "@mui/icons-material";
 
 function BatchStatementsScreen() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [showStatementDraftGrid, setShowStatementDraftGrid] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleShowAddItemModal = () => {
     setShowAddItemModal(true);
@@ -34,6 +40,16 @@ function BatchStatementsScreen() {
           <h4 className="title-primary">
             <span className="title-primary--underline">احکام گروهی</span>
           </h4>
+
+          <div style={{ marginRight: "auto" }} className="back-button">
+            <Tooltip title="بازگشت">
+              <span>
+                <IconButton color="primary" onClick={() => navigate(-1)}>
+                  <BackIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </div>
         </div>
 
         <div>

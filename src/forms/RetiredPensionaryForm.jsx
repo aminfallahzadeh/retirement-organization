@@ -17,7 +17,7 @@ import {
 import { setIsPensionary } from "../slices/retiredStateSlice.js";
 
 // mui imports
-import { Button } from "@mui/material";
+import { Button, Box, CircularProgress } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
   CalendarTodayOutlined as CalenderIcon,
@@ -67,6 +67,8 @@ function RetiredPensionaryForm() {
   const {
     data: pensionary,
     isSuccess: isPensionarySuccess,
+    isLoading,
+    isFetching,
     error: pensionaryError,
     refetch: refetchPensionary,
   } = useGetRetiredPensionaryQuery(personID);
@@ -220,229 +222,259 @@ function RetiredPensionaryForm() {
   };
 
   const content = (
-    <section className="flex-col">
-      <form method="POST" className="grid grid--col-3" noValidate>
-        <div className="inputBox__form">
-          <input
-            disabled={!editable}
-            type="text"
-            id="retiredGroup"
-            name="retiredGroup"
-            className="inputBox__form--input"
-            value={convertToPersianNumber(pensionaryData?.retiredGroup) ?? ""}
-            onChange={handlePensionaryDataChange}
-            required
-          />
-          <label htmlFor="retiredGroup" className="inputBox__form--label">
-            <span>*</span> گروه
-          </label>
-        </div>
+    <>
+      {isLoading || isFetching ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "2rem 10rem",
+          }}
+        >
+          <CircularProgress color="primary" />
+        </Box>
+      ) : (
+        <section className="flex-col">
+          <form method="POST" className="grid grid--col-3" noValidate>
+            <div className="inputBox__form">
+              <input
+                disabled={!editable}
+                type="text"
+                id="retiredGroup"
+                name="retiredGroup"
+                className="inputBox__form--input"
+                value={
+                  convertToPersianNumber(pensionaryData?.retiredGroup) ?? ""
+                }
+                onChange={handlePensionaryDataChange}
+                required
+              />
+              <label htmlFor="retiredGroup" className="inputBox__form--label">
+                <span>*</span> گروه
+              </label>
+            </div>
 
-        <div className="inputBox__form">
-          <input
-            disabled={!editable}
-            type="text"
-            id="retiredOrganizationID"
-            name="retiredOrganizationID"
-            value={
-              convertToPersianNumber(pensionaryData?.retiredOrganizationID) ??
-              ""
-            }
-            onChange={handlePensionaryDataChange}
-            className="inputBox__form--input"
-            required
-          />
-          <label
-            htmlFor="retiredOrganizationID"
-            className="inputBox__form--label"
-          >
-            <span>*</span> آخرین محل خدمت
-          </label>
-        </div>
-
-        <div className="inputBox__form">
-          <input
-            disabled={!editable}
-            type="text"
-            id="retiredLastPosition"
-            name="retiredLastPosition"
-            value={pensionaryData?.retiredLastPosition || ""}
-            onChange={handlePensionaryDataChange}
-            className="inputBox__form--input"
-            required
-          />
-          <label
-            htmlFor="retiredLastPosition"
-            className="inputBox__form--label"
-          >
-            <span>*</span> سمت
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <select
-            disabled={!editable}
-            type="text"
-            id="employmentTypeID"
-            name="employmentTypeID"
-            value={pensionaryData?.employmentTypeID || " "}
-            onChange={handlePensionaryDataChange}
-            className="inputBox__form--input"
-            required
-          >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            {employmentTypeCombo?.map((item) => (
-              <option key={item.lookUpID} value={item.lookUpID}>
-                {item.lookUpName}
-              </option>
-            ))}
-          </select>
-          <label htmlFor="employmentTypeID" className="inputBox__form--label">
-            <span>*</span> نوع استخدام
-          </label>
-        </div>
-
-        <div className="inputBox__form">
-          <InputDatePicker
-            disabled={!editable}
-            value={selectedRetriementDate}
-            defaultValue={null}
-            onChange={handleRetiredDateChange}
-            onOpenChange={handleRetiredOpenChange}
-            format={"jYYYY/jMM/jDD"}
-            suffixIcon={<CalenderIcon color="action" />}
-            open={isRetriementCalenderOpen}
-            style={{
-              border: "2px solid #cfcfcf",
-              borderRadius: "6px",
-              marginLeft: "0.5rem",
-            }}
-            wrapperStyle={{
-              border: "none",
-              cursor: "pointer",
-            }}
-          />
-          <div className="inputBox__form--readOnly-label">تاریخ بازنشستگی</div>
-        </div>
-
-        <div className="inputBox__form">
-          <select
-            disabled={!editable}
-            className="inputBox__form--input"
-            id="pensionaryStatusID"
-            style={{ cursor: "pointer" }}
-            name="pensionaryStatusID"
-            required
-            value={pensionaryData?.pensionaryStatusID || " "}
-            onChange={handlePensionaryDataChange}
-          >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            {pernsionaryStatusCombo.map((item) => (
-              <option
-                key={item.pensionaryStatusID}
-                value={item.pensionaryStatusID}
+            <div className="inputBox__form">
+              <input
+                disabled={!editable}
+                type="text"
+                id="retiredOrganizationID"
+                name="retiredOrganizationID"
+                value={
+                  convertToPersianNumber(
+                    pensionaryData?.retiredOrganizationID
+                  ) ?? ""
+                }
+                onChange={handlePensionaryDataChange}
+                className="inputBox__form--input"
+                required
+              />
+              <label
+                htmlFor="retiredOrganizationID"
+                className="inputBox__form--label"
               >
-                {item.pensionaryStatusName}
-              </option>
-            ))}
-          </select>
-          <label className="inputBox__form--label" htmlFor="pensionaryIsActive">
-            <span>*</span> وضعیت
-          </label>
-        </div>
+                <span>*</span> آخرین محل خدمت
+              </label>
+            </div>
 
-        <div className="inputBox__form StaffInfoForm__flex--item">
-          <input
-            disabled={!editable}
-            type="text"
-            id="retiredJobDegreeCoef"
-            className="inputBox__form--input"
-            value={
-              convertToPersianNumber(pensionaryData?.retiredJobDegreeCoef) ?? ""
-            }
-            onChange={handlePensionaryDataChange}
-            name="retiredJobDegreeCoef"
-            required
-          />
-          <label
-            htmlFor="retiredJobDegreeCoef"
-            className="inputBox__form--label"
-          >
-            ضریب مدیریتی
-          </label>
-        </div>
-        <div className="inputBox__form StaffInfoForm__flex--item">
-          <input
-            disabled={!editable}
-            type="text"
-            id="retiredRealDuration"
-            className="inputBox__form--input"
-            value={
-              convertToPersianNumber(pensionaryData?.retiredRealDuration) ?? ""
-            }
-            onChange={handlePensionaryDataChange}
-            name="retiredRealDuration"
-            required
-          />
-          <label
-            htmlFor="retiredRealDuration"
-            className="inputBox__form--label"
-          >
-            سابقه حقیقی بازنشسته
-          </label>
-        </div>
-        <div className="inputBox__form StaffInfoForm__flex--item">
-          <input
-            disabled={!editable}
-            type="text"
-            id="retiredGrantDuration"
-            className="inputBox__form--input"
-            value={
-              convertToPersianNumber(pensionaryData?.retiredGrantDuration) ?? ""
-            }
-            onChange={handlePensionaryDataChange}
-            name="retiredGrantDuration"
-            required
-          />
-          <label
-            htmlFor="retiredGrantDuration"
-            className="inputBox__form--label"
-          >
-            سابقه ارفاقی بازنشسته
-          </label>
-        </div>
-      </form>
+            <div className="inputBox__form">
+              <input
+                disabled={!editable}
+                type="text"
+                id="retiredLastPosition"
+                name="retiredLastPosition"
+                value={pensionaryData?.retiredLastPosition || ""}
+                onChange={handlePensionaryDataChange}
+                className="inputBox__form--input"
+                required
+              />
+              <label
+                htmlFor="retiredLastPosition"
+                className="inputBox__form--label"
+              >
+                <span>*</span> سمت
+              </label>
+            </div>
+            <div className="inputBox__form">
+              <select
+                disabled={!editable}
+                type="text"
+                id="employmentTypeID"
+                name="employmentTypeID"
+                value={pensionaryData?.employmentTypeID || " "}
+                onChange={handlePensionaryDataChange}
+                className="inputBox__form--input"
+                required
+              >
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
+                {employmentTypeCombo?.map((item) => (
+                  <option key={item.lookUpID} value={item.lookUpID}>
+                    {item.lookUpName}
+                  </option>
+                ))}
+              </select>
+              <label
+                htmlFor="employmentTypeID"
+                className="inputBox__form--label"
+              >
+                <span>*</span> نوع استخدام
+              </label>
+            </div>
 
-      <div style={{ marginRight: "auto" }} className="flex-row">
-        <LoadingButton
-          dir="ltr"
-          endIcon={<SaveIcon />}
-          loading={isUpdating}
-          disabled={!editable}
-          onClick={handleUpdateRetiredPensionary}
-          variant="contained"
-          color="success"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>ذخیره</span>
-        </LoadingButton>
+            <div className="inputBox__form">
+              <InputDatePicker
+                disabled={!editable}
+                value={selectedRetriementDate}
+                defaultValue={null}
+                onChange={handleRetiredDateChange}
+                onOpenChange={handleRetiredOpenChange}
+                format={"jYYYY/jMM/jDD"}
+                suffixIcon={<CalenderIcon color="action" />}
+                open={isRetriementCalenderOpen}
+                style={{
+                  border: "2px solid #cfcfcf",
+                  borderRadius: "6px",
+                  marginLeft: "0.5rem",
+                }}
+                wrapperStyle={{
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              />
+              <div className="inputBox__form--readOnly-label">
+                تاریخ بازنشستگی
+              </div>
+            </div>
 
-        <Button
-          dir="ltr"
-          endIcon={<EditIcon />}
-          onClick={handleEditable}
-          disabled={editable}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>ویرایش</span>
-        </Button>
-      </div>
-    </section>
+            <div className="inputBox__form">
+              <select
+                disabled={!editable}
+                className="inputBox__form--input"
+                id="pensionaryStatusID"
+                style={{ cursor: "pointer" }}
+                name="pensionaryStatusID"
+                required
+                value={pensionaryData?.pensionaryStatusID || " "}
+                onChange={handlePensionaryDataChange}
+              >
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
+                {pernsionaryStatusCombo.map((item) => (
+                  <option
+                    key={item.pensionaryStatusID}
+                    value={item.pensionaryStatusID}
+                  >
+                    {item.pensionaryStatusName}
+                  </option>
+                ))}
+              </select>
+              <label
+                className="inputBox__form--label"
+                htmlFor="pensionaryIsActive"
+              >
+                <span>*</span> وضعیت
+              </label>
+            </div>
+
+            <div className="inputBox__form StaffInfoForm__flex--item">
+              <input
+                disabled={!editable}
+                type="text"
+                id="retiredJobDegreeCoef"
+                className="inputBox__form--input"
+                value={
+                  convertToPersianNumber(
+                    pensionaryData?.retiredJobDegreeCoef
+                  ) ?? ""
+                }
+                onChange={handlePensionaryDataChange}
+                name="retiredJobDegreeCoef"
+                required
+              />
+              <label
+                htmlFor="retiredJobDegreeCoef"
+                className="inputBox__form--label"
+              >
+                ضریب مدیریتی
+              </label>
+            </div>
+            <div className="inputBox__form StaffInfoForm__flex--item">
+              <input
+                disabled={!editable}
+                type="text"
+                id="retiredRealDuration"
+                className="inputBox__form--input"
+                value={
+                  convertToPersianNumber(pensionaryData?.retiredRealDuration) ??
+                  ""
+                }
+                onChange={handlePensionaryDataChange}
+                name="retiredRealDuration"
+                required
+              />
+              <label
+                htmlFor="retiredRealDuration"
+                className="inputBox__form--label"
+              >
+                سابقه حقیقی بازنشسته
+              </label>
+            </div>
+            <div className="inputBox__form StaffInfoForm__flex--item">
+              <input
+                disabled={!editable}
+                type="text"
+                id="retiredGrantDuration"
+                className="inputBox__form--input"
+                value={
+                  convertToPersianNumber(
+                    pensionaryData?.retiredGrantDuration
+                  ) ?? ""
+                }
+                onChange={handlePensionaryDataChange}
+                name="retiredGrantDuration"
+                required
+              />
+              <label
+                htmlFor="retiredGrantDuration"
+                className="inputBox__form--label"
+              >
+                سابقه ارفاقی بازنشسته
+              </label>
+            </div>
+          </form>
+
+          <div style={{ marginRight: "auto" }} className="flex-row">
+            <LoadingButton
+              dir="ltr"
+              endIcon={<SaveIcon />}
+              loading={isUpdating}
+              disabled={!editable}
+              onClick={handleUpdateRetiredPensionary}
+              variant="contained"
+              color="success"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>ذخیره</span>
+            </LoadingButton>
+
+            <Button
+              dir="ltr"
+              endIcon={<EditIcon />}
+              onClick={handleEditable}
+              disabled={editable}
+              variant="contained"
+              color="primary"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>ویرایش</span>
+            </Button>
+          </div>
+        </section>
+      )}
+    </>
   );
   return content;
 }

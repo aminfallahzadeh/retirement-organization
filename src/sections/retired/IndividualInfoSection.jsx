@@ -21,7 +21,7 @@ function IndividualInfoSection() {
 
   const content = (
     <section>
-      <Accordion>
+      <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
@@ -34,7 +34,7 @@ function IndividualInfoSection() {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion>
+      <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
@@ -47,7 +47,7 @@ function IndividualInfoSection() {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion>
+      <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
@@ -60,7 +60,7 @@ function IndividualInfoSection() {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion>
+      <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"
