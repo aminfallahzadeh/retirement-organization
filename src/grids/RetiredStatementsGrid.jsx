@@ -223,7 +223,7 @@ function RetiredStatementsGrid() {
         ),
       },
       {
-        accessorKey: "observeStatement",
+        accessorKey: "downloadRetiredStatement",
         header: "مشاهده/چاپ",
         enableSorting: false,
         enableColumnActions: false,

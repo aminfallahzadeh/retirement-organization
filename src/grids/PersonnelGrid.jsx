@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // mui imports
-import { IconButton, PaginationItem } from "@mui/material";
+import { IconButton, PaginationItem, Tooltip } from "@mui/material";
 import {
   RemoveRedEye as RemoveRedEyeIcon,
   ChevronLeft,
@@ -62,13 +62,17 @@ function PersonnelGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Link
-            to={`/retirement-organization/personnel-statements/info?personID=${row.id}`}
+          <Tooltip
+            title={`${row.original.personFirstName} ${row.original.personLastName}`}
           >
-            <IconButton color="primary" sx={{ padding: "0" }}>
-              <RemoveRedEyeIcon />
-            </IconButton>
-          </Link>
+            <Link
+              to={`/retirement-organization/personnel-statements/info?personID=${row.id}&personDeathDate=${row.original.personDeathDate}`}
+            >
+              <IconButton color="primary" sx={{ padding: "0" }}>
+                <RemoveRedEyeIcon />
+              </IconButton>
+            </Link>
+          </Tooltip>
         ),
       },
     ],

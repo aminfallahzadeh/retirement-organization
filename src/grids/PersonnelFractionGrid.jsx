@@ -8,12 +8,19 @@ import { useLocation } from "react-router-dom";
 import { useGetFractionItemViewQuery } from "../slices/fractionApiSlice";
 
 // mui imports
-import { PaginationItem, Tooltip } from "@mui/material";
+import {
+  PaginationItem,
+  Tooltip,
+  Box,
+  CircularProgress,
+  IconButton,
+} from "@mui/material";
 import {
   ChevronLeft,
   ChevronRight,
   FirstPage,
   LastPage,
+  Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -45,8 +52,14 @@ export const PersonnelFractionGrid = () => {
     data: fractions,
     isSuccess,
     isLoading,
+    isFetching,
+    refetch,
     error,
   } = useGetFractionItemViewQuery({ personID });
+
+  const handleRefresh = () => {
+    refetch();
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -436,6 +449,27 @@ export const PersonnelFractionGrid = () => {
         cursor: "pointer",
       },
     }),
+    renderTopToolbarCustomActions: () => (
+      <Box>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip title="بروز رسانی">
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="info"
+                onClick={handleRefresh}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
+      </Box>
+    ),
     muiPaginationProps: {
       size: "small",
       shape: "rounded",
@@ -463,7 +497,7 @@ export const PersonnelFractionGrid = () => {
       {isLoading ? (
         <div className="skeleton-lg">
           <Skeleton
-            count={7}
+            count={5}
             baseColor="#dfdfdf"
             highlightColor="#9f9f9f"
             duration={1}
