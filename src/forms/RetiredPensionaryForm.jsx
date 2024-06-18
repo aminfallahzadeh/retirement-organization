@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useDispatch } from "react-redux";
 import {
   useGetLookupDataQuery,
   useGetPensionaryStatusQuery,
@@ -14,7 +13,6 @@ import {
   useUpdateRetiredPensionaryMutation,
   useGetRetiredPensionaryQuery,
 } from "../slices/retiredApiSlice.js";
-import { setIsPensionary } from "../slices/retiredStateSlice.js";
 
 // mui imports
 import { Button, Box, CircularProgress } from "@mui/material";
@@ -38,11 +36,7 @@ import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 
 function RetiredPensionaryForm() {
-  const dispatch = useDispatch();
-
   const [editable, setEditable] = useState(false);
-
-  const [isPensionarySaved, setIsPensionarySaved] = useState(false);
 
   // LOOKUP DATA STATES
   const [employmentTypeCombo, setEmploymentTypeCombo] = useState([]);
@@ -79,29 +73,6 @@ function RetiredPensionaryForm() {
       setPensionaryData(pensionary?.itemList[0]);
     }
   }, [isPensionarySuccess, pensionary]);
-
-  // CHECK FOR THE PENSIONARY STATUS AND SET IS PENSIONARY
-  useEffect(() => {
-    if (isPensionarySaved) {
-      dispatch(setIsPensionary(true));
-    }
-
-    return () => {
-      dispatch(setIsPensionary(false));
-    };
-  }, [dispatch, isPensionarySaved]);
-
-  useEffect(() => {
-    if (pensionaryData && pensionaryData?.pensionaryStatusID) {
-      dispatch(setIsPensionary(true));
-    }
-
-    return () => {
-      dispatch(setIsPensionary(false));
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, pensionaryData?.pensionaryStatusID]);
 
   // handle error
   useEffect(() => {
@@ -209,7 +180,7 @@ function RetiredPensionaryForm() {
       }).unwrap();
       refetchPensionary();
       setEditable(false);
-      setIsPensionarySaved(true);
+      // setIsPensionarySaved(true);
       toast.success(updateRes.message, {
         autoClose: 2000,
       });
