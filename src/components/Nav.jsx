@@ -81,14 +81,6 @@ function Nav({ userName, userID }) {
     setShowLogoutModal(true);
   };
 
-  // const handlePanelToggle = (panel) => {
-  //   setActivePanel((prev) => {
-  //     const newPanel = prev === panel ? null : panel;
-  //     dispatch(setNavPanelOpen(newPanel !== null));
-  //     return newPanel;
-  //   });
-  // };
-
   const handlePanelToggle = (panel) => {
     setActivePanel((prev) => {
       const newPanel = prev === panel ? null : panel;
