@@ -11,6 +11,9 @@
     box-shadow: 0 7px 26.5px -10.5px #000000;
 
     &__links {
+        &--loading {
+            color: var(--color-txt-secondary);
+        }
         &--list {
             display: flex;
             column-gap: 1.5rem;
@@ -23,6 +26,8 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                transition: all 0.3s;
+                color: var(--color-txt-secondary);
 
                 a {
                     transition: all 0.3s;

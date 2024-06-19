@@ -10,6 +10,7 @@ import { setNavPanelOpen } from "../slices/themeDataSlice";
 import {
   useGetUserQuery,
   useUpdateUserThemeMutation,
+  useGetItemAccessQuery,
 } from "../slices/usersApiSlice";
 
 // components
@@ -34,6 +35,7 @@ import {
 import { toast } from "react-toastify";
 
 function Nav({ userName, userID }) {
+  const [permissions, setPermissions] = useState([]);
   const { data: user } = useGetUserQuery({ userID });
 
   const dispatch = useDispatch();
@@ -51,14 +53,48 @@ function Nav({ userName, userID }) {
 
   const isActivePath = (path) => location.pathname === path;
 
+  const {
+    data: permissionsList,
+    isSuccess: isPermissionsSuccess,
+    isLoading: isPermissionsLoading,
+    isFetching: isPermissionsFetching,
+    error: isPermissionError,
+  } = useGetItemAccessQuery();
+
+  useEffect(() => {
+    if (isPermissionsSuccess) {
+      const extractedData = permissionsList.itemList.map((item) => item.itemID);
+      setPermissions(extractedData);
+    }
+  }, [isPermissionsSuccess, permissionsList]);
+
+  useEffect(() => {
+    if (isPermissionError) {
+      console.log(isPermissionError);
+      toast.error(isPermissionError?.data?.message || isPermissionError.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [isPermissionError]);
+
   const handleShowLogoutModalChange = () => {
     setShowLogoutModal(true);
   };
 
+  // const handlePanelToggle = (panel) => {
+  //   setActivePanel((prev) => {
+  //     const newPanel = prev === panel ? null : panel;
+  //     dispatch(setNavPanelOpen(newPanel !== null));
+  //     return newPanel;
+  //   });
+  // };
+
   const handlePanelToggle = (panel) => {
     setActivePanel((prev) => {
       const newPanel = prev === panel ? null : panel;
-      dispatch(setNavPanelOpen(newPanel !== null));
+      setTimeout(() => {
+        dispatch(setNavPanelOpen(newPanel !== null));
+      }, 0);
       return newPanel;
     });
   };
@@ -122,94 +158,105 @@ function Nav({ userName, userID }) {
       )}
       <nav className="nav">
         <div className="nav__links">
-          <ul className="nav__links--list">
-            <li
-              className={
-                isActivePath("/retirement-organization/cartable")
-                  ? "active"
-                  : ""
-              }
-              onClick={() => handlePanelToggle(null)}
-            >
-              <Link to={"/retirement-organization/cartable"}>کارتابل</Link>
-            </li>
-            <li
-              className={
-                isActivePath("/retirement-organization/create-request")
-                  ? "active"
-                  : ""
-              }
-              onClick={() => handlePanelToggle(null)}
-            >
-              <Link to={"/retirement-organization/create-request"}>
-                ایجاد درخواست
-              </Link>
-            </li>
-            <li
-              className={
-                isActivePath("/retirement-organization/personnel-statements")
-                  ? "active"
-                  : ""
-              }
-              onClick={() => handlePanelToggle(null)}
-            >
-              <Link to={"/retirement-organization/personnel-statements"}>
-                رویت احکام و تعرفه
-              </Link>
-            </li>
-            <li
-              className={
-                isActivePath("/retirement-organization/fraction")
-                  ? "active"
-                  : ""
-              }
-              onClick={() => handlePanelToggle(null)}
-            >
-              <Link to={"/retirement-organization/fraction"}>کسورات</Link>
-            </li>
-            <li onClick={() => handlePanelToggle(null)}>
-              <a>داشبورد مدیریتی</a>
-            </li>
-            <li
-              onClick={() => handlePanelToggle(null)}
-              className={
-                isActivePath("/retirement-organization/report-creator")
-                  ? "active"
-                  : ""
-              }
-            >
-              <Link to={"/retirement-organization/report-creator"}>
-                گزارش ساز
-              </Link>
-            </li>
-            <li
-              onClick={() => handlePanelToggle("systemManagement")}
-              className={activePanel === "systemManagement" ? "active" : ""}
-            >
-              <a>مدیریت سیستم</a>
-              <ArrowIcon
-                sx={{
-                  color: "#fff",
-                  transition: "all 0.25s ease",
-                  transform:
-                    activePanel === "systemManagement" ? "rotate(-90deg)" : "",
-                }}
-              />
-            </li>
-            <li
-              onClick={() => handlePanelToggle("baseInfo")}
-              className={activePanel === "baseInfo" ? "active" : ""}
-            >
-              <a>مدیریت اطلاعات پایه</a>
-              <ArrowIcon
-                sx={{
-                  color: "#fff",
-                  transition: "all 0.25s ease",
-                  transform: activePanel === "baseInfo" ? "rotate(-90deg)" : "",
-                }}
-              />
-            </li>
-          </ul>
+          <>
+            {isPermissionsLoading || isPermissionsFetching ? (
+              <div className="nav__links--loading">در حال بارگزاری ...</div>
+            ) : (
+              <ul className="nav__links--list">
+                <li
+                  className={
+                    isActivePath("/retirement-organization/cartable")
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() => handlePanelToggle(null)}
+                >
+                  <Link to={"/retirement-organization/cartable"}>کارتابل</Link>
+                </li>
+                <li
+                  className={
+                    isActivePath("/retirement-organization/create-request")
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() => handlePanelToggle(null)}
+                >
+                  <Link to={"/retirement-organization/create-request"}>
+                    ایجاد درخواست
+                  </Link>
+                </li>
+                <li
+                  className={
+                    isActivePath(
+                      "/retirement-organization/personnel-statements"
+                    )
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() => handlePanelToggle(null)}
+                >
+                  <Link to={"/retirement-organization/personnel-statements"}>
+                    رویت احکام و تعرفه
+                  </Link>
+                </li>
+                <li
+                  className={
+                    isActivePath("/retirement-organization/fraction")
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() => handlePanelToggle(null)}
+                >
+                  <Link to={"/retirement-organization/fraction"}>کسورات</Link>
+                </li>
+                <li onClick={() => handlePanelToggle(null)}>
+                  <a>داشبورد مدیریتی</a>
+                </li>
+                <li
+                  onClick={() => handlePanelToggle(null)}
+                  className={
+                    isActivePath("/retirement-organization/report-creator")
+                      ? "active"
+                      : ""
+                  }
+                >
+                  <Link to={"/retirement-organization/report-creator"}>
+                    گزارش ساز
+                  </Link>
+                </li>
+                <li
+                  onClick={() => handlePanelToggle("systemManagement")}
+                  className={activePanel === "systemManagement" ? "active" : ""}
+                >
+                  <a>مدیریت سیستم</a>
+                  <ArrowIcon
+                    sx={{
+                      color: "#fff",
+                      transition: "all 0.25s ease",
+                      transform:
+                        activePanel === "systemManagement"
+                          ? "rotate(-90deg)"
+                          : "",
+                    }}
+                  />
+                </li>
+                <li
+                  onClick={() => handlePanelToggle("baseInfo")}
+                  className={activePanel === "baseInfo" ? "active" : ""}
+                >
+                  <a>مدیریت اطلاعات پایه</a>
+                  <ArrowIcon
+                    sx={{
+                      color: "#fff",
+                      transition: "all 0.25s ease",
+                      transform:
+                        activePanel === "baseInfo" ? "rotate(-90deg)" : "",
+                    }}
+                  />
+                </li>
+              </ul>
+            )}
+          </>
         </div>
 
         <div className="nav__profile">
@@ -315,16 +362,19 @@ function Nav({ userName, userID }) {
             >
               <Link to="/retirement-organization/groups">گروه ها</Link>
             </li>
-            <li
-              className={
-                isActivePath("/retirement-organization/users") ||
-                isActivePath("/retirement-organization/create-user")
-                  ? "active"
-                  : ""
-              }
-            >
-              <Link to="/retirement-organization/users">کاربران</Link>
-            </li>
+
+            {permissions.includes("0BB99A3E-55F8-47F0-8A88-65F543403C37") && (
+              <li
+                className={
+                  isActivePath("/retirement-organization/users") ||
+                  isActivePath("/retirement-organization/create-user")
+                    ? "active"
+                    : ""
+                }
+              >
+                <Link to="/retirement-organization/users">کاربران</Link>
+              </li>
+            )}
           </ul>
         ) : null}
       </div>
