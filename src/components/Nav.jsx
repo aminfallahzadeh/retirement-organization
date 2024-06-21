@@ -196,7 +196,7 @@ function Nav({ userName, userID }) {
                   </Link>
                 </li>
 
-                {permissions.includes("Fractions") && (
+                {permissions && permissions.includes("Fractions") && (
                   <li
                     className={
                       isActivePath("/retirement-organization/fraction")
@@ -240,7 +240,7 @@ function Nav({ userName, userID }) {
                     }}
                   />
                 </li>
-                {permissions.includes("BaseInfoManagement") && (
+                {permissions && permissions.includes("BaseInfoManagement") && (
                   <li
                     onClick={() => handlePanelToggle("baseInfo")}
                     className={activePanel === "baseInfo" ? "active" : ""}
@@ -354,7 +354,7 @@ function Nav({ userName, userID }) {
           </ul>
         ) : activePanel === "systemManagement" ? (
           <ul className="nav__panel--list">
-            {permissions.includes("Groups") && (
+            {permissions && permissions.includes("Groups") && (
               <li
                 className={
                   isActivePath("/retirement-organization/groups") ||
@@ -367,7 +367,7 @@ function Nav({ userName, userID }) {
               </li>
             )}
 
-            {permissions.includes("Users") && (
+            {permissions && permissions.includes("Users") && (
               <li
                 className={
                   isActivePath("/retirement-organization/users") ||

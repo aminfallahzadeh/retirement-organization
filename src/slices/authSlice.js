@@ -56,6 +56,7 @@ const authSlice = createSlice({
       state.error = null;
       state.expiredate = null;
       sessionStorage.removeItem("userInfo");
+      sessionStorage.removeItem("permissions");
     },
   },
 });
