@@ -1,9 +1,10 @@
 .login {
+    background-color: $color-login-bg;
+
     &__main {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: $color-login-bg;
         position: absolute;
         width: 100%;
         height: 100%;
@@ -14,9 +15,9 @@
         background: -webkit-linear-gradient(295deg, $color-login-info-bg-100 0%, $color-login-info-bg-0 100%);
         background: linear-gradient(295deg, $color-login-info-bg-100 0%, $color-login-info-bg-0 100%);
         position: relative;
-        width: 700px;
-        height: 750px;
-        border-radius: 40px;
+        width: 35rem;
+        height: 35rem;
+        border-radius: 1.5rem;
         transform: translateX(-25%);
 
         &--title {
@@ -70,12 +71,12 @@
     }
 
     &__credentials {
-        padding: 50px 25px;
+        padding: 20px 25px;
         background-color: $color-white;
         position: absolute;
-        width: 450px;
-        height: 600px;
-        border-radius: 40px;
+        width: 25rem;
+        height: 30rem;
+        border-radius: 1.5rem;
         right: -380px;
         top: 50%;
         transform: translateY(-50%);
@@ -106,7 +107,7 @@
             flex-direction: column;
             row-gap: 15px;
             padding: 10px 20px;
-            margin-top: 60px;
+            // margin-top: 60px;
         }
 
         &--input {
@@ -115,6 +116,7 @@
             padding: 10px;
             border-radius: 4px;
             width: 100%;
+            color: $color-login-title-1;
 
             &:focus {
                 border-color: rgba(229, 103, 23, 0.8);
@@ -125,6 +127,11 @@
             }
         }
 
+        &--label {
+            font-size: 12px;
+            font-family: IranYekan;
+        }
+
         &--captcha {
             position: absolute;
             left: 0;
@@ -133,6 +140,7 @@
 
             &-canvas {
                 width: 100%;
+                border-radius: 4px;
             }
 
             &-icon {

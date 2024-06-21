@@ -54,33 +54,34 @@ function Login() {
 
   const onSubmit = async (data) => {
     // user authentication logic
-    try {
-      const res = await login(data).unwrap();
-      dispatch(setCredentials({ ...res }));
-      setValue("username", "");
-      setValue("password", "");
-      if (captcha) {
+
+    if (captcha) {
+      try {
+        const res = await login(data).unwrap();
+        dispatch(setCredentials({ ...res }));
+        setValue("username", "");
+        setValue("password", "");
         navigate("/retirement-organization/cartable");
         toast.success(res.message, {
           autoClose: 2000,
         });
-      } else {
-        // reset captcha after invalid input
+      } catch (err) {
         setCaptchaText(generateCaptcha(4));
         setUserInputCaptcha("");
-        setCaptcha(false);
         setValue("username", "");
         setValue("password", "");
-        toast.error("! کد امنیتی اشتباه است", {
+        toast.error(err?.data?.message || err.error, {
           autoClose: 2000,
         });
       }
-    } catch (err) {
+    } else {
+      //  reset captcha after invalid input
       setCaptchaText(generateCaptcha(4));
       setUserInputCaptcha("");
+      setCaptcha(false);
       setValue("username", "");
       setValue("password", "");
-      toast.error(err?.data?.message || err.error, {
+      toast.error("! کد امنیتی اشتباه است", {
         autoClose: 2000,
       });
     }
