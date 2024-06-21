@@ -1,9 +1,6 @@
 // react imports
 import { useState, useEffect } from "react";
 
-// rrd imports
-import { useLocation } from "react-router-dom";
-
 // reduxt imports
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import {
@@ -12,7 +9,6 @@ import {
 } from "../slices/retiredApiSlice.js";
 import { setPersonDeathDate } from "../slices/retiredStateSlice.js";
 import { useDispatch } from "react-redux";
-import { setPensionaryID } from "../slices/retiredStateSlice.js";
 
 // mui imports
 import { Button, Box, CircularProgress } from "@mui/material";
@@ -58,7 +54,6 @@ function RetiredPersonForm() {
   const [personData, setPersonData] = useState({});
 
   const dispatch = useDispatch();
-  const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
@@ -79,7 +74,7 @@ function RetiredPersonForm() {
   useEffect(() => {
     if (isSuccess) {
       setPersonData(retiredPersonData?.itemList[0]);
-      dispatch(setPensionaryID(retiredPersonData?.itemList[0]?.pensionaryID));
+
       dispatch(
         setPersonDeathDate(retiredPersonData?.itemList[0]?.personDeathDate)
       );
@@ -88,8 +83,7 @@ function RetiredPersonForm() {
     return () => {
       dispatch(setPersonDeathDate(null));
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess, retiredPersonData?.itemList]);
+  }, [dispatch, isSuccess, retiredPersonData?.itemList]);
 
   // handle error
   useEffect(() => {
