@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 // library imports
 import { toast } from "react-toastify";
 
-function Login() {
+function LoginNew() {
   const [showPassword, setShowPassword] = useState(false);
   const [captcha, setCaptcha] = useState(false);
   const [captchaText, setCaptchaText] = useState("");
@@ -46,11 +46,11 @@ function Login() {
   const [login, { isLoading }] = useLoginMutation();
 
   // CHECK IF USER IS ALREADY LOGGED IN
-  useEffect(() => {
-    if (sessionStorage.getItem("userInfo")) {
-      navigate("/retirement-organization/cartable");
-    }
-  }, [navigate]);
+  //   useEffect(() => {
+  //     if (sessionStorage.getItem("userInfo")) {
+  //       navigate("/retirement-organization/cartable");
+  //     }
+  //   }, [navigate]);
 
   const onSubmit = async (data) => {
     // user authentication logic
@@ -62,16 +62,18 @@ function Login() {
       if (captcha) {
         navigate("/retirement-organization/cartable");
         toast.success(res.message, {
+          fontSize: "18px",
           autoClose: 2000,
         });
-      } else {
+      } else if (!captcha) {
         // reset captcha after invalid input
         setCaptchaText(generateCaptcha(4));
         setUserInputCaptcha("");
-        setCaptcha(false);
+        dispatch(setCaptcha(false));
         setValue("username", "");
         setValue("password", "");
         toast.error("! کد امنیتی اشتباه است", {
+          fontSize: "18px",
           autoClose: 2000,
         });
       }
@@ -81,6 +83,7 @@ function Login() {
       setValue("username", "");
       setValue("password", "");
       toast.error(err?.data?.message || err.error, {
+        fontSize: "18px",
         autoClose: 2000,
       });
     }
@@ -292,4 +295,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginNew;

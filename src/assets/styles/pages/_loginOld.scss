@@ -1,0 +1,107 @@
+.bg {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	min-width: 100%;
+	min-height: 100%;
+}
+
+.loginContainer {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	align-items: center;
+	perspective: 1500px;
+
+	&__box {
+		width: 450px;
+		-webkit-backdrop-filter: blur(10px);
+		-moz-backdrop-filter: blur(10px);
+		-ms-backdrop-filter: blur(10px);
+		-o-backdrop-filter: blur(10px);
+		backdrop-filter: blur(10px);
+		border: 2px solid $color-grey-1;
+		border-radius: $border-radius-secondary;
+		padding: 55px 25px 40px 25px;
+		color: $color-grey-1;
+		background-color: $color-fg-primary;
+		box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
+		transition: 0.2s;
+		transform-style: preserve-3d;
+
+		&::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: rgba(0, 0, 0, 0.5);
+			backdrop-filter: blur(10px);
+			z-index: -1;
+			border-radius: inherit;
+		}
+
+		&--header {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-bottom: 10px;
+
+			span {
+				font-size: 30px;
+				text-align: center;
+			}
+		}
+
+		&--rememberForgot {
+			display: flex;
+			justify-content: center;
+			font-size: 15px;
+			margin-top: 15px;
+
+			a {
+				transition: all 0.25s;
+				text-decoration: none;
+				color: $color-grey-1;
+
+				&:hover {
+					color: $color-accent-red;
+				}
+			}
+		}
+	}
+}
+
+#user {
+	margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 564px) {
+	.loginContainer {
+		padding: 20px;
+	}
+
+	.loginContainer__box {
+		padding: 55px 15px 4px 15px;
+	}
+}
+
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+	.bg__box {
+		-webkit-backdrop-filter: blur(10px);
+		backdrop-filter: blur(10px);
+	}
+}
+
+/* slightly transparent fallback for Firefox (not supporting backdrop-filter) */
+@supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+	.bg__box {
+		background-color: rgba(255, 255, 255, 0.8);
+	}
+}

@@ -2,6 +2,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "./slices/apiSlice";
 import authSliceReducer from "./slices/authSlice";
+import userPermissionsDataSliceReducer from "./slices/userPermissionsDataSlice";
 import captchaSliceReducer from "./slices/captchaSlice";
 import retiredStateSliceReducer from "./slices/retiredStateSlice";
 import roleDataSliceReducer from "./slices/roleDataSlice";
@@ -19,6 +20,7 @@ const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authSliceReducer,
+    userPermissionsData: userPermissionsDataSliceReducer,
     captcha: captchaSliceReducer,
     retiredState: retiredStateSliceReducer,
     itemsData: itemsDataSliceReducer,

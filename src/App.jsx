@@ -43,7 +43,9 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isLoginPage = location.pathname === "/retirement-organization/";
+  const isLoginPage =
+    location.pathname === "/retirement-organization/" ||
+    location.pathname === "/retirement-organization/login";
   const { logoutHandler } = useLogout();
 
   const onIdle = () => {
@@ -101,18 +103,23 @@ function App() {
   }, [location.pathname]);
 
   return (
-    <>
-      <ThemeProvider theme={theme}>
-        {!isLoginPage && <Header userName={userName} userID={userID} />}
-        <main
-          className="main"
-          style={{ marginTop: navPanelOpen ? "220px" : "170px" }}
-        >
-          <Outlet />
-        </main>
-        <ToastContainer />
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={theme}>
+      {!isLoginPage && <Header userName={userName} userID={userID} />}
+      <main
+        className={!isLoginPage ? "main" : ""}
+        style={{
+          marginTop:
+            navPanelOpen && !isLoginPage
+              ? "220px"
+              : !navPanelOpen && !isLoginPage
+              ? "170px"
+              : "0px",
+        }}
+      >
+        <Outlet />
+      </main>
+      <ToastContainer />
+    </ThemeProvider>
   );
 }
 

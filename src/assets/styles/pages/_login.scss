@@ -1,107 +1,161 @@
-.bg {
-	position: fixed;
-	right: 0;
-	bottom: 0;
-	min-width: 100%;
-	min-height: 100%;
-}
+.login {
+    &__main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $color-login-bg;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
 
-.loginContainer {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	align-items: center;
-	perspective: 1500px;
+    &__info {
+        background: $color-login-info-bg-100;
+        background: -webkit-linear-gradient(295deg, $color-login-info-bg-100 0%, $color-login-info-bg-0 100%);
+        background: linear-gradient(295deg, $color-login-info-bg-100 0%, $color-login-info-bg-0 100%);
+        position: relative;
+        width: 700px;
+        height: 750px;
+        border-radius: 40px;
+        transform: translateX(-25%);
 
-	&__box {
-		width: 450px;
-		-webkit-backdrop-filter: blur(10px);
-		-moz-backdrop-filter: blur(10px);
-		-ms-backdrop-filter: blur(10px);
-		-o-backdrop-filter: blur(10px);
-		backdrop-filter: blur(10px);
-		border: 2px solid $color-grey-1;
-		border-radius: $border-radius-secondary;
-		padding: 55px 25px 40px 25px;
-		color: $color-grey-1;
-		background-color: $color-fg-primary;
-		box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
-		transition: 0.2s;
-		transform-style: preserve-3d;
+        &--title {
+            position: absolute;
+            left: 50%;
+            top: 15%;
+            transform: translateX(-50%);
+            width: 430px;
+            padding: 10px 20px;
 
-		&::before {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background-color: rgba(0, 0, 0, 0.5);
-			backdrop-filter: blur(10px);
-			z-index: -1;
-			border-radius: inherit;
-		}
+            &::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                right: -15px;
+                width: 50px;
+                height: 64px;
+                transform: translateY(-50%);
+                background-color: $color-login-bg;
+                clip-path: polygon(38% 0, 58% 0, 20% 100%, 0% 100%);
+            }
 
-		&--header {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			margin-bottom: 10px;
+            &::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                right: -30px;
+                width: 50px;
+                height: 64px;
+                transform: translateY(-50%);
+                background-color: $color-login-bg;
+                clip-path: polygon(38% 0, 58% 0, 20% 100%, 0% 100%);
+            }
 
-			span {
-				font-size: 30px;
-				text-align: center;
-			}
-		}
+            .title-wrapper {
+                background-color: $color-login-bg;
+                width: 100%;
+                height: 100%;
+                clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+                padding: 10px 10px;
 
-		&--rememberForgot {
-			display: flex;
-			justify-content: center;
-			font-size: 15px;
-			margin-top: 15px;
+                h1 {
+                    color: $color-login-title-1;
+                    font-family: IranYekan;
+                    font-size: 25px;
+                    text-align: center;
+                    font-weight: 100;
+                }
+            }
+        }
+    }
 
-			a {
-				transition: all 0.25s;
-				text-decoration: none;
-				color: $color-grey-1;
+    &__credentials {
+        padding: 50px 25px;
+        background-color: $color-white;
+        position: absolute;
+        width: 450px;
+        height: 600px;
+        border-radius: 40px;
+        right: -380px;
+        top: 50%;
+        transform: translateY(-50%);
 
-				&:hover {
-					color: $color-accent-red;
-				}
-			}
-		}
-	}
-}
+        &--wrapper {
+            position: relative;
+        }
 
-#user {
-	margin-bottom: 10px;
-}
+        &--icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
-@media only screen and (max-width: 564px) {
-	.loginContainer {
-		padding: 20px;
-	}
+        &--title {
+            h1 {
+                color: $color-login-title-2;
+                font-family: IranYekan;
+                font-size: 25px;
+                text-align: center;
+                font-weight: 100;
+            }
+        }
 
-	.loginContainer__box {
-		padding: 55px 15px 4px 15px;
-	}
-}
+        &--form {
+            display: flex;
+            flex-direction: column;
+            row-gap: 15px;
+            padding: 10px 20px;
+            margin-top: 60px;
+        }
 
-@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-	.bg__box {
-		-webkit-backdrop-filter: blur(10px);
-		backdrop-filter: blur(10px);
-	}
-}
+        &--input {
+            border: none;
+            background-color: $color-login-input-bg;
+            padding: 10px;
+            border-radius: 4px;
+            width: 100%;
 
-/* slightly transparent fallback for Firefox (not supporting backdrop-filter) */
-@supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-	.bg__box {
-		background-color: rgba(255, 255, 255, 0.8);
-	}
+            &:focus {
+                border-color: rgba(229, 103, 23, 0.8);
+                box-shadow:
+                    0 1px 1px rgba(229, 103, 23, 0.075) inset,
+                    0 0 8px rgba(229, 103, 23, 0.6);
+                outline: 0 none;
+            }
+        }
+
+        &--captcha {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+
+            &-canvas {
+                width: 100%;
+            }
+
+            &-icon {
+                position: absolute;
+                top: 50%;
+                right: -30px;
+                transform: translateY(-50%);
+            }
+        }
+
+        &--forgot {
+            h5 {
+                color: $color-login-forgot;
+                text-align: center;
+                cursor: pointer;
+                font-weight: 100;
+                font-family: IranYekan;
+                transition: all 1s;
+
+                &:hover {
+                    color: $color-login-forgot-hover;
+                }
+            }
+        }
+    }
 }
