@@ -5,13 +5,14 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 // redux imports
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setNavPanelOpen } from "../slices/themeDataSlice";
 import {
   useGetUserQuery,
   useUpdateUserThemeMutation,
   useGetItemAccessQuery,
 } from "../slices/usersApiSlice";
+import { setUserPermissionsData } from "../slices/userPermissionsDataSlice";
 
 // components
 import Modal from "./Modal";
@@ -35,7 +36,7 @@ import {
 import { toast } from "react-toastify";
 
 function Nav({ userName, userID }) {
-  const [permissions, setPermissions] = useState([]);
+  // const [permissions, setPermissions] = useState([]);
   const { data: user } = useGetUserQuery({ userID });
 
   const dispatch = useDispatch();
@@ -51,6 +52,9 @@ function Nav({ userName, userID }) {
 
   const [updateUserTheme, { isLoading }] = useUpdateUserThemeMutation();
 
+  // ACCESS PERMISSIONS FROM REDUX STORE
+  const { permissions } = useSelector((state) => state.userPermissionsData);
+
   const isActivePath = (path) => location.pathname === path;
 
   const {
@@ -63,10 +67,10 @@ function Nav({ userName, userID }) {
 
   useEffect(() => {
     if (isPermissionsSuccess) {
-      const extractedData = permissionsList.itemList.map((item) => item.itemID);
-      setPermissions(extractedData);
+      const extractedData = permissionsList.itemList.map((item) => item.url);
+      dispatch(setUserPermissionsData(extractedData));
     }
-  }, [isPermissionsSuccess, permissionsList]);
+  }, [isPermissionsSuccess, permissionsList, dispatch]);
 
   useEffect(() => {
     if (isPermissionError) {
@@ -191,16 +195,20 @@ function Nav({ userName, userID }) {
                     رویت احکام و تعرفه
                   </Link>
                 </li>
-                <li
-                  className={
-                    isActivePath("/retirement-organization/fraction")
-                      ? "active"
-                      : ""
-                  }
-                  onClick={() => handlePanelToggle(null)}
-                >
-                  <Link to={"/retirement-organization/fraction"}>کسورات</Link>
-                </li>
+
+                {permissions.includes("Fractions") && (
+                  <li
+                    className={
+                      isActivePath("/retirement-organization/fraction")
+                        ? "active"
+                        : ""
+                    }
+                    onClick={() => handlePanelToggle(null)}
+                  >
+                    <Link to={"/retirement-organization/fraction"}>کسورات</Link>
+                  </li>
+                )}
+
                 <li onClick={() => handlePanelToggle(null)}>
                   <a>داشبورد مدیریتی</a>
                 </li>
@@ -232,20 +240,22 @@ function Nav({ userName, userID }) {
                     }}
                   />
                 </li>
-                <li
-                  onClick={() => handlePanelToggle("baseInfo")}
-                  className={activePanel === "baseInfo" ? "active" : ""}
-                >
-                  <a>مدیریت اطلاعات پایه</a>
-                  <ArrowIcon
-                    sx={{
-                      color: "#fff",
-                      transition: "all 0.25s ease",
-                      transform:
-                        activePanel === "baseInfo" ? "rotate(-90deg)" : "",
-                    }}
-                  />
-                </li>
+                {permissions.includes("BaseInfoManagement") && (
+                  <li
+                    onClick={() => handlePanelToggle("baseInfo")}
+                    className={activePanel === "baseInfo" ? "active" : ""}
+                  >
+                    <a>مدیریت اطلاعات پایه</a>
+                    <ArrowIcon
+                      sx={{
+                        color: "#fff",
+                        transition: "all 0.25s ease",
+                        transform:
+                          activePanel === "baseInfo" ? "rotate(-90deg)" : "",
+                      }}
+                    />
+                  </li>
+                )}
               </ul>
             )}
           </>
@@ -344,18 +354,20 @@ function Nav({ userName, userID }) {
           </ul>
         ) : activePanel === "systemManagement" ? (
           <ul className="nav__panel--list">
-            <li
-              className={
-                isActivePath("/retirement-organization/groups") ||
-                isActivePath("/retirement-organization/create-group")
-                  ? "active"
-                  : ""
-              }
-            >
-              <Link to="/retirement-organization/groups">گروه ها</Link>
-            </li>
+            {permissions.includes("Groups") && (
+              <li
+                className={
+                  isActivePath("/retirement-organization/groups") ||
+                  isActivePath("/retirement-organization/create-group")
+                    ? "active"
+                    : ""
+                }
+              >
+                <Link to="/retirement-organization/groups">گروه ها</Link>
+              </li>
+            )}
 
-            {permissions.includes("0BB99A3E-55F8-47F0-8A88-65F543403C37") && (
+            {permissions.includes("Users") && (
               <li
                 className={
                   isActivePath("/retirement-organization/users") ||

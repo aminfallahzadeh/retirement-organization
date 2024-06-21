@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  userPermissionsTableData: [],
+  permissions: sessionStorage.getItem("permissions")
+    ? JSON.parse(sessionStorage.getItem("permissions"))
+    : null,
 };
 
 const userPermissionsDataSlice = createSlice({
@@ -9,7 +11,8 @@ const userPermissionsDataSlice = createSlice({
   initialState,
   reducers: {
     setUserPermissionsData: (state, action) => {
-      state.userPermissionsTableData = action.payload;
+      state.permissions = action.payload;
+      sessionStorage.setItem("permissions", JSON.stringify(action.payload));
     },
   },
 });
