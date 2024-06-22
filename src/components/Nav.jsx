@@ -42,9 +42,7 @@ function Nav({ userName, userID }) {
   const dispatch = useDispatch();
 
   const [activePanel, setActivePanel] = useState(null);
-
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-
   const [theme, setTheme] = useState("default");
 
   const { logoutHandler, logoutLoading } = useLogout();

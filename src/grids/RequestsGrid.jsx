@@ -75,7 +75,7 @@ function RequestsGrid({ isLoading, roles }) {
         requestTypeID: item.requestTypeID,
         personID: item.personID,
         requestTypeNameFa: item.requestTypeNameFa,
-        personName: item.personName || "-",
+        personName: item.personFirstName + " " + item.personLastName || "-",
         date: item.requestDate,
         body: item.requestText,
       }));
