@@ -1,5 +1,5 @@
 // react imports
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // redux improts
 import { setSelectedRole } from "../slices/roleDataSlice.js";
@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 
 function CartableScreen() {
   const dispatch = useDispatch();
+  const [allRoles, setAllRoles] = useState([]);
 
   const { selectedRole } = useSelector((state) => state.roleData);
 
@@ -22,14 +23,22 @@ function CartableScreen() {
     isLoading,
     error: rolesError,
     isSuccess: isRolesSuccess,
+    refetch,
   } = useGetRoleQuery();
 
   // set selected role default to first role
   useEffect(() => {
+    refetch();
     if (isRolesSuccess) {
-      dispatch(setSelectedRole(roles?.itemList[0].url));
+      dispatch(setSelectedRole(roles.itemList[0].url));
+      setAllRoles(roles.itemList);
     }
-  }, [isRolesSuccess, dispatch, roles]);
+
+    return () => {
+      dispatch(setSelectedRole(null));
+      setAllRoles([]);
+    };
+  }, [isRolesSuccess, dispatch, roles, refetch]);
 
   useEffect(() => {
     if (rolesError) {
@@ -48,7 +57,7 @@ function CartableScreen() {
         </h4>
       </div>
 
-      {selectedRole && <RequestsGrid isLoading={isLoading} roles={roles} />}
+      {selectedRole && <RequestsGrid isLoading={isLoading} roles={allRoles} />}
     </section>
   );
 }
