@@ -36,8 +36,14 @@ import {
 import { toast } from "react-toastify";
 
 function Nav({ userName, userID }) {
-  // const [permissions, setPermissions] = useState([]);
-  const { data: user } = useGetUserQuery({ userID });
+  const shouldFetch = !!userID;
+
+  const { data: user } = useGetUserQuery(
+    { userID },
+    {
+      skip: !shouldFetch,
+    }
+  );
 
   const dispatch = useDispatch();
 
@@ -61,14 +67,16 @@ function Nav({ userName, userID }) {
     isLoading: isPermissionsLoading,
     isFetching: isPermissionsFetching,
     error: isPermissionError,
+    refetch,
   } = useGetItemAccessQuery();
 
   useEffect(() => {
+    refetch();
     if (isPermissionsSuccess) {
       const extractedData = permissionsList.itemList.map((item) => item.url);
       dispatch(setUserPermissionsData(extractedData));
     }
-  }, [isPermissionsSuccess, permissionsList, dispatch]);
+  }, [isPermissionsSuccess, permissionsList, dispatch, refetch]);
 
   useEffect(() => {
     if (isPermissionError) {

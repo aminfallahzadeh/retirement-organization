@@ -1,5 +1,5 @@
 // react imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ import {
   Print as PrintIcon,
   KeyboardReturn as ReturnIcon,
   ArrowBack as BackIcon,
+  Done as DoneIcon,
 } from "@mui/icons-material";
 
 // components
@@ -25,9 +26,16 @@ import Modal from "../components/Modal";
 function RequestScreen() {
   const [value, setValue] = useState("1");
 
+  // REQUEST CONDTIONS STATE
+  const [requestCondition, setRequestCondition] = useState(null);
+
   // MODAL STATES
   const [showSendRequestModal, setShowSendRequestModal] = useState(false);
   const [showReturnRequestModal, setShowReturnRequestModal] = useState(false);
+
+  // BUTTON STATES
+  const [showBackButton, setShowBackButton] = useState(false);
+  const [sendOrConfirmButton, setSendOrConfirmButton] = useState(false);
 
   const navigate = useNavigate();
 
@@ -43,6 +51,30 @@ function RequestScreen() {
   const handleShowReturnRequestModal = () => {
     setShowReturnRequestModal(true);
   };
+
+  // HANDLE BUTTONS BASED ON REQUEST STATE
+  useEffect(() => {
+    if (requestCondition) {
+      if (requestCondition.length > 1) {
+        setShowBackButton(true);
+      }
+    }
+  }, [requestCondition]);
+
+  useEffect(() => {
+    if (requestCondition) {
+      for (let i = 0; i < requestCondition.length; i++) {
+        if (requestCondition[i].neaxtSate === 1000) {
+          setSendOrConfirmButton(true);
+          break;
+        }
+      }
+    }
+  }, [requestCondition]);
+
+  useEffect(() => {
+    console.log(sendOrConfirmButton);
+  }, [sendOrConfirmButton]);
 
   const content = (
     <>
@@ -78,7 +110,7 @@ function RequestScreen() {
                 padding: "0",
               }}
             >
-              <RequestInfoForm />
+              <RequestInfoForm setRequestCondition={setRequestCondition} />
             </TabPanel>
             <TabPanel
               value="2"
@@ -111,24 +143,28 @@ function RequestScreen() {
           </Button>
           <Button
             dir="ltr"
-            endIcon={<SendIcon />}
+            endIcon={sendOrConfirmButton ? <DoneIcon /> : <SendIcon />}
             onClick={handleShowSendRequestModal}
             variant="contained"
             color="success"
             sx={{ fontFamily: "Vazir" }}
           >
-            <span>ارسال درخواست</span>
+            <span>
+              {sendOrConfirmButton ? "تایید درخواست" : "ارسال درخواست"}
+            </span>
           </Button>
-          <Button
-            dir="ltr"
-            endIcon={<ReturnIcon />}
-            onClick={handleShowReturnRequestModal}
-            variant="contained"
-            color="warning"
-            sx={{ fontFamily: "Vazir" }}
-          >
-            <span>برگشت درخواست</span>
-          </Button>
+          {showBackButton && (
+            <Button
+              dir="ltr"
+              endIcon={<ReturnIcon />}
+              onClick={handleShowReturnRequestModal}
+              variant="contained"
+              color="warning"
+              sx={{ fontFamily: "Vazir" }}
+            >
+              <span>برگشت درخواست</span>
+            </Button>
+          )}
         </div>
       </section>
 

@@ -16,7 +16,7 @@ import {
   convertToPersianDateFormatted,
 } from "../helper";
 
-function RequestInfoForm() {
+function RequestInfoForm({ setRequestCondition }) {
   const [requestData, setRequestData] = useState(null);
 
   const searchParams = new URLSearchParams(location.search);
@@ -34,8 +34,9 @@ function RequestInfoForm() {
   useEffect(() => {
     if (isSuccess) {
       setRequestData(request.itemList[0]);
+      setRequestCondition(request.itemList[0].conditions);
     }
-  }, [isSuccess, request?.itemList]);
+  }, [isSuccess, request?.itemList, setRequestCondition]);
 
   useEffect(() => {
     if (error) {
