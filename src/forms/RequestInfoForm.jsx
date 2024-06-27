@@ -47,7 +47,7 @@ function RequestInfoForm({ setRequestCondition }) {
     }
   }, [error]);
 
-  return (
+  const content = (
     <>
       {isLoading || isFetching ? (
         <Box
@@ -146,6 +146,8 @@ function RequestInfoForm({ setRequestCondition }) {
       )}
     </>
   );
+
+  return content;
 }
 
 export default RequestInfoForm;

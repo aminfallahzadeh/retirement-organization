@@ -17,11 +17,11 @@ import {
 
 // components
 import RequestAttachmentsSection from "../sections/request/RequestAttachmentsSection";
-import RequestHistorySection from "../sections/request/RequestHistorySection";
 import RequestInfoForm from "../forms/RequestInfoForm";
 import SendRequestFrom from "../forms/SendRequestForm";
 import ReturnRequestForm from "../forms/ReturnRequestForm";
 import Modal from "../components/Modal";
+import RequestHistoryGrid from "../grids/RequestHistoryGrid";
 
 function RequestScreen() {
   const [value, setValue] = useState("1");
@@ -64,17 +64,13 @@ function RequestScreen() {
   useEffect(() => {
     if (requestCondition) {
       for (let i = 0; i < requestCondition.length; i++) {
-        if (requestCondition[i].neaxtSate === 1000) {
+        if (requestCondition[i].nextState === 1000) {
           setSendOrConfirmButton(true);
           break;
         }
       }
     }
   }, [requestCondition]);
-
-  useEffect(() => {
-    console.log(sendOrConfirmButton);
-  }, [sendOrConfirmButton]);
 
   const content = (
     <>
@@ -126,7 +122,7 @@ function RequestScreen() {
                 padding: "0",
               }}
             >
-              <RequestHistorySection />
+              <RequestHistoryGrid />
             </TabPanel>
           </TabContext>
         </div>

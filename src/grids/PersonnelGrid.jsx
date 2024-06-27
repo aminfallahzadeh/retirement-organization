@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 // mui imports
 import { IconButton, PaginationItem, Tooltip } from "@mui/material";
 import {
-  RemoveRedEye as RemoveRedEyeIcon,
+  VisibilityOutlined as EyeIcon,
   ChevronLeft,
   ChevronRight,
   FirstPage,
@@ -69,7 +69,7 @@ function PersonnelGrid() {
               to={`/retirement-organization/personnel-statements/info?personID=${row.id}&personDeathDate=${row.original.personDeathDate}`}
             >
               <IconButton color="primary" sx={{ padding: "0" }}>
-                <RemoveRedEyeIcon />
+                <EyeIcon />
               </IconButton>
             </Link>
           </Tooltip>

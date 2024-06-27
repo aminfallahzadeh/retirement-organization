@@ -63,6 +63,12 @@ export const requestApiSlice = apiSlice.injectEndpoints({
         url: `${REQUEST_URL_HTTPS}/GetRequestType`,
       }),
     }),
+
+    getRequestHistory: builder.query({
+      query: (requestID) => ({
+        url: `${REQUEST_URL_HTTPS}/GetRequestHistory?requestID=${requestID}`,
+      }),
+    }),
   }),
 });
 
@@ -73,4 +79,5 @@ export const {
   useGetRequestTypeQuery,
   useInsertRequestMutation,
   useSendRequestToNextStateMutation,
+  useGetRequestHistoryQuery,
 } = requestApiSlice;
