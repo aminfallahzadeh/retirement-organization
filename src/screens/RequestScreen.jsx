@@ -16,7 +16,7 @@ import {
 } from "@mui/icons-material";
 
 // components
-import RequestAttachmentsSection from "../sections/request/RequestAttachmentsSection";
+import RequestAttachmentsGrid from "../grids/RequestAttachmentsGrid";
 import RequestInfoForm from "../forms/RequestInfoForm";
 import SendRequestFrom from "../forms/SendRequestForm";
 import ReturnRequestForm from "../forms/ReturnRequestForm";
@@ -114,7 +114,7 @@ function RequestScreen() {
                 padding: "0",
               }}
             >
-              <RequestAttachmentsSection />
+              <RequestAttachmentsGrid />
             </TabPanel>
             <TabPanel
               value="3"

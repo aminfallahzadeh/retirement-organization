@@ -37,7 +37,6 @@ import { defaultTableOptions } from "../utils.js";
 
 // helpers
 import {
-  findById,
   convertToPersianNumber,
   convertToPersianDateFormatted,
 } from "../helper.js";
@@ -45,7 +44,6 @@ import {
 function RequestHistoryGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const [historyTableData, setHistoryTableData] = useState([]);
-  const [selectedSlip, setSelectedSlip] = useState([]);
 
   const location = useLocation();
 
@@ -196,17 +194,6 @@ function RequestHistoryGrid() {
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
-
-  useEffect(() => {
-    const id = Object.keys(table.getState().rowSelection)[0];
-    const selected = findById(historyTableData, id);
-
-    if (id) {
-      setSelectedSlip(selected);
-    } else {
-      setSelectedSlip([]);
-    }
-  }, [table, rowSelection, historyTableData]);
 
   const content = (
     <>

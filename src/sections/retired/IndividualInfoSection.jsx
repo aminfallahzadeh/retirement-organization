@@ -21,7 +21,7 @@ function IndividualInfoSection() {
 
   const content = (
     <section>
-      <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
+      <Accordion>
         <AccordionSummary
           id="panel-header"
           aria-controls="panel-content"

@@ -6,7 +6,6 @@ import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 // components
-import RequestAttachmentsSection from "../sections/request/RequestAttachmentsSection";
 import CreateRequestForm from "../forms/CreateRequestForm";
 
 function CreateRequestScreen() {
@@ -46,7 +45,7 @@ function CreateRequestScreen() {
               padding: "0",
             }}
           >
-            <RequestAttachmentsSection />
+            Test
           </TabPanel>
         </TabContext>
       </div>

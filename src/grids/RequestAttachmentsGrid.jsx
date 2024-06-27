@@ -1,61 +1,140 @@
 // react imports
-import { useMemo, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
+
+// rrd imports
+import { useLocation } from "react-router-dom";
+
+// redux imports
+import { useGetRequestAttachmentQuery } from "../slices/requestApiSlice.js";
 
 // mui imports
-import { IconButton } from "@mui/material";
 import {
-  RemoveRedEye as RemoveRedEyeIcon,
-  Delete as DeleteIcon,
+  Box,
+  IconButton,
+  Tooltip,
+  CircularProgress,
+  PaginationItem,
+} from "@mui/material";
+import {
+  Refresh as RefreshIcon,
+  VisibilityOutlined as EyeIcon,
+  DeleteOutline as DeleteIcon,
+  ChevronLeft,
+  ChevronRight,
+  FirstPage,
+  LastPage,
+  Add as AddIcon,
 } from "@mui/icons-material";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
 
+// library imports
+import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
-const data = [];
+// helpers
+import { convertToPersianNumber } from "../helper.js";
 
 function RequestAttachmentsGrid() {
   const [rowSelection, setRowSelection] = useState({});
+  const [attachmentsTableData, setAttachmentsTableData] = useState([]);
+
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const requestID = searchParams.get("requestID");
+
+  const {
+    data: attachments,
+    isLoading,
+    isSuccess,
+    isFetching,
+    error,
+    refetch,
+  } = useGetRequestAttachmentQuery(requestID);
+
+  const handleRefresh = () => {
+    refetch();
+  };
+
+  useEffect(() => {
+    refetch();
+    if (isSuccess) {
+      const data = attachments.itemList.map((item, index) => ({
+        attachmentsRowNum: index + 1,
+      }));
+
+      setAttachmentsTableData(data);
+    }
+  }, [isSuccess, refetch, attachments]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "rowNum",
+        accessorKey: "attachmentsRowNum",
         header: "ردیف",
-      },
-      {
-        accessorKey: "docName",
-        header: "نام مدرک",
-      },
-      {
-        accessorKey: "docDesc",
-        header: "توضیحات",
-      },
-      {
-        accessorKey: "senderInfoReq",
-        header: "حذف",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <IconButton color="primary">
-            <DeleteIcon />
-          </IconButton>
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
       },
       {
-        accessorKey: "observeReq",
-        header: "مشاهده",
+        accessorKey: "attachmentName",
+        header: "نام پیوست",
+        size: 20,
+      },
+      {
+        accessorKey: "attachmentDescription",
+        header: "توضیحات",
+        size: 20,
+      },
+      {
+        accessorKey: "deleteAttachment",
+        header: "حذف پیوست",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
         Cell: () => (
-          <IconButton color="primary">
-            <RemoveRedEyeIcon />
-          </IconButton>
+          <Tooltip>
+            <IconButton color="error" sx={{ padding: "0" }}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        ),
+      },
+      {
+        accessorKey: "observeAttachment",
+        header: "مشاهده پیوست",
+        enableSorting: false,
+        enableColumnActions: false,
+        muiTableBodyCellProps: {
+          align: "center",
+        },
+        size: 20,
+        Cell: () => (
+          <Tooltip>
+            <span>
+              <IconButton sx={{ padding: "0" }} color="info">
+                <EyeIcon color="info" />
+              </IconButton>
+            </span>
+          </Tooltip>
         ),
       },
     ],
@@ -65,10 +144,62 @@ function RequestAttachmentsGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data,
-    enablePagination: false,
-    enableBottomToolbar: false,
-    muiTableContainerProps: { sx: { height: "500px" } },
+    data: attachmentsTableData,
+    renderTopToolbarCustomActions: () => (
+      <Box>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip title="بروز رسانی">
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="info"
+                onClick={handleRefresh}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} color={"success"} />
+          </IconButton>
+        ) : (
+          <Tooltip title="افزودن پیوست">
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="success"
+                onClick={handleRefresh}
+              >
+                <AddIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
+      </Box>
+    ),
+    muiPaginationProps: {
+      size: "small",
+      shape: "rounded",
+      showRowsPerPage: false,
+      renderItem: (item) => (
+        <PaginationItem
+          {...item}
+          page={convertToPersianNumber(item.page)}
+          slots={{
+            previous: ChevronRight,
+            next: ChevronLeft,
+            first: LastPage,
+            last: FirstPage,
+          }}
+        />
+      ),
+    },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -85,7 +216,24 @@ function RequestAttachmentsGrid() {
     state: { rowSelection },
   });
 
-  const content = <MaterialReactTable table={table} />;
+  const content = (
+    <>
+      {isLoading ? (
+        <div className="skeleton-lg">
+          <Skeleton
+            count={5}
+            baseColor="#dfdfdf"
+            highlightColor="#9f9f9f"
+            duration={1}
+            direction="rtl"
+          />
+        </div>
+      ) : (
+        <MaterialReactTable table={table} />
+      )}
+    </>
+  );
+
   return content;
 }
 

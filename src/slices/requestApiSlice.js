@@ -69,6 +69,20 @@ export const requestApiSlice = apiSlice.injectEndpoints({
         url: `${REQUEST_URL_HTTPS}/GetRequestHistory?requestID=${requestID}`,
       }),
     }),
+
+    getRequestAttachment: builder.query({
+      query: (requestID) => ({
+        url: `${REQUEST_URL_HTTPS}/GetRequestAttachment?requestID=${requestID}`,
+      }),
+    }),
+
+    insertRequestAttachment: builder.mutation({
+      query: (data) => ({
+        url: `${REQUEST_URL_HTTPS}/InsertRequestAttachment`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -80,4 +94,5 @@ export const {
   useInsertRequestMutation,
   useSendRequestToNextStateMutation,
   useGetRequestHistoryQuery,
+  useGetRequestAttachmentQuery,
 } = requestApiSlice;
