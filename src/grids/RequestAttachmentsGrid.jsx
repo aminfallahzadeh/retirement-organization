@@ -9,7 +9,7 @@ import { useGetRequestAttachmentQuery } from "../slices/requestApiSlice.js";
 
 // components
 import Modal from "../components/Modal";
-import RequestAttachmentForm from "../forms/requestAttachmentForm.jsx";
+import RequestAttachmentForm from "../forms/RequestAttachmentForm.jsx";
 
 // mui imports
 import {
