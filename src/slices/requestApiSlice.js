@@ -83,6 +83,11 @@ export const requestApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getRequestTypeAttachment: builder.query({
+      query: (requestTypeID) => ({
+        url: `${REQUEST_URL_HTTPS}/GetRequestTypeAttachment?requestTypeID=${requestTypeID}`,
+      }),
+    }),
   }),
 });
 
@@ -95,4 +100,6 @@ export const {
   useSendRequestToNextStateMutation,
   useGetRequestHistoryQuery,
   useGetRequestAttachmentQuery,
+  useInsertRequestAttachmentMutation,
+  useGetRequestTypeAttachmentQuery,
 } = requestApiSlice;

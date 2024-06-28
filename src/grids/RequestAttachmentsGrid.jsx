@@ -7,6 +7,10 @@ import { useLocation } from "react-router-dom";
 // redux imports
 import { useGetRequestAttachmentQuery } from "../slices/requestApiSlice.js";
 
+// components
+import Modal from "../components/Modal";
+import RequestAttachmentForm from "../forms/requestAttachmentForm.jsx";
+
 // mui imports
 import {
   Box,
@@ -45,6 +49,9 @@ function RequestAttachmentsGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const [attachmentsTableData, setAttachmentsTableData] = useState([]);
 
+  const [showInsertAttachmentModal, setShowInsertAttachmentModal] =
+    useState(false);
+
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
@@ -68,11 +75,12 @@ function RequestAttachmentsGrid() {
     if (isSuccess) {
       const data = attachments.itemList.map((item, index) => ({
         attachmentsRowNum: index + 1,
+        attachmentDesc: item.attachementDesc || "-",
+        attachmentName: item.attachmentName || "-",
       }));
-
       setAttachmentsTableData(data);
     }
-  }, [isSuccess, refetch, attachments]);
+  }, [isSuccess, refetch, attachments, showInsertAttachmentModal]);
 
   useEffect(() => {
     if (error) {
@@ -81,6 +89,11 @@ function RequestAttachmentsGrid() {
       });
     }
   }, [error]);
+
+  // CHANGE HANDLERS
+  const handleShowInsertAttachmentModalChange = () => {
+    setShowInsertAttachmentModal(true);
+  };
 
   const columns = useMemo(
     () => [
@@ -100,7 +113,7 @@ function RequestAttachmentsGrid() {
         size: 20,
       },
       {
-        accessorKey: "attachmentDescription",
+        accessorKey: "attachmentDesc",
         header: "توضیحات",
         size: 20,
       },
@@ -174,7 +187,7 @@ function RequestAttachmentsGrid() {
               <IconButton
                 aria-label="refresh"
                 color="success"
-                onClick={handleRefresh}
+                onClick={handleShowInsertAttachmentModalChange}
               >
                 <AddIcon fontSize="small" />
               </IconButton>
@@ -229,7 +242,19 @@ function RequestAttachmentsGrid() {
           />
         </div>
       ) : (
-        <MaterialReactTable table={table} />
+        <>
+          {showInsertAttachmentModal && (
+            <Modal
+              title="افزودن پیوست"
+              closeModal={() => setShowInsertAttachmentModal(false)}
+            >
+              <RequestAttachmentForm
+                setShowInsertAttachmentModal={setShowInsertAttachmentModal}
+              />
+            </Modal>
+          )}
+          <MaterialReactTable table={table} />
+        </>
       )}
     </>
   );

@@ -104,7 +104,7 @@ function ReturnRequestForm({ setShowReturnRequestModal }) {
         </Box>
       ) : (
         <section className="formContainer flex-col">
-          <form method="POST" className="grid grid--col-2">
+          <form method="POST" className="grid grid--col-2" noValidate>
             <div className="inputBox__form">
               <select
                 className="inputBox__form--input"

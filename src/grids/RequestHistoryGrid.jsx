@@ -68,8 +68,7 @@ function RequestHistoryGrid() {
     if (isSuccess) {
       const data = histories.itemList.map((item, index) => ({
         historyRowNum: index + 1,
-        historyFirstName: item.firstName || "-",
-        historyLastName: item.lastName || "-",
+        historyUser: item.firstName + " " + item.lastName || "-",
         historyDate: item.date || "-",
         historyDesc: item.description || "-",
         historyStateName: item.stateName || "-",
@@ -101,13 +100,13 @@ function RequestHistoryGrid() {
         ),
       },
       {
-        accessorKey: "historyFirstName",
-        header: "نام",
+        accessorKey: "historyUser",
+        header: "کاربر",
         size: 20,
       },
       {
-        accessorKey: "historyLastName",
-        header: "نام خانوادگی",
+        accessorKey: "-",
+        header: "نقش",
         size: 20,
       },
       {
