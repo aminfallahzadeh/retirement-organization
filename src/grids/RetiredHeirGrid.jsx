@@ -1,19 +1,24 @@
 // react imports
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
-  useLazyGetHeirListByParentPersonIDQuery,
+  useGetHeirListByParentPersonIDQuery,
   useRemoveHeirMutation,
 } from "../slices/heirApiSlice";
-import { setHeirTableData } from "../slices/heirDataSlice.js";
 
 // mui imports
-import { IconButton, Button, Box } from "@mui/material";
+import {
+  IconButton,
+  Button,
+  Box,
+  CircularProgress,
+  Tooltip,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { PaginationItem } from "@mui/material";
 import {
@@ -55,6 +60,9 @@ import { defaultTableOptions } from "../utils.js";
 
 function RetiredHeirGrid() {
   const [rowSelection, setRowSelection] = useState({});
+
+  const [heirTableData, setHeirTableData] = useState([]);
+
   const [showEditHeirModal, setShowEditHeirModal] = useState(false);
   const [showCreateHeirModal, setShowCreateHeirModal] = useState(false);
   const [showDeleteHeirModal, setShowDeleteHeirModal] = useState(false);
@@ -63,21 +71,59 @@ function RetiredHeirGrid() {
 
   const { selectedHeirData } = useSelector((state) => state.heirData);
 
-  const dispatch = useDispatch();
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
   const parentPersonID = searchParams.get("personID");
-
-  // ACCESS THE PENSIONARY STATE FROM STORE
-  const { isPensionary } = useSelector((state) => state.retiredState);
-
-  // access the data from redux store
-  const { heirTableData } = useSelector((state) => state.heirData);
-
-  const [getListOfHeir, { isLoading, isFetching }] =
-    useLazyGetHeirListByParentPersonIDQuery();
   const [removeHeir, { isLoading: isDeleting }] = useRemoveHeirMutation();
+
+  const {
+    data: heirs,
+    isLoading,
+    isSuccess,
+    isFetching,
+    error,
+    refetch,
+  } = useGetHeirListByParentPersonIDQuery(parentPersonID);
+
+  useEffect(() => {
+    refetch();
+    if (isSuccess) {
+      const data = heirs.itemList.map((item) => ({
+        id: item.personID,
+        pensionaryID: item.pensionaryID,
+        personNationalCode: item.personNationalCode,
+        personFirstName: item.personFirstName,
+        personLastName: item.personLastName,
+        pensionaryIsUnderGauranteeText: item.pensionaryIsUnderGauranteeText,
+        personBirthDate: item.personBirthDate,
+        relationshipWithParentName: item.relationshipWithParentName,
+        parentPersonNationalCode: item.parentPersonNationalCode,
+      }));
+      setHeirTableData(data);
+    }
+  }, [
+    isSuccess,
+    heirs,
+    refetch,
+    showEditHeirModal,
+    showCreateHeirModal,
+    showDeleteHeirModal,
+  ]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
+
+  // HANDLERS
+  const handleRefresh = () => {
+    refetch();
+  };
 
   const handleShowCreateHeirModal = () => {
     setShowCreateHeirModal(true);
@@ -91,38 +137,13 @@ function RetiredHeirGrid() {
     setShowDeleteHeirModal(true);
   };
 
-  const getHeirList = useCallback(async () => {
-    try {
-      const getListRes = await getListOfHeir(parentPersonID).unwrap();
-
-      const mappedData = getListRes?.itemList?.map((item) => ({
-        id: item.personID,
-        pensionaryID: item.pensionaryID,
-        personNationalCode: item.personNationalCode,
-        personFirstName: item.personFirstName,
-        personLastName: item.personLastName,
-        pensionaryIsUnderGauranteeText: item.pensionaryIsUnderGauranteeText,
-        personBirthDate: item.personBirthDate,
-        relationshipWithParentName: item.relationshipWithParentName,
-        parentPersonNationalCode: item.parentPersonNationalCode,
-      }));
-
-      dispatch(setHeirTableData(mappedData));
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [dispatch, parentPersonID, getListOfHeir]);
-
   const handleRemoveHeir = async () => {
     try {
       const deleteRes = await removeHeir({
         pensionaryID: selectedHeirData?.pensionaryID,
       }).unwrap();
       setShowDeleteHeirModal(false);
-      getHeirList();
+      refetch();
       toast.success(deleteRes.message, {
         autoClose: 2000,
       });
@@ -133,18 +154,6 @@ function RetiredHeirGrid() {
       });
     }
   };
-
-  useEffect(() => {
-    if (isPensionary) {
-      getHeirList();
-    }
-  }, [
-    isPensionary,
-    getHeirList,
-    showEditHeirModal,
-    showCreateHeirModal,
-    showDeleteHeirModal,
-  ]);
 
   const columns = useMemo(
     () => [
@@ -240,39 +249,54 @@ function RetiredHeirGrid() {
       },
     }),
     renderTopToolbarCustomActions: () => (
-      <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
-      >
-        <Button
-          dir="ltr"
-          endIcon={<AddIcon />}
-          disabled={!isPensionary}
-          onClick={handleShowCreateHeirModal}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>ایجاد</span>
-        </Button>
+      <Box>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip title="بروز رسانی">
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="info"
+                onClick={handleRefresh}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
 
-        <LoadingButton
-          dir="ltr"
-          endIcon={<RefreshIcon />}
-          loading={isFetching}
-          disabled={!isPensionary}
-          onClick={getHeirList}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>بروز رسانی</span>
-        </LoadingButton>
+        {isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip
+            title={
+              <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
+                ایجاد موظف
+              </span>
+            }
+          >
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="success"
+                onClick={handleShowCreateHeirModal}
+              >
+                <AddIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
       </Box>
     ),
     muiPaginationProps: {
-      color: "success",
-      variant: "outlined",
+      shape: "rounded",
       showRowsPerPage: false,
+      size: "small",
       renderItem: (item) => (
         <PaginationItem
           {...item}
@@ -304,7 +328,7 @@ function RetiredHeirGrid() {
       {isLoading ? (
         <div className="skeleton-lg">
           <Skeleton
-            count={7}
+            count={5}
             baseColor="#dfdfdf"
             highlightColor="#9f9f9f"
             duration={1}

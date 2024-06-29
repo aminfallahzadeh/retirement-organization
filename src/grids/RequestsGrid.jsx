@@ -81,7 +81,6 @@ function RequestsGrid({ isLoading, roles }) {
       }));
 
       setRequestTableData(data);
-      sessionStorage.setItem("requests", JSON.stringify(data));
     }
   }, [requests, isSuccess, refetch]);
 
