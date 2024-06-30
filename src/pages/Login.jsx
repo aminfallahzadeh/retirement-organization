@@ -25,6 +25,9 @@ import { useNavigate } from "react-router-dom";
 // library imports
 import { toast } from "react-toastify";
 
+// helpers
+import { convertToEnglishNumber } from "../helper.js";
+
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [captcha, setCaptcha] = useState(false);
@@ -144,7 +147,7 @@ function Login() {
     const input = e.target.value;
     setUserInputCaptcha(input);
 
-    if (input.toLowerCase() === captchaText.toLowerCase()) {
+    if (convertToEnglishNumber(input) === captchaText) {
       setCaptcha(true);
     } else {
       setCaptcha(false);
