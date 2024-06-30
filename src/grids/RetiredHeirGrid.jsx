@@ -5,7 +5,6 @@ import { useMemo, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useSelector } from "react-redux";
 import {
   useGetHeirListByParentPersonIDQuery,
   useRemoveHeirMutation,
@@ -53,6 +52,7 @@ import { toast } from "react-toastify";
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
+  findById,
 } from "../helper.js";
 
 // utils imports
@@ -68,8 +68,9 @@ function RetiredHeirGrid() {
   const [showDeleteHeirModal, setShowDeleteHeirModal] = useState(false);
 
   const [personID, setPersonID] = useState("");
+  const [pensionaryID, setPensionaryID] = useState("");
 
-  const { selectedHeirData } = useSelector((state) => state.heirData);
+  // const { selectedHeirData } = useSelector((state) => state.heirData);
 
   const location = useLocation();
 
@@ -140,7 +141,7 @@ function RetiredHeirGrid() {
   const handleRemoveHeir = async () => {
     try {
       const deleteRes = await removeHeir({
-        pensionaryID: selectedHeirData?.pensionaryID,
+        pensionaryID,
       }).unwrap();
       setShowDeleteHeirModal(false);
       refetch();
@@ -211,10 +212,18 @@ function RetiredHeirGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <IconButton color="success" onClick={handleShowRelatedModal}>
-            <EditIcon />
-          </IconButton>
+        Cell: ({ row }) => (
+          <Tooltip
+            title={`ویرایش "${row.original.personFirstName} ${row.original.personLastName}"`}
+          >
+            <IconButton
+              color="success"
+              onClick={handleShowRelatedModal}
+              sx={{ padding: "0" }}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
         ),
       },
       {
@@ -223,10 +232,18 @@ function RetiredHeirGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <IconButton color="error" onClick={handleShowDeleteRelatedModal}>
-            <DeleteIcon />
-          </IconButton>
+        Cell: ({ row }) => (
+          <Tooltip
+            title={`حذف "${row.original.personFirstName} ${row.original.personLastName}"`}
+          >
+            <IconButton
+              color="error"
+              onClick={handleShowDeleteRelatedModal}
+              sx={{ padding: "0" }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         ),
       },
     ],
@@ -319,9 +336,11 @@ function RetiredHeirGrid() {
     const id = Object.keys(table.getState().rowSelection)[0];
 
     if (id) {
+      const selected = findById(heirTableData, id);
       setPersonID(id);
+      setPensionaryID(selected?.pensionaryID);
     }
-  }, [table, rowSelection]);
+  }, [table, rowSelection, heirTableData]);
 
   const content = (
     <>
