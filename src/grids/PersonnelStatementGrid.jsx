@@ -121,6 +121,11 @@ function PersonnelStatementGrid() {
   const columns = useMemo(
     () => [
       {
+        accessorKey: "personnelStatementTypeName",
+        header: "نوع حکم",
+        size: 20,
+      },
+      {
         accessorKey: "personnelStatementSerial",
         header: "سریال حکم",
         size: 20,
@@ -135,11 +140,6 @@ function PersonnelStatementGrid() {
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue) || "-"}</div>
         ),
-      },
-      {
-        accessorKey: "personnelStatementTypeName",
-        header: "نوع حکم",
-        size: 20,
       },
       {
         accessorKey: "personnelStatementIssueDate",
