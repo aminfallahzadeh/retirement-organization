@@ -66,7 +66,7 @@ function AllRequestsGrid() {
     refetch();
     if (isSuccess) {
       const data = requests.itemList.map((item) => ({
-        id: item.requestNO,
+        id: item.requestID,
         type: item.requestTypeID,
         requestNO: item.requestNO || "-",
         personId: item.personID,
