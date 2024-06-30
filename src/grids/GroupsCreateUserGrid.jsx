@@ -62,7 +62,7 @@ function GroupsCreateUserGrid({ setAddedGroups }) {
     () => [
       {
         accessorKey: "name",
-        header: "نام گروه",
+        header: "نام نقش",
         size: 20,
       },
     ],

@@ -130,7 +130,14 @@ function RequestsGrid({ isLoading, roles }) {
         },
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip title={row.original.requestTypeNameFa}>
+          <Tooltip
+            title={
+              <>
+                <span>{row.original.requestTypeNameFa}</span> <br />{" "}
+                <span>{row.original.personName}</span>
+              </>
+            }
+          >
             <Link
               to={
                 row.original.requestTypeID ===
