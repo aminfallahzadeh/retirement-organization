@@ -78,7 +78,7 @@ function SendRequestForm({ setShowSendRequestModal }) {
       navigate("/retirement-organization/cartable");
     } catch (err) {
       console.log(err);
-      toast.error(err?.data?.message || err.error, {
+      toast.error(err?.error.message || err.error, {
         autoClose: 2000,
       });
     }

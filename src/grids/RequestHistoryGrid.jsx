@@ -69,6 +69,7 @@ function RequestHistoryGrid() {
       const data = histories.itemList.map((item, index) => ({
         historyRowNum: index + 1,
         historyUser: item.firstName + " " + item.lastName || "-",
+        roleName: item.roleName || "-",
         historyDate: item.date || "-",
         historyDesc: item.description || "-",
         historyStateName: item.stateName || "-",
@@ -105,7 +106,7 @@ function RequestHistoryGrid() {
         size: 20,
       },
       {
-        accessorKey: "-",
+        accessorKey: "roleName",
         header: "نقش",
         size: 20,
       },
