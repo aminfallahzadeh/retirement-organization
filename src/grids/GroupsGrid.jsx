@@ -376,7 +376,10 @@ function GroupsGrid() {
                     <h4 className="title-tertiary">عملیات</h4>
                   </div>
                   <div style={{ marginTop: "6rem" }}>
-                    <ArrowButtonsGroups selectedGroup={selectedGroup} />
+                    <ArrowButtonsGroups
+                      selectedGroup={selectedGroup}
+                      setShowEditItemsModal={setShowEditItemsModal}
+                    />
                   </div>
                 </div>
 

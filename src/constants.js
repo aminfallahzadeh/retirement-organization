@@ -15,3 +15,5 @@ export const PERSONNEL_STATEMENT_URL_HTTPS =
   "https://185.129.238.13/api/PersonnelStatement";
 export const FRACTION_URL_HTTPS = "https://185.129.238.13/api/Fraction";
 export const PAY_URL_HTTPS = "https://185.129.238.13/api/Pay";
+export const REPORT_GENERATOR_HTTPS =
+  "https://185.129.238.13/api/ReportGenerator";

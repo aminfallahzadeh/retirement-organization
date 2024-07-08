@@ -104,6 +104,11 @@
 			width: 200px !important;
 		}
 
+		&:disabled {
+			opacity: 0.5;
+			cursor: default !important;
+		}
+
 		&:focus ~ .inputBox__form--label,
 		&:valid ~ .inputBox__form--label,
 		&:disabled ~ .inputBox__form--label {

@@ -40,7 +40,7 @@ import ElectronicStatementScreen from "./screens/ElectronicStatementScreen";
 import CreateRequestScreen from "./screens/CreateRequestScreen";
 import PersonnelInfoScreen from "./screens/PersonnelInfoScreen";
 import FractionScreen from "./screens/FractionScreen.jsx";
-import ReportCreatorScreen from "./screens/ReportCreatorScreen.jsx";
+import ReportGeneratorScreen from "./screens/ReportGeneratorScreen.jsx";
 import BaseInfoScreen from "./screens/BaseInfoScreen.jsx";
 
 const router = createBrowserRouter(
@@ -121,7 +121,7 @@ const router = createBrowserRouter(
 
         <Route
           path="/retirement-organization/report-creator"
-          element={<ReportCreatorScreen />}
+          element={<ReportGeneratorScreen />}
         />
 
         <Route

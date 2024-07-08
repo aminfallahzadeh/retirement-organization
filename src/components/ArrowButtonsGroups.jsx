@@ -23,7 +23,7 @@ import {
 } from "../slices/itemsDataSlice";
 import { addGroupItems, removeGroupItems } from "../slices/groupItemsDataSlice";
 
-function ArrowButtonsGroups({ selectedGroup }) {
+function ArrowButtonsGroups({ selectedGroup, setShowEditItemsModal }) {
   const [groupID, setGroupID] = useState(null);
   const dispatch = useDispatch();
 
@@ -58,6 +58,7 @@ function ArrowButtonsGroups({ selectedGroup }) {
       toast.success(insertRes.message, {
         autoClose: 2000,
       });
+      setShowEditItemsModal(false);
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
