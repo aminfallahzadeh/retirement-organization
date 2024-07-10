@@ -19,6 +19,10 @@ import {
 import { findById } from "../helper";
 
 function ReportGeneratorTableForm() {
+  // CONTROLLED STATES
+  const [disabaleAddButton, setDisabaleAddButton] = useState(false);
+  const [disableOperators, setDisableOperators] = useState(true);
+
   // MAIN STATES
   const [data, setData] = useState({ operator: "=" });
   const [conditionText, setConditionText] = useState("");
@@ -107,10 +111,6 @@ function ReportGeneratorTableForm() {
     }
   }, [data, featureCombo]);
 
-  useEffect(() => {
-    console.log(isLookup);
-  }, [isLookup]);
-
   // HANDLERS
   const addConditionHandler = (colId, op, condi) => {
     let result;
@@ -126,6 +126,8 @@ function ReportGeneratorTableForm() {
     }
 
     setConditionText(conditionText + " " + result);
+    setDisabaleAddButton(true);
+    setDisableOperators(false);
   };
 
   const handleDataChange = (e) => {
@@ -135,10 +137,44 @@ function ReportGeneratorTableForm() {
 
   const handleDeleteAllconditions = () => {
     setConditionText("");
+    setDisabaleAddButton(false);
+    setDisableOperators(true);
   };
 
   const handleAddAnd = () => {
     setConditionText(conditionText + " " + "AND");
+    setDisabaleAddButton(false);
+    setDisableOperators(true);
+  };
+
+  const handleAddOr = () => {
+    setConditionText(conditionText + " " + "OR");
+    setDisabaleAddButton(false);
+    setDisableOperators(true);
+  };
+
+  const handleAddOpenParenthesis = () => {
+    setConditionText(conditionText + " " + "(");
+    setDisabaleAddButton(false);
+    setDisableOperators(true);
+  };
+
+  const handleOpenCloseParenthesis = () => {
+    setConditionText(conditionText + " " + ")");
+    setDisabaleAddButton(false);
+    setDisableOperators(true);
+  };
+
+  const handleAddNull = () => {
+    setConditionText(conditionText + " " + "NULL");
+    setDisabaleAddButton(false);
+    setDisableOperators(true);
+  };
+
+  const handleAddPercentage = () => {
+    setConditionText(conditionText + " " + "%");
+    setDisabaleAddButton(false);
+    setDisableOperators(true);
   };
 
   const content = (
@@ -205,10 +241,10 @@ function ReportGeneratorTableForm() {
               name="operator"
             >
               <option value="=">=</option>
-              <option value="<">&gt;</option>
-              <option value=">">&lt;</option>
-              <option value="<=">&#8805;</option>
-              <option value=">=">&#8804;</option>
+              <option value=">">&gt;</option>
+              <option value="<">&lt;</option>
+              <option value=">=">&#8805;</option>
+              <option value="<=">&#8804;</option>
               <option value="like">like</option>
             </select>
           </div>
@@ -275,7 +311,8 @@ function ReportGeneratorTableForm() {
                     !data.TableName ||
                     !data.operator ||
                     !data.columnid ||
-                    !data.condition
+                    !data.condition ||
+                    disabaleAddButton
                   }
                 >
                   <AddIcon />
@@ -299,6 +336,8 @@ function ReportGeneratorTableForm() {
               dir="ltr"
               variant="contained"
               color="info"
+              disabled={disableOperators}
+              onClick={handleAddOr}
               sx={{ fontFamily: "sahel" }}
             >
               <span>OR</span>
@@ -307,6 +346,7 @@ function ReportGeneratorTableForm() {
               dir="ltr"
               variant="contained"
               color="info"
+              disabled={disableOperators}
               onClick={handleAddAnd}
               sx={{ fontFamily: "sahel" }}
             >
@@ -316,14 +356,8 @@ function ReportGeneratorTableForm() {
               dir="ltr"
               variant="contained"
               color="info"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>(</span>
-            </Button>
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
+              disabled={disableOperators}
+              onClick={handleAddOpenParenthesis}
               sx={{ fontFamily: "sahel" }}
             >
               <span>)</span>
@@ -332,6 +366,18 @@ function ReportGeneratorTableForm() {
               dir="ltr"
               variant="contained"
               color="info"
+              disabled={disableOperators}
+              onClick={handleOpenCloseParenthesis}
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>(</span>
+            </Button>
+            <Button
+              dir="ltr"
+              variant="contained"
+              color="info"
+              disabled={disableOperators}
+              onClick={handleAddNull}
               sx={{ fontFamily: "sahel" }}
             >
               <span>Null</span>
@@ -340,6 +386,8 @@ function ReportGeneratorTableForm() {
               dir="ltr"
               variant="contained"
               color="info"
+              disabled={disableOperators}
+              onClick={handleAddPercentage}
               sx={{ fontFamily: "sahel" }}
             >
               <span>%</span>
