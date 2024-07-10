@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
+import { useSelector } from "react-redux";
 import {
   useGetLookupDataQuery,
   useGetPensionaryStatusQuery,
@@ -58,6 +59,8 @@ function RetiredPensionaryForm() {
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
+  const { personDeathDate } = useSelector((state) => state.retiredState);
+
   const {
     data: pensionary,
     isSuccess: isPensionarySuccess,
@@ -97,6 +100,7 @@ function RetiredPensionaryForm() {
     isSuccess: isPensionaryStatusComboSuccess,
   } = useGetPensionaryStatusQuery({
     pensionaryStatusCategory: "R",
+    pensionaryStatusIsDead: personDeathDate ? true : false,
   });
 
   // FETCH LOOK UP DATA

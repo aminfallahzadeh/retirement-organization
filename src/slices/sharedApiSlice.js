@@ -28,8 +28,8 @@ export const sharedApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getPensionaryStatus: builder.query({
-      query: ({ pensionaryStatusCategory }) => ({
-        url: `${SHARED_URL_HTTPS}/GetPensionaryStatus?pensionaryStatusCategory=${pensionaryStatusCategory}`,
+      query: ({ pensionaryStatusCategory, pensionaryStatusIsDead }) => ({
+        url: `${SHARED_URL_HTTPS}/GetPensionaryStatus?pensionaryStatusCategory=${pensionaryStatusCategory}&pensionaryStatusIsDead=${pensionaryStatusIsDead}`,
       }),
     }),
 
