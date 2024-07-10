@@ -8,6 +8,10 @@ import {
   useLazyGetLookupValueQuery,
 } from "../slices/reportGeneratorsApiSlice";
 
+// mui imports
+import { Button } from "@mui/material";
+import { Remove as RemoveIcon, Add as AddIcon } from "@mui/icons-material";
+
 // helpers
 import { findById } from "../helper";
 
@@ -106,119 +110,142 @@ function ReportGeneratorTableForm() {
 
   const content = (
     <section className="formContainer flex-col">
-      <form method="POST" className="grid grid--col-4">
-        <div className="inputBox__form">
-          <select
-            className="inputBox__form--input"
-            id="selectTable"
-            name="TableName"
-            onChange={handleDataChange}
-            defaultValue=""
-            disabled={isTablesLoading || isTablesFetching}
-          >
-            <option value="" disabled>
-              انتخاب کنید
-            </option>
-
-            {tableCombo.map((item) => (
-              <option value={item.tableName} key={item.id}>
-                {item.tableNameFarsi}
-              </option>
-            ))}
-          </select>
-
-          <label className="inputBox__form--label" htmlFor="selectTable">
-            انتخاب جدول
-          </label>
-        </div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-        <div className="inputBox__form">
-          <select
-            className="inputBox__form--input"
-            id="selectFeature"
-            name="columnid"
-            defaultValue=""
-            onChange={handleDataChange}
-            disabled={isColsLoading || isColsFetching || !data.TableName}
-          >
-            <option value="" disabled>
-              انتخاب کنید
-            </option>
-
-            {featureCombo.map((item) => (
-              <option value={item.id} key={item.id}>
-                {item.columnTitle}
-              </option>
-            ))}
-          </select>
-          <label className="inputBox__form--label" htmlFor="selectFeature">
-            خصوصیت
-          </label>
-        </div>
-
-        <div className="inputBox__form">
-          <select
-            className="inputBox__form--input"
-            id="operator"
-            defaultValue=""
-            name="operator"
-          >
-            <option value="" disabled>
-              انتخاب کنید
-            </option>
-            <option value="=">=</option>
-            <option value=">">&gt;</option>
-            <option value="<">&lt;</option>
-            <option value=">=">&#8805;</option>
-            <option value="<=">&#8804;</option>
-            <option value="like">like</option>
-          </select>
-        </div>
-
-        {data.columnid && !isLookup && (
-          <div className="inputBox__form">
-            <input
-              type="text"
-              className="inputBox__form--input"
-              id="condition"
-              name="condition"
-              onChange={handleDataChange}
-              required
-            />
-
-            <label className="inputBox__form--label" htmlFor="condition">
-              شرط
-            </label>
-          </div>
-        )}
-
-        {data.columnid && isLookup && (
+      <form method="POST" className="flex-col">
+        <div className="grid grid--col-4">
           <div className="inputBox__form">
             <select
               className="inputBox__form--input"
-              defaultValue=""
-              id="selectCondition"
-              name="sleectCondition"
+              id="selectTable"
+              name="TableName"
               onChange={handleDataChange}
+              defaultValue=""
+              disabled={isTablesLoading || isTablesFetching}
             >
-              <option value="">انتخاب کنید</option>
+              <option value="" disabled>
+                انتخاب کنید
+              </option>
+
+              {tableCombo.map((item) => (
+                <option value={item.tableName} key={item.id}>
+                  {item.tableNameFarsi}
+                </option>
+              ))}
             </select>
 
-            {conditionCombo.map((item) => (
-              <option value={item.id} key={item.id}>
-                {item.lookupValue}
-              </option>
-            ))}
-
-            <label className="inputBox__form--label" htmlFor="selectCondition">
-              شرط
+            <label className="inputBox__form--label" htmlFor="selectTable">
+              انتخاب جدول
             </label>
           </div>
-        )}
+        </div>
+
+        <div className="grid grid--col-3-mid-sm">
+          <div className="inputBox__form">
+            <select
+              className="inputBox__form--input"
+              id="selectFeature"
+              name="columnid"
+              defaultValue=""
+              onChange={handleDataChange}
+              disabled={isColsLoading || isColsFetching || !data.TableName}
+            >
+              <option value="" disabled>
+                انتخاب کنید
+              </option>
+
+              {featureCombo.map((item) => (
+                <option value={item.id} key={item.id}>
+                  {item.columnTitle}
+                </option>
+              ))}
+            </select>
+            <label className="inputBox__form--label" htmlFor="selectFeature">
+              خصوصیت
+            </label>
+          </div>
+
+          <div className="inputBox__form">
+            <select
+              className="inputBox__form--input"
+              id="operator"
+              defaultValue=""
+              name="operator"
+            >
+              <option value="=">=</option>
+              <option value=">">&gt;</option>
+              <option value="<">&lt;</option>
+              <option value=">=">&#8805;</option>
+              <option value="<=">&#8804;</option>
+              <option value="like">like</option>
+            </select>
+          </div>
+
+          {data.columnid && !isLookup && (
+            <div className="inputBox__form">
+              <input
+                type="text"
+                className="inputBox__form--input"
+                id="condition"
+                name="condition"
+                onChange={handleDataChange}
+                required
+              />
+
+              <label className="inputBox__form--label" htmlFor="condition">
+                شرط
+              </label>
+            </div>
+          )}
+
+          {data.columnid && isLookup && (
+            <div className="inputBox__form">
+              <select
+                className="inputBox__form--input"
+                defaultValue=""
+                id="selectCondition"
+                name="sleectCondition"
+                onChange={handleDataChange}
+                disabled={isLookupFetching || isLookupLoading}
+              >
+                <option value="">انتخاب کنید</option>
+                {conditionCombo.map((item) => (
+                  <option value={item.value} key={item.value}>
+                    {item.text}
+                  </option>
+                ))}
+              </select>
+
+              <label
+                className="inputBox__form--label"
+                htmlFor="selectCondition"
+              >
+                شرط
+              </label>
+            </div>
+          )}
+        </div>
       </form>
+
+      <div style={{ marginRight: "auto" }} className="flex-row">
+        <Button
+          dir="ltr"
+          endIcon={<AddIcon />}
+          variant="contained"
+          color="success"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>افزودن شرط</span>
+        </Button>
+
+        <Button
+          dir="ltr"
+          endIcon={<RemoveIcon />}
+          variant="contained"
+          color="error"
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>پاک کردن شروط</span>
+        </Button>
+      </div>
     </section>
   );
 
