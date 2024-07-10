@@ -2,190 +2,178 @@
 import { useState, useEffect } from "react";
 
 // redux imports
-import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
+import { useGetLookupDataQuery } from "../slices/sharedApiSlice";
 
 // mui imports
+import { Switch } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import { Button } from "@mui/material";
 import {
-  CalendarTodayOutlined as CalenderIcon,
-  Outbox as OutboxIcon,
+  Save as SaveIcon,
+  VisibilityRounded as EyeIcon,
+  UploadRounded as UploadIcon,
 } from "@mui/icons-material";
 
-// libary imports
-import "jalaali-react-date-picker/lib/styles/index.css";
-import { InputDatePicker } from "jalaali-react-date-picker";
-
 function BatchStatementsForm() {
-  // DATE STATES
-  const [selectedRunDate, setSelectedRunDate] = useState(null);
-  const [isRunCalenderOpen, setIsRunCalenderOpen] = useState(false);
+  const [isExcel, setIsExcel] = useState(false);
 
-  // LOOKUP STATEs
-  const [statementTypeCombo, setStatementTypeCombo] = useState([]);
+  // LOOK UP STATES
+  const [genderCombo, setGenderCombo] = useState([]);
 
+  // GET LOOKUP DATA
   const {
-    data: retirementStatementTypesComboItems,
-    isSuccess: isStatementTypeSuccess,
-  } = useGetRetirementStatementTypeQuery({});
+    data: genderComboItems,
+    isSuccess: isGenderComboItemsSuccess,
+    error: genderComboItemsError,
+  } = useGetLookupDataQuery({ lookUpType: "Gender" });
+
+  // FETCH LOOKUP DATA
+  useEffect(() => {
+    if (isGenderComboItemsSuccess) {
+      setGenderCombo(genderComboItems.itemList);
+    }
+  }, [genderComboItems, isGenderComboItemsSuccess]);
 
   useEffect(() => {
-    if (isStatementTypeSuccess) {
-      setStatementTypeCombo(retirementStatementTypesComboItems.itemList);
+    if (genderComboItemsError) {
+      console.log(genderComboItemsError);
     }
-  }, [isStatementTypeSuccess, retirementStatementTypesComboItems]);
+  }, [genderComboItemsError]);
 
-  // DATE HANDLERS
-  const handleRunDateChange = (date) => {
-    setSelectedRunDate(date);
-    setIsRunCalenderOpen(false);
-  };
-
-  const handleRunDateOpenChange = (open) => {
-    setIsRunCalenderOpen(open);
+  // HANDLERS
+  const handleIsExcelChange = () => {
+    setIsExcel(!isExcel);
   };
 
   const content = (
-    <section className="formContainer flex-col">
-      <form
-        method="POST"
-        className="grid grid--col-5 u-margin-top-md"
-        noValidate
-      >
-        <div className="inputBox__form">
-          <input
-            type="text"
-            id="year"
-            className="inputBox__form--input"
-            required
-          />
-          <label htmlFor="year" className="inputBox__form--label">
-            <span>*</span> سال
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            id="sazman"
-            className="inputBox__form--input"
-            required
-          />
-          <label htmlFor="sazman" className="inputBox__form--label">
-            <span>*</span> سازمان
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <input
-            type="text"
-            id="sexG"
-            className="inputBox__form--input"
-            required
-          />
-          <label htmlFor="sexG" className="inputBox__form--label">
-            <span>*</span> جنسیت
-          </label>
-        </div>
-        <div className="inputBox__form">
-          <InputDatePicker
-            value={selectedRunDate}
-            onChange={handleRunDateChange}
-            format={"jYYYY/jMM/jDD"}
-            onOpenChange={handleRunDateOpenChange}
-            suffixIcon={<CalenderIcon color="action" />}
-            open={isRunCalenderOpen}
-            style={{
-              border: "2px solid #cfcfcf",
-              borderRadius: "6px",
-              marginLeft: "0.5rem",
-            }}
-            wrapperStyle={{
-              border: "none",
-              cursor: "pointer",
-            }}
-          />
-          <div className="inputBox__form--readOnly-label">تاریخ اجرا</div>
-        </div>
+    <section className="flex-col formContainer">
+      <form className="grid grid--col-4">
+        <div className="checkboxContainer">
+          <span>فایل اکسل</span>
 
-        <div className="inputBox__form">
-          <select
-            type="text"
-            className="inputBox__form--input"
-            name="retirementStatementTypeID"
-            // onChange={handleStatementDataChange}
-            // value={statementObject?.retirementStatementTypeID}
-            required
-            id="retirementStatementTypeID"
-          >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            {statementTypeCombo?.map((type) => (
-              <option
-                value={type.retirementStatementTypeID}
-                key={type.retirementStatementTypeID}
+          <Switch checked={isExcel} onChange={handleIsExcelChange} />
+        </div>
+        <div>&nbsp;</div>
+        <div>&nbsp;</div>
+
+        {isExcel ? (
+          <div style={{ marginRight: "auto" }} className="flex-row flex-center">
+            <div>
+              <LoadingButton
+                dir="ltr"
+                variant="contained"
+                color="success"
+                sx={{ fontFamily: "sahel" }}
+                endIcon={<UploadIcon />}
               >
-                {type.retirementStatementTypeName}
-              </option>
-            ))}
-          </select>
-          <label
-            className="inputBox__form--label"
-            htmlFor="retirementStatementTypeID"
-          >
-            <span>*</span> نوع حکم
-          </label>
-        </div>
+                <span>بارگزاری اکسل</span>
+              </LoadingButton>
+            </div>
+
+            <div>
+              <Button
+                dir="ltr"
+                variant="contained"
+                color="primary"
+                sx={{ fontFamily: "sahel" }}
+                endIcon={<SaveIcon />}
+              >
+                <span>ذخیره</span>
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div>&nbsp;</div>
+        )}
+
+        {!isExcel && (
+          <>
+            <div className="inputBox__form">
+              <select
+                className="inputBox__form--input"
+                defaultValue=" "
+                required
+              >
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
+              </select>
+
+              <label className="inputBox__form--label">
+                <span>*</span> نوع سازمان
+              </label>
+            </div>
+
+            <div className="inputBox__form">
+              <select
+                className="inputBox__form--input"
+                defaultValue=" "
+                required
+              >
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
+
+                {genderCombo?.map((gender) => (
+                  <option key={gender.lookUpID} value={gender.lookUpID}>
+                    {gender.lookUpName}
+                  </option>
+                ))}
+              </select>
+
+              <label className="inputBox__form--label">
+                <span>*</span> جنسیت
+              </label>
+            </div>
+
+            <div className="inputBox__form">
+              <select
+                className="inputBox__form--input"
+                defaultValue=" "
+                required
+              >
+                <option value=" " disabled>
+                  انتخاب کنید
+                </option>
+              </select>
+
+              <label className="inputBox__form--label">
+                <span>*</span> وضعیت
+              </label>
+            </div>
+
+            <div
+              style={{ marginRight: "auto" }}
+              className="flex-row flex-center"
+            >
+              <div>
+                <LoadingButton
+                  dir="ltr"
+                  variant="contained"
+                  disabled
+                  color="success"
+                  sx={{ fontFamily: "sahel" }}
+                  endIcon={<EyeIcon />}
+                >
+                  <span>مشاهده</span>
+                </LoadingButton>
+              </div>
+
+              <div>
+                <Button
+                  dir="ltr"
+                  variant="contained"
+                  color="primary"
+                  sx={{ fontFamily: "sahel" }}
+                  endIcon={<SaveIcon />}
+                >
+                  <span>ذخیره</span>
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
       </form>
-
-      <div className="u-margin-top-md grid grid--col-2">
-        <div className="inputBox__form">
-          <select
-            id="statementType"
-            className="inputBox__form--input"
-            required
-            value=" "
-          >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            <option>حقوق مبنا</option>
-            <option>حقوق مبنای بازنشسته</option>
-            <option>حقوق مبنای موظف</option>
-            <otpion>تکمیلی بازنشسته</otpion>
-            <option>تکمیلی موظف</option>
-            <option>حق اولاد بازنشسته</option>
-            <option>حق اولاد موظف</option>
-            <option>عائله مندی بازنشسته</option>
-            <option>عائله مندی موظف</option>
-          </select>
-          <label htmlFor="statementType" className="inputBox__form--label">
-            تنظیمات آیتم های حکم
-          </label>
-        </div>
-
-        <div className="inputBox__form row-span-3">
-          <textarea
-            type="text"
-            id="StatemnetDisc"
-            className="inputBox__form--input"
-            required
-          ></textarea>
-          <label htmlFor="StatemnetDisc" className="inputBox__form--label">
-            شرح حکم
-          </label>
-        </div>
-      </div>
-
-      <div style={{ marginRight: "auto" }}>
-        <LoadingButton
-          dir="ltr"
-          endIcon={<OutboxIcon />}
-          variant="contained"
-          color="primary"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>ارسال</span>
-        </LoadingButton>
-      </div>
     </section>
   );
   return content;

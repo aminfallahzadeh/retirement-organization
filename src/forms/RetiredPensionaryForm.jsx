@@ -273,7 +273,6 @@ function RetiredPensionaryForm() {
             <div className="inputBox__form">
               <select
                 disabled={!editable}
-                type="text"
                 id="employmentTypeID"
                 name="employmentTypeID"
                 value={pensionaryData?.employmentTypeID || " "}
