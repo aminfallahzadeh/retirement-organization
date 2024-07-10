@@ -108,19 +108,24 @@ function ReportGeneratorTableForm() {
   }, [data, featureCombo]);
 
   useEffect(() => {
-    console.log(featureCombo);
-  }, [featureCombo]);
+    console.log(isLookup);
+  }, [isLookup]);
 
   // HANDLERS
 
-  const addConditionHandler = (colId, op, condiId) => {
+  const addConditionHandler = (colId, op, condi) => {
+    let result;
     const colData = findById(featureCombo, colId);
     const colText = colData.columnTitle;
 
-    const condiData = findById(conditionCombo, condiId, "value");
-    const condiText = condiData.text;
+    if (isLookup) {
+      const condiData = findById(conditionCombo, condi, "value");
+      const condiText = condiData.text;
+      result = `${colText} ${op} ${condiText}`;
+    } else {
+      result = `${colText} ${op} ${condi}`;
+    }
 
-    const result = `${colText} ${op} ${condiText}`;
     setConditionText(result);
   };
 
