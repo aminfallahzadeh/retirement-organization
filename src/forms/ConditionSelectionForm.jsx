@@ -8,63 +8,6 @@ function ConditionSelectionForm() {
   return (
     <section className="formContainer">
       <form method="POST" className="flex-col">
-        <div className="condition grid grid--col-4">
-          <div className="grid grid--col-2">
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>OR</span>
-            </Button>
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>AND</span>
-            </Button>
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>(</span>
-            </Button>
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>)</span>
-            </Button>
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>Null</span>
-            </Button>
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>%</span>
-            </Button>
-          </div>
-
-          <div className="condition__box col-span-3 row-span-3">
-            <h4 className="condition__box--title">شروط انتخاب شده:</h4>
-          </div>
-        </div>
-
         <div className="condition__features">
           <h4 className="condition__box--title">خصوصیات جدول:</h4>
 

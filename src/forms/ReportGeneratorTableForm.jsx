@@ -9,7 +9,7 @@ import {
 } from "../slices/reportGeneratorsApiSlice";
 
 // mui imports
-import { IconButton, Tooltip } from "@mui/material";
+import { IconButton, Tooltip, Button } from "@mui/material";
 import {
   DeleteOutline as RemoveIcon,
   Add as AddIcon,
@@ -112,7 +112,6 @@ function ReportGeneratorTableForm() {
   }, [isLookup]);
 
   // HANDLERS
-
   const addConditionHandler = (colId, op, condi) => {
     let result;
     const colData = findById(featureCombo, colId);
@@ -126,12 +125,20 @@ function ReportGeneratorTableForm() {
       result = `${colText} ${op} ${condi}`;
     }
 
-    setConditionText(result);
+    setConditionText(conditionText + " " + result);
   };
 
   const handleDataChange = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
+  };
+
+  const handleDeleteAllconditions = () => {
+    setConditionText("");
+  };
+
+  const handleAddAnd = () => {
+    setConditionText(conditionText + " " + "AND");
   };
 
   const content = (
@@ -278,7 +285,7 @@ function ReportGeneratorTableForm() {
 
             <Tooltip title="پاک کردن تمامی شروط">
               <span>
-                <IconButton color="error">
+                <IconButton color="error" onClick={handleDeleteAllconditions}>
                   <RemoveIcon />
                 </IconButton>
               </span>
@@ -286,9 +293,62 @@ function ReportGeneratorTableForm() {
           </div>
         </div>
 
-        <div className="condition__box col-span-3 row-span-3">
-          <h4 className="condition__box--title">شروط انتخاب شده:</h4>
-          <p>{conditionText}</p>
+        <div className="grid grid--col-2-first-sm">
+          <div className="grid grid--col-2">
+            <Button
+              dir="ltr"
+              variant="contained"
+              color="info"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>OR</span>
+            </Button>
+            <Button
+              dir="ltr"
+              variant="contained"
+              color="info"
+              onClick={handleAddAnd}
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>AND</span>
+            </Button>
+            <Button
+              dir="ltr"
+              variant="contained"
+              color="info"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>(</span>
+            </Button>
+            <Button
+              dir="ltr"
+              variant="contained"
+              color="info"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>)</span>
+            </Button>
+            <Button
+              dir="ltr"
+              variant="contained"
+              color="info"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>Null</span>
+            </Button>
+            <Button
+              dir="ltr"
+              variant="contained"
+              color="info"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>%</span>
+            </Button>
+          </div>
+          <div className="condition__box row-span-3">
+            <h4 className="condition__box--title">شروط انتخاب شده:</h4>
+            <p>{conditionText}</p>
+          </div>
         </div>
       </form>
     </section>

@@ -30,6 +30,10 @@
     &--col-4-mid-sm-last-sm {
         grid-template-columns: 1fr auto 1fr auto;
     }
+
+    &--col-2-first-sm {
+        grid-template-columns: auto 1fr;
+    }
 }
 
 .col-span-2 {
