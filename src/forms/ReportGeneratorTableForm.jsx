@@ -9,15 +9,19 @@ import {
 } from "../slices/reportGeneratorsApiSlice";
 
 // mui imports
-import { Button } from "@mui/material";
-import { Remove as RemoveIcon, Add as AddIcon } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
+import {
+  DeleteOutline as RemoveIcon,
+  Add as AddIcon,
+} from "@mui/icons-material";
 
 // helpers
 import { findById } from "../helper";
 
 function ReportGeneratorTableForm() {
-  // MAIN STATE
-  const [data, setData] = useState({});
+  // MAIN STATES
+  const [data, setData] = useState({ operator: "=" });
+  const [conditionText, setConditionText] = useState("");
 
   // LOOK UP STATES
   const [tableCombo, setTableCombo] = useState([]);
@@ -94,11 +98,6 @@ function ReportGeneratorTableForm() {
     }
   }, [data, fetchLookupValue, isLookup]);
 
-  const handleDataChange = (e) => {
-    const { name, value } = e.target;
-    setData({ ...data, [name]: value });
-  };
-
   useEffect(() => {
     if (data.columnid) {
       const columnData = findById(featureCombo, data.columnid);
@@ -107,6 +106,28 @@ function ReportGeneratorTableForm() {
       }
     }
   }, [data, featureCombo]);
+
+  useEffect(() => {
+    console.log(featureCombo);
+  }, [featureCombo]);
+
+  // HANDLERS
+
+  const addConditionHandler = (colId, op, condiId) => {
+    const colData = findById(featureCombo, colId);
+    const colText = colData.columnTitle;
+
+    const condiData = findById(conditionCombo, condiId, "value");
+    const condiText = condiData.text;
+
+    const result = `${colText} ${op} ${condiText}`;
+    setConditionText(result);
+  };
+
+  const handleDataChange = (e) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+  };
 
   const content = (
     <section className="formContainer flex-col">
@@ -138,7 +159,7 @@ function ReportGeneratorTableForm() {
           </div>
         </div>
 
-        <div className="grid grid--col-3-mid-sm">
+        <div className="grid grid--col-4-mid-sm-last-sm">
           <div className="inputBox__form">
             <select
               className="inputBox__form--input"
@@ -166,15 +187,16 @@ function ReportGeneratorTableForm() {
           <div className="inputBox__form">
             <select
               className="inputBox__form--input"
+              value={data.operator}
+              onChange={handleDataChange}
               id="operator"
-              defaultValue=""
               name="operator"
             >
               <option value="=">=</option>
-              <option value=">">&gt;</option>
-              <option value="<">&lt;</option>
-              <option value=">=">&#8805;</option>
-              <option value="<=">&#8804;</option>
+              <option value="<">&gt;</option>
+              <option value=">">&lt;</option>
+              <option value="<=">&#8805;</option>
+              <option value=">=">&#8804;</option>
               <option value="like">like</option>
             </select>
           </div>
@@ -202,11 +224,13 @@ function ReportGeneratorTableForm() {
                 className="inputBox__form--input"
                 defaultValue=""
                 id="selectCondition"
-                name="sleectCondition"
+                name="condition"
                 onChange={handleDataChange}
                 disabled={isLookupFetching || isLookupLoading}
               >
-                <option value="">انتخاب کنید</option>
+                <option value="" disabled>
+                  انتخاب کنید
+                </option>
                 {conditionCombo.map((item) => (
                   <option value={item.value} key={item.value}>
                     {item.text}
@@ -222,30 +246,46 @@ function ReportGeneratorTableForm() {
               </label>
             </div>
           )}
+
+          <div>
+            <Tooltip title="افزودن شرط">
+              <span>
+                <IconButton
+                  color="success"
+                  onClick={() =>
+                    addConditionHandler(
+                      data.columnid,
+                      data.operator,
+                      data.condition
+                    )
+                  }
+                  disabled={
+                    !data.TableName ||
+                    !data.operator ||
+                    !data.columnid ||
+                    !data.condition
+                  }
+                >
+                  <AddIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+
+            <Tooltip title="پاک کردن تمامی شروط">
+              <span>
+                <IconButton color="error">
+                  <RemoveIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </div>
+        </div>
+
+        <div className="condition__box col-span-3 row-span-3">
+          <h4 className="condition__box--title">شروط انتخاب شده:</h4>
+          <p>{conditionText}</p>
         </div>
       </form>
-
-      <div style={{ marginRight: "auto" }} className="flex-row">
-        <Button
-          dir="ltr"
-          endIcon={<AddIcon />}
-          variant="contained"
-          color="success"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>افزودن شرط</span>
-        </Button>
-
-        <Button
-          dir="ltr"
-          endIcon={<RemoveIcon />}
-          variant="contained"
-          color="error"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>پاک کردن شروط</span>
-        </Button>
-      </div>
     </section>
   );
 
