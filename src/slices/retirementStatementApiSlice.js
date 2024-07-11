@@ -7,9 +7,20 @@ import { apiSlice } from "./apiSlice";
 export const retirementStatementApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getListOfRetirementStatements: builder.query({
-      query: (personID) => ({
-        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GetListOfRetirementStatements?personID=${personID}`,
-      }),
+      query: ({ personID, requestID }) => {
+        let url = `${RETIREMENT_STATEMENT_URL_HTTPS}/GetListOfRetirementStatements`;
+
+        if (personID) {
+          url += `?personID=${personID}`;
+        }
+        if (requestID) {
+          url += `&requestID=${requestID}`;
+        }
+
+        return {
+          url,
+        };
+      },
     }),
     generateNewRetirementStatement: builder.mutation({
       query: (data) => ({
@@ -19,10 +30,20 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     removeRetirementStatement: builder.mutation({
-      query: ({ rsID }) => ({
-        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/RemoveRetirementStatement?rsID=${rsID}`,
-        method: "POST",
-      }),
+      query: ({ rsID, requestID }) => {
+        let url = `${RETIREMENT_STATEMENT_URL_HTTPS}/RemoveRetirementStatement`;
+
+        if (rsID) {
+          url += `?rsID=${rsID}`;
+        }
+        if (requestID) {
+          url += `&requestID=${requestID}`;
+        }
+        return {
+          method: "POST",
+          url,
+        };
+      },
     }),
     getRetirementStatement: builder.query({
       query: ({ RetirementStatementID }) => ({

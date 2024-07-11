@@ -20,7 +20,7 @@ import { findById } from "../helper";
 
 function ReportGeneratorTableForm() {
   // CONTROLLED STATES
-  const [disabaleAddButton, setDisabaleAddButton] = useState(false);
+  const [disabaleAddButton, setDisableAddButton] = useState(false);
   const [disableOperators, setDisableOperators] = useState(true);
 
   // MAIN STATES
@@ -80,7 +80,7 @@ function ReportGeneratorTableForm() {
     if (data.TableName) {
       fetchColsData(data.TableName);
     }
-  }, [data, fetchColsData]);
+  }, [data.TableName, fetchColsData]);
 
   // GET LOOKUP VALUE FUNCTION
   const fetchLookupValue = useCallback(
@@ -126,7 +126,7 @@ function ReportGeneratorTableForm() {
     }
 
     setConditionText(conditionText + " " + result);
-    setDisabaleAddButton(true);
+    setDisableAddButton(true);
     setDisableOperators(false);
   };
 
@@ -137,43 +137,13 @@ function ReportGeneratorTableForm() {
 
   const handleDeleteAllconditions = () => {
     setConditionText("");
-    setDisabaleAddButton(false);
+    setDisableAddButton(false);
     setDisableOperators(true);
   };
 
-  const handleAddAnd = () => {
-    setConditionText(conditionText + " " + "AND");
-    setDisabaleAddButton(false);
-    setDisableOperators(true);
-  };
-
-  const handleAddOr = () => {
-    setConditionText(conditionText + " " + "OR");
-    setDisabaleAddButton(false);
-    setDisableOperators(true);
-  };
-
-  const handleAddOpenParenthesis = () => {
-    setConditionText(conditionText + " " + "(");
-    setDisabaleAddButton(false);
-    setDisableOperators(true);
-  };
-
-  const handleOpenCloseParenthesis = () => {
-    setConditionText(conditionText + " " + ")");
-    setDisabaleAddButton(false);
-    setDisableOperators(true);
-  };
-
-  const handleAddNull = () => {
-    setConditionText(conditionText + " " + "NULL");
-    setDisabaleAddButton(false);
-    setDisableOperators(true);
-  };
-
-  const handleAddPercentage = () => {
-    setConditionText(conditionText + " " + "%");
-    setDisabaleAddButton(false);
+  const addConditionElement = (element) => {
+    setConditionText((prev) => `${prev} ${element}`);
+    setDisableAddButton(false);
     setDisableOperators(true);
   };
 
@@ -332,66 +302,19 @@ function ReportGeneratorTableForm() {
 
         <div className="grid grid--col-2-first-sm">
           <div className="grid grid--col-2">
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              disabled={disableOperators}
-              onClick={handleAddOr}
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>OR</span>
-            </Button>
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              disabled={disableOperators}
-              onClick={handleAddAnd}
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>AND</span>
-            </Button>
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              disabled={disableOperators}
-              onClick={handleAddOpenParenthesis}
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>)</span>
-            </Button>
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              disabled={disableOperators}
-              onClick={handleOpenCloseParenthesis}
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>(</span>
-            </Button>
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              disabled={disableOperators}
-              onClick={handleAddNull}
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>Null</span>
-            </Button>
-            <Button
-              dir="ltr"
-              variant="contained"
-              color="info"
-              disabled={disableOperators}
-              onClick={handleAddPercentage}
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>%</span>
-            </Button>
+            {["OR", "AND", "(", ")", "NULL", "%"].map((element) => (
+              <Button
+                key={element}
+                dir="ltr"
+                variant="contained"
+                color="info"
+                disabled={disableOperators}
+                onClick={() => addConditionElement(element)}
+                sx={{ fontFamily: "sahel" }}
+              >
+                <span>{element}</span>
+              </Button>
+            ))}
           </div>
           <div className="condition__box row-span-3">
             <h4 className="condition__box--title">شروط انتخاب شده:</h4>

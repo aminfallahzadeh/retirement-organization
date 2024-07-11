@@ -93,7 +93,7 @@ function RetiredStatementsGrid() {
     isFetching,
     error,
     refetch,
-  } = useGetListOfRetirementStatementsQuery(personID);
+  } = useGetListOfRetirementStatementsQuery({ personID });
 
   useEffect(() => {
     refetch();
