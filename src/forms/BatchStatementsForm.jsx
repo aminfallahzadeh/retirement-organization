@@ -17,15 +17,29 @@ import {
 function BatchStatementsForm() {
   const [isExcel, setIsExcel] = useState(false);
 
+  // MAIN STATE
+  const [data, setData] = useState({});
+
   // LOOK UP STATES
+  const [employmnetCombo, setEmploymnetCombo] = useState([]);
   const [genderCombo, setGenderCombo] = useState([]);
 
   // GET LOOKUP DATA
   const {
     data: genderComboItems,
     isSuccess: isGenderComboItemsSuccess,
+    isLoading: isGenderComboItemsLoading,
+    isFetching: isGenderComboItemsFetching,
     error: genderComboItemsError,
   } = useGetLookupDataQuery({ lookUpType: "Gender" });
+
+  const {
+    data: employmnetComboItems,
+    isSuccess: isEmploymnetComboItemsSuccess,
+    isLoading: isEmploymnetComboItemsLoading,
+    isFetching: isEmploymnetComboItemsFetching,
+    error: employmnetComboItemsError,
+  } = useGetLookupDataQuery({ lookUpType: "EmploymentType" });
 
   // FETCH LOOKUP DATA
   useEffect(() => {
@@ -35,12 +49,30 @@ function BatchStatementsForm() {
   }, [genderComboItems, isGenderComboItemsSuccess]);
 
   useEffect(() => {
+    if (isEmploymnetComboItemsSuccess) {
+      setEmploymnetCombo(employmnetComboItems.itemList);
+    }
+  }, [isEmploymnetComboItemsSuccess, employmnetComboItems]);
+
+  // HANLDE ERRORS
+  useEffect(() => {
     if (genderComboItemsError) {
       console.log(genderComboItemsError);
     }
   }, [genderComboItemsError]);
 
+  useEffect(() => {
+    if (employmnetComboItemsError) {
+      console.log(employmnetComboItemsError);
+    }
+  }, [employmnetComboItemsError]);
+
   // HANDLERS
+  const handleDataChange = (e) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+  };
+
   const handleIsExcelChange = () => {
     setIsExcel(!isExcel);
   };
@@ -59,10 +91,22 @@ function BatchStatementsForm() {
         {isExcel ? (
           <div style={{ marginRight: "auto" }} className="flex-row flex-center">
             <div>
+              <Button
+                dir="ltr"
+                variant="contained"
+                color="primary"
+                disabled
+                sx={{ fontFamily: "sahel" }}
+                endIcon={<EyeIcon />}
+              >
+                <span>مشاهده</span>
+              </Button>
+            </div>
+            <div>
               <LoadingButton
                 dir="ltr"
                 variant="contained"
-                color="success"
+                color="warning"
                 sx={{ fontFamily: "sahel" }}
                 endIcon={<UploadIcon />}
               >
@@ -74,7 +118,7 @@ function BatchStatementsForm() {
               <Button
                 dir="ltr"
                 variant="contained"
-                color="primary"
+                color="success"
                 sx={{ fontFamily: "sahel" }}
                 endIcon={<SaveIcon />}
               >
@@ -91,12 +135,24 @@ function BatchStatementsForm() {
             <div className="inputBox__form">
               <select
                 className="inputBox__form--input"
-                defaultValue=" "
                 required
+                value={data.employmentTypeID || " "}
+                name="employmentTypeID"
+                onChange={handleDataChange}
+                disabled={
+                  isEmploymnetComboItemsFetching ||
+                  isEmploymnetComboItemsLoading
+                }
               >
                 <option value=" " disabled>
                   انتخاب کنید
                 </option>
+
+                {employmnetCombo?.map((item) => (
+                  <option key={item.lookUpID} value={item.lookUpID}>
+                    {item.lookUpName}
+                  </option>
+                ))}
               </select>
 
               <label className="inputBox__form--label">
@@ -107,8 +163,13 @@ function BatchStatementsForm() {
             <div className="inputBox__form">
               <select
                 className="inputBox__form--input"
-                defaultValue=" "
+                value={data.genderID || " "}
                 required
+                onChange={handleDataChange}
+                name="genderID"
+                disabled={
+                  isGenderComboItemsFetching || isGenderComboItemsLoading
+                }
               >
                 <option value=" " disabled>
                   انتخاب کنید
@@ -163,7 +224,7 @@ function BatchStatementsForm() {
                 <Button
                   dir="ltr"
                   variant="contained"
-                  color="primary"
+                  color="success"
                   sx={{ fontFamily: "sahel" }}
                   endIcon={<SaveIcon />}
                 >
