@@ -42,6 +42,7 @@ import PersonnelInfoScreen from "./screens/PersonnelInfoScreen";
 import FractionScreen from "./screens/FractionScreen.jsx";
 import ReportGeneratorScreen from "./screens/ReportGeneratorScreen.jsx";
 import BaseInfoScreen from "./screens/BaseInfoScreen.jsx";
+import BaseInfoScreen2 from "./screens/BaseInfoScreen2.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -127,6 +128,11 @@ const router = createBrowserRouter(
         <Route
           path="/retirement-organization/base-info"
           element={<BaseInfoScreen />}
+        />
+
+        <Route
+          path="/retirement-organization/base-info-2"
+          element={<BaseInfoScreen2 />}
         />
       </Route>
       <Route path="*" element={<Error />} />

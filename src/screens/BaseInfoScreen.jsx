@@ -20,7 +20,7 @@ import BaseHeirConditionForm from "../forms/BaseInfoForms/BaseHeirConditionForm"
 import BaseFixedAmountForm from "../forms/BaseInfoForms/BaseFixedAmountForm";
 
 function BaseInfoScreen() {
-  return (
+  const content = (
     <section className="flex-col u-margin-bottom-xl">
       <div className="title-primary--container flex-row flex-center">
         <h4 className="title-primary">
@@ -226,6 +226,8 @@ function BaseInfoScreen() {
       </div>
     </section>
   );
+
+  return content;
 }
 
 export default BaseInfoScreen;

@@ -59,7 +59,8 @@ function Nav({ userName, userID }) {
   // ACCESS PERMISSIONS FROM REDUX STORE
   const { permissions } = useSelector((state) => state.userPermissionsData);
 
-  const isActivePath = (path) => location.pathname === path;
+  const baseURL = "/retirement-organization/";
+  const isActivePath = (path) => location.pathname === baseURL + path;
 
   const {
     data: permissionsList,
@@ -166,21 +167,13 @@ function Nav({ userName, userID }) {
             ) : (
               <ul className="nav__links--list">
                 <li
-                  className={
-                    isActivePath("/retirement-organization/cartable")
-                      ? "active"
-                      : ""
-                  }
+                  className={isActivePath("cartable") ? "active" : ""}
                   onClick={() => handlePanelToggle(null)}
                 >
                   <Link to={"/retirement-organization/cartable"}>کارتابل</Link>
                 </li>
                 <li
-                  className={
-                    isActivePath("/retirement-organization/create-request")
-                      ? "active"
-                      : ""
-                  }
+                  className={isActivePath("create-request") ? "active" : ""}
                   onClick={() => handlePanelToggle(null)}
                 >
                   <Link to={"/retirement-organization/create-request"}>
@@ -189,11 +182,7 @@ function Nav({ userName, userID }) {
                 </li>
                 <li
                   className={
-                    isActivePath(
-                      "/retirement-organization/personnel-statements"
-                    )
-                      ? "active"
-                      : ""
+                    isActivePath("personnel-statements") ? "active" : ""
                   }
                   onClick={() => handlePanelToggle(null)}
                 >
@@ -204,11 +193,7 @@ function Nav({ userName, userID }) {
 
                 {permissions && permissions.includes("Fractions") && (
                   <li
-                    className={
-                      isActivePath("/retirement-organization/fraction")
-                        ? "active"
-                        : ""
-                    }
+                    className={isActivePath("fraction") ? "active" : ""}
                     onClick={() => handlePanelToggle(null)}
                   >
                     <Link to={"/retirement-organization/fraction"}>کسورات</Link>
@@ -220,11 +205,7 @@ function Nav({ userName, userID }) {
                 </li>
                 <li
                   onClick={() => handlePanelToggle(null)}
-                  className={
-                    isActivePath("/retirement-organization/report-creator")
-                      ? "active"
-                      : ""
-                  }
+                  className={isActivePath("report-creator") ? "active" : ""}
                 >
                   <Link to={"/retirement-organization/report-creator"}>
                     گزارش ساز
@@ -333,29 +314,21 @@ function Nav({ userName, userID }) {
         {activePanel === "baseInfo" ? (
           <ul className="nav__panel--list">
             <li
-              className={
-                isActivePath("/retirement-organization/electronic-statement")
-                  ? "active"
-                  : ""
-              }
+              className={isActivePath("electronic-statement") ? "active" : ""}
             >
               <Link to="/retirement-organization/electronic-statement">
                 پرونده الکترونیک
               </Link>
             </li>
-            <li
-              className={
-                isActivePath("/retirement-organization/base-info")
-                  ? "active"
-                  : ""
-              }
-            >
+            <li className={isActivePath("base-info") ? "active" : ""}>
               <Link to="/retirement-organization/base-info">
                 اطلاعات پایه ۱
               </Link>
             </li>
-            <li>
-              <Link to="/">اطلاعات پایه ۲</Link>
+            <li className={isActivePath("base-info-2") ? "active" : ""}>
+              <Link to="/retirement-organization/base-info-2">
+                اطلاعات پایه ۲
+              </Link>
             </li>
           </ul>
         ) : activePanel === "systemManagement" ? (
@@ -363,8 +336,7 @@ function Nav({ userName, userID }) {
             {permissions && permissions.includes("Groups") && (
               <li
                 className={
-                  isActivePath("/retirement-organization/groups") ||
-                  isActivePath("/retirement-organization/create-group")
+                  isActivePath("groups") || isActivePath("create-group")
                     ? "active"
                     : ""
                 }
@@ -376,8 +348,7 @@ function Nav({ userName, userID }) {
             {permissions && permissions.includes("Users") && (
               <li
                 className={
-                  isActivePath("/retirement-organization/users") ||
-                  isActivePath("/retirement-organization/create-user")
+                  isActivePath("users") || isActivePath("create-user")
                     ? "active"
                     : ""
                 }
