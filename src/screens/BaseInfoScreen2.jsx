@@ -32,6 +32,7 @@ function BaseInfoScreen2() {
           isRtl={true}
           isClearable={true}
           isSearchable={true}
+          noOptionsMessage={() => "موردی یافت نشد!"}
           placeholder="نوع اطلاعات..."
           styles={{
             control: (base) => ({

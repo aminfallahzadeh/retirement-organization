@@ -86,7 +86,7 @@
 	&--input {
 		width: 100%;
 		height: 100%;
-		font-size: 16px;
+		font-size: 13px;
 		background: transparent;
 		color: var(--color-input-primary);
 		padding-inline: 20px 50px;
@@ -191,4 +191,8 @@
 		left: 3.3rem;
 		z-index: 9;
 	}
+}
+
+.react-select-placeholder span {
+	color: $color-accent-red !important;
 }

@@ -14,6 +14,13 @@ import {
   UploadRounded as UploadIcon,
 } from "@mui/icons-material";
 
+// librari imports
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+// utils
+import { styles } from "../utils/reactSelectStyles";
+
 function BatchStatementsForm() {
   const [isExcel, setIsExcel] = useState(false);
 
@@ -23,6 +30,8 @@ function BatchStatementsForm() {
   // LOOK UP STATES
   const [employmnetCombo, setEmploymnetCombo] = useState([]);
   const [genderCombo, setGenderCombo] = useState([]);
+
+  const animatedComponents = makeAnimated();
 
   // GET LOOKUP DATA
   const {
@@ -40,6 +49,11 @@ function BatchStatementsForm() {
     isFetching: isEmploymnetComboItemsFetching,
     error: employmnetComboItemsError,
   } = useGetLookupDataQuery({ lookUpType: "EmploymentType" });
+
+  // SELECT OPTIONS
+  const employmentOptions = employmnetCombo.map((item) => {
+    return { value: item.lookUpID, label: item.lookUpName };
+  });
 
   // FETCH LOOKUP DATA
   useEffect(() => {
@@ -132,7 +146,24 @@ function BatchStatementsForm() {
 
         {!isExcel && (
           <>
-            <div className="inputBox__form">
+            <Select
+              closeMenuOnSelect={false}
+              components={animatedComponents}
+              options={employmentOptions}
+              placeholder={
+                <div className="react-select-placeholder">
+                  <span>*</span> نوع سازمان
+                </div>
+              }
+              noOptionsMessage={() => "موردی یافت نشد!"}
+              isMulti
+              isLoading={
+                isEmploymnetComboItemsFetching || isEmploymnetComboItemsLoading
+              }
+              loadingMessage={() => "در حال بارگذاری ..."}
+              styles={styles}
+            />
+            {/* <div className="inputBox__form">
               <select
                 className="inputBox__form--input"
                 required
@@ -158,7 +189,7 @@ function BatchStatementsForm() {
               <label className="inputBox__form--label">
                 <span>*</span> نوع سازمان
               </label>
-            </div>
+            </div> */}
 
             <div className="inputBox__form">
               <select
