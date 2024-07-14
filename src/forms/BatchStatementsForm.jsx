@@ -1,5 +1,5 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 // redux imports
 import { useDispatch } from "react-redux";
@@ -8,12 +8,14 @@ import {
   useGetLookupDataQuery,
   useGetPensionaryStatusQuery,
 } from "../slices/sharedApiSlice";
-import { useGetStatementListFromFiltersMutation } from "../slices/retirementStatementApiSlice";
+import {
+  useGetStatementListFromFiltersMutation,
+  useGetStatementListFromExcelMutation,
+} from "../slices/retirementStatementApiSlice";
 
 // mui imports
-import { Switch } from "@mui/material";
+import { Switch, LinearProgress, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Button } from "@mui/material";
 import {
   VisibilityRounded as EyeIcon,
   UploadRounded as UploadIcon,
@@ -21,20 +23,29 @@ import {
 
 // components
 import FilteredPersonsGrid from "../grids/FilteredPersonsGrid";
+import StatementItemsForm from "./StatementItemsForm";
 
 // library imports
 import { toast } from "react-toastify";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import * as XLSX from "xlsx";
 
 // utils
 import { styles, settings } from "../utils/reactSelectStyles";
 
 function BatchStatementsForm() {
+  // EXCEL FILE UPLOAD REF
+  const excelFileUploadRef = useRef(null);
+
+  // FILTER STATES
   const [isExcel, setIsExcel] = useState(false);
+  const [isExcelFileUploaded, setIsExcelFileUploaded] = useState(false);
 
   // MAIN STATE
   const [data, setData] = useState({});
+  const [nationalCodesFromExcel, setNationalCodesFromExcel] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // LOOK UP STATES
   const [employmnetCombo, setEmploymnetCombo] = useState([]);
@@ -49,6 +60,37 @@ function BatchStatementsForm() {
     getStatementListFromFilters,
     { isLoading: isStatementListLoading, isFetching: isStatementListFetching },
   ] = useGetStatementListFromFiltersMutation();
+
+  const [
+    getListFromExcel,
+    {
+      isLoading: isGetListFromExcelLoading,
+      isFetching: isGetListFromExcelFetching,
+    },
+  ] = useGetStatementListFromExcelMutation();
+
+  // FETCH WOTH EXCEL DATA FUNCTION
+  const fetchWithExcel = useCallback(
+    async (data) => {
+      try {
+        const res = await getListFromExcel(data).unwrap();
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
+    },
+    [getListFromExcel]
+  );
+
+  // SEND ESCLE REQUEST IF ESCLE UPLOADED
+  useEffect(() => {
+    if (isExcelFileUploaded) {
+      fetchWithExcel(nationalCodesFromExcel);
+    }
+  }, [isExcelFileUploaded, nationalCodesFromExcel, fetchWithExcel]);
 
   // GET LOOKUP DATA
   const {
@@ -130,6 +172,50 @@ function BatchStatementsForm() {
   }, [statusComboItemsError]);
 
   // HANDLERS
+  const handleExcelFileUpload = () => {
+    excelFileUploadRef.current.click();
+  };
+
+  const handleExcelFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+
+      // Event handler for progress
+      reader.onprogress = (event) => {
+        const progress = Math.round((event.loaded / event.total) * 100);
+        setUploadProgress(progress);
+      };
+
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        // FIND NATIONAL CODES FROM ALL CELLS
+        const nationalCodes = [];
+        json.forEach((row) => {
+          row.forEach((cell) => {
+            if (cell !== null && cell !== undefined && cell !== "") {
+              nationalCodes.push(cell.toString());
+            }
+          });
+        });
+        setNationalCodesFromExcel(nationalCodes);
+      };
+
+      reader.onloadend = () => {
+        setTimeout(() => {
+          setUploadProgress(0);
+        }, 2000);
+      };
+      reader.readAsArrayBuffer(file);
+      setIsExcelFileUploaded(true);
+    }
+  };
+
   const handleDataChange = (selectedOptions, actionMeta) => {
     const name = actionMeta.name;
     const value = selectedOptions
@@ -146,7 +232,6 @@ function BatchStatementsForm() {
   const handleFilterListByValues = async () => {
     try {
       const filterRes = await getStatementListFromFilters(data).unwrap();
-
       const mappedData = filterRes.map((item, index) => ({
         id: item.id,
         selectedPersonRowNum: index + 1,
@@ -172,6 +257,13 @@ function BatchStatementsForm() {
 
   const content = (
     <>
+      <input
+        type="file"
+        ref={excelFileUploadRef}
+        style={{ display: "none" }}
+        onChange={handleExcelFileChange}
+      />
+
       <section className="flex-col formContainer">
         <form className="grid grid--col-4">
           <div className="checkboxContainer">
@@ -186,28 +278,42 @@ function BatchStatementsForm() {
               style={{ marginRight: "auto" }}
               className="flex-row flex-center col-span-2"
             >
-              <div>
-                <Button
-                  dir="ltr"
-                  variant="contained"
-                  color="primary"
-                  disabled
-                  sx={{ fontFamily: "sahel" }}
-                  endIcon={<EyeIcon />}
-                >
-                  <span>مشاهده</span>
-                </Button>
-              </div>
-              <div>
+              <div style={{ position: "relative" }}>
                 <LoadingButton
                   dir="ltr"
                   variant="contained"
                   color="warning"
+                  disabled={uploadProgress > 0}
                   sx={{ fontFamily: "sahel" }}
                   endIcon={<UploadIcon />}
+                  loading={
+                    isGetListFromExcelFetching || isGetListFromExcelLoading
+                  }
+                  onClick={handleExcelFileUpload}
                 >
                   <span>بارگزاری اکسل</span>
                 </LoadingButton>
+
+                <Box
+                  sx={{
+                    position: "absolute",
+                    left: "50%",
+                    bottom: "-40px",
+                    zIndex: 15,
+                    width: "90%",
+                    transform: "translateX(-50%)",
+                    visibility: uploadProgress > 0 ? "visible" : "hidden",
+                  }}
+                >
+                  <LinearProgress
+                    variant="determinate"
+                    value={uploadProgress}
+                    color="warning"
+                  />
+                  <span style={{ fontFamily: "IranYekan", fontSize: "12px" }}>
+                    {uploadProgress}%
+                  </span>
+                </Box>
               </div>
             </div>
           ) : (
@@ -216,6 +322,7 @@ function BatchStatementsForm() {
 
           {!isExcel && (
             <>
+              <div>&nbsp;</div>
               <Select
                 closeMenuOnSelect={false}
                 components={animatedComponents}
@@ -310,6 +417,8 @@ function BatchStatementsForm() {
       </section>
 
       <FilteredPersonsGrid />
+
+      <StatementItemsForm />
     </>
   );
   return content;

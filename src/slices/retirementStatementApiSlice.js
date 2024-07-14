@@ -58,6 +58,14 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+
+    getStatementListFromExcel: builder.mutation({
+      query: (data) => ({
+        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GetStatementListFromExcel`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -68,4 +76,5 @@ export const {
   useGetRetirementStatementQuery,
   useLazyGetRetirementStatementQuery,
   useGetStatementListFromFiltersMutation,
+  useGetStatementListFromExcelMutation,
 } = retirementStatementApiSlice;
