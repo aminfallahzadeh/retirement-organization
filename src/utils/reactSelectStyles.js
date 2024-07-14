@@ -1,10 +1,5 @@
 // STYLES
 export const styles = {
-  // indicatorsContainer: (base) => ({
-  //   ...base,
-  //   maxWidth: "100%",
-  //   maxHeight: "100%",
-  // }),
   container: (base) => ({
     ...base,
     position: "relative",
@@ -18,11 +13,13 @@ export const styles = {
     maxWidth: "100%",
     maxHeight: "100%",
     overflow: "auto",
+    textOverflow: "ellipsis",
     position: "relative",
   }),
   menu: (base) => ({
     ...base,
     fontFamily: "IranYekan",
+    zIndex: "5",
   }),
   option: (base) => ({
     ...base,

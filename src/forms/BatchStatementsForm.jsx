@@ -2,11 +2,12 @@
 import { useState, useEffect } from "react";
 
 // redux imports
+import { useDispatch } from "react-redux";
+import { setFilteredPersonsTableData } from "../slices/batchStatementsDataSlice";
 import {
   useGetLookupDataQuery,
   useGetPensionaryStatusQuery,
 } from "../slices/sharedApiSlice";
-
 import { useGetStatementListFromFiltersMutation } from "../slices/retirementStatementApiSlice";
 
 // mui imports
@@ -18,6 +19,9 @@ import {
   VisibilityRounded as EyeIcon,
   UploadRounded as UploadIcon,
 } from "@mui/icons-material";
+
+// components
+import FilteredPersonsGrid from "../grids/FilteredPersonsGrid";
 
 // library imports
 import { toast } from "react-toastify";
@@ -39,6 +43,7 @@ function BatchStatementsForm() {
   const [statusCombo, setStatusCombo] = useState([]);
 
   const animatedComponents = makeAnimated();
+  const dispatch = useDispatch();
 
   // ACCESS THE FILTER QUERY
   const [
@@ -141,7 +146,15 @@ function BatchStatementsForm() {
   const handleFilterListByValues = async () => {
     try {
       const filterRes = await getStatementListFromFilters(data).unwrap();
-      console.log(filterRes);
+
+      const mappedData = filterRes.map((item, index) => ({
+        id: item.id,
+        selectedPersonRowNum: index + 1,
+        selectedPersonNationalCode: item.nationalCode,
+        selectedPersonName: item.firstName,
+        selectedPersonLastName: item.lastName,
+      }));
+      dispatch(setFilteredPersonsTableData(mappedData));
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -151,151 +164,161 @@ function BatchStatementsForm() {
   };
 
   const content = (
-    <section className="flex-col formContainer">
-      <form className="grid grid--col-4">
-        <div className="checkboxContainer">
-          <span className="checkboxContainer__label">فایل اکسل</span>
+    <>
+      <section className="flex-col formContainer">
+        <form className="grid grid--col-4">
+          <div className="checkboxContainer">
+            <span className="checkboxContainer__label">فایل اکسل</span>
 
-          <Switch checked={isExcel} onChange={handleIsExcelChange} />
-        </div>
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
-
-        {isExcel ? (
-          <div style={{ marginRight: "auto" }} className="flex-row flex-center">
-            <div>
-              <Button
-                dir="ltr"
-                variant="contained"
-                color="primary"
-                disabled
-                sx={{ fontFamily: "sahel" }}
-                endIcon={<EyeIcon />}
-              >
-                <span>مشاهده</span>
-              </Button>
-            </div>
-            <div>
-              <LoadingButton
-                dir="ltr"
-                variant="contained"
-                color="warning"
-                sx={{ fontFamily: "sahel" }}
-                endIcon={<UploadIcon />}
-              >
-                <span>بارگزاری اکسل</span>
-              </LoadingButton>
-            </div>
-
-            <div>
-              <Button
-                dir="ltr"
-                variant="contained"
-                color="success"
-                sx={{ fontFamily: "sahel" }}
-                endIcon={<SaveIcon />}
-              >
-                <span>ذخیره</span>
-              </Button>
-            </div>
+            <Switch checked={isExcel} onChange={handleIsExcelChange} />
           </div>
-        ) : (
           <div>&nbsp;</div>
-        )}
+          <div>&nbsp;</div>
 
-        {!isExcel && (
-          <>
-            <Select
-              closeMenuOnSelect={false}
-              components={animatedComponents}
-              onChange={handleDataChange}
-              options={employmentOptions}
-              defaultValue={[]}
-              name="employmentTypeIDs"
-              placeholder={
-                <div className="react-select-placeholder">
-                  <span>*</span> نوع سازمان
-                </div>
-              }
-              noOptionsMessage={settings.noOptionsMessage}
-              loadingMessage={settings.loadingMessage}
-              isMulti
-              isLoading={
-                isEmploymnetComboItemsFetching || isEmploymnetComboItemsLoading
-              }
-              styles={styles}
-            />
-
-            <Select
-              closeMenuOnSelect={false}
-              components={animatedComponents}
-              onChange={handleDataChange}
-              defaultValue={[]}
-              options={genderOptions}
-              name="genderIDs"
-              placeholder={
-                <div className="react-select-placeholder">
-                  <span>*</span> جنسیت
-                </div>
-              }
-              noOptionsMessage={settings.noOptionsMessage}
-              loadingMessage={settings.loadingMessage}
-              isMulti
-              isLoading={
-                isGenderComboItemsFetching || isGenderComboItemsLoading
-              }
-              styles={styles}
-            />
-
-            <Select
-              closeMenuOnSelect={false}
-              components={animatedComponents}
-              onChange={handleDataChange}
-              options={statusOptions}
-              defaultValue={[]}
-              name="pensionaryStatusIDs"
-              placeholder={
-                <div className="react-select-placeholder">
-                  <span>*</span> وضعیت
-                </div>
-              }
-              noOptionsMessage={settings.noOptionsMessage}
-              loadingMessage={settings.loadingMessage}
-              isMulti
-              isLoading={
-                isStatusComboItemsFetching || isStatusComboItemsLoading
-              }
-              styles={styles}
-            />
-
+          {isExcel ? (
             <div
               style={{ marginRight: "auto" }}
               className="flex-row flex-center"
             >
-              <LoadingButton
-                dir="ltr"
-                variant="contained"
-                disabled={
-                  !data.employmentTypeIDs ||
-                  !data.genderIDs ||
-                  !data.pensionaryStatusIDs ||
-                  data.employmentTypeIDs.length === 0 ||
-                  data.genderIDs.length === 0 ||
-                  data.pensionaryStatusIDs.length === 0
-                }
-                loading={isStatementListFetching || isStatementListLoading}
-                onClick={handleFilterListByValues}
-                color="primary"
-                sx={{ fontFamily: "sahel" }}
-                endIcon={<EyeIcon />}
-              >
-                <span>مشاهده</span>
-              </LoadingButton>
+              <div>
+                <Button
+                  dir="ltr"
+                  variant="contained"
+                  color="primary"
+                  disabled
+                  sx={{ fontFamily: "sahel" }}
+                  endIcon={<EyeIcon />}
+                >
+                  <span>مشاهده</span>
+                </Button>
+              </div>
+              <div>
+                <LoadingButton
+                  dir="ltr"
+                  variant="contained"
+                  color="warning"
+                  sx={{ fontFamily: "sahel" }}
+                  endIcon={<UploadIcon />}
+                >
+                  <span>بارگزاری اکسل</span>
+                </LoadingButton>
+              </div>
+
+              <div>
+                <Button
+                  dir="ltr"
+                  variant="contained"
+                  color="success"
+                  sx={{ fontFamily: "sahel" }}
+                  endIcon={<SaveIcon />}
+                >
+                  <span>ذخیره</span>
+                </Button>
+              </div>
             </div>
-          </>
-        )}
-      </form>
-    </section>
+          ) : (
+            <div>&nbsp;</div>
+          )}
+
+          {!isExcel && (
+            <>
+              <Select
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                onChange={handleDataChange}
+                options={employmentOptions}
+                defaultValue={[]}
+                name="employmentTypeIDs"
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> نوع سازمان
+                  </div>
+                }
+                noOptionsMessage={settings.noOptionsMessage}
+                loadingMessage={settings.loadingMessage}
+                isMulti
+                isLoading={
+                  isEmploymnetComboItemsFetching ||
+                  isEmploymnetComboItemsLoading
+                }
+                styles={styles}
+              />
+
+              <Select
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                onChange={handleDataChange}
+                defaultValue={[]}
+                options={genderOptions}
+                name="genderIDs"
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> جنسیت
+                  </div>
+                }
+                noOptionsMessage={settings.noOptionsMessage}
+                loadingMessage={settings.loadingMessage}
+                isMulti
+                isLoading={
+                  isGenderComboItemsFetching || isGenderComboItemsLoading
+                }
+                styles={styles}
+              />
+
+              <Select
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                onChange={handleDataChange}
+                options={statusOptions}
+                defaultValue={[]}
+                name="pensionaryStatusIDs"
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> وضعیت
+                  </div>
+                }
+                noOptionsMessage={settings.noOptionsMessage}
+                loadingMessage={settings.loadingMessage}
+                isMulti
+                isLoading={
+                  isStatusComboItemsFetching || isStatusComboItemsLoading
+                }
+                styles={styles}
+              />
+
+              <div
+                style={{ marginRight: "auto" }}
+                className="flex-row flex-center"
+              >
+                <LoadingButton
+                  dir="ltr"
+                  variant="contained"
+                  disabled={
+                    !data.employmentTypeIDs ||
+                    !data.genderIDs ||
+                    !data.pensionaryStatusIDs ||
+                    data.employmentTypeIDs.length === 0 ||
+                    data.genderIDs.length === 0 ||
+                    data.pensionaryStatusIDs.length === 0
+                  }
+                  loading={isStatementListFetching || isStatementListLoading}
+                  onClick={handleFilterListByValues}
+                  color="primary"
+                  sx={{ fontFamily: "sahel" }}
+                  endIcon={<EyeIcon />}
+                >
+                  <span>مشاهده</span>
+                </LoadingButton>
+              </div>
+            </>
+          )}
+        </form>
+      </section>
+
+      <section>
+        <FilteredPersonsGrid />
+      </section>
+    </>
   );
   return content;
 }
