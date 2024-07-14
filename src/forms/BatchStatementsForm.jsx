@@ -150,10 +150,6 @@ function BatchStatementsForm() {
     }
   };
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   const content = (
     <section className="flex-col formContainer">
       <form className="grid grid--col-4">
