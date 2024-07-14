@@ -28,9 +28,32 @@ export const sharedApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getPensionaryStatus: builder.query({
-      query: ({ pensionaryStatusCategory, pensionaryStatusIsDead }) => ({
-        url: `${SHARED_URL_HTTPS}/GetPensionaryStatus?pensionaryStatusCategory=${pensionaryStatusCategory}&pensionaryStatusIsDead=${pensionaryStatusIsDead}`,
-      }),
+      query: ({ pensionaryStatusCategory, pensionaryStatusIsDead }) => {
+        let url = `${SHARED_URL_HTTPS}/GetPensionaryStatus`;
+
+        const queryParams = [];
+
+        if (pensionaryStatusCategory) {
+          queryParams.push(
+            `pensionaryStatusCategory=${pensionaryStatusCategory}`
+          );
+        }
+
+        if (
+          pensionaryStatusIsDead !== undefined &&
+          pensionaryStatusIsDead !== null
+        ) {
+          queryParams.push(`pensionaryStatusIsDead=${pensionaryStatusIsDead}`);
+        }
+
+        if (queryParams.length > 0) {
+          url += `?${queryParams.join("&")}`;
+        }
+
+        return {
+          url,
+        };
+      },
     }),
 
     getRetirementStatementType: builder.query({

@@ -50,6 +50,14 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
         url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GetRetirementStatement?RetirementStatementID=${RetirementStatementID}`,
       }),
     }),
+
+    getStatementListFromFilters: builder.mutation({
+      query: (data) => ({
+        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GetStatementListFromFilters`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -59,4 +67,5 @@ export const {
   useRemoveRetirementStatementMutation,
   useGetRetirementStatementQuery,
   useLazyGetRetirementStatementQuery,
+  useGetStatementListFromFiltersMutation,
 } = retirementStatementApiSlice;

@@ -1,3 +1,4 @@
+// STYLES
 export const styles = {
   control: (base) => ({
     ...base,
@@ -14,4 +15,10 @@ export const styles = {
     ...base,
     cursor: "pointer",
   }),
+};
+
+// COMON SETTINGS
+export const settings = {
+  noOptionsMessage: () => "موردی یافت نشد!",
+  loadingMessage: () => "در حال بارگذاری ...",
 };
