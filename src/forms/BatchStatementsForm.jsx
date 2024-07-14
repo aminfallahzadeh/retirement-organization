@@ -15,7 +15,6 @@ import { Switch } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Button } from "@mui/material";
 import {
-  Save as SaveIcon,
   VisibilityRounded as EyeIcon,
   UploadRounded as UploadIcon,
 } from "@mui/icons-material";
@@ -141,6 +140,7 @@ function BatchStatementsForm() {
 
   const handleIsExcelChange = () => {
     setIsExcel(!isExcel);
+    dispatch(setFilteredPersonsTableData([]));
   };
 
   const handleFilterListByValues = async () => {
@@ -163,6 +163,13 @@ function BatchStatementsForm() {
     }
   };
 
+  // CLEARE TABLE DATA ON UNMOUNT
+  useEffect(() => {
+    return () => {
+      dispatch(setFilteredPersonsTableData([]));
+    };
+  }, [dispatch]);
+
   const content = (
     <>
       <section className="flex-col formContainer">
@@ -173,12 +180,11 @@ function BatchStatementsForm() {
             <Switch checked={isExcel} onChange={handleIsExcelChange} />
           </div>
           <div>&nbsp;</div>
-          <div>&nbsp;</div>
 
           {isExcel ? (
             <div
               style={{ marginRight: "auto" }}
-              className="flex-row flex-center"
+              className="flex-row flex-center col-span-2"
             >
               <div>
                 <Button
@@ -202,18 +208,6 @@ function BatchStatementsForm() {
                 >
                   <span>بارگزاری اکسل</span>
                 </LoadingButton>
-              </div>
-
-              <div>
-                <Button
-                  dir="ltr"
-                  variant="contained"
-                  color="success"
-                  sx={{ fontFamily: "sahel" }}
-                  endIcon={<SaveIcon />}
-                >
-                  <span>ذخیره</span>
-                </Button>
               </div>
             </div>
           ) : (
@@ -315,9 +309,7 @@ function BatchStatementsForm() {
         </form>
       </section>
 
-      <section>
-        <FilteredPersonsGrid />
-      </section>
+      <FilteredPersonsGrid />
     </>
   );
   return content;

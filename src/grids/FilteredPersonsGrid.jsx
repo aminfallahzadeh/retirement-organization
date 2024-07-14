@@ -37,7 +37,7 @@ function FilteredPersonsGrid() {
         header: "ردیف",
         enableSorting: false,
         enableColumnActions: false,
-        szie: 20,
+        size: 10,
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
@@ -45,8 +45,6 @@ function FilteredPersonsGrid() {
       {
         accessorKey: "selectedPersonNationalCode",
         header: "کد ملی",
-        szie: 20,
-
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
@@ -54,12 +52,10 @@ function FilteredPersonsGrid() {
       {
         accessorKey: "selectedPersonName",
         header: "نام",
-        szie: 20,
       },
       {
         accessorKey: "selectedPersonLastName",
         header: "نام خانوادگی",
-        szie: 20,
       },
     ],
     []
@@ -69,6 +65,10 @@ function FilteredPersonsGrid() {
     ...defaultTableOptions,
     columns,
     data: filteredPersonsTableData,
+    defaultColumn: {
+      minSize: 5,
+      maxSize: 1000,
+    },
     muiPaginationProps: {
       size: "small",
       shape: "rounded",

@@ -13,7 +13,7 @@ export const defaultTableOptions = {
   muiTableBodyCellProps: {
     align: "center",
     sx: {
-      fontFamily: "Vazir",
+      fontFamily: "IranYekan",
       borderRight: "1px solid #cfcfcf",
     },
   },
