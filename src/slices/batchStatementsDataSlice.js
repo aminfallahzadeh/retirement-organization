@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   filteredPersonsTableData: [],
+  isDataRecieved: false,
 };
 
 const batchStatementsDataSlice = createSlice({
@@ -14,7 +15,6 @@ const batchStatementsDataSlice = createSlice({
   },
 });
 
-export const { setFilteredPersonsTableData, setFilteredByExcelTableData } =
-  batchStatementsDataSlice.actions;
+export const { setFilteredPersonsTableData } = batchStatementsDataSlice.actions;
 
 export default batchStatementsDataSlice.reducer;

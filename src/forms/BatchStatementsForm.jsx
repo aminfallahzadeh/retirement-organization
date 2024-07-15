@@ -44,6 +44,7 @@ function BatchStatementsForm() {
   // FILTER STATES
   const [isExcel, setIsExcel] = useState(false);
   const [isExcelFileUploaded, setIsExcelFileUploaded] = useState(false);
+  const [isDataRecived, setIsDataRecived] = useState(false);
 
   // MAIN STATE
   const [data, setData] = useState({});
@@ -85,6 +86,8 @@ function BatchStatementsForm() {
           selectedPersonLastName: item.lastName || "-",
         }));
         dispatch(setFilteredPersonsTableData(mappedData));
+        setIsExcelFileUploaded(true);
+        setIsDataRecived(true);
       } catch (err) {
         console.log(err);
         toast.error(err?.data?.message || err.error, {
@@ -237,19 +240,22 @@ function BatchStatementsForm() {
   const handleIsExcelChange = () => {
     setIsExcel(!isExcel);
     dispatch(setFilteredPersonsTableData([]));
+    setIsExcelFileUploaded(false);
+    setIsDataRecived(false);
   };
 
   const handleFilterListByValues = async () => {
     try {
       const filterRes = await getStatementListFromFilters(data).unwrap();
       const mappedData = filterRes.map((item, index) => ({
-        id: item.id,
+        id: item.personID,
         selectedPersonRowNum: index + 1 || "-",
         selectedPersonNationalCode: item.nationalCode || "-",
         selectedPersonName: item.firstName || "-",
         selectedPersonLastName: item.lastName || "-",
       }));
       dispatch(setFilteredPersonsTableData(mappedData));
+      setIsDataRecived(true);
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -262,6 +268,8 @@ function BatchStatementsForm() {
   useEffect(() => {
     return () => {
       dispatch(setFilteredPersonsTableData([]));
+      setIsExcelFileUploaded(false);
+      setIsDataRecived(false);
     };
   }, [dispatch]);
 
@@ -430,7 +438,7 @@ function BatchStatementsForm() {
 
       <FilteredPersonsGrid />
 
-      <StatementItemsForm />
+      {isDataRecived && <StatementItemsForm />}
     </>
   );
   return content;
