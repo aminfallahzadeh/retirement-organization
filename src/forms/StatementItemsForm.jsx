@@ -18,12 +18,15 @@ import { InputDatePicker } from "jalaali-react-date-picker";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
+// components
+import GroupFormulaForm from "./groupFormulaForm.jsx";
 // utils
 import { selectStyles, selectSettings } from "../utils/reactSelect";
 
 function StatementItemsForm() {
   // MAIN STATES
   const [data, setData] = useState({});
+  const [formulaGroups, setFormulaGroups] = useState(null);
 
   // LOOK UP STATES
   const [statementTypes, setStatementTypes] = useState([]);
@@ -50,7 +53,7 @@ function StatementItemsForm() {
         const res = await getFormulaGroups({
           retirementStatementItemID,
         }).unwrap();
-        console.log(res);
+        setFormulaGroups(res);
       } catch (err) {
         console.log(err);
         toast.error(err?.data?.message || err.error, {
@@ -147,85 +150,93 @@ function StatementItemsForm() {
   }, [data]);
 
   const content = (
-    <section className="flex-col formContainer">
-      <form method="POST" className="grid grid--col-4" noValidate>
-        <div className="inputBox__form">
-          <InputDatePicker
-            defaultValue={null}
-            value={selectedRunDate}
-            onChange={handleRunDateChange}
-            onOpenChange={hadnleRunDateOpenChange}
-            format={"jYYYY/jMM/jDD"}
-            suffixIcon={<CalenderIcon color="action" />}
-            open={isRunDateCalenderOpen}
-            style={{
-              border: "none",
-              cursor: "pointer",
-            }}
-            wrapperStyle={{
-              border: "1px solid var(--color-input-border)",
-              width: "100%",
-              height: "100%",
-              paddingLeft: "20px",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-          />
-          <div className="inputBox__form--readOnly-label">
-            <span>*</span> تاریخ اجرا
+    <>
+      <section className="flex-col formContainer">
+        <form method="POST" className="grid grid--col-4" noValidate>
+          <div className="inputBox__form">
+            <InputDatePicker
+              defaultValue={null}
+              value={selectedRunDate}
+              onChange={handleRunDateChange}
+              onOpenChange={hadnleRunDateOpenChange}
+              format={"jYYYY/jMM/jDD"}
+              suffixIcon={<CalenderIcon color="action" />}
+              open={isRunDateCalenderOpen}
+              style={{
+                border: "none",
+                cursor: "pointer",
+              }}
+              wrapperStyle={{
+                border: "1px solid var(--color-input-border)",
+                width: "100%",
+                height: "100%",
+                paddingLeft: "20px",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            />
+            <div className="inputBox__form--readOnly-label">
+              <span>*</span> تاریخ اجرا
+            </div>
           </div>
-        </div>
 
-        <Select
-          closeMenuOnSelect={true}
-          components={animatedComponents}
-          options={statementTypeOptions}
-          isLoading={statementTypesIsLoading || statementTypesIsFetching}
-          placeholder={<div className="react-select-placeholder">نوع حکم</div>}
-          noOptionsMessage={selectSettings.noOptionsMessage}
-          loadingMessage={selectSettings.loadingMessage}
-          styles={selectStyles}
-        />
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={statementTypeOptions}
+            isClearable={true}
+            isLoading={statementTypesIsLoading || statementTypesIsFetching}
+            placeholder={
+              <div className="react-select-placeholder">نوع حکم</div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+          />
 
-        <div className="inputBox__form col-span-2 row-span-4">
-          <textarea
-            type="text"
-            className="inputBox__form--input"
-            name="retirementStatementDesc"
-            required
-            id="retirementStatementDesc"
-          ></textarea>
-          <label
-            className="inputBox__form--label"
-            htmlFor="retirementStatementDesc"
-          >
-            شرح حکم
-          </label>
-        </div>
+          <div className="inputBox__form col-span-2 row-span-2">
+            <textarea
+              type="text"
+              className="inputBox__form--input"
+              name="retirementStatementDesc"
+              required
+              id="retirementStatementDesc"
+            ></textarea>
+            <label
+              className="inputBox__form--label"
+              htmlFor="retirementStatementDesc"
+            >
+              شرح حکم
+            </label>
+          </div>
 
-        <Select
-          closeMenuOnSelect={true}
-          components={animatedComponents}
-          options={formulaGroupSettingOptions}
-          onChange={handleStatementItemChange}
-          name="retirementStatementItemID"
-          placeholder={
-            <div className="react-select-placeholder">تنظیمات آیتم های حکم</div>
-          }
-          noOptionsMessage={selectSettings.noOptionsMessage}
-          loadingMessage={selectSettings.loadingMessage}
-          styles={selectStyles}
-          isLoading={
-            formulaGroupSettingIsFetching || formulaGroupSettingIsLoading
-          }
-        />
-        <div>&nbsp;</div>
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={formulaGroupSettingOptions}
+            onChange={handleStatementItemChange}
+            name="retirementStatementItemID"
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">
+                تنظیمات آیتم های حکم
+              </div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={
+              formulaGroupSettingIsFetching || formulaGroupSettingIsLoading
+            }
+          />
+          <div>&nbsp;</div>
+        </form>
+      </section>
 
-        <div>
-          <h2> درصد موظف</h2>
-        </div>
-      </form>
-    </section>
+      {data.retirementStatementItemID && formulaGroups && (
+        <GroupFormulaForm formulaGroups={formulaGroups} />
+      )}
+    </>
   );
 
   return content;
