@@ -1,5 +1,5 @@
 // STYLES
-export const styles = {
+export const selectStyles = {
   container: (base) => ({
     ...base,
     position: "relative",
@@ -28,7 +28,7 @@ export const styles = {
 };
 
 // COMON SETTINGS
-export const settings = {
+export const selectSettings = {
   noOptionsMessage: () => "موردی یافت نشد!",
   loadingMessage: () => "در حال بارگذاری ...",
 };

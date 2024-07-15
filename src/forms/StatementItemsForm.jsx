@@ -7,10 +7,17 @@ import { CalendarTodayOutlined as CalenderIcon } from "@mui/icons-material";
 // library imports
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+// utils
+import { selectStyles, selectSettings } from "../utils/reactSelect";
 
 function StatementItemsForm() {
   const [selectedRunDate, setSelectedRunDate] = useState(null);
   const [isRunDateCalenderOpen, setIsRunDateCalenderOpen] = useState(false);
+
+  const animatedComponents = makeAnimated();
 
   // DATE HANDLER
   const hadnleRunDateOpenChange = (open) => {
@@ -48,6 +55,18 @@ function StatementItemsForm() {
             <span>*</span> تاریخ اجرا
           </div>
         </div>
+
+        <Select
+          closeMenuOnSelect={false}
+          components={animatedComponents}
+          defaultValue={[]}
+          name="employmentTypeIDs"
+          placeholder={<div className="react-select-placeholder">نوع حکم</div>}
+          noOptionsMessage={selectSettings.noOptionsMessage}
+          loadingMessage={selectSettings.loadingMessage}
+          isMulti
+          styles={selectStyles}
+        />
       </form>
     </section>
   );

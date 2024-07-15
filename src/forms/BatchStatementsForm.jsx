@@ -32,7 +32,10 @@ import makeAnimated from "react-select/animated";
 import * as XLSX from "xlsx";
 
 // utils
-import { styles, settings } from "../utils/reactSelectStyles";
+import { selectStyles, selectSettings } from "../utils/reactSelect";
+
+// helpers
+import { convertToEnglishNumber } from "../helper";
 
 function BatchStatementsForm() {
   // EXCEL FILE UPLOAD REF
@@ -206,7 +209,7 @@ function BatchStatementsForm() {
         json.forEach((row) => {
           row.forEach((cell) => {
             if (cell !== null && cell !== undefined && cell !== "") {
-              nationalCodes.push(cell.toString());
+              nationalCodes.push(convertToEnglishNumber(cell.toString()));
             }
           });
         });
@@ -344,14 +347,14 @@ function BatchStatementsForm() {
                     <span>*</span> نوع سازمان
                   </div>
                 }
-                noOptionsMessage={settings.noOptionsMessage}
-                loadingMessage={settings.loadingMessage}
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
                 isMulti
                 isLoading={
                   isEmploymnetComboItemsFetching ||
                   isEmploymnetComboItemsLoading
                 }
-                styles={styles}
+                styles={selectStyles}
               />
 
               <Select
@@ -366,13 +369,13 @@ function BatchStatementsForm() {
                     <span>*</span> جنسیت
                   </div>
                 }
-                noOptionsMessage={settings.noOptionsMessage}
-                loadingMessage={settings.loadingMessage}
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
                 isMulti
                 isLoading={
                   isGenderComboItemsFetching || isGenderComboItemsLoading
                 }
-                styles={styles}
+                styles={selectStyles}
               />
 
               <Select
@@ -387,13 +390,13 @@ function BatchStatementsForm() {
                     <span>*</span> وضعیت
                   </div>
                 }
-                noOptionsMessage={settings.noOptionsMessage}
-                loadingMessage={settings.loadingMessage}
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
                 isMulti
                 isLoading={
                   isStatusComboItemsFetching || isStatusComboItemsLoading
                 }
-                styles={styles}
+                styles={selectStyles}
               />
 
               <div
