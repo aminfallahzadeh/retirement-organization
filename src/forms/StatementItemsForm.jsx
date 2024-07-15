@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 // redux imports
 import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
-import { useGetListOfFormulaGroupSettingQuery } from "../slices/retirementStatementApiSlice.js";
+import { useGetListOfRetirementStatementItemQuery } from "../slices/retirementStatementApiSlice.js";
 
 // mui imports
 import { CalendarTodayOutlined as CalenderIcon } from "@mui/icons-material";
@@ -23,7 +23,7 @@ function StatementItemsForm() {
 
   // LOOK UP STATES
   const [statementTypes, setStatementTypes] = useState([]);
-  const [formulaGroupSettings, setFormulaGroupSettings] = useState([]);
+  const [statementItems, setStatementItems] = useState([]);
 
   // DATE STATES
   const [selectedRunDate, setSelectedRunDate] = useState(null);
@@ -46,7 +46,7 @@ function StatementItemsForm() {
     isFetching: formulaGroupSettingIsFetching,
     isLoading: formulaGroupSettingIsLoading,
     error: formulaGroupSettingError,
-  } = useGetListOfFormulaGroupSettingQuery({});
+  } = useGetListOfRetirementStatementItemQuery();
 
   // FETCH LOOK UP DATA
   useEffect(() => {
@@ -57,7 +57,7 @@ function StatementItemsForm() {
 
   useEffect(() => {
     if (formulaGroupSettingIsSuccess) {
-      setFormulaGroupSettings(formulaGroupSettingComboItems);
+      setStatementItems(formulaGroupSettingComboItems);
     }
   }, [formulaGroupSettingIsSuccess, formulaGroupSettingComboItems]);
 
@@ -80,10 +80,13 @@ function StatementItemsForm() {
     label: statementType.retirementStatementTypeName,
   }));
 
-  const formulaGroupSettingOptions = formulaGroupSettings.map((item) => ({
-    value: item.retirementStatementItemID,
-    label: item.description,
-  }));
+  const formulaGroupSettingOptions = statementItems
+    // ONLY SHOW ACTIVE ITEMS
+    .filter((item) => item.isActive)
+    .map((item) => ({
+      value: item.retirementStatementItemID,
+      label: item.retirementStatementItemName,
+    }));
 
   // DATE HANDLER
   const hadnleRunDateOpenChange = (open) => {
@@ -101,10 +104,6 @@ function StatementItemsForm() {
     const value = selectedOption;
     setData({ ...data, [name]: value });
   };
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   const content = (
     <section className="flex-col formContainer">

@@ -67,6 +67,11 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    getListOfRetirementStatementItem: builder.query({
+      query: () => ({
+        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GetListOfRetirementStatementItem`,
+      }),
+    }),
     getListOfFormulaGroupSetting: builder.query({
       query: ({ retirementStatementItemID }) => {
         let url = `${RETIREMENT_STATEMENT_URL_HTTPS}/GetListOfFormulaGroupSetting`;
@@ -99,4 +104,5 @@ export const {
   useGetStatementListFromFiltersMutation,
   useGetStatementListFromExcelMutation,
   useGetListOfFormulaGroupSettingQuery,
+  useGetListOfRetirementStatementItemQuery,
 } = retirementStatementApiSlice;
