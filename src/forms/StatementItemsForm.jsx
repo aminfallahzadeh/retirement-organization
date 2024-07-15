@@ -220,6 +220,10 @@ function StatementItemsForm() {
           }
         />
         <div>&nbsp;</div>
+
+        <div>
+          <h2> درصد موظف</h2>
+        </div>
       </form>
     </section>
   );

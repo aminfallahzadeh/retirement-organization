@@ -21,7 +21,6 @@ import store from "./store";
 import App from "./App.jsx";
 
 // pages
-// import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login.jsx";
 import Error from "./pages/Error";
 
