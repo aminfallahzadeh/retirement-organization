@@ -103,6 +103,6 @@ export const {
   useLazyGetRetirementStatementQuery,
   useGetStatementListFromFiltersMutation,
   useGetStatementListFromExcelMutation,
-  useGetListOfFormulaGroupSettingQuery,
   useGetListOfRetirementStatementItemQuery,
+  useLazyGetListOfFormulaGroupSettingQuery,
 } = retirementStatementApiSlice;

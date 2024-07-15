@@ -1,14 +1,18 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // redux imports
 import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
-import { useGetListOfRetirementStatementItemQuery } from "../slices/retirementStatementApiSlice.js";
+import {
+  useGetListOfRetirementStatementItemQuery,
+  useLazyGetListOfFormulaGroupSettingQuery,
+} from "../slices/retirementStatementApiSlice.js";
 
 // mui imports
 import { CalendarTodayOutlined as CalenderIcon } from "@mui/icons-material";
 
 // library imports
+import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 import Select from "react-select";
@@ -30,6 +34,32 @@ function StatementItemsForm() {
   const [isRunDateCalenderOpen, setIsRunDateCalenderOpen] = useState(false);
 
   const animatedComponents = makeAnimated();
+
+  const [
+    getFormulaGroups,
+    {
+      isLoading: getFormulaGroupsIsLoading,
+      isFetching: getFormulaGroupsIsFetching,
+    },
+  ] = useLazyGetListOfFormulaGroupSettingQuery();
+
+  // FETCH FORMULA GROUPS FUNCTION
+  const fetchFormulaGroups = useCallback(
+    async (retirementStatementItemID) => {
+      try {
+        const res = await getFormulaGroups({
+          retirementStatementItemID,
+        }).unwrap();
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
+    },
+    [getFormulaGroups]
+  );
 
   // GET LOOKUP DATA
   const {
@@ -60,6 +90,13 @@ function StatementItemsForm() {
       setStatementItems(formulaGroupSettingComboItems);
     }
   }, [formulaGroupSettingIsSuccess, formulaGroupSettingComboItems]);
+
+  // FETCH FORMULA GROUPS ON USER SELECTED ITEM
+  useEffect(() => {
+    if (data.retirementStatementItemID) {
+      fetchFormulaGroups(data.retirementStatementItemID.value);
+    }
+  }, [data.retirementStatementItemID, fetchFormulaGroups]);
 
   // HANLDE ERRORS
   useEffect(() => {
@@ -105,6 +142,10 @@ function StatementItemsForm() {
     setData({ ...data, [name]: value });
   };
 
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   const content = (
     <section className="flex-col formContainer">
       <form method="POST" className="grid grid--col-4" noValidate>
@@ -136,7 +177,7 @@ function StatementItemsForm() {
         </div>
 
         <Select
-          closeMenuOnSelect={false}
+          closeMenuOnSelect={true}
           components={animatedComponents}
           options={statementTypeOptions}
           isLoading={statementTypesIsLoading || statementTypesIsFetching}
@@ -163,7 +204,7 @@ function StatementItemsForm() {
         </div>
 
         <Select
-          closeMenuOnSelect={false}
+          closeMenuOnSelect={true}
           components={animatedComponents}
           options={formulaGroupSettingOptions}
           onChange={handleStatementItemChange}
