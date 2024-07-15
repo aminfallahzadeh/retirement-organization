@@ -19,7 +19,7 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
 // components
-import GroupFormulaForm from "./groupFormulaForm.jsx";
+import GroupFormulaForm from "./GroupFormulaForm.jsx";
 // utils
 import { selectStyles, selectSettings } from "../utils/reactSelect";
 
