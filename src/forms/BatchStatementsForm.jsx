@@ -105,10 +105,6 @@ function BatchStatementsForm() {
     }
   }, [isExcelFileUploaded, nationalCodesFromExcel, fetchWithExcel]);
 
-  useEffect(() => {
-    console.log(isExcelFileUploaded);
-  }, [isExcelFileUploaded]);
-
   // GET LOOKUP DATA
   const {
     data: genderComboItems,

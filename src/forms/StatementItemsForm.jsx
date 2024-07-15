@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 // redux imports
 import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
+import { useGetListOfFormulaGroupSettingQuery } from "../slices/retirementStatementApiSlice.js";
 
 // mui imports
 import { CalendarTodayOutlined as CalenderIcon } from "@mui/icons-material";
@@ -17,8 +18,12 @@ import makeAnimated from "react-select/animated";
 import { selectStyles, selectSettings } from "../utils/reactSelect";
 
 function StatementItemsForm() {
+  // MAIN STATES
+  const [data, setData] = useState({});
+
   // LOOK UP STATES
   const [statementTypes, setStatementTypes] = useState([]);
+  const [formulaGroupSettings, setFormulaGroupSettings] = useState([]);
 
   // DATE STATES
   const [selectedRunDate, setSelectedRunDate] = useState(null);
@@ -35,12 +40,26 @@ function StatementItemsForm() {
     error: statementTypesError,
   } = useGetRetirementStatementTypeQuery({});
 
+  const {
+    data: formulaGroupSettingComboItems,
+    isSuccess: formulaGroupSettingIsSuccess,
+    isFetching: formulaGroupSettingIsFetching,
+    isLoading: formulaGroupSettingIsLoading,
+    error: formulaGroupSettingError,
+  } = useGetListOfFormulaGroupSettingQuery({});
+
   // FETCH LOOK UP DATA
   useEffect(() => {
     if (statementTypesIsSuccess) {
       setStatementTypes(statementTypesComboItems.itemList);
     }
   }, [statementTypesIsSuccess, statementTypesComboItems]);
+
+  useEffect(() => {
+    if (formulaGroupSettingIsSuccess) {
+      setFormulaGroupSettings(formulaGroupSettingComboItems);
+    }
+  }, [formulaGroupSettingIsSuccess, formulaGroupSettingComboItems]);
 
   // HANLDE ERRORS
   useEffect(() => {
@@ -49,10 +68,21 @@ function StatementItemsForm() {
     }
   }, [statementTypesError]);
 
+  useEffect(() => {
+    if (formulaGroupSettingError) {
+      console.log(formulaGroupSettingError);
+    }
+  }, [formulaGroupSettingError]);
+
   // SELECT OPTIONS
   const statementTypeOptions = statementTypes.map((statementType) => ({
     value: statementType.retirementStatementTypeID,
     label: statementType.retirementStatementTypeName,
+  }));
+
+  const formulaGroupSettingOptions = formulaGroupSettings.map((item) => ({
+    value: item.retirementStatementItemID,
+    label: item.description,
   }));
 
   // DATE HANDLER
@@ -64,6 +94,17 @@ function StatementItemsForm() {
     setSelectedRunDate(date);
     setIsRunDateCalenderOpen(false);
   };
+
+  // DATA HANDLERS
+  const handleStatementItemChange = (selectedOption, actionMeta) => {
+    const name = actionMeta.name;
+    const value = selectedOption;
+    setData({ ...data, [name]: value });
+  };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const content = (
     <section className="flex-col formContainer">
@@ -100,7 +141,6 @@ function StatementItemsForm() {
           components={animatedComponents}
           options={statementTypeOptions}
           isLoading={statementTypesIsLoading || statementTypesIsFetching}
-          name="employmentTypeIDs"
           placeholder={<div className="react-select-placeholder">نوع حکم</div>}
           noOptionsMessage={selectSettings.noOptionsMessage}
           loadingMessage={selectSettings.loadingMessage}
@@ -126,13 +166,18 @@ function StatementItemsForm() {
         <Select
           closeMenuOnSelect={false}
           components={animatedComponents}
-          name="employmentTypeIDs"
+          options={formulaGroupSettingOptions}
+          onChange={handleStatementItemChange}
+          name="retirementStatementItemID"
           placeholder={
             <div className="react-select-placeholder">تنظیمات آیتم های حکم</div>
           }
           noOptionsMessage={selectSettings.noOptionsMessage}
           loadingMessage={selectSettings.loadingMessage}
           styles={selectStyles}
+          isLoading={
+            formulaGroupSettingIsFetching || formulaGroupSettingIsLoading
+          }
         />
         <div>&nbsp;</div>
       </form>

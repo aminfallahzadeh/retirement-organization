@@ -66,6 +66,27 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+
+    getListOfFormulaGroupSetting: builder.query({
+      query: ({ retirementStatementItemID }) => {
+        let url = `${RETIREMENT_STATEMENT_URL_HTTPS}/GetListOfFormulaGroupSetting`;
+        const queryParams = [];
+
+        if (retirementStatementItemID) {
+          queryParams.push(
+            `retirementStatementItemID=${retirementStatementItemID}`
+          );
+        }
+
+        if (queryParams.length > 0) {
+          url += `?${queryParams.join("&")}`;
+        }
+
+        return {
+          url,
+        };
+      },
+    }),
   }),
 });
 
@@ -77,4 +98,5 @@ export const {
   useLazyGetRetirementStatementQuery,
   useGetStatementListFromFiltersMutation,
   useGetStatementListFromExcelMutation,
+  useGetListOfFormulaGroupSettingQuery,
 } = retirementStatementApiSlice;
