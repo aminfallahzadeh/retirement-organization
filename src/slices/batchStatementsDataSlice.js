@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   filteredPersonsTableData: [],
-  filteredByExcelTableData: [],
 };
 
 const batchStatementsDataSlice = createSlice({
@@ -11,10 +10,6 @@ const batchStatementsDataSlice = createSlice({
   reducers: {
     setFilteredPersonsTableData: (state, action) => {
       state.filteredPersonsTableData = action.payload;
-    },
-
-    setFilteredByExcelTableData: (state, action) => {
-      state.filteredByExcelTableData = action.payload;
     },
   },
 });

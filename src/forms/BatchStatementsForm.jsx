@@ -74,7 +74,14 @@ function BatchStatementsForm() {
     async (data) => {
       try {
         const res = await getListFromExcel(data).unwrap();
-        console.log(res);
+        const mappedData = res.map((item, index) => ({
+          id: item.id,
+          selectedPersonRowNum: index + 1 || "-",
+          selectedPersonNationalCode: item.nationalCode || "-",
+          selectedPersonName: item.firstName || "-",
+          selectedPersonLastName: item.lastName || "-",
+        }));
+        dispatch(setFilteredPersonsTableData(mappedData));
       } catch (err) {
         console.log(err);
         toast.error(err?.data?.message || err.error, {
@@ -82,7 +89,7 @@ function BatchStatementsForm() {
         });
       }
     },
-    [getListFromExcel]
+    [getListFromExcel, dispatch]
   );
 
   // SEND ESCLE REQUEST IF ESCLE UPLOADED
@@ -234,10 +241,10 @@ function BatchStatementsForm() {
       const filterRes = await getStatementListFromFilters(data).unwrap();
       const mappedData = filterRes.map((item, index) => ({
         id: item.id,
-        selectedPersonRowNum: index + 1,
-        selectedPersonNationalCode: item.nationalCode,
-        selectedPersonName: item.firstName,
-        selectedPersonLastName: item.lastName,
+        selectedPersonRowNum: index + 1 || "-",
+        selectedPersonNationalCode: item.nationalCode || "-",
+        selectedPersonName: item.firstName || "-",
+        selectedPersonLastName: item.lastName || "-",
       }));
       dispatch(setFilteredPersonsTableData(mappedData));
     } catch (err) {
@@ -262,6 +269,7 @@ function BatchStatementsForm() {
         ref={excelFileUploadRef}
         style={{ display: "none" }}
         onChange={handleExcelFileChange}
+        accept=".xlsx, .xls"
       />
 
       <section className="flex-col formContainer">
@@ -309,6 +317,7 @@ function BatchStatementsForm() {
                     variant="determinate"
                     value={uploadProgress}
                     color="warning"
+                    sx={{ borderRadius: "40px" }}
                   />
                   <span style={{ fontFamily: "IranYekan", fontSize: "12px" }}>
                     {uploadProgress}%
