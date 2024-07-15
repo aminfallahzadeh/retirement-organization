@@ -73,7 +73,7 @@ function BatchStatementsForm() {
     },
   ] = useGetStatementListFromExcelMutation();
 
-  // FETCH WOTH EXCEL DATA FUNCTION
+  // FETCH WITH EXCEL DATA FUNCTION
   const fetchWithExcel = useCallback(
     async (data) => {
       try {
@@ -104,6 +104,10 @@ function BatchStatementsForm() {
       fetchWithExcel(nationalCodesFromExcel);
     }
   }, [isExcelFileUploaded, nationalCodesFromExcel, fetchWithExcel]);
+
+  useEffect(() => {
+    console.log(isExcelFileUploaded);
+  }, [isExcelFileUploaded]);
 
   // GET LOOKUP DATA
   const {
@@ -217,6 +221,7 @@ function BatchStatementsForm() {
           });
         });
         setNationalCodesFromExcel(nationalCodes);
+        setIsExcelFileUploaded(true);
       };
 
       reader.onloadend = () => {
@@ -225,7 +230,6 @@ function BatchStatementsForm() {
         }, 2000);
       };
       reader.readAsArrayBuffer(file);
-      setIsExcelFileUploaded(true);
     }
   };
 
