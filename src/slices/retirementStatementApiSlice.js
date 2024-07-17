@@ -92,6 +92,21 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+
+    updateRetirementStatementFormulaGroupSetting: builder.mutation({
+      // {
+      // "retirementStatementFormulaGroupSettingID": "string",
+      // "retirementStatementItemID": "string",
+      // "description": "string",
+      // "value": 0
+      // }
+
+      query: (data) => ({
+        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/UpdateRetirementStatementFormulaGroupSetting`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -105,4 +120,5 @@ export const {
   useGetStatementListFromExcelMutation,
   useGetListOfRetirementStatementItemQuery,
   useLazyGetListOfFormulaGroupSettingQuery,
+  useUpdateRetirementStatementFormulaGroupSettingMutation,
 } = retirementStatementApiSlice;

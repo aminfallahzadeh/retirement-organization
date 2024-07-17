@@ -234,7 +234,10 @@ function StatementItemsForm() {
       </section>
 
       {data.retirementStatementItemID && formulaGroups && (
-        <GroupFormulaForm formulaGroups={formulaGroups} />
+        <GroupFormulaForm
+          formulaGroups={formulaGroups}
+          retirementStatementItemID={data.retirementStatementItemID.value}
+        />
       )}
     </>
   );
