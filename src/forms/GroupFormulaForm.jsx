@@ -71,9 +71,9 @@ function GroupFormulaForm({ formulaGroups, retirementStatementItemID }) {
                 className="inputBox__form--input"
                 type="text"
                 value={
-                  data.find(
-                    (d) =>
-                      d.retirementStatementFormulaGroupSettingID ===
+                  formulaGroups.find(
+                    (item) =>
+                      item.retirementStatementFormulaGroupSettingID ===
                       formula.retirementStatementFormulaGroupSettingID
                   ).value
                 }

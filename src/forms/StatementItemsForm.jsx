@@ -10,6 +10,7 @@ import {
 
 // mui imports
 import { CalendarTodayOutlined as CalenderIcon } from "@mui/icons-material";
+import { CircularProgress, Box } from "@mui/material";
 
 // library imports
 import { toast } from "react-toastify";
@@ -233,12 +234,22 @@ function StatementItemsForm() {
         </form>
       </section>
 
-      {data.retirementStatementItemID && formulaGroups && (
+      {getFormulaGroupsIsFetching || getFormulaGroupsIsLoading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "2rem 10rem",
+          }}
+        >
+          <CircularProgress color="primary" />
+        </Box>
+      ) : data.retirementStatementItemID && formulaGroups ? (
         <GroupFormulaForm
           formulaGroups={formulaGroups}
           retirementStatementItemID={data.retirementStatementItemID.value}
         />
-      )}
+      ) : null}
     </>
   );
 
