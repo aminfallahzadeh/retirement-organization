@@ -26,7 +26,7 @@ function FractionForm() {
 
   const content = (
     <section className="formContainer">
-      <form method="POST" className="flex-col">
+      <form method="POST" className="flex-col" noValidate>
         <div className="grid grid--col-5">
           <div className="inputBox__form">
             <input

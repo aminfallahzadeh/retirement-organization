@@ -1,5 +1,5 @@
 // react imports
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 // redux imports
 import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
@@ -21,10 +21,14 @@ import makeAnimated from "react-select/animated";
 
 // components
 import GroupFormulaForm from "./GroupFormulaForm.jsx";
+
 // utils
 import { selectStyles, selectSettings } from "../utils/reactSelect";
+import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function StatementItemsForm() {
+  const inputRef = useRef(null);
+
   // MAIN STATES
   const [data, setData] = useState({});
   const [formulaGroups, setFormulaGroups] = useState(null);
@@ -146,9 +150,21 @@ function StatementItemsForm() {
     setData({ ...data, [name]: value });
   };
 
+  // FUNCTION TO HANDLE OURSIDE CLICK
+  const handleOutsideClick = (event) => {
+    if (inputRef.current && !inputRef.current.contains(event.target)) {
+      setIsRunDateCalenderOpen(false);
+    }
+  };
+
+  // EVENT LISTENER FOR HANLDE OURSIDE CLICK
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
 
   const content = (
     <>
@@ -163,17 +179,10 @@ function StatementItemsForm() {
               format={"jYYYY/jMM/jDD"}
               suffixIcon={<CalenderIcon color="action" />}
               open={isRunDateCalenderOpen}
-              style={{
-                border: "none",
-                cursor: "pointer",
-              }}
-              wrapperStyle={{
-                border: "1px solid var(--color-input-border)",
-                width: "100%",
-                height: "100%",
-                paddingLeft: "20px",
-                borderRadius: "4px",
-                cursor: "pointer",
+              style={datePickerStyles}
+              wrapperStyle={datePickerWrapperStyles}
+              pickerProps={{
+                ref: inputRef,
               }}
             />
             <div className="inputBox__form--readOnly-label">
