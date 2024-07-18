@@ -22,7 +22,7 @@ import {
 import { useCloseCalender } from "../hooks/useCloseCalender";
 
 // mui imports
-import { Button, Box, CircularProgress } from "@mui/material";
+import { Button, Box, CircularProgress, Checkbox } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
   PersonOutlined as PersonOutlinedIcon,
@@ -302,7 +302,7 @@ function RetiredPersonForm() {
                 <PersonOutlinedIcon sx={{ fontSize: 70, color: "#707070" }} />
               </div>
 
-              <div className="flex-col flex-center flex-col--grow">
+              <div className="flex-col flex-center flex-col--grow flex-col--gap-lg">
                 <div className="inputBox__form">
                   <input
                     disabled={!editable}
@@ -480,24 +480,20 @@ function RetiredPersonForm() {
             </div>
 
             <div className="checkboxContainer col-span-3">
-              <p
-                className={
-                  !editable
-                    ? "checkboxContainer__title--disabled"
-                    : "checkboxContainer__title"
-                }
-              >
-                وضعیت ایثارگری:
-              </p>
+              <p className="inputBox__form--readOnly-label">وضعیت ایثارگری:</p>
 
               <div className="checkboxContainer__item">
-                <input
+                <Checkbox
+                  size="small"
+                  color="success"
                   disabled={!editable}
-                  type="checkbox"
-                  id="personIsSacrificedFamily"
-                  name="personIsSacrificedFamily"
                   checked={!!personData?.personIsSacrificedFamily}
+                  name="personIsSacrificedFamily"
+                  id="personIsSacrificedFamily"
                   onChange={handleCheckBoxChange}
+                  sx={{
+                    padding: 0.5,
+                  }}
                 />
                 <label
                   htmlFor="personIsSacrificedFamily"
@@ -512,13 +508,17 @@ function RetiredPersonForm() {
               </div>
 
               <div className="checkboxContainer__item">
-                <input
+                <Checkbox
+                  size="small"
+                  color="success"
                   disabled={!editable}
-                  type="checkbox"
                   id="personIsWarrior"
                   name="personIsWarrior"
                   checked={!!personData?.personIsWarrior}
                   onChange={handleCheckBoxChange}
+                  sx={{
+                    padding: 0.5,
+                  }}
                 />
                 <label
                   htmlFor="personIsWarrior"
@@ -533,14 +533,19 @@ function RetiredPersonForm() {
               </div>
 
               <div className="checkboxContainer__item">
-                <input
+                <Checkbox
+                  size="small"
+                  color="success"
                   disabled={!editable}
-                  type="checkbox"
                   id="personIsChildOfSacrificed"
                   name="personIsChildOfSacrificed"
                   checked={!!personData?.personIsChildOfSacrificed}
                   onChange={handleCheckBoxChange}
+                  sx={{
+                    padding: 0.5,
+                  }}
                 />
+
                 <label
                   htmlFor="personIsChildOfSacrificed"
                   className={
@@ -554,14 +559,19 @@ function RetiredPersonForm() {
               </div>
 
               <div className="checkboxContainer__item">
-                <input
+                <Checkbox
+                  size="small"
+                  color="success"
                   disabled={!editable}
-                  type="checkbox"
                   id="personIsValiant"
                   name="personIsValiant"
                   checked={!!personData?.personIsValiant}
                   onChange={handleCheckBoxChange}
+                  sx={{
+                    padding: 0.5,
+                  }}
                 />
+
                 <label
                   htmlFor="personIsValiant"
                   className={
@@ -575,14 +585,19 @@ function RetiredPersonForm() {
               </div>
 
               <div className="checkboxContainer__item">
-                <input
+                <Checkbox
+                  size="small"
+                  color="success"
                   disabled={!editable}
-                  type="checkbox"
                   id="personIsSacrificed"
                   name="personIsSacrificed"
                   checked={!!personData?.personIsSacrificed}
                   onChange={handleCheckBoxChange}
+                  sx={{
+                    padding: 0.5,
+                  }}
                 />
+
                 <label
                   htmlFor="personIsSacrificed"
                   className={
@@ -596,13 +611,17 @@ function RetiredPersonForm() {
               </div>
 
               <div className="checkboxContainer__item">
-                <input
+                <Checkbox
+                  size="small"
+                  color="success"
                   disabled={!editable}
-                  type="checkbox"
                   id="personIsCaptive"
                   name="personIsCaptive"
                   checked={!!personData?.personIsCaptive}
                   onChange={handleCheckBoxChange}
+                  sx={{
+                    padding: 0.5,
+                  }}
                 />
                 <label
                   htmlFor="personIsCaptive"

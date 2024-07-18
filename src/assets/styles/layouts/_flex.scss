@@ -30,6 +30,10 @@
             width: 100%;
         }
     }
+
+    &--gap-lg {
+        row-gap: 25px !important;
+    }
 }
 
 .flex-center {

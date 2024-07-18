@@ -4,24 +4,24 @@
     justify-content: center;
     border: 1px solid $color-grey-2;
     border-radius: $border-radius-secondary;
-    column-gap: 10px;
     position: relative;
 
     &__title {
         color: $color-accent-red;
-        flex: 1;
+        // flex: 1;
     }
 
     &__item {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        column-gap: 5px;
         flex: 1;
     }
 
     &__label {
         color: var(--color-text-title-primary);
         transition: all 0.25s;
+        cursor: pointer;
     }
 }
