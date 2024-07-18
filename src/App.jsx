@@ -8,6 +8,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 // redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { setPersonTableData } from "./slices/personDataSlice";
+import { setUserID } from "./slices/authSlice";
 
 // mui imports
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -35,7 +36,7 @@ function App() {
   const [isActive, setIsActive] = useState(true);
   const [remaining, setRemaining] = useState(0);
   const [userName, setUserName] = useState("");
-  const [userID, setUserID] = useState("");
+  // const [userID, setUserID] = useState("");
 
   const { token } = useSelector((state) => state.auth);
   const { navPanelOpen } = useSelector((state) => state.themeData);
@@ -68,9 +69,10 @@ function App() {
       navigate("/retirement-organization/");
     } else {
       setUserName(jwtDecode(token).name);
-      setUserID(jwtDecode(token).id);
+      // setUserID(jwtDecode(token).id);
+      dispatch(setUserID(jwtDecode(token).id));
     }
-  }, [token, navigate, isLoginPage]);
+  }, [token, navigate, isLoginPage, dispatch]);
 
   useEffect(() => {
     if (token) {
@@ -80,7 +82,6 @@ function App() {
       if (!isActive) {
         logoutHandler();
       }
-      // console.log(isActive, remaining);
       return () => {
         clearInterval(interval);
       };
@@ -104,7 +105,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {!isLoginPage && <Header userName={userName} userID={userID} />}
+      {!isLoginPage && <Header userName={userName} />}
       <main
         className={!isLoginPage ? "main" : ""}
         style={{

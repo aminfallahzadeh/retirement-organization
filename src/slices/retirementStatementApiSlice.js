@@ -94,6 +94,7 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
     }),
 
     updateRetirementStatementFormulaGroupSetting: builder.mutation({
+      // VIEW MODEL
       // {
       // "retirementStatementFormulaGroupSettingID": "string",
       // "retirementStatementItemID": "string",
@@ -106,6 +107,26 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+    }),
+
+    generateGroupStatement: builder.mutation({
+      query: ({
+        runDate,
+        retirementStatementTypeID,
+        retirementStatementDesc,
+        insertUserID,
+        requestID,
+      }) => {
+        let url = `${RETIREMENT_STATEMENT_URL_HTTPS}/GenerateGroupStatement?runDate=${runDate}&retirementStatementTypeID=${retirementStatementTypeID}&insertUserID=${insertUserID}&requestID=${requestID}`;
+
+        if (retirementStatementDesc) {
+          url += `&retirementStatementDesc=${retirementStatementDesc}`;
+        }
+
+        return {
+          url,
+        };
+      },
     }),
   }),
 });
@@ -121,4 +142,5 @@ export const {
   useGetListOfRetirementStatementItemQuery,
   useLazyGetListOfFormulaGroupSettingQuery,
   useUpdateRetirementStatementFormulaGroupSettingMutation,
+  useGenerateGroupStatementMutation,
 } = retirementStatementApiSlice;

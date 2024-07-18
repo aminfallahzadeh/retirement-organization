@@ -14,6 +14,8 @@ const initialState = {
   expiredate: sessionStorage.getItem("userInfo")
     ? JSON.parse(sessionStorage.getItem("userInfo")).expiredate
     : null,
+
+  userID: null,
 };
 
 const authSlice = createSlice({
@@ -58,9 +60,14 @@ const authSlice = createSlice({
       sessionStorage.removeItem("userInfo");
       sessionStorage.removeItem("permissions");
     },
+
+    setUserID: (state, action) => {
+      state.userID = action.payload;
+    },
   },
 });
 
-export const { setCredentials, setNewCredentials, logout } = authSlice.actions;
+export const { setCredentials, setNewCredentials, logout, setUserID } =
+  authSlice.actions;
 
 export default authSlice.reducer;

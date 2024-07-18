@@ -35,7 +35,9 @@ import {
 } from "@mui/icons-material";
 import { toast } from "react-toastify";
 
-function Nav({ userName, userID }) {
+function Nav({ userName }) {
+  const { userID } = useSelector((state) => state.auth);
+
   const shouldFetch = !!userID;
 
   const { data: user } = useGetUserQuery(

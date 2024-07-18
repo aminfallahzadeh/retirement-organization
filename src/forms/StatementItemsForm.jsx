@@ -2,14 +2,19 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 // redux imports
+import { useSelector } from "react-redux";
 import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
 import {
   useGetListOfRetirementStatementItemQuery,
   useLazyGetListOfFormulaGroupSettingQuery,
+  useGenerateGroupStatementMutation,
 } from "../slices/retirementStatementApiSlice.js";
 
 // mui imports
-import { CalendarTodayOutlined as CalenderIcon } from "@mui/icons-material";
+import {
+  CalendarTodayOutlined as CalenderIcon,
+  EditCalendarOutlined as DraftIcon,
+} from "@mui/icons-material";
 import { CircularProgress, Box } from "@mui/material";
 
 // library imports
@@ -25,9 +30,15 @@ import GroupFormulaForm from "./GroupFormulaForm.jsx";
 // utils
 import { selectStyles, selectSettings } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
+import { LoadingButton } from "@mui/lab";
 
 function StatementItemsForm() {
   const inputRef = useRef(null);
+
+  const { userID } = useSelector((state) => state.auth);
+
+  const searchParams = new URLSearchParams(location.search);
+  const requestID = searchParams.get("requestID");
 
   // MAIN STATES
   const [data, setData] = useState({});
@@ -50,6 +61,11 @@ function StatementItemsForm() {
       isFetching: getFormulaGroupsIsFetching,
     },
   ] = useLazyGetListOfFormulaGroupSettingQuery();
+
+  const [
+    generateGroupStatement,
+    { isLoading: generateGroupStatementIsLoading },
+  ] = useGenerateGroupStatementMutation();
 
   // FETCH FORMULA GROUPS FUNCTION
   const fetchFormulaGroups = useCallback(
@@ -143,10 +159,16 @@ function StatementItemsForm() {
     setIsRunDateCalenderOpen(false);
   };
 
-  // DATA HANDLERS
+  // OTHER HANDLERS
   const handleStatementItemChange = (selectedOption, actionMeta) => {
     const name = actionMeta.name;
     const value = selectedOption;
+    setData({ ...data, [name]: value });
+  };
+
+  const handleStatementDescriptionChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
     setData({ ...data, [name]: value });
   };
 
@@ -165,6 +187,43 @@ function StatementItemsForm() {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, []);
+
+  // GENERATE GROUP STATEMENT HANDLER
+  const generateGroupStatementHandler = async () => {
+    try {
+      console.log(userID);
+      // Adjusting for timezone difference
+      let runDate;
+
+      if (selectedRunDate) {
+        runDate = new Date(selectedRunDate);
+        runDate.setMinutes(runDate.getMinutes() - runDate.getTimezoneOffset());
+      } else {
+        runDate = null;
+      }
+
+      const res = await generateGroupStatement({
+        runDate: runDate.toISOString(),
+        retirementStatementTypeID: data.retirementStatementTypeID.value,
+        insertUserID: userID,
+        requestID,
+        retirementStatementDesc: data.retirementStatementDesc || null,
+      }).unwrap();
+      console.log(res);
+      toast.success(res.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
+  useEffect(() => {
+    console.log(userID);
+  }, [userID]);
 
   const content = (
     <>
@@ -195,9 +254,13 @@ function StatementItemsForm() {
             components={animatedComponents}
             options={statementTypeOptions}
             isClearable={true}
+            name="retirementStatementTypeID"
+            onChange={handleStatementItemChange}
             isLoading={statementTypesIsLoading || statementTypesIsFetching}
             placeholder={
-              <div className="react-select-placeholder">نوع حکم</div>
+              <div className="react-select-placeholder">
+                <span>*</span> نوع حکم{" "}
+              </div>
             }
             noOptionsMessage={selectSettings.noOptionsMessage}
             loadingMessage={selectSettings.loadingMessage}
@@ -209,6 +272,7 @@ function StatementItemsForm() {
               type="text"
               className="inputBox__form--input"
               name="retirementStatementDesc"
+              onChange={handleStatementDescriptionChange}
               required
               id="retirementStatementDesc"
             ></textarea>
@@ -254,10 +318,27 @@ function StatementItemsForm() {
           <CircularProgress color="primary" />
         </Box>
       ) : data.retirementStatementItemID && formulaGroups ? (
-        <GroupFormulaForm
-          formulaGroups={formulaGroups}
-          retirementStatementItemID={data.retirementStatementItemID.value}
-        />
+        <>
+          <GroupFormulaForm
+            formulaGroups={formulaGroups}
+            retirementStatementItemID={data.retirementStatementItemID.value}
+          />
+
+          <div style={{ marginRight: "auto" }}>
+            <LoadingButton
+              dir="ltr"
+              variant="contained"
+              color="primary"
+              onClick={generateGroupStatementHandler}
+              loading={generateGroupStatementIsLoading}
+              disabled={!data.retirementStatementTypeID || !selectedRunDate}
+              sx={{ fontFamily: "IranYekan" }}
+              endIcon={<DraftIcon />}
+            >
+              <span>صدور پیش نویس</span>
+            </LoadingButton>
+          </div>
+        </>
       ) : null}
     </>
   );

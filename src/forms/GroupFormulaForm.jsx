@@ -11,6 +11,9 @@ import { toast } from "react-toastify";
 import { Save as SaveIcon } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 
+// components
+import NumberInput from "../components/NumberInput.jsx";
+
 // helpers
 import { convertToPersianNumber } from "../helper";
 
@@ -38,10 +41,10 @@ function GroupFormulaForm({ formulaGroups, retirementStatementItemID }) {
   const [updateRetirementStatementFormulaGroupSetting, { isLoading }] =
     useUpdateRetirementStatementFormulaGroupSettingMutation();
 
-  const handleSaveChanges = async (id) => {
+  const handleSaveChanges = async () => {
     try {
       const res = await updateRetirementStatementFormulaGroupSetting(
-        data.find((d) => d.retirementStatementFormulaGroupSettingID === id)
+        data
       ).unwrap();
       toast.success(res.message, {
         autoClose: 2000,
@@ -66,58 +69,37 @@ function GroupFormulaForm({ formulaGroups, retirementStatementItemID }) {
               {convertToPersianNumber(index + 1)}. {formula.description}
             </span>
 
-            <div className="inputBox__form">
-              <input
-                className="inputBox__form--input"
-                type="text"
-                value={
-                  data.find(
-                    (item) =>
-                      item.retirementStatementFormulaGroupSettingID ===
-                      formula.retirementStatementFormulaGroupSettingID
-                  ).value
-                }
-                onChange={(e) =>
-                  handleDataChange(
-                    formula.retirementStatementFormulaGroupSettingID,
-                    e.target.value
-                  )
-                }
-              />
-            </div>
-            {/* <QuantityInput
-              value={
-                data.find(
-                  (d) =>
-                    d.retirementStatementFormulaGroupSettingID ===
+            <NumberInput
+              value={convertToPersianNumber(
+                data?.find(
+                  (item) =>
+                    item.retirementStatementFormulaGroupSettingID ===
                     formula.retirementStatementFormulaGroupSettingID
                 ).value
-              }
-              onChange={(val) =>
+              )}
+              onInputChange={(val) =>
                 handleDataChange(
                   formula.retirementStatementFormulaGroupSettingID,
                   val
                 )
               }
-            /> */}
-            <LoadingButton
-              dir="ltr"
-              variant="contained"
-              color="success"
-              loading={isLoading}
-              onClick={() =>
-                handleSaveChanges(
-                  formula.retirementStatementFormulaGroupSettingID
-                )
-              }
-              sx={{ fontFamily: "IranYekan" }}
-              endIcon={<SaveIcon />}
-            >
-              <span>ذخیره</span>
-            </LoadingButton>
+            />
           </div>
         ))}
       </form>
+      <div style={{ marginRight: "auto" }}>
+        <LoadingButton
+          dir="ltr"
+          variant="contained"
+          color="success"
+          onClick={handleSaveChanges}
+          loading={isLoading}
+          sx={{ fontFamily: "IranYekan" }}
+          endIcon={<SaveIcon />}
+        >
+          <span>ذخیره</span>
+        </LoadingButton>
+      </div>
     </section>
   );
 }
