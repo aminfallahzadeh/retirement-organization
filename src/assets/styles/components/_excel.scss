@@ -1,0 +1,19 @@
+.excel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 5px;
+    height: 100%;
+
+    &__image {
+        width: 20px;
+    }
+
+    &__name {
+        font-size: 14px;
+        font-weight: 300;
+        color: var(--color-txt-primary);
+        text-align: center;
+        line-height: 0;
+    }
+}

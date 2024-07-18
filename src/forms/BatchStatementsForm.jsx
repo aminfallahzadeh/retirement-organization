@@ -14,11 +14,12 @@ import {
 } from "../slices/retirementStatementApiSlice";
 
 // mui imports
-import { Switch, LinearProgress, Box } from "@mui/material";
+import { Switch, LinearProgress, Box, IconButton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
   VisibilityRounded as EyeIcon,
   UploadRounded as UploadIcon,
+  DeleteOutline as RemoveIcon,
 } from "@mui/icons-material";
 
 // components
@@ -42,6 +43,7 @@ function BatchStatementsForm() {
   const excelFileUploadRef = useRef(null);
 
   // FILTER STATES
+  const [excelFile, setExcelFile] = useState(null);
   const [isExcel, setIsExcel] = useState(false);
   const [isExcelFileUploaded, setIsExcelFileUploaded] = useState(false);
   const [isDataRecived, setIsDataRecived] = useState(false);
@@ -185,6 +187,11 @@ function BatchStatementsForm() {
   }, [statusComboItemsError]);
 
   // HANDLERS
+  const handleRemoveExcelFile = () => {
+    setExcelFile(null);
+    setUploadProgress(0);
+  };
+
   const handleExcelFileUpload = () => {
     excelFileUploadRef.current.click();
   };
@@ -193,6 +200,7 @@ function BatchStatementsForm() {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
+      setExcelFile(file);
 
       // Event handler for progress
       reader.onprogress = (event) => {
@@ -287,7 +295,6 @@ function BatchStatementsForm() {
         <form className="grid grid--col-4">
           <div className="checkboxContainer">
             <span className="checkboxContainer__label">فایل اکسل</span>
-
             <Switch checked={isExcel} onChange={handleIsExcelChange} />
           </div>
           <div>&nbsp;</div>
@@ -297,12 +304,26 @@ function BatchStatementsForm() {
               style={{ marginRight: "auto" }}
               className="flex-row flex-center col-span-2"
             >
+              {excelFile && (
+                <div className="excel">
+                  <IconButton
+                    color="error"
+                    size="small"
+                    onClick={handleRemoveExcelFile}
+                    sx={{ padding: 0 }}
+                  >
+                    <RemoveIcon />
+                  </IconButton>
+                  <span className="excel__name">{excelFile.name}</span>
+                  <img src="./images/excel-icon.png" className="excel__image" />
+                </div>
+              )}
               <div style={{ position: "relative" }}>
                 <LoadingButton
                   dir="ltr"
                   variant="contained"
                   color="warning"
-                  disabled={uploadProgress > 0}
+                  disabled={uploadProgress > 0 || excelFile ? true : false}
                   sx={{ fontFamily: "sahel" }}
                   endIcon={<UploadIcon />}
                   loading={

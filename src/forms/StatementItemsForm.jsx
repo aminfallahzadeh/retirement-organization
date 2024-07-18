@@ -40,6 +40,9 @@ function StatementItemsForm() {
   const searchParams = new URLSearchParams(location.search);
   const requestID = searchParams.get("requestID");
 
+  // CONTROL STATES
+  const [isItemsEdited, setIsItemsEdited] = useState(false);
+
   // MAIN STATES
   const [data, setData] = useState({});
   const [formulaGroups, setFormulaGroups] = useState(null);
@@ -191,7 +194,6 @@ function StatementItemsForm() {
   // GENERATE GROUP STATEMENT HANDLER
   const generateGroupStatementHandler = async () => {
     try {
-      console.log(userID);
       // Adjusting for timezone difference
       let runDate;
 
@@ -220,10 +222,6 @@ function StatementItemsForm() {
       });
     }
   };
-
-  useEffect(() => {
-    console.log(userID);
-  }, [userID]);
 
   const content = (
     <>
@@ -322,6 +320,7 @@ function StatementItemsForm() {
           <GroupFormulaForm
             formulaGroups={formulaGroups}
             retirementStatementItemID={data.retirementStatementItemID.value}
+            setIsItemsEdited={setIsItemsEdited}
           />
 
           <div style={{ marginRight: "auto" }}>
@@ -331,7 +330,11 @@ function StatementItemsForm() {
               color="primary"
               onClick={generateGroupStatementHandler}
               loading={generateGroupStatementIsLoading}
-              disabled={!data.retirementStatementTypeID || !selectedRunDate}
+              disabled={
+                !data.retirementStatementTypeID ||
+                !selectedRunDate ||
+                !isItemsEdited
+              }
               sx={{ fontFamily: "IranYekan" }}
               endIcon={<DraftIcon />}
             >

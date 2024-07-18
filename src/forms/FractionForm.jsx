@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 
 // redux imports
 import { useGetLookupDataQuery } from "../slices/sharedApiSlice";
+import { useGetPersonnelStatementOffTypeQuery } from "../slices/personnelStatementApiSlice";
+import { useGetFractionTypeQuery } from "../slices/fractionApiSlice";
 
 // mui imports
 import {
@@ -40,6 +42,8 @@ function FractionForm() {
   const [frMode, setFrMode] = useState(null);
 
   // LOOK UP STATES
+  const [offTypeCombo, setOffTypeCombo] = useState([]);
+  const [fractionTypeCombo, setFractionTypeCombo] = useState([]);
   const [employmnetCombo, setEmploymnetCombo] = useState([]);
 
   // DATE STATES
@@ -62,7 +66,33 @@ function FractionForm() {
     error: employmnetComboItemsError,
   } = useGetLookupDataQuery({ lookUpType: "EmploymentType" });
 
+  const {
+    data: fractionTypeComboItems,
+    isSuccess: isFractionTypeComboItemsSuccess,
+    isLoading: isFractionTypeComboItemsLoading,
+    isFetching: isFractionTypeComboItemsFetching,
+    error: fractionTypeComboItemsError,
+  } = useGetFractionTypeQuery();
+
+  const {
+    data: offTypeComboItems,
+    isSuccess: isOffTypeComboItemsSuccess,
+    isLoading: isOffTypeComboItemsLoading,
+    isFetching: isOffTypeComboItemsFetching,
+    error: offTypeComboItemsError,
+  } = useGetPersonnelStatementOffTypeQuery();
+
   // SELECT OPTIONS
+  const offTypesOptions = offTypeCombo.map((item) => ({
+    value: item.personnelStatementOffTypeID,
+    label: item.personnelStatementOffTypeName,
+  }));
+
+  const fractionTypesOptions = fractionTypeCombo.map((item) => ({
+    value: item.fractionTypeid,
+    label: item.fractionTypeName,
+  }));
+
   const employmentOptions = employmnetCombo.map((item) => ({
     value: item.lookUpID,
     label: item.lookUpName,
@@ -75,12 +105,36 @@ function FractionForm() {
 
   // FETCH LOOKUP DATA
   useEffect(() => {
+    if (isOffTypeComboItemsSuccess) {
+      setOffTypeCombo(offTypeComboItems.itemList);
+    }
+  }, [isOffTypeComboItemsSuccess, offTypeComboItems]);
+
+  useEffect(() => {
+    if (isFractionTypeComboItemsSuccess) {
+      setFractionTypeCombo(fractionTypeComboItems.itemList);
+    }
+  }, [isFractionTypeComboItemsSuccess, fractionTypeComboItems]);
+
+  useEffect(() => {
     if (isEmploymnetComboItemsSuccess) {
       setEmploymnetCombo(employmnetComboItems.itemList);
     }
   }, [isEmploymnetComboItemsSuccess, employmnetComboItems]);
 
   // HANLDE ERRORS
+  useEffect(() => {
+    if (offTypeComboItemsError) {
+      console.log(offTypeComboItemsError);
+    }
+  }, [offTypeComboItemsError]);
+
+  useEffect(() => {
+    if (fractionTypeComboItemsError) {
+      console.log(fractionTypeComboItemsError);
+    }
+  }, [fractionTypeComboItemsError]);
+
   useEffect(() => {
     if (employmnetComboItemsError) {
       console.log(employmnetComboItemsError);
@@ -142,7 +196,11 @@ function FractionForm() {
       <form method="POST" className="grid grid--col-5" noValidate>
         <Select
           closeMenuOnSelect={true}
+          options={fractionTypesOptions}
           components={animatedComponents}
+          isLoading={
+            isFractionTypeComboItemsLoading || isFractionTypeComboItemsFetching
+          }
           isClearable={true}
           placeholder={<div className="react-select-placeholder">نوع کسور</div>}
           noOptionsMessage={selectSettings.noOptionsMessage}
@@ -227,7 +285,9 @@ function FractionForm() {
 
         <Select
           closeMenuOnSelect={true}
+          options={offTypesOptions}
           components={animatedComponents}
+          isLoading={isOffTypeComboItemsLoading || isOffTypeComboItemsFetching}
           isClearable={true}
           placeholder={
             <div className="react-select-placeholder">نوع سابقه</div>

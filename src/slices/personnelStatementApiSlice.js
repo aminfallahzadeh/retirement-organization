@@ -16,10 +16,17 @@ export const personnelStatementApiSlice = apiSlice.injectEndpoints({
         url: `${PERSONNEL_STATEMENT_URL_HTTPS}/GetPersonnelStatementOff?personID=${personID}`,
       }),
     }),
+
+    getPersonnelStatementOffType: builder.query({
+      query: () => ({
+        url: `${PERSONNEL_STATEMENT_URL_HTTPS}/GetPersonnelStatementOffType`,
+      }),
+    }),
   }),
 });
 
 export const {
   useGetPersonnelStatementQuery,
   useGetPersonnelStatementOffQuery,
+  useGetPersonnelStatementOffTypeQuery,
 } = personnelStatementApiSlice;

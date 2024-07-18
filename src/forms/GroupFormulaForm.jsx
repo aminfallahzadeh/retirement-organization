@@ -17,7 +17,11 @@ import NumberInput from "../components/NumberInput.jsx";
 // helpers
 import { convertToPersianNumber } from "../helper";
 
-function GroupFormulaForm({ formulaGroups, retirementStatementItemID }) {
+function GroupFormulaForm({
+  formulaGroups,
+  retirementStatementItemID,
+  setIsItemsEdited,
+}) {
   const [data, setData] = useState(
     formulaGroups.map((formula) => ({
       retirementStatementItemID,
@@ -46,6 +50,7 @@ function GroupFormulaForm({ formulaGroups, retirementStatementItemID }) {
       const res = await updateRetirementStatementFormulaGroupSetting(
         data
       ).unwrap();
+      setIsItemsEdited(true);
       toast.success(res.message, {
         autoClose: 2000,
       });

@@ -11,7 +11,14 @@ export const fractionApiSlice = apiSlice.injectEndpoints({
         url: `${FRACTION_URL_HTTPS}/GetFractionItemView?personID=${personID}`,
       }),
     }),
+
+    getFractionType: builder.query({
+      query: () => ({
+        url: `${FRACTION_URL_HTTPS}/GetFractionType`,
+      }),
+    }),
   }),
 });
 
-export const { useGetFractionItemViewQuery } = fractionApiSlice;
+export const { useGetFractionItemViewQuery, useGetFractionTypeQuery } =
+  fractionApiSlice;
