@@ -3,12 +3,14 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 // redux imports
 import { useSelector } from "react-redux";
-import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
 import {
   useGetListOfRetirementStatementItemQuery,
   useLazyGetListOfFormulaGroupSettingQuery,
   useGenerateGroupStatementMutation,
 } from "../slices/retirementStatementApiSlice.js";
+
+// hooks
+import { useFetchRetirementStatementTypes } from "../hooks/useFetchLookUpData.js";
 
 // mui imports
 import {
@@ -16,6 +18,7 @@ import {
   EditCalendarOutlined as DraftIcon,
 } from "@mui/icons-material";
 import { CircularProgress, Box } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 // library imports
 import { toast } from "react-toastify";
@@ -30,7 +33,6 @@ import GroupFormulaForm from "./GroupFormulaForm.jsx";
 // utils
 import { selectStyles, selectSettings } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
-import { LoadingButton } from "@mui/lab";
 
 function StatementItemsForm() {
   const inputRef = useRef(null);
@@ -48,7 +50,7 @@ function StatementItemsForm() {
   const [formulaGroups, setFormulaGroups] = useState(null);
 
   // LOOK UP STATES
-  const [statementTypes, setStatementTypes] = useState([]);
+  // const [statementTypes, setStatementTypes] = useState([]);
   const [statementItems, setStatementItems] = useState([]);
 
   // DATE STATES
@@ -88,14 +90,9 @@ function StatementItemsForm() {
     [getFormulaGroups]
   );
 
-  // GET LOOKUP DATA
-  const {
-    data: statementTypesComboItems,
-    isSuccess: statementTypesIsSuccess,
-    isFetching: statementTypesIsFetching,
-    isLoading: statementTypesIsLoading,
-    error: statementTypesError,
-  } = useGetRetirementStatementTypeQuery({});
+  // GET LOOKUP DATA FROM HOOK
+  const { statementTypes, statementTypesIsFetching, statementTypesIsLoading } =
+    useFetchRetirementStatementTypes();
 
   const {
     data: formulaGroupSettingComboItems,
@@ -104,13 +101,6 @@ function StatementItemsForm() {
     isLoading: formulaGroupSettingIsLoading,
     error: formulaGroupSettingError,
   } = useGetListOfRetirementStatementItemQuery();
-
-  // FETCH LOOK UP DATA
-  useEffect(() => {
-    if (statementTypesIsSuccess) {
-      setStatementTypes(statementTypesComboItems.itemList);
-    }
-  }, [statementTypesIsSuccess, statementTypesComboItems]);
 
   useEffect(() => {
     if (formulaGroupSettingIsSuccess) {
@@ -124,13 +114,6 @@ function StatementItemsForm() {
       fetchFormulaGroups(data.retirementStatementItemID.value);
     }
   }, [data.retirementStatementItemID, fetchFormulaGroups]);
-
-  // HANLDE ERRORS
-  useEffect(() => {
-    if (statementTypesError) {
-      console.log(statementTypesError);
-    }
-  }, [statementTypesError]);
 
   useEffect(() => {
     if (formulaGroupSettingError) {

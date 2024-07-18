@@ -6,6 +6,9 @@ import { useGetLookupDataQuery } from "../slices/sharedApiSlice";
 import { useGetPersonnelStatementOffTypeQuery } from "../slices/personnelStatementApiSlice";
 import { useGetFractionTypeQuery } from "../slices/fractionApiSlice";
 
+// hooks
+import { useCloseCalender } from "../hooks/useCloseCalender";
+
 // mui imports
 import {
   CalendarTodayOutlined as CalenderIcon,
@@ -20,7 +23,6 @@ import {
 
 // library imports
 import moment from "moment-jalaali";
-import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 import Select from "react-select";
@@ -34,7 +36,9 @@ import { selectStyles, selectSettings } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function FractionForm() {
-  const inputRef = useRef(null);
+  const letterCalenderRef = useRef(null);
+  const confirmCalenderRef = useRef(null);
+  const paymenrCalenderRef = useRef(null);
 
   const animatedComponents = makeAnimated();
 
@@ -173,23 +177,14 @@ function FractionForm() {
     setFrMode(e.target.value);
   };
 
-  // FUNCTION TO HANDLE OURSIDE CLICK
-  const handleOutsideClick = (event) => {
-    if (inputRef.current && !inputRef.current.contains(event.target)) {
-      setIsLetterDateCalenderOpen(false);
-      setIsConfirmDateCalenderOpen(false);
-      setIsPaymentCalenderOpen(false);
-    }
-  };
-
-  // EVENT LISTENER FOR HANLDE OURSIDE CLICK
-  useEffect(() => {
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
+  useCloseCalender(
+    [letterCalenderRef, confirmCalenderRef, paymenrCalenderRef],
+    [
+      setIsLetterDateCalenderOpen,
+      setIsConfirmDateCalenderOpen,
+      setIsPaymentCalenderOpen,
+    ]
+  );
 
   const content = (
     <section className="formContainer flex-col">
@@ -259,7 +254,7 @@ function FractionForm() {
             style={datePickerStyles}
             wrapperStyle={datePickerWrapperStyles}
             pickerProps={{
-              ref: inputRef,
+              ref: letterCalenderRef,
             }}
           />
           <div className="inputBox__form--readOnly-label">تاریخ نامه</div>
@@ -277,7 +272,7 @@ function FractionForm() {
             style={datePickerStyles}
             wrapperStyle={datePickerWrapperStyles}
             pickerProps={{
-              ref: inputRef,
+              ref: confirmCalenderRef,
             }}
           />
           <div className="inputBox__form--readOnly-label">تاریخ ثبت</div>
@@ -418,7 +413,7 @@ function FractionForm() {
             style={datePickerStyles}
             wrapperStyle={datePickerWrapperStyles}
             pickerProps={{
-              ref: inputRef,
+              ref: paymenrCalenderRef,
             }}
           />
           <div className="inputBox__form--readOnly-label">تاریخ پرداخت</div>

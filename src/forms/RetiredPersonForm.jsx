@@ -1,14 +1,25 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // reduxt imports
-import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import {
   useUpdateRetiredPersonMutation,
   useGetRetiredPersonQuery,
 } from "../slices/retiredApiSlice.js";
 import { setPersonDeathDate } from "../slices/retiredStateSlice.js";
 import { useDispatch } from "react-redux";
+
+// hooks
+import {
+  useFetchGenders,
+  useFetchEducationTypes,
+  useFetchCountries,
+  useFetchStates,
+  useFetchCities,
+  useFetchHousingTypes,
+  useFetchMaritalStatus,
+} from "../hooks/useFetchLookUpData.js";
+import { useCloseCalender } from "../hooks/useCloseCalender";
 
 // mui imports
 import { Button, Box, CircularProgress } from "@mui/material";
@@ -24,6 +35,8 @@ import {
 import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 // helpers
 import {
@@ -32,17 +45,21 @@ import {
   convertToPersianDate,
 } from "../helper.js";
 
+// utils
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
+import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
+
 function RetiredPersonForm() {
+  const birthDateCalenderRef = useRef(null);
+  const deathDateCalenderRef = useRef(null);
+
   const [editable, setEditable] = useState(false);
 
-  // LOOK UP STATES
-  const [genderCombo, setGenderCombo] = useState([]);
-  const [educationCombo, setEducationCombo] = useState([]);
-  const [housingCombo, setHousingCombo] = useState([]);
-  const [maritalStatusCombo, setMaritalStatusCombo] = useState([]);
-  const [countryCombo, setCountryCombo] = useState([]);
-  const [stateCombo, setStateCombo] = useState([]);
-  const [cityCombo, setCityCombo] = useState([]);
+  const animatedComponents = makeAnimated();
 
   // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
@@ -95,40 +112,48 @@ function RetiredPersonForm() {
   }, [error]);
 
   // GET LOOK UP DATA
-  const { data: genderComboItems, isSuccess: isGenderComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "Gender",
-    });
+  const { genders, isGenderItemsLoading, isGenderItemsFetching } =
+    useFetchGenders();
 
-  const { data: educationComboItems, isSuccess: isEducationComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "EducationType",
-    });
+  const { educationTypes, educationTypesIsLoading, educationTypesIsFetching } =
+    useFetchEducationTypes();
 
-  const { data: housingComboItems, isSuccess: isHousingComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "HousingType",
-    });
+  const { countries, countriesIsLoading, countriesIsFetching } =
+    useFetchCountries();
 
-  const { data: maritalStatusComboItems, isSuccess: isMatritalComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "MaritialStatus",
-    });
+  const { states, statesIsLoading, statesIsFetching } = useFetchStates();
 
-  const { data: countryComboItems, isSuccess: isCountryComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "Country",
-    });
+  const { cities, citiesIsLoading, citiesIsFetching } = useFetchCities();
 
-  const { data: cityComboItems, isSuccess: isCityComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "City",
-    });
+  const { housingTypes, housingTypesIsLoading, housingTypesIsFetching } =
+    useFetchHousingTypes();
 
-  const { data: stateComboItems, isSuccess: isStateComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "State",
-    });
+  const {
+    maritalStatusItems,
+    maritalStatusItemsIsLoading,
+    maritalStatusItemsIsFetching,
+  } = useFetchMaritalStatus();
+
+  // SELECT OPTIONS
+  const genderOptions = optionsGenerator(genders, "lookUpID", "lookUpName");
+  const educationOptions = optionsGenerator(
+    educationTypes,
+    "lookUpID",
+    "lookUpName"
+  );
+  const stateOptions = optionsGenerator(states, "lookUpID", "lookUpName");
+  const countryOptions = optionsGenerator(countries, "lookUpID", "lookUpName");
+  const cityOptions = optionsGenerator(cities, "lookUpID", "lookUpName");
+  const housingOptions = optionsGenerator(
+    housingTypes,
+    "lookUpID",
+    "lookUpName"
+  );
+  const maritalStatusOptions = optionsGenerator(
+    maritalStatusItems,
+    "lookUpID",
+    "lookUpName"
+  );
 
   // HANDLE DATES
   useEffect(() => {
@@ -138,49 +163,6 @@ function RetiredPersonForm() {
   useEffect(() => {
     setSelectedDeathDate(convertToPersianDate(personData?.personDeathDate));
   }, [personData?.personDeathDate]);
-
-  // FETCH LOOK UP DATA
-  useEffect(() => {
-    if (isGenderComboSuccess) {
-      setGenderCombo(genderComboItems.itemList);
-    }
-  }, [isGenderComboSuccess, genderComboItems]);
-
-  useEffect(() => {
-    if (isEducationComboSuccess) {
-      setEducationCombo(educationComboItems.itemList);
-    }
-  }, [isEducationComboSuccess, educationComboItems]);
-
-  useEffect(() => {
-    if (isHousingComboSuccess) {
-      setHousingCombo(housingComboItems.itemList);
-    }
-  }, [isHousingComboSuccess, housingComboItems]);
-
-  useEffect(() => {
-    if (isMatritalComboSuccess) {
-      setMaritalStatusCombo(maritalStatusComboItems.itemList);
-    }
-  }, [isMatritalComboSuccess, maritalStatusComboItems]);
-
-  useEffect(() => {
-    if (isCountryComboSuccess) {
-      setCountryCombo(countryComboItems.itemList);
-    }
-  }, [isCountryComboSuccess, countryComboItems]);
-
-  useEffect(() => {
-    if (isCityComboSuccess) {
-      setCityCombo(cityComboItems.itemList);
-    }
-  }, [isCityComboSuccess, cityComboItems]);
-
-  useEffect(() => {
-    if (isStateComboSuccess) {
-      setStateCombo(stateComboItems.itemList);
-    }
-  }, [isStateComboSuccess, stateComboItems]);
 
   // other handlers
   const handleEditable = () => {
@@ -221,6 +203,16 @@ function RetiredPersonForm() {
       ...personData,
       [name]: value,
     });
+  };
+
+  const handleSelectOptionChange = (selectedOption, actionMeta) => {
+    const { name } = actionMeta;
+    if (selectedOption) {
+      const { value } = selectedOption;
+      setPersonData({ ...personData, [name]: value || "" });
+    } else {
+      setPersonData({ ...personData, [name]: null });
+    }
   };
 
   // handle update retired person
@@ -284,6 +276,11 @@ function RetiredPersonForm() {
       });
     }
   };
+
+  useCloseCalender(
+    [birthDateCalenderRef, deathDateCalenderRef],
+    [setIsBirthCalenderOpen, setIsDeathCalenderOpen]
+  );
 
   const content = (
     <>
@@ -406,30 +403,24 @@ function RetiredPersonForm() {
               </label>
             </div>
 
-            <div className="inputBox__form">
-              <select
-                disabled={!editable}
-                type="text"
-                name="genderID"
-                id="genderID"
-                className="inputBox__form--input"
-                value={personData?.genderID || " "}
-                onChange={handlePersonDataChange}
-                required
-              >
-                <option value=" " disabled>
-                  انتخاب
-                </option>
-                {genderCombo.map((gender) => (
-                  <option key={gender.lookUpID} value={gender.lookUpID}>
-                    {gender.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="genderID" className="inputBox__form--label">
-                <span>*</span> جنسیت
-              </label>
-            </div>
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={genderOptions}
+              onChange={handleSelectOptionChange}
+              isDisabled={!editable}
+              name="genderID"
+              isClearable={true}
+              placeholder={
+                <div className="react-select-placeholder">
+                  <span>*</span> جنسیت
+                </div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+              isLoading={isGenderItemsLoading || isGenderItemsFetching}
+            />
 
             <div className="inputBox__form">
               <InputDatePicker
@@ -441,14 +432,10 @@ function RetiredPersonForm() {
                 onOpenChange={handleBirthOpenChange}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isBirthCalenderOpen}
-                style={{
-                  border: "2px solid #cfcfcf",
-                  borderRadius: "6px",
-                  marginLeft: "0.5rem",
-                }}
-                wrapperStyle={{
-                  border: "none",
-                  cursor: "pointer",
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: birthDateCalenderRef,
                 }}
               />
               <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
@@ -744,108 +731,71 @@ function RetiredPersonForm() {
               </label>
             </div>
 
-            <div className="inputBox__form">
-              <select
-                disabled={!editable}
-                type="text"
-                id="educationTypeID"
-                value={personData?.educationTypeID || " "}
-                name="educationTypeID"
-                className="inputBox__form--input field"
-                onChange={handlePersonDataChange}
-                required
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {educationCombo.map((edu) => (
-                  <option key={edu.lookUpID} value={edu.lookUpID}>
-                    {edu.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label
-                htmlFor="educationTypeID"
-                className="inputBox__form--label"
-              >
-                مدرک تحصیلی
-              </label>
-            </div>
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={educationOptions}
+              onChange={handleSelectOptionChange}
+              isDisabled={!editable}
+              name="educationTypeID"
+              isClearable={true}
+              placeholder={
+                <div className="react-select-placeholder">
+                  <span>*</span> مدرک تحصیلی
+                </div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+              isLoading={educationTypesIsLoading || educationTypesIsFetching}
+            />
 
-            <div className="inputBox__form">
-              <select
-                disabled={!editable}
-                type="text"
-                id="personCountry"
-                value={personData?.personCountryID || " "}
-                name="personCountryID"
-                className="inputBox__form--input field"
-                onChange={handlePersonDataChange}
-                required
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {countryCombo.map((country) => (
-                  <option key={country.lookUpID} value={country.lookUpID}>
-                    {country.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="personCountry" className="inputBox__form--label">
-                کشور
-              </label>
-            </div>
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={countryOptions}
+              onChange={handleSelectOptionChange}
+              isDisabled={!editable}
+              name="personCountryID"
+              isClearable={true}
+              placeholder={<div className="react-select-placeholder">کشور</div>}
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+              isLoading={countriesIsLoading || countriesIsFetching}
+            />
 
-            <div className="inputBox__form">
-              <select
-                disabled={!editable}
-                type="text"
-                id="personState"
-                value={personData?.personStateID || " "}
-                name="personStateID"
-                className="inputBox__form--input"
-                onChange={handlePersonDataChange}
-                required
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {stateCombo.map((state) => (
-                  <option key={state.lookUpID} value={state.lookUpID}>
-                    {state.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="personState" className="inputBox__form--label">
-                استان
-              </label>
-            </div>
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={stateOptions}
+              onChange={handleSelectOptionChange}
+              isDisabled={!editable}
+              name="personStateID"
+              isClearable={true}
+              placeholder={
+                <div className="react-select-placeholder">استان</div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+              isLoading={statesIsLoading || statesIsFetching}
+            />
 
-            <div className="inputBox__form">
-              <select
-                disabled={!editable}
-                type="text"
-                id="personCity"
-                value={personData?.personCityID || " "}
-                name="personCityID"
-                className="inputBox__form--input"
-                onChange={handlePersonDataChange}
-                required
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {cityCombo.map((city) => (
-                  <option key={city.lookUpID} value={city.lookUpID}>
-                    {city.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="personCity" className="inputBox__form--label">
-                شهر
-              </label>
-            </div>
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={cityOptions}
+              onChange={handleSelectOptionChange}
+              isDisabled={!editable}
+              name="personCityID"
+              isClearable={true}
+              placeholder={<div className="react-select-placeholder">شهر</div>}
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+              isLoading={citiesIsLoading || citiesIsFetching}
+            />
 
             <div className="inputBox__form">
               <input
@@ -899,58 +849,41 @@ function RetiredPersonForm() {
               </label>
             </div>
 
-            <div className="inputBox__form">
-              <select
-                disabled={!editable}
-                type="text"
-                id="housingTypeID"
-                value={personData?.housingTypeID || " "}
-                name="housingTypeID"
-                className="inputBox__form--input"
-                onChange={handlePersonDataChange}
-                required
-              >
-                <option value=" " disabled>
-                  انتخاب
-                </option>
-                {housingCombo.map((house) => (
-                  <option key={house.lookUpID} value={house.lookUpID}>
-                    {house.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="housingTypeID" className="inputBox__form--label">
-                وضعیت مسکن
-              </label>
-            </div>
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={housingOptions}
+              onChange={handleSelectOptionChange}
+              isDisabled={!editable}
+              name="housingTypeID"
+              isClearable={true}
+              placeholder={
+                <div className="react-select-placeholder">وضعیت مسکن</div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+              isLoading={housingTypesIsLoading || housingTypesIsFetching}
+            />
 
-            <div className="inputBox__form">
-              <select
-                disabled={!editable}
-                type="text"
-                name="maritalStatusID"
-                id="maritalStatusID"
-                className="inputBox__form--input"
-                value={personData?.maritalStatusID || " "}
-                onChange={handlePersonDataChange}
-                required
-              >
-                <option value=" " disabled>
-                  انتخاب
-                </option>
-                {maritalStatusCombo.map((item) => (
-                  <option key={item.lookUpID} value={item.lookUpID}>
-                    {item.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label
-                htmlFor="maritalStatusID"
-                className="inputBox__form--label"
-              >
-                وضعیت تاهل
-              </label>
-            </div>
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={maritalStatusOptions}
+              onChange={handleSelectOptionChange}
+              isDisabled={!editable}
+              name="maritalStatusID"
+              isClearable={true}
+              placeholder={
+                <div className="react-select-placeholder">وضعیت مسکن</div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+              isLoading={
+                maritalStatusItemsIsLoading || maritalStatusItemsIsFetching
+              }
+            />
 
             <div className="inputBox__form">
               <InputDatePicker
@@ -961,14 +894,10 @@ function RetiredPersonForm() {
                 onOpenChange={handleDeathOpenChange}
                 open={isDeathCalenderOpen}
                 suffixIcon={<CalenderIcon color="action" />}
-                style={{
-                  border: "2px solid #cfcfcf",
-                  borderRadius: "6px",
-                  marginLeft: "0.5rem",
-                }}
-                wrapperStyle={{
-                  border: "none",
-                  cursor: "pointer",
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: deathDateCalenderRef,
                 }}
               />
               <div className="inputBox__form--readOnly-label">تاریخ فوت</div>

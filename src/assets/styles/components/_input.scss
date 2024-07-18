@@ -87,14 +87,18 @@
 		width: 100%;
 		height: 100%;
 		font-size: 13px;
-		background: transparent;
+		background-color: var(--color-white);
 		color: var(--color-input-primary);
 		padding-inline: 20px 50px;
 		border: 1px solid var(--color-input-border);
 		border-radius: $border-radius-secondary;
 		outline: none;
 		text-align: right;
-		transition: all 0.25s;
+		transition: position 0.25s;
+
+		&:focus {
+			outline: 2px solid var(--color-input-outline);
+		}
 
 		&-height-40 {
 			height: 40px !important;
@@ -105,8 +109,10 @@
 		}
 
 		&:disabled {
-			opacity: 0.5;
+			background-color: var(--color-disabled-input);
 			cursor: default !important;
+			border: 1px solid var(--color-disbaled-input-border);
+			color: var(--color-disbaled-input-txt);
 		}
 
 		&:focus ~ .inputBox__form--label,
@@ -120,23 +126,6 @@
 			border-radius: $border-radius-secondary;
 			padding: 0 10px;
 			cursor: text;
-			transition: all 0.25s;
-		}
-	}
-
-	&--readOnly-label {
-		position: absolute;
-		top: -10px;
-		right: 20px;
-		font-size: 12px;
-		background-color: $color-grey-4;
-		color: $color-white;
-		border-radius: $border-radius-secondary;
-		padding: 0 10px;
-		cursor: default;
-
-		span {
-			color: $color-accent-red;
 		}
 	}
 
@@ -144,13 +133,31 @@
 		width: 100%;
 		height: 100%;
 		font-size: 16px;
-		background: $color-bg-primary;
-		color: $color-grey-5;
+		background-color: var(--color-disabled-input);
+		cursor: default !important;
+		border: 1px solid var(--color-disbaled-input-border);
+		color: var(--color-disbaled-input-txt);
 		padding-inline: 20px 50px;
-		border: 2px solid $color-grey-2;
 		border-radius: $border-radius-secondary;
 		outline: none;
 		text-align: right;
+	}
+
+	&--readOnly-label {
+		position: absolute;
+		top: -10px;
+		right: 20px;
+		font-size: 12px;
+		background-color: var(--color-bg-label);
+		color: $color-white;
+		border-radius: $border-radius-secondary;
+		padding: 0 10px;
+		cursor: text;
+		color: var(--color-label-primary);
+
+		span {
+			color: $color-accent-red;
+		}
 	}
 
 	&--readOnly-content {

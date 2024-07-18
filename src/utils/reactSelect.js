@@ -32,3 +32,11 @@ export const selectSettings = {
   noOptionsMessage: () => "موردی یافت نشد!",
   loadingMessage: () => "در حال بارگذاری ...",
 };
+
+// OPTIONS CREATOR
+export const optionsGenerator = (data, valueKey, labelKey) => {
+  return data.map((item) => ({
+    value: item[valueKey],
+    label: item[labelKey],
+  }));
+};
