@@ -1,5 +1,5 @@
 // react imports
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // redux imports
 import { useUpdateRetirementStatementFormulaGroupSettingMutation } from "../slices/retirementStatementApiSlice.js";
@@ -17,20 +17,8 @@ import NumberInput from "../components/NumberInput.jsx";
 // helpers
 import { convertToPersianNumber, separateByThousands } from "../helper";
 
-function GroupFormulaForm({
-  formulaGroups,
-  retirementStatementItemID,
-  setIsItemsEdited,
-}) {
-  const [data, setData] = useState(
-    formulaGroups.map((formula) => ({
-      retirementStatementItemID,
-      retirementStatementFormulaGroupSettingID:
-        formula.retirementStatementFormulaGroupSettingID,
-      description: formula.description,
-      value: formula.value,
-    }))
-  );
+function GroupFormulaForm({ formulaGroups, setIsItemsEdited }) {
+  const [data, setData] = useState([...formulaGroups]);
 
   const handleDataChange = (id, value) => {
     setData((prevData) =>
@@ -41,10 +29,6 @@ function GroupFormulaForm({
       )
     );
   };
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   const [updateRetirementStatementFormulaGroupSetting, { isLoading }] =
     useUpdateRetirementStatementFormulaGroupSettingMutation();
@@ -69,7 +53,7 @@ function GroupFormulaForm({
   const content = (
     <section className="flex-col formContainer">
       <form className="grid grid--col-2">
-        {formulaGroups.map((formula, index) => (
+        {data.map((formula, index) => (
           <div
             key={formula.retirementStatementFormulaGroupSettingID}
             className="flex-right flex-row"
@@ -81,7 +65,7 @@ function GroupFormulaForm({
             <NumberInput
               value={separateByThousands(
                 convertToPersianNumber(
-                  data?.find(
+                  data.find(
                     (item) =>
                       item.retirementStatementFormulaGroupSettingID ===
                       formula.retirementStatementFormulaGroupSettingID

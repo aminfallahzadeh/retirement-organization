@@ -49,7 +49,7 @@ function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
 
   // MAIN STATES
   const [data, setData] = useState({});
-  const [formulaGroups, setFormulaGroups] = useState(null);
+  const [formulaGroups, setFormulaGroups] = useState([]);
   const [groupStatementTableData, setGroupStatementTableData] = useState(null);
 
   // LOOK UP STATES
@@ -319,7 +319,6 @@ function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
           {!isDraftGenerated && (
             <GroupFormulaForm
               formulaGroups={formulaGroups}
-              retirementStatementItemID={data.retirementStatementItemID.value}
               setIsItemsEdited={setIsItemsEdited}
             />
           )}
