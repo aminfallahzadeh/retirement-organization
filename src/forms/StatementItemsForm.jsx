@@ -11,6 +11,7 @@ import {
 
 // hooks
 import { useFetchRetirementStatementTypes } from "../hooks/useFetchLookUpData.js";
+import { useCloseCalender } from "../hooks/useCloseCalender";
 
 // mui imports
 import {
@@ -34,11 +35,15 @@ import GroupFormulaForm from "./GroupFormulaForm.jsx";
 import GenerateGroupStatementGrid from "../grids/GenerateGroupStatementGrid.jsx";
 
 // utils
-import { selectStyles, selectSettings } from "../utils/reactSelect";
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
-  const inputRef = useRef(null);
+  const statementRunDateCalenderRef = useRef(null);
 
   const { userID } = useSelector((state) => state.auth);
 
@@ -129,10 +134,11 @@ function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
   }, [formulaGroupSettingError]);
 
   // SELECT OPTIONS
-  const statementTypeOptions = statementTypes.map((statementType) => ({
-    value: statementType.retirementStatementTypeID,
-    label: statementType.retirementStatementTypeName,
-  }));
+  const statementTypeOptions = optionsGenerator(
+    statementTypes,
+    "retirementStatementTypeID",
+    "retirementStatementTypeName"
+  );
 
   const formulaGroupSettingOptions = statementItems
     // ONLY SHOW ACTIVE ITEMS
@@ -164,22 +170,6 @@ function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
     const value = event.target.value;
     setData({ ...data, [name]: value });
   };
-
-  // FUNCTION TO HANDLE OURSIDE CLICK
-  const handleOutsideClick = (event) => {
-    if (inputRef.current && !inputRef.current.contains(event.target)) {
-      setIsRunDateCalenderOpen(false);
-    }
-  };
-
-  // EVENT LISTENER FOR HANLDE OURSIDE CLICK
-  useEffect(() => {
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
 
   // GENERATE GROUP STATEMENT HANDLER
   const generateGroupStatementHandler = async () => {
@@ -222,6 +212,9 @@ function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
     }
   };
 
+  // FIX CLOSE CALENDER BUG
+  useCloseCalender([statementRunDateCalenderRef], [setIsRunDateCalenderOpen]);
+
   const content = (
     <>
       {!isDraftGenerated && (
@@ -239,7 +232,7 @@ function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
                 style={datePickerStyles}
                 wrapperStyle={datePickerWrapperStyles}
                 pickerProps={{
-                  ref: inputRef,
+                  ref: statementRunDateCalenderRef,
                 }}
               />
               <div className="inputBox__form--readOnly-label">
@@ -247,23 +240,35 @@ function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
               </div>
             </div>
 
-            <Select
-              closeMenuOnSelect={true}
-              components={animatedComponents}
-              options={statementTypeOptions}
-              isClearable={true}
-              name="retirementStatementTypeID"
-              onChange={handleStatementItemChange}
-              isLoading={statementTypesIsLoading || statementTypesIsFetching}
-              placeholder={
-                <div className="react-select-placeholder">
-                  <span>*</span> نوع حکم
-                </div>
-              }
-              noOptionsMessage={selectSettings.noOptionsMessage}
-              loadingMessage={selectSettings.loadingMessage}
-              styles={selectStyles}
-            />
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={statementTypeOptions}
+                isClearable={true}
+                name="retirementStatementTypeID"
+                onChange={handleStatementItemChange}
+                isLoading={statementTypesIsLoading || statementTypesIsFetching}
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> نوع حکم
+                  </div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+              />
+
+              <label
+                className={
+                  data?.retirementStatementTypeID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                <span>*</span> نوع حکم
+              </label>
+            </div>
 
             <div className="inputBox__form col-span-2 row-span-2">
               <textarea
@@ -282,25 +287,37 @@ function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
               </label>
             </div>
 
-            <Select
-              closeMenuOnSelect={true}
-              components={animatedComponents}
-              options={formulaGroupSettingOptions}
-              onChange={handleStatementItemChange}
-              name="retirementStatementItemID"
-              isClearable={true}
-              placeholder={
-                <div className="react-select-placeholder">
-                  تنظیمات آیتم های حکم
-                </div>
-              }
-              noOptionsMessage={selectSettings.noOptionsMessage}
-              loadingMessage={selectSettings.loadingMessage}
-              styles={selectStyles}
-              isLoading={
-                formulaGroupSettingIsFetching || formulaGroupSettingIsLoading
-              }
-            />
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={formulaGroupSettingOptions}
+                onChange={handleStatementItemChange}
+                name="retirementStatementItemID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">
+                    تنظیمات آیتم های حکم
+                  </div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={
+                  formulaGroupSettingIsFetching || formulaGroupSettingIsLoading
+                }
+              />
+
+              <label
+                className={
+                  data?.retirementStatementItemID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                تنظیمات آیتم های حکم
+              </label>
+            </div>
             <div>&nbsp;</div>
           </form>
         </section>
