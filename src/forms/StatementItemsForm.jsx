@@ -29,6 +29,7 @@ import makeAnimated from "react-select/animated";
 
 // components
 import GroupFormulaForm from "./GroupFormulaForm.jsx";
+import GenerateGroupStatementGrid from "../grids/GenerateGroupStatementGrid.jsx";
 
 // utils
 import { selectStyles, selectSettings } from "../utils/reactSelect";
@@ -44,13 +45,14 @@ function StatementItemsForm() {
 
   // CONTROL STATES
   const [isItemsEdited, setIsItemsEdited] = useState(false);
+  const [showGroupStatementGrid, setShowGroupStatementGrid] = useState(false);
 
   // MAIN STATES
   const [data, setData] = useState({});
   const [formulaGroups, setFormulaGroups] = useState(null);
+  const [groupStatementTableData, setGroupStatementTableData] = useState(null);
 
   // LOOK UP STATES
-  // const [statementTypes, setStatementTypes] = useState([]);
   const [statementItems, setStatementItems] = useState([]);
 
   // DATE STATES
@@ -69,7 +71,10 @@ function StatementItemsForm() {
 
   const [
     generateGroupStatement,
-    { isLoading: generateGroupStatementIsLoading },
+    {
+      isLoading: generateGroupStatementIsLoading,
+      isFetching: generateGroupStatementIsFetching,
+    },
   ] = useGenerateGroupStatementMutation();
 
   // FETCH FORMULA GROUPS FUNCTION
@@ -194,7 +199,15 @@ function StatementItemsForm() {
         requestID,
         retirementStatementDesc: data.retirementStatementDesc || null,
       }).unwrap();
-      console.log(res);
+      setShowGroupStatementGrid(true);
+      const mappedData = res.map((item, index) => ({
+        id: item.retirementStatementID,
+        groupStatementRowNum: index + 1,
+        statementSerial: item.retirementStatementSerial || "-",
+        statementType: item.retirementStatementTypeName || "-",
+        statementNumber: item.retirementStatementNo || "-",
+      }));
+      setGroupStatementTableData(mappedData);
       toast.success(res.message, {
         autoClose: 2000,
       });
@@ -208,85 +221,87 @@ function StatementItemsForm() {
 
   const content = (
     <>
-      <section className="flex-col formContainer">
-        <form method="POST" className="grid grid--col-4" noValidate>
-          <div className="inputBox__form">
-            <InputDatePicker
-              defaultValue={null}
-              value={selectedRunDate}
-              onChange={handleRunDateChange}
-              onOpenChange={hadnleRunDateOpenChange}
-              format={"jYYYY/jMM/jDD"}
-              suffixIcon={<CalenderIcon color="action" />}
-              open={isRunDateCalenderOpen}
-              style={datePickerStyles}
-              wrapperStyle={datePickerWrapperStyles}
-              pickerProps={{
-                ref: inputRef,
-              }}
-            />
-            <div className="inputBox__form--readOnly-label">
-              <span>*</span> تاریخ اجرا
+      {!showGroupStatementGrid && (
+        <section className="flex-col formContainer">
+          <form method="POST" className="grid grid--col-4" noValidate>
+            <div className="inputBox__form">
+              <InputDatePicker
+                defaultValue={null}
+                value={selectedRunDate}
+                onChange={handleRunDateChange}
+                onOpenChange={hadnleRunDateOpenChange}
+                format={"jYYYY/jMM/jDD"}
+                suffixIcon={<CalenderIcon color="action" />}
+                open={isRunDateCalenderOpen}
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: inputRef,
+                }}
+              />
+              <div className="inputBox__form--readOnly-label">
+                <span>*</span> تاریخ اجرا
+              </div>
             </div>
-          </div>
 
-          <Select
-            closeMenuOnSelect={true}
-            components={animatedComponents}
-            options={statementTypeOptions}
-            isClearable={true}
-            name="retirementStatementTypeID"
-            onChange={handleStatementItemChange}
-            isLoading={statementTypesIsLoading || statementTypesIsFetching}
-            placeholder={
-              <div className="react-select-placeholder">
-                <span>*</span> نوع حکم{" "}
-              </div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            styles={selectStyles}
-          />
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={statementTypeOptions}
+              isClearable={true}
+              name="retirementStatementTypeID"
+              onChange={handleStatementItemChange}
+              isLoading={statementTypesIsLoading || statementTypesIsFetching}
+              placeholder={
+                <div className="react-select-placeholder">
+                  <span>*</span> نوع حکم
+                </div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+            />
 
-          <div className="inputBox__form col-span-2 row-span-2">
-            <textarea
-              type="text"
-              className="inputBox__form--input"
-              name="retirementStatementDesc"
-              onChange={handleStatementDescriptionChange}
-              required
-              id="retirementStatementDesc"
-            ></textarea>
-            <label
-              className="inputBox__form--label"
-              htmlFor="retirementStatementDesc"
-            >
-              شرح حکم
-            </label>
-          </div>
+            <div className="inputBox__form col-span-2 row-span-2">
+              <textarea
+                type="text"
+                className="inputBox__form--input"
+                name="retirementStatementDesc"
+                onChange={handleStatementDescriptionChange}
+                required
+                id="retirementStatementDesc"
+              ></textarea>
+              <label
+                className="inputBox__form--label"
+                htmlFor="retirementStatementDesc"
+              >
+                <span>*</span> شرح حکم
+              </label>
+            </div>
 
-          <Select
-            closeMenuOnSelect={true}
-            components={animatedComponents}
-            options={formulaGroupSettingOptions}
-            onChange={handleStatementItemChange}
-            name="retirementStatementItemID"
-            isClearable={true}
-            placeholder={
-              <div className="react-select-placeholder">
-                تنظیمات آیتم های حکم
-              </div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            styles={selectStyles}
-            isLoading={
-              formulaGroupSettingIsFetching || formulaGroupSettingIsLoading
-            }
-          />
-          <div>&nbsp;</div>
-        </form>
-      </section>
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={formulaGroupSettingOptions}
+              onChange={handleStatementItemChange}
+              name="retirementStatementItemID"
+              isClearable={true}
+              placeholder={
+                <div className="react-select-placeholder">
+                  تنظیمات آیتم های حکم
+                </div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+              isLoading={
+                formulaGroupSettingIsFetching || formulaGroupSettingIsLoading
+              }
+            />
+            <div>&nbsp;</div>
+          </form>
+        </section>
+      )}
 
       {getFormulaGroupsIsFetching || getFormulaGroupsIsLoading ? (
         <Box
@@ -300,11 +315,13 @@ function StatementItemsForm() {
         </Box>
       ) : data.retirementStatementItemID && formulaGroups ? (
         <>
-          <GroupFormulaForm
-            formulaGroups={formulaGroups}
-            retirementStatementItemID={data.retirementStatementItemID.value}
-            setIsItemsEdited={setIsItemsEdited}
-          />
+          {!showGroupStatementGrid && (
+            <GroupFormulaForm
+              formulaGroups={formulaGroups}
+              retirementStatementItemID={data.retirementStatementItemID.value}
+              setIsItemsEdited={setIsItemsEdited}
+            />
+          )}
 
           <div style={{ marginRight: "auto" }}>
             <LoadingButton
@@ -312,11 +329,15 @@ function StatementItemsForm() {
               variant="contained"
               color="primary"
               onClick={generateGroupStatementHandler}
-              loading={generateGroupStatementIsLoading}
+              loading={
+                generateGroupStatementIsLoading ||
+                generateGroupStatementIsFetching
+              }
               disabled={
                 !data.retirementStatementTypeID ||
                 !selectedRunDate ||
-                !isItemsEdited
+                !isItemsEdited ||
+                showGroupStatementGrid
               }
               sx={{ fontFamily: "IranYekan" }}
               endIcon={<DraftIcon />}
@@ -326,6 +347,14 @@ function StatementItemsForm() {
           </div>
         </>
       ) : null}
+
+      {showGroupStatementGrid && (
+        <GenerateGroupStatementGrid
+          groupStatementTableData={groupStatementTableData}
+          isLoading={generateGroupStatementIsLoading}
+          isFetching={generateGroupStatementIsFetching}
+        />
+      )}
     </>
   );
 

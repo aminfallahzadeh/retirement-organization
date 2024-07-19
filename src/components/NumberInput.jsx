@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 // helpers
-import { convertToEnglishNumber } from "../helper";
+import { convertToEnglishNumber, removeSeparators } from "../helper";
 
 // mui imports
 import { IconButton } from "@mui/material";
@@ -18,8 +18,10 @@ function NumberInput({ onInputChange, ...props }) {
   const handleInputChange = (event) => {
     const newValue = event.target.value;
     // Allow only numbers
-    if (/^[۰۱۲۳۴۵۶۷۸۹0-9]*$/.test(newValue)) {
-      const numericValue = Number(convertToEnglishNumber(newValue));
+    if (/^[۰۱۲۳۴۵۶۷۸۹0-9.,]*$/.test(newValue)) {
+      const numericValue = parseFloat(
+        convertToEnglishNumber(removeSeparators(newValue))
+      );
       if (
         (props.min !== undefined && numericValue < props.min) ||
         (props.max !== undefined && numericValue > props.max)
@@ -28,12 +30,18 @@ function NumberInput({ onInputChange, ...props }) {
       }
       setValue(newValue);
       onInputChange && onInputChange(numericValue);
+      // if (newValue.includes(".")) {
+      //   setValue(newValue);
+      //   onInputChange && onInputChange(newValue);
+      // } else {
+      // }
     }
   };
 
   // Function to handle increment
   const handleIncrement = () => {
-    const newValue = (parseInt(convertToEnglishNumber(value), 10) || 0) + 1;
+    const newValue =
+      (parseInt(convertToEnglishNumber(removeSeparators(value)), 10) || 0) + 1;
     if (props.max !== undefined && newValue > props.max) {
       return;
     }
@@ -43,7 +51,8 @@ function NumberInput({ onInputChange, ...props }) {
 
   // Function to handle decrement
   const handleDecrement = () => {
-    const newValue = (parseInt(convertToEnglishNumber(value), 10) || 0) - 1;
+    const newValue =
+      (parseInt(convertToEnglishNumber(removeSeparators(value)), 10) || 0) - 1;
     if (props.min !== undefined && newValue < props.min) {
       return;
     }
@@ -53,10 +62,15 @@ function NumberInput({ onInputChange, ...props }) {
 
   // Function to prevent non-numeric characters from being input
   const handleBeforeInput = (event) => {
+    // if (event.data.includes(".") && removeSeparators(value).includes(".")) {
+    //   event.preventDefault();
+    // }
     const newValue = value + event.data;
-    const numericValue = Number(convertToEnglishNumber(newValue));
+    const numericValue = Number(
+      convertToEnglishNumber(removeSeparators(newValue))
+    );
     if (
-      !/^[۰۱۲۳۴۵۶۷۸۹0-9]*$/.test(event.data) ||
+      !/^[۰۱۲۳۴۵۶۷۸۹0-9.,]*$/.test(event.data) ||
       (props.min !== undefined && numericValue < props.min) ||
       (props.max !== undefined && numericValue > props.max)
     ) {
@@ -68,9 +82,11 @@ function NumberInput({ onInputChange, ...props }) {
   const handlePaste = (event) => {
     const paste = (event.clipboardData || window.clipboardData).getData("text");
     const newValue = value + paste;
-    const numericValue = Number(convertToEnglishNumber(newValue));
+    const numericValue = Number(
+      convertToEnglishNumber(removeSeparators(newValue))
+    );
     if (
-      !/^[۰۱۲۳۴۵۶۷۸۹0-9]*$/.test(paste) ||
+      !/^[۰۱۲۳۴۵۶۷۸۹0-9.,]*$/.test(paste) ||
       (props.min !== undefined && numericValue < props.min) ||
       (props.max !== undefined && numericValue > props.max)
     ) {
@@ -86,7 +102,7 @@ function NumberInput({ onInputChange, ...props }) {
         </IconButton>
       </div>
       <input
-        type="number"
+        type="text"
         className="numberInput__input"
         onChange={handleInputChange}
         onBeforeInput={handleBeforeInput}

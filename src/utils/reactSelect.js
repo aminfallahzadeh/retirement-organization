@@ -28,7 +28,7 @@ export const selectStyles = {
   menuList: (base) => ({
     ...base,
     fontFamily: "IranYekan",
-    // zIndex: "5",
+    zIndex: "5",
   }),
 };
 

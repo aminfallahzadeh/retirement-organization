@@ -15,7 +15,7 @@ import { LoadingButton } from "@mui/lab";
 import NumberInput from "../components/NumberInput.jsx";
 
 // helpers
-import { convertToPersianNumber } from "../helper";
+import { convertToPersianNumber, separateByThousands } from "../helper";
 
 function GroupFormulaForm({
   formulaGroups,
@@ -62,7 +62,7 @@ function GroupFormulaForm({
     }
   };
 
-  return (
+  const content = (
     <section className="flex-col formContainer">
       <form className="grid grid--col-2">
         {formulaGroups.map((formula, index) => (
@@ -75,12 +75,14 @@ function GroupFormulaForm({
             </span>
 
             <NumberInput
-              value={convertToPersianNumber(
-                data?.find(
-                  (item) =>
-                    item.retirementStatementFormulaGroupSettingID ===
-                    formula.retirementStatementFormulaGroupSettingID
-                ).value
+              value={separateByThousands(
+                convertToPersianNumber(
+                  data?.find(
+                    (item) =>
+                      item.retirementStatementFormulaGroupSettingID ===
+                      formula.retirementStatementFormulaGroupSettingID
+                  ).value
+                )
               )}
               onInputChange={(val) =>
                 handleDataChange(
@@ -107,6 +109,8 @@ function GroupFormulaForm({
       </div>
     </section>
   );
+
+  return content;
 }
 
 export default GroupFormulaForm;

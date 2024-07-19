@@ -92,6 +92,10 @@ export const convertObjectToPersianDate = (obj) => {
 };
 
 export const separateByThousands = (num) => {
+  // if (num.toString().includes(",")) {
+  //   return num;
+  // }
+
   var result = "";
   const [integerPart, decimalPart] = num.toString().split(".");
 
@@ -104,6 +108,10 @@ export const separateByThousands = (num) => {
     }
   }
   return decimalPart ? result + "." + decimalPart : result;
+};
+
+export const removeSeparators = (str) => {
+  return str.toString().replace(/,/g, "");
 };
 
 export const reverseString = (str) => {

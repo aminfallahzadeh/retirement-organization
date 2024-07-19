@@ -116,17 +116,10 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
         retirementStatementDesc,
         insertUserID,
         requestID,
-      }) => {
-        let url = `${RETIREMENT_STATEMENT_URL_HTTPS}/GenerateGroupStatement?runDate=${runDate}&retirementStatementTypeID=${retirementStatementTypeID}&insertUserID=${insertUserID}&requestID=${requestID}`;
-
-        if (retirementStatementDesc) {
-          url += `&retirementStatementDesc=${retirementStatementDesc}`;
-        }
-
-        return {
-          url,
-        };
-      },
+      }) => ({
+        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/GenerateGroupStatement?runDate=${runDate}&retirementStatementTypeID=${retirementStatementTypeID}&retirementStatementDesc=${retirementStatementDesc}&insertUserID=${insertUserID}&requestID=${requestID}`,
+        method: "POST",
+      }),
     }),
   }),
 });
