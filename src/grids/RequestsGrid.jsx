@@ -60,7 +60,7 @@ function RequestsGrid({ isLoading, roles }) {
     isFetching: isRequestsFetching,
     error,
     refetch,
-  } = useGetRequestQuery({ Role: selectedRole });
+  } = useGetRequestQuery({ Role: selectedRole.value });
 
   const handleRefresh = () => {
     refetch();
@@ -219,6 +219,16 @@ function RequestsGrid({ isLoading, roles }) {
         <RoleSelectionForm isLoading={isLoading} roles={roles} />
       </Box>
     ),
+    muiTopToolbarProps: {
+      sx: {
+        overflow: "none",
+      },
+    },
+    muiTableHeadProps: {
+      sx: {
+        zIndex: 0,
+      },
+    },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>

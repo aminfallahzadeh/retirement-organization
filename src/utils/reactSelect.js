@@ -25,6 +25,11 @@ export const selectStyles = {
     ...base,
     cursor: "pointer",
   }),
+  menuList: (base) => ({
+    ...base,
+    fontFamily: "IranYekan",
+    // zIndex: "5",
+  }),
 };
 
 // COMON SETTINGS

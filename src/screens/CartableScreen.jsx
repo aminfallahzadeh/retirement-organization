@@ -30,7 +30,12 @@ function CartableScreen() {
   useEffect(() => {
     refetch();
     if (isRolesSuccess) {
-      dispatch(setSelectedRole(roles.itemList[0].url));
+      dispatch(
+        setSelectedRole({
+          value: roles.itemList[0].url,
+          label: roles.itemList[0].itemName,
+        })
+      );
       setAllRoles(roles.itemList);
     }
 
