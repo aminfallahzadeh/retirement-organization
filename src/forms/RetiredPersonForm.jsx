@@ -278,6 +278,7 @@ function RetiredPersonForm() {
     }
   };
 
+  // FIX CLOSE CALENDER BUG
   useCloseCalender(
     [birthDateCalenderRef, deathDateCalenderRef],
     [setIsBirthCalenderOpen, setIsDeathCalenderOpen]

@@ -5,12 +5,12 @@ import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import {
-  useGetLookupDataQuery,
-  useLazyGetLookupDataQuery,
-} from "../slices/sharedApiSlice.js";
+import { useLazyGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import { useGetRetiredAccountQuery } from "../slices/retiredApiSlice";
 import { useUpdateRetiredAccountMutation } from "../slices/retiredApiSlice";
+
+// hooks
+import { useFetchLookUpData } from "../hooks/useFetchLookUpData";
 
 // mui imports
 import { Button, Box, CircularProgress } from "@mui/material";
@@ -22,15 +22,25 @@ import {
 
 // library imports
 import { toast } from "react-toastify";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 // helpers
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
+// utils
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
+
 function RetiredAccountForm() {
   const [editable, setEditable] = useState(false);
 
+  const animatedComponents = makeAnimated();
+
   // LOOP UP STATES
-  const [bankCombo, setBankCombo] = useState([]);
   const [bankBranchCombo, setBankBranchCombo] = useState([]);
 
   // ACCOUNT DATA STATE
@@ -44,8 +54,28 @@ function RetiredAccountForm() {
   const [updateRetiredAccount, { isLoading: isUpdating }] =
     useUpdateRetiredAccountMutation();
 
-  const [getLookupData, { isLoading: isBankBranchComboLoading }] =
-    useLazyGetLookupDataQuery();
+  const [
+    getLookupData,
+    {
+      isLoading: isBankBranchComboLoading,
+      isFetching: isBankBranchComboFetching,
+    },
+  ] = useLazyGetLookupDataQuery();
+
+  // GET LOOKUP DATA
+  const {
+    lookUpItems: bankItems,
+    lookUpItemsIsLoading: bankItemsIsLoading,
+    lookUpItemsIsFetching: bankItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "Bank" });
+
+  // CREATE SELECT OPTIONS
+  const bankOptions = optionsGenerator(bankItems, "lookUpID", "lookUpName");
+  const bankBranchOptions = optionsGenerator(
+    bankBranchCombo,
+    "lookUpID",
+    "lookUpName"
+  );
 
   // GET MAIN DATA
   const {
@@ -71,7 +101,6 @@ function RetiredAccountForm() {
     [getLookupData, setBankBranchCombo]
   );
 
-  // FETCH ACCOUNT DATA
   // FETCH MAIN DATA
   useEffect(() => {
     if (isSuccess) {
@@ -92,24 +121,9 @@ function RetiredAccountForm() {
   useEffect(() => {
     if (accountData.bankID) {
       fetchBankBranchData(accountData.bankID);
+      // setAccountData({ ...accountData, bankBranchID: null });
     }
   }, [accountData.bankID, fetchBankBranchData]);
-
-  // GET LOOKUP DATA
-  const {
-    data: bankComboItems,
-    isSuccess: isBankComboSuccess,
-    isLoading: isBankComboLoading,
-  } = useGetLookupDataQuery({
-    lookUpType: "Bank",
-  });
-
-  // FETCH LOOKUP DATA
-  useEffect(() => {
-    if (isBankComboSuccess) {
-      setBankCombo(bankComboItems.itemList);
-    }
-  }, [isBankComboSuccess, bankComboItems]);
 
   const handleEditable = () => {
     setEditable(true);
@@ -146,6 +160,17 @@ function RetiredAccountForm() {
     }
   };
 
+  // HANDLE SELECT OPTION CHANGE
+  const handleSelectOptionChange = (selectedOption, actionMeta) => {
+    const { name } = actionMeta;
+    if (selectedOption) {
+      const { value } = selectedOption;
+      setAccountData({ ...accountData, [name]: value || "" });
+    } else {
+      setAccountData({ ...accountData, [name]: null });
+    }
+  };
+
   const content = (
     <>
       {isLoading || isFetching ? (
@@ -162,30 +187,83 @@ function RetiredAccountForm() {
         <section className="flex-col">
           <form method="POST" className="grid grid--col-3" noValidate>
             <div className="inputBox__form">
-              <select
-                disabled={!editable || isBankComboLoading}
-                type="text"
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={bankOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={!editable}
+                value={bankOptions.find(
+                  (item) => item.value === accountData?.bankID
+                )}
                 id="bankID"
                 name="bankID"
-                value={accountData?.bankID || " "}
-                onChange={handleAccountDataChange}
-                className="inputBox__form--input"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">بانک</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={bankItemsIsLoading || bankItemsIsFetching}
+              />
+
+              <label
+                htmlFor="bankID"
+                className={
+                  accountData?.bankID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
-                <option value=" " disabled>
-                  انتخاب
-                </option>
-                {bankCombo.map((bank) => (
-                  <option key={bank.lookUpID} value={bank.lookUpID}>
-                    {bank.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="bankID" className="inputBox__form--label">
                 بانک
               </label>
             </div>
 
             <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={bankBranchOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={
+                  !editable ||
+                  isBankBranchComboLoading ||
+                  isBankBranchComboFetching ||
+                  !accountData.bankID
+                }
+                value={
+                  bankBranchOptions.find(
+                    (item) => item.value === accountData?.bankBranchID
+                  ) || null
+                }
+                id="bankBranchID"
+                name="bankBranchID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">شعبه</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={
+                  isBankBranchComboLoading || isBankBranchComboFetching
+                }
+              />
+
+              <label
+                htmlFor="bankBranchID"
+                className={
+                  accountData?.bankBranchID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                شعبه
+              </label>
+            </div>
+
+            {/* <div className="inputBox__form">
               <select
                 disabled={!editable || isBankBranchComboLoading}
                 type="text"
@@ -208,7 +286,7 @@ function RetiredAccountForm() {
               <label htmlFor="bankBranchID" className="inputBox__form--label">
                 شعبه
               </label>
-            </div>
+            </div> */}
 
             <div className="inputBox__form">
               <input

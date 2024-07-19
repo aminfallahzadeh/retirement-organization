@@ -1,5 +1,5 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -13,9 +13,10 @@ import {
 
 // hooks
 import {
-  useFetchEmploymentTypes,
   useFetchPensionaryStatus,
+  useFetchLookUpData,
 } from "../hooks/useFetchLookUpData.js";
+import { useCloseCalender } from "../hooks/useCloseCalender";
 
 // mui imports
 import { Button, Box, CircularProgress } from "@mui/material";
@@ -49,13 +50,11 @@ import {
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function RetiredPensionaryForm() {
+  const retirementCalenderRef = useRef(null);
+
   const [editable, setEditable] = useState(false);
 
   const animatedComponents = makeAnimated();
-
-  // LOOKUP DATA STATES
-  // const [employmentTypeCombo, setEmploymentTypeCombo] = useState([]);
-  // const [pernsionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
 
   // DATE STATES
   const [selectedRetriementDate, setSelectedRetriementDate] = useState(null);
@@ -84,14 +83,14 @@ function RetiredPensionaryForm() {
     refetch: refetchPensionary,
   } = useGetRetiredPensionaryQuery(personID);
 
-  // fetch data
+  // FETCH MAIN DATA
   useEffect(() => {
     if (isPensionarySuccess) {
       setPensionaryData(pensionary?.itemList[0]);
     }
   }, [isPensionarySuccess, pensionary]);
 
-  // handle error
+  // HANDLE MAIN DATA ERROR
   useEffect(() => {
     if (pensionaryError) {
       console.log(pensionaryError);
@@ -103,10 +102,10 @@ function RetiredPensionaryForm() {
 
   // GET LOOK UP DATA
   const {
-    employmentTypes,
-    employmentTypesIsLoading,
-    employmentTypesIsFetching,
-  } = useFetchEmploymentTypes();
+    lookUpItems: employmentTypes,
+    lookUpItemsIsLoading: employmentTypesIsLoading,
+    lookUpItemsIsFetching: employmentTypesIsFetching,
+  } = useFetchLookUpData({ lookUpType: "EmploymentType" });
 
   const {
     pensionaryStatus,
@@ -129,24 +128,6 @@ function RetiredPensionaryForm() {
     "pensionaryStatusID",
     "pensionaryStatusName"
   );
-
-  // const {
-  //   data: pensionaryStatusComboItems,
-  //   isSuccess: isPensionaryStatusComboSuccess,
-  // } = useGetPensionaryStatusQuery({
-  //   pensionaryStatusCategory: "R",
-  //   pensionaryStatusIsDead: personDeathDate ? true : false,
-  // });
-
-  // useEffect(() => {
-  //   if (isPensionaryStatusComboSuccess) {
-  //     setPensionaryStatusCombo(pensionaryStatusComboItems.itemList);
-  //   }
-  // }, [
-  //   isPensionaryStatusComboSuccess,
-  //   pensionaryStatusComboItems,
-  //   pernsionaryStatusCombo,
-  // ]);
 
   // HANDLE DATEs
   useEffect(() => {
@@ -234,6 +215,9 @@ function RetiredPensionaryForm() {
       });
     }
   };
+
+  // FIX CLOSE CALENDER BUG
+  useCloseCalender([retirementCalenderRef], [setIsRetirementCalenderOpen]);
 
   const content = (
     <>
@@ -356,14 +340,10 @@ function RetiredPensionaryForm() {
                 format={"jYYYY/jMM/jDD"}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isRetriementCalenderOpen}
-                style={{
-                  border: "2px solid #cfcfcf",
-                  borderRadius: "6px",
-                  marginLeft: "0.5rem",
-                }}
-                wrapperStyle={{
-                  border: "none",
-                  cursor: "pointer",
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: retirementCalenderRef,
                 }}
               />
               <div className="inputBox__form--readOnly-label">

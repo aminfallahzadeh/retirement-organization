@@ -42,42 +42,6 @@ const useFetchRetirementStatementTypes = () => {
   };
 };
 
-// EMPLOYMENT TYPES LOOK UP LOGIC
-const useFetchEmploymentTypes = () => {
-  const [employmentTypes, setEmploymentTypes] = useState([]);
-
-  // GET DATA
-  const {
-    data: employmentTypesItems,
-    isSuccess: employmentTypesIsSuccess,
-    isLoading: employmentTypesIsLoading,
-    isFetching: employmentTypesIsFetching,
-    error: employmentTypesError,
-  } = useGetLookupDataQuery({
-    lookUpType: "EmploymentType",
-  });
-
-  // FETCH DATA
-  useEffect(() => {
-    if (employmentTypesIsSuccess) {
-      setEmploymentTypes(employmentTypesItems.itemList);
-    }
-  }, [employmentTypesIsSuccess, employmentTypesItems]);
-
-  // HANDLE ERROR
-  useEffect(() => {
-    if (employmentTypesError) {
-      console.log(employmentTypesError);
-    }
-  }, [employmentTypesError]);
-
-  return {
-    employmentTypes,
-    employmentTypesIsLoading,
-    employmentTypesIsFetching,
-  };
-};
-
 // PENSIONARY STATUS LOOK UP LOGIC
 const useFetchPensionaryStatus = ({
   pensionaryStatusCategory,
@@ -370,6 +334,52 @@ const useFetchMaritalStatus = () => {
   };
 };
 
+/**
+ * Custom hook to fetch lookup data based on the specified type.
+ *
+ * @param {Object} params - Parameters for the hook.
+ * @param {string} params.lookUpType - The type of lookup data to fetch.
+ *
+ * @returns {Object} An object containing the following properties:
+ * - `lookUpItems` {Array}: The list of fetched lookup items.
+ * - `lookUpItemsIsLoading` {boolean}: A flag indicating if the data is currently loading.
+ * - `lookUpItemsIsFetching` {boolean}: A flag indicating if the data is being fetched.
+ */
+
+// COMMON LOOK UP DATA LOGIC
+const useFetchLookUpData = ({ lookUpType }) => {
+  const [lookUpItems, setLookUpItems] = useState([]);
+
+  // GET DATA
+  const {
+    data: lookUpItemsData,
+    isSuccess: lookUpItemsIsSuccess,
+    isLoading: lookUpItemsIsLoading,
+    isFetching: lookUpItemsIsFetching,
+    error: lookUpItemsError,
+  } = useGetLookupDataQuery({ lookUpType });
+
+  // FETCH DATA
+  useEffect(() => {
+    if (lookUpItemsIsSuccess) {
+      setLookUpItems(lookUpItemsData.itemList);
+    }
+  }, [lookUpItemsIsSuccess, lookUpItemsData]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (lookUpItemsError) {
+      console.log(lookUpItemsError);
+    }
+  }, [lookUpItemsError]);
+
+  return {
+    lookUpItems,
+    lookUpItemsIsLoading,
+    lookUpItemsIsFetching,
+  };
+};
+
 export {
   useFetchGenders,
   useFetchRetirementStatementTypes,
@@ -379,6 +389,6 @@ export {
   useFetchCities,
   useFetchHousingTypes,
   useFetchMaritalStatus,
-  useFetchEmploymentTypes,
   useFetchPensionaryStatus,
+  useFetchLookUpData,
 };
