@@ -409,6 +409,9 @@ function RetiredPersonForm() {
               options={genderOptions}
               onChange={handleSelectOptionChange}
               isDisabled={!editable}
+              value={genderOptions.find(
+                (item) => item.value === personData?.genderID
+              )}
               name="genderID"
               isClearable={true}
               placeholder={
@@ -479,7 +482,13 @@ function RetiredPersonForm() {
               </label>
             </div>
 
-            <div className="checkboxContainer col-span-3">
+            <div
+              className={
+                !editable
+                  ? "checkboxContainer--disabled col-span-3"
+                  : "checkboxContainer col-span-3"
+              }
+            >
               <p className="inputBox__form--readOnly-label">وضعیت ایثارگری:</p>
 
               <div className="checkboxContainer__item">
@@ -756,6 +765,9 @@ function RetiredPersonForm() {
               options={educationOptions}
               onChange={handleSelectOptionChange}
               isDisabled={!editable}
+              value={educationOptions.find(
+                (item) => item.value === personData?.educationTypeID
+              )}
               name="educationTypeID"
               isClearable={true}
               placeholder={
@@ -775,6 +787,9 @@ function RetiredPersonForm() {
               options={countryOptions}
               onChange={handleSelectOptionChange}
               isDisabled={!editable}
+              value={countryOptions.find(
+                (item) => item.value === personData?.personCountryID
+              )}
               name="personCountryID"
               isClearable={true}
               placeholder={<div className="react-select-placeholder">کشور</div>}
@@ -790,6 +805,9 @@ function RetiredPersonForm() {
               options={stateOptions}
               onChange={handleSelectOptionChange}
               isDisabled={!editable}
+              value={stateOptions.find(
+                (item) => item.value === personData?.personStateID
+              )}
               name="personStateID"
               isClearable={true}
               placeholder={
@@ -807,6 +825,9 @@ function RetiredPersonForm() {
               options={cityOptions}
               onChange={handleSelectOptionChange}
               isDisabled={!editable}
+              value={cityOptions.find(
+                (item) => item.value === personData?.personCityID
+              )}
               name="personCityID"
               isClearable={true}
               placeholder={<div className="react-select-placeholder">شهر</div>}
@@ -874,6 +895,9 @@ function RetiredPersonForm() {
               options={housingOptions}
               onChange={handleSelectOptionChange}
               isDisabled={!editable}
+              value={housingOptions.find(
+                (item) => item.value === personData?.housingTypeID
+              )}
               name="housingTypeID"
               isClearable={true}
               placeholder={
@@ -890,11 +914,14 @@ function RetiredPersonForm() {
               components={animatedComponents}
               options={maritalStatusOptions}
               onChange={handleSelectOptionChange}
+              value={maritalStatusOptions.find(
+                (item) => item.value === personData?.maritalStatusID
+              )}
               isDisabled={!editable}
               name="maritalStatusID"
               isClearable={true}
               placeholder={
-                <div className="react-select-placeholder">وضعیت مسکن</div>
+                <div className="react-select-placeholder">وضعیت تاهل</div>
               }
               noOptionsMessage={selectSettings.noOptionsMessage}
               loadingMessage={selectSettings.loadingMessage}

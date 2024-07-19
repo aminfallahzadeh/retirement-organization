@@ -16,6 +16,8 @@ import { useFetchRetirementStatementTypes } from "../hooks/useFetchLookUpData.js
 import {
   CalendarTodayOutlined as CalenderIcon,
   EditCalendarOutlined as DraftIcon,
+  DoneRounded as DoneIcon,
+  CloseRounded as CancelIcon,
 } from "@mui/icons-material";
 import { CircularProgress, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -349,11 +351,34 @@ function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
       ) : null}
 
       {showGroupStatementGrid && (
-        <GenerateGroupStatementGrid
-          groupStatementTableData={groupStatementTableData}
-          isLoading={generateGroupStatementIsLoading}
-          isFetching={generateGroupStatementIsFetching}
-        />
+        <>
+          <GenerateGroupStatementGrid
+            groupStatementTableData={groupStatementTableData}
+            isLoading={generateGroupStatementIsLoading}
+            isFetching={generateGroupStatementIsFetching}
+          />
+
+          <div style={{ marginRight: "auto" }} className="flex-row">
+            <LoadingButton
+              dir="ltr"
+              variant="contained"
+              color="error"
+              sx={{ fontFamily: "IranYekan" }}
+              endIcon={<CancelIcon />}
+            >
+              <span>لغو</span>
+            </LoadingButton>
+            <LoadingButton
+              dir="ltr"
+              variant="contained"
+              color="success"
+              sx={{ fontFamily: "IranYekan" }}
+              endIcon={<DoneIcon />}
+            >
+              <span>تایید</span>
+            </LoadingButton>
+          </div>
+        </>
       )}
     </>
   );

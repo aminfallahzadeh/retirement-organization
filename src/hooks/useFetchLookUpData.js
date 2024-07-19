@@ -267,7 +267,7 @@ const useFetchMaritalStatus = () => {
     isFetching: maritalStatusItemsIsFetching,
     error: maritalStatusItemsError,
   } = useGetLookupDataQuery({
-    lookUpType: "MaritalStatus",
+    lookUpType: "MaritialStatus",
   });
 
   // FETCH DATA

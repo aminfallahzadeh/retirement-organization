@@ -121,6 +121,23 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
+
+    confirmRetirementStatement: builder.mutation({
+      query: ({ retirementStatementID, requestID, confirmDate }) => {
+        let url = `${RETIREMENT_STATEMENT_URL_HTTPS}/ConfirmRetirementStatement?confirmDate=${confirmDate}`;
+        if (retirementStatementID) {
+          url += `&retirementStatementID=${retirementStatementID}`;
+        }
+
+        if (requestID) {
+          url += `&requestID=${requestID}`;
+        }
+        return {
+          url,
+          method: "POST",
+        };
+      },
+    }),
   }),
 });
 

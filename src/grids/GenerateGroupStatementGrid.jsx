@@ -40,6 +40,8 @@ function GenerateGroupStatementGrid({
         accessorKey: "groupStatementRowNum",
         header: "ردیف",
         size: 20,
+        enableSorting: false,
+        enableColumnActions: false,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
