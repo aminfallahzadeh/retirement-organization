@@ -154,10 +154,23 @@
 		padding: 0 10px;
 		cursor: text;
 		color: var(--color-label-primary);
+		transition: all 0.25s;
 
 		span {
 			color: $color-accent-red;
 		}
+	}
+
+	&--readOnly-label-hidden {
+		position: absolute;
+		top: -10px;
+		font-size: 12px;
+		background-color: var(--color-bg-label);
+		color: $color-white;
+		border-radius: $border-radius-secondary;
+		right: 0;
+		visibility: hidden;
+		transition: all 0.25s;
 	}
 
 	&--readOnly-content {

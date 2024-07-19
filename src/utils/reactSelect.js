@@ -3,6 +3,7 @@ export const selectStyles = {
   container: (base) => ({
     ...base,
     position: "relative",
+    height: "100%",
   }),
   control: (base) => ({
     ...base,

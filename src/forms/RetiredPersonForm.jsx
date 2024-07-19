@@ -781,23 +781,38 @@ function RetiredPersonForm() {
               isLoading={educationTypesIsLoading || educationTypesIsFetching}
             />
 
-            <Select
-              closeMenuOnSelect={true}
-              components={animatedComponents}
-              options={countryOptions}
-              onChange={handleSelectOptionChange}
-              isDisabled={!editable}
-              value={countryOptions.find(
-                (item) => item.value === personData?.personCountryID
-              )}
-              name="personCountryID"
-              isClearable={true}
-              placeholder={<div className="react-select-placeholder">کشور</div>}
-              noOptionsMessage={selectSettings.noOptionsMessage}
-              loadingMessage={selectSettings.loadingMessage}
-              styles={selectStyles}
-              isLoading={countriesIsLoading || countriesIsFetching}
-            />
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={countryOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={!editable}
+                value={countryOptions.find(
+                  (item) => item.value === personData?.personCountryID
+                )}
+                name="personCountryID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">کشور</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={countriesIsLoading || countriesIsFetching}
+                aria-label="country"
+              />
+
+              <label
+                className={
+                  personData?.personCountryID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                کشور
+              </label>
+            </div>
 
             <Select
               closeMenuOnSelect={true}
