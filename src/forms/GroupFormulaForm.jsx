@@ -1,5 +1,5 @@
 // react imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // redux imports
 import { useUpdateRetirementStatementFormulaGroupSettingMutation } from "../slices/retirementStatementApiSlice.js";
@@ -41,6 +41,10 @@ function GroupFormulaForm({
       )
     );
   };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const [updateRetirementStatementFormulaGroupSetting, { isLoading }] =
     useUpdateRetirementStatementFormulaGroupSettingMutation();

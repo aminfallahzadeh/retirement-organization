@@ -35,7 +35,7 @@ import GenerateGroupStatementGrid from "../grids/GenerateGroupStatementGrid.jsx"
 import { selectStyles, selectSettings } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
-function StatementItemsForm() {
+function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
   const inputRef = useRef(null);
 
   const { userID } = useSelector((state) => state.auth);
@@ -208,6 +208,7 @@ function StatementItemsForm() {
         statementNumber: item.retirementStatementNo || "-",
       }));
       setGroupStatementTableData(mappedData);
+      setIsDraftGenerated(true);
       toast.success(res.message, {
         autoClose: 2000,
       });
@@ -221,7 +222,7 @@ function StatementItemsForm() {
 
   const content = (
     <>
-      {!showGroupStatementGrid && (
+      {!isDraftGenerated && (
         <section className="flex-col formContainer">
           <form method="POST" className="grid grid--col-4" noValidate>
             <div className="inputBox__form">
@@ -315,7 +316,7 @@ function StatementItemsForm() {
         </Box>
       ) : data.retirementStatementItemID && formulaGroups ? (
         <>
-          {!showGroupStatementGrid && (
+          {!isDraftGenerated && (
             <GroupFormulaForm
               formulaGroups={formulaGroups}
               retirementStatementItemID={data.retirementStatementItemID.value}

@@ -42,6 +42,9 @@ function BatchStatementsForm() {
   // EXCEL FILE UPLOAD REF
   const excelFileUploadRef = useRef(null);
 
+  // CONTROL STATE
+  const [isDraftGenerated, setIsDraftGenerated] = useState(false);
+
   // FILTER STATES
   const [excelFile, setExcelFile] = useState(null);
   const [isExcel, setIsExcel] = useState(false);
@@ -457,9 +460,14 @@ function BatchStatementsForm() {
         </form>
       </section>
 
-      <FilteredPersonsGrid />
+      {!isDraftGenerated && <FilteredPersonsGrid />}
 
-      {isDataRecived && <StatementItemsForm />}
+      {isDataRecived && (
+        <StatementItemsForm
+          isDraftGenerated={isDraftGenerated}
+          setIsDraftGenerated={setIsDraftGenerated}
+        />
+      )}
     </>
   );
   return content;
