@@ -3,7 +3,10 @@ import { useState, useEffect } from "react";
 
 // redux imports
 import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
-import { useGetLookupDataQuery } from "../slices/sharedApiSlice.js";
+import {
+  useGetLookupDataQuery,
+  useGetPensionaryStatusQuery,
+} from "../slices/sharedApiSlice.js";
 
 // STATEMENT TYPES LOOK UP LOGIC
 const useFetchRetirementStatementTypes = () => {
@@ -36,6 +39,82 @@ const useFetchRetirementStatementTypes = () => {
     statementTypes,
     statementTypesIsFetching,
     statementTypesIsLoading,
+  };
+};
+
+// EMPLOYMENT TYPES LOOK UP LOGIC
+const useFetchEmploymentTypes = () => {
+  const [employmentTypes, setEmploymentTypes] = useState([]);
+
+  // GET DATA
+  const {
+    data: employmentTypesItems,
+    isSuccess: employmentTypesIsSuccess,
+    isLoading: employmentTypesIsLoading,
+    isFetching: employmentTypesIsFetching,
+    error: employmentTypesError,
+  } = useGetLookupDataQuery({
+    lookUpType: "EmploymentType",
+  });
+
+  // FETCH DATA
+  useEffect(() => {
+    if (employmentTypesIsSuccess) {
+      setEmploymentTypes(employmentTypesItems.itemList);
+    }
+  }, [employmentTypesIsSuccess, employmentTypesItems]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (employmentTypesError) {
+      console.log(employmentTypesError);
+    }
+  }, [employmentTypesError]);
+
+  return {
+    employmentTypes,
+    employmentTypesIsLoading,
+    employmentTypesIsFetching,
+  };
+};
+
+// PENSIONARY STATUS LOOK UP LOGIC
+const useFetchPensionaryStatus = ({
+  pensionaryStatusCategory,
+  pensionaryStatusIsDead,
+}) => {
+  const [pensionaryStatus, setPensionaryStatus] = useState([]);
+
+  // GET DATA
+  const {
+    data: pensionaryStatusItems,
+    isSuccess: pensionaryStatusIsSuccess,
+    isLoading: pensionaryStatusIsLoading,
+    isFetching: pensionaryStatusIsFetching,
+    error: pensionaryStatusError,
+  } = useGetPensionaryStatusQuery({
+    pensionaryStatusCategory,
+    pensionaryStatusIsDead,
+  });
+
+  // FETCH DATA
+  useEffect(() => {
+    if (pensionaryStatusIsSuccess) {
+      setPensionaryStatus(pensionaryStatusItems.itemList);
+    }
+  }, [pensionaryStatusIsSuccess, pensionaryStatusItems]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (pensionaryStatusError) {
+      console.log(pensionaryStatusError);
+    }
+  }, [pensionaryStatusError]);
+
+  return {
+    pensionaryStatus,
+    pensionaryStatusIsLoading,
+    pensionaryStatusIsFetching,
   };
 };
 
@@ -300,4 +379,6 @@ export {
   useFetchCities,
   useFetchHousingTypes,
   useFetchMaritalStatus,
+  useFetchEmploymentTypes,
+  useFetchPensionaryStatus,
 };

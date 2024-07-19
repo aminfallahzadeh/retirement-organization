@@ -7,13 +7,15 @@ import { useLocation } from "react-router-dom";
 // redux imports
 import { useSelector } from "react-redux";
 import {
-  useGetLookupDataQuery,
-  useGetPensionaryStatusQuery,
-} from "../slices/sharedApiSlice.js";
-import {
   useUpdateRetiredPensionaryMutation,
   useGetRetiredPensionaryQuery,
 } from "../slices/retiredApiSlice.js";
+
+// hooks
+import {
+  useFetchEmploymentTypes,
+  useFetchPensionaryStatus,
+} from "../hooks/useFetchLookUpData.js";
 
 // mui imports
 import { Button, Box, CircularProgress } from "@mui/material";
@@ -35,13 +37,25 @@ import {
 import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+// utils
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
+import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function RetiredPensionaryForm() {
   const [editable, setEditable] = useState(false);
 
+  const animatedComponents = makeAnimated();
+
   // LOOKUP DATA STATES
-  const [employmentTypeCombo, setEmploymentTypeCombo] = useState([]);
-  const [pernsionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
+  // const [employmentTypeCombo, setEmploymentTypeCombo] = useState([]);
+  // const [pernsionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
 
   // DATE STATES
   const [selectedRetriementDate, setSelectedRetriementDate] = useState(null);
@@ -89,36 +103,50 @@ function RetiredPensionaryForm() {
 
   // GET LOOK UP DATA
   const {
-    data: employmentTypeComboItems,
-    isSuccess: isEmploymentTypeComboSuccess,
-  } = useGetLookupDataQuery({
-    lookUpType: "EmploymentType",
-  });
+    employmentTypes,
+    employmentTypesIsLoading,
+    employmentTypesIsFetching,
+  } = useFetchEmploymentTypes();
 
   const {
-    data: pensionaryStatusComboItems,
-    isSuccess: isPensionaryStatusComboSuccess,
-  } = useGetPensionaryStatusQuery({
+    pensionaryStatus,
+    pensionaryStatusIsLoading,
+    pensionaryStatusIsFetching,
+  } = useFetchPensionaryStatus({
     pensionaryStatusCategory: "R",
     pensionaryStatusIsDead: personDeathDate ? true : false,
   });
 
-  // FETCH LOOK UP DATA
-  useEffect(() => {
-    if (isEmploymentTypeComboSuccess) {
-      setEmploymentTypeCombo(employmentTypeComboItems.itemList);
-    }
-  }, [isEmploymentTypeComboSuccess, employmentTypeComboItems]);
+  // SELECT OPTIONS
+  const employmentOptions = optionsGenerator(
+    employmentTypes,
+    "lookUpID",
+    "lookUpName"
+  );
 
-  useEffect(() => {
-    if (isPensionaryStatusComboSuccess) {
-      setPensionaryStatusCombo(pensionaryStatusComboItems.itemList);
-    }
-  }, [
-    isPensionaryStatusComboSuccess,
-    pensionaryStatusComboItems,
-    pernsionaryStatusCombo,
-  ]);
+  const pensionaryStatusOptions = optionsGenerator(
+    pensionaryStatus,
+    "pensionaryStatusID",
+    "pensionaryStatusName"
+  );
+
+  // const {
+  //   data: pensionaryStatusComboItems,
+  //   isSuccess: isPensionaryStatusComboSuccess,
+  // } = useGetPensionaryStatusQuery({
+  //   pensionaryStatusCategory: "R",
+  //   pensionaryStatusIsDead: personDeathDate ? true : false,
+  // });
+
+  // useEffect(() => {
+  //   if (isPensionaryStatusComboSuccess) {
+  //     setPensionaryStatusCombo(pensionaryStatusComboItems.itemList);
+  //   }
+  // }, [
+  //   isPensionaryStatusComboSuccess,
+  //   pensionaryStatusComboItems,
+  //   pernsionaryStatusCombo,
+  // ]);
 
   // HANDLE DATEs
   useEffect(() => {
@@ -141,10 +169,21 @@ function RetiredPensionaryForm() {
     setIsRetirementCalenderOpen(false);
   };
 
-  // handle pensionary data change
+  // HADNLE DATA CHANGE
   const handlePensionaryDataChange = (e) => {
     const { name, value } = e.target;
     setPensionaryData({ ...pensionaryData, [name]: value });
+  };
+
+  // HANDLE SELECT OPTION CHANGE
+  const handleSelectOptionChange = (selectedOption, actionMeta) => {
+    const { name } = actionMeta;
+    if (selectedOption) {
+      const { value } = selectedOption;
+      setPensionaryData({ ...pensionaryData, [name]: value || "" });
+    } else {
+      setPensionaryData({ ...pensionaryData, [name]: null });
+    }
   };
 
   // hanlde update retired pensionary
@@ -270,28 +309,38 @@ function RetiredPensionaryForm() {
                 <span>*</span> سمت
               </label>
             </div>
+
             <div className="inputBox__form">
-              <select
-                disabled={!editable}
-                id="employmentTypeID"
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={employmentOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={!editable}
+                value={employmentOptions.find(
+                  (item) => item.value === pensionaryData?.employmentTypeID
+                )}
                 name="employmentTypeID"
-                value={pensionaryData?.employmentTypeID || " "}
-                onChange={handlePensionaryDataChange}
-                className="inputBox__form--input"
-                required
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {employmentTypeCombo?.map((item) => (
-                  <option key={item.lookUpID} value={item.lookUpID}>
-                    {item.lookUpName}
-                  </option>
-                ))}
-              </select>
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> نوع استخدام
+                  </div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={
+                  employmentTypesIsLoading || employmentTypesIsFetching
+                }
+              />
+
               <label
-                htmlFor="employmentTypeID"
-                className="inputBox__form--label"
+                className={
+                  pensionaryData?.employmentTypeID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
                 <span>*</span> نوع استخدام
               </label>
@@ -323,31 +372,36 @@ function RetiredPensionaryForm() {
             </div>
 
             <div className="inputBox__form">
-              <select
-                disabled={!editable}
-                className="inputBox__form--input"
-                id="pensionaryStatusID"
-                style={{ cursor: "pointer" }}
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={pensionaryStatusOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={!editable}
+                value={pensionaryStatusOptions.find(
+                  (item) => item.value === pensionaryData?.pensionaryStatusID
+                )}
                 name="pensionaryStatusID"
-                required
-                value={pensionaryData?.pensionaryStatusID || " "}
-                onChange={handlePensionaryDataChange}
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {pernsionaryStatusCombo.map((item) => (
-                  <option
-                    key={item.pensionaryStatusID}
-                    value={item.pensionaryStatusID}
-                  >
-                    {item.pensionaryStatusName}
-                  </option>
-                ))}
-              </select>
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> وضعیت
+                  </div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={
+                  pensionaryStatusIsLoading || pensionaryStatusIsFetching
+                }
+              />
+
               <label
-                className="inputBox__form--label"
-                htmlFor="pensionaryIsActive"
+                className={
+                  pensionaryData?.pensionaryStatusID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
                 <span>*</span> وضعیت
               </label>

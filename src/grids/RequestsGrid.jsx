@@ -53,6 +53,8 @@ function RequestsGrid({ isLoading, roles }) {
 
   const { selectedRole } = useSelector((state) => state.roleData);
 
+  const Role = selectedRole.value;
+
   const {
     data: requests,
     isSuccess,
@@ -146,7 +148,7 @@ function RequestsGrid({ isLoading, roles }) {
                   : row.original.requestTypeID ===
                     "6E7BA26E-A1DC-4A5E-9700-17820A36158D"
                   ? `/retirement-organization/batch-statements?requestID=${row.original.id}`
-                  : `/retirement-organization/retired?personID=${row.original.personID}&Role=${selectedRole}&requestID=${row.original.id}`
+                  : `/retirement-organization/retired?personID=${row.original.personID}&Role=${Role}&requestID=${row.original.id}`
               }
             >
               <span>
@@ -170,7 +172,7 @@ function RequestsGrid({ isLoading, roles }) {
         Cell: ({ row }) => (
           <Tooltip title={convertToPersianNumber(row.original.requestNO)}>
             <Link
-              to={`/retirement-organization/request?requestID=${row.id}&Role=${selectedRole}&type=${row.original.requestTypeID}`}
+              to={`/retirement-organization/request?requestID=${row.id}&Role=${Role}&type=${row.original.requestTypeID}`}
             >
               <span>
                 <IconButton sx={{ padding: "0" }} color="info">
@@ -182,7 +184,7 @@ function RequestsGrid({ isLoading, roles }) {
         ),
       },
     ],
-    [selectedRole]
+    [Role]
   );
 
   const table = useMaterialReactTable({

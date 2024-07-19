@@ -205,6 +205,7 @@ function RetiredPersonForm() {
     });
   };
 
+  // HANDLE SELECT OPTION CHANGE
   const handleSelectOptionChange = (selectedOption, actionMeta) => {
     const { name } = actionMeta;
     if (selectedOption) {
