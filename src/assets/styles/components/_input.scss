@@ -163,12 +163,12 @@
 
 	&--readOnly-label-hidden {
 		position: absolute;
-		top: -10px;
+		top: 4px;
+		right: 15px;
 		font-size: 12px;
-		background-color: var(--color-bg-label);
+		background-color: transparent;
 		color: $color-white;
 		border-radius: $border-radius-secondary;
-		right: 0;
 		visibility: hidden;
 		transition: all 0.25s;
 	}

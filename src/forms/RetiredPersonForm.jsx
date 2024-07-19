@@ -403,27 +403,39 @@ function RetiredPersonForm() {
               </label>
             </div>
 
-            <Select
-              closeMenuOnSelect={true}
-              components={animatedComponents}
-              options={genderOptions}
-              onChange={handleSelectOptionChange}
-              isDisabled={!editable}
-              value={genderOptions.find(
-                (item) => item.value === personData?.genderID
-              )}
-              name="genderID"
-              isClearable={true}
-              placeholder={
-                <div className="react-select-placeholder">
-                  <span>*</span> جنسیت
-                </div>
-              }
-              noOptionsMessage={selectSettings.noOptionsMessage}
-              loadingMessage={selectSettings.loadingMessage}
-              styles={selectStyles}
-              isLoading={isGenderItemsLoading || isGenderItemsFetching}
-            />
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={genderOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={!editable}
+                value={genderOptions.find(
+                  (item) => item.value === personData?.genderID
+                )}
+                name="genderID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> جنسیت
+                  </div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={isGenderItemsLoading || isGenderItemsFetching}
+              />
+
+              <label
+                className={
+                  personData?.genderID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                <span>*</span> جنسیت
+              </label>
+            </div>
 
             <div className="inputBox__form">
               <InputDatePicker
@@ -759,27 +771,39 @@ function RetiredPersonForm() {
               </label>
             </div>
 
-            <Select
-              closeMenuOnSelect={true}
-              components={animatedComponents}
-              options={educationOptions}
-              onChange={handleSelectOptionChange}
-              isDisabled={!editable}
-              value={educationOptions.find(
-                (item) => item.value === personData?.educationTypeID
-              )}
-              name="educationTypeID"
-              isClearable={true}
-              placeholder={
-                <div className="react-select-placeholder">
-                  <span>*</span> مدرک تحصیلی
-                </div>
-              }
-              noOptionsMessage={selectSettings.noOptionsMessage}
-              loadingMessage={selectSettings.loadingMessage}
-              styles={selectStyles}
-              isLoading={educationTypesIsLoading || educationTypesIsFetching}
-            />
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={educationOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={!editable}
+                value={educationOptions.find(
+                  (item) => item.value === personData?.educationTypeID
+                )}
+                name="educationTypeID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> مدرک تحصیلی
+                  </div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={educationTypesIsLoading || educationTypesIsFetching}
+              />
+
+              <label
+                className={
+                  personData?.educationTypeID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                <span>*</span> مدرک تحصیلی
+              </label>
+            </div>
 
             <div className="inputBox__form">
               <Select
@@ -814,43 +838,69 @@ function RetiredPersonForm() {
               </label>
             </div>
 
-            <Select
-              closeMenuOnSelect={true}
-              components={animatedComponents}
-              options={stateOptions}
-              onChange={handleSelectOptionChange}
-              isDisabled={!editable}
-              value={stateOptions.find(
-                (item) => item.value === personData?.personStateID
-              )}
-              name="personStateID"
-              isClearable={true}
-              placeholder={
-                <div className="react-select-placeholder">استان</div>
-              }
-              noOptionsMessage={selectSettings.noOptionsMessage}
-              loadingMessage={selectSettings.loadingMessage}
-              styles={selectStyles}
-              isLoading={statesIsLoading || statesIsFetching}
-            />
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={stateOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={!editable}
+                value={stateOptions.find(
+                  (item) => item.value === personData?.personStateID
+                )}
+                name="personStateID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">استان</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={statesIsLoading || statesIsFetching}
+              />
 
-            <Select
-              closeMenuOnSelect={true}
-              components={animatedComponents}
-              options={cityOptions}
-              onChange={handleSelectOptionChange}
-              isDisabled={!editable}
-              value={cityOptions.find(
-                (item) => item.value === personData?.personCityID
-              )}
-              name="personCityID"
-              isClearable={true}
-              placeholder={<div className="react-select-placeholder">شهر</div>}
-              noOptionsMessage={selectSettings.noOptionsMessage}
-              loadingMessage={selectSettings.loadingMessage}
-              styles={selectStyles}
-              isLoading={citiesIsLoading || citiesIsFetching}
-            />
+              <label
+                className={
+                  personData?.personStateID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                استان
+              </label>
+            </div>
+
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={cityOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={!editable}
+                value={cityOptions.find(
+                  (item) => item.value === personData?.personCityID
+                )}
+                name="personCityID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">شهر</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={citiesIsLoading || citiesIsFetching}
+              />
+
+              <label
+                className={
+                  personData?.personCityID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                شهر
+              </label>
+            </div>
 
             <div className="inputBox__form">
               <input
@@ -904,47 +954,71 @@ function RetiredPersonForm() {
               </label>
             </div>
 
-            <Select
-              closeMenuOnSelect={true}
-              components={animatedComponents}
-              options={housingOptions}
-              onChange={handleSelectOptionChange}
-              isDisabled={!editable}
-              value={housingOptions.find(
-                (item) => item.value === personData?.housingTypeID
-              )}
-              name="housingTypeID"
-              isClearable={true}
-              placeholder={
-                <div className="react-select-placeholder">وضعیت مسکن</div>
-              }
-              noOptionsMessage={selectSettings.noOptionsMessage}
-              loadingMessage={selectSettings.loadingMessage}
-              styles={selectStyles}
-              isLoading={housingTypesIsLoading || housingTypesIsFetching}
-            />
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={housingOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={!editable}
+                value={housingOptions.find(
+                  (item) => item.value === personData?.housingTypeID
+                )}
+                name="housingTypeID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">وضعیت مسکن</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={housingTypesIsLoading || housingTypesIsFetching}
+              />
 
-            <Select
-              closeMenuOnSelect={true}
-              components={animatedComponents}
-              options={maritalStatusOptions}
-              onChange={handleSelectOptionChange}
-              value={maritalStatusOptions.find(
-                (item) => item.value === personData?.maritalStatusID
-              )}
-              isDisabled={!editable}
-              name="maritalStatusID"
-              isClearable={true}
-              placeholder={
-                <div className="react-select-placeholder">وضعیت تاهل</div>
-              }
-              noOptionsMessage={selectSettings.noOptionsMessage}
-              loadingMessage={selectSettings.loadingMessage}
-              styles={selectStyles}
-              isLoading={
-                maritalStatusItemsIsLoading || maritalStatusItemsIsFetching
-              }
-            />
+              <label
+                className={
+                  personData?.housingTypeID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                وضعیت مسکن
+              </label>
+            </div>
+
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={maritalStatusOptions}
+                onChange={handleSelectOptionChange}
+                value={maritalStatusOptions.find(
+                  (item) => item.value === personData?.maritalStatusID
+                )}
+                isDisabled={!editable}
+                name="maritalStatusID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">وضعیت تاهل</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={
+                  maritalStatusItemsIsLoading || maritalStatusItemsIsFetching
+                }
+              />
+
+              <label
+                className={
+                  personData?.maritalStatusID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                وضعیت تاهل
+              </label>
+            </div>
 
             <div className="inputBox__form">
               <InputDatePicker
