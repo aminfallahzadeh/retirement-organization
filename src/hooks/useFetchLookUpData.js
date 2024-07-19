@@ -45,7 +45,7 @@ const useFetchRetirementStatementTypes = () => {
 // PENSIONARY STATUS LOOK UP LOGIC
 const useFetchPensionaryStatus = ({
   pensionaryStatusCategory,
-  pensionaryStatusIsDead,
+  pensionaryStatusIsDead = undefined,
 }) => {
   const [pensionaryStatus, setPensionaryStatus] = useState([]);
 

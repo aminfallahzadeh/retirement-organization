@@ -40,10 +40,11 @@ html {
 
 textarea {
     padding: 0.65rem !important;
+    font-family: IranYekan !important;
 }
 
 select {
-    font-family: Vazir !important;
+    font-family: IranYekan !important;
     padding: 0 0.5rem !important;
 }
 
@@ -118,7 +119,6 @@ select {
             left: 0;
             height: 2px;
             width: 50%;
-            // background-color: var(--color-accent-primary);
             background: linear-gradient(-90deg, var(--color-accent-gr-primary), var(--color-accent-primary));
         }
 

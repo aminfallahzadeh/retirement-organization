@@ -72,13 +72,14 @@ function SendRequestForm({ setShowSendRequestModal }) {
         requestTypeID,
       });
       setShowSendRequestModal(false);
-      toast.success(sendRes.data.message, {
+      console.log(sendRes);
+      toast.success(sendRes.data.message || sendRes.message, {
         autoClose: 2000,
       });
       navigate("/retirement-organization/cartable");
     } catch (err) {
       console.log(err);
-      toast.error(err?.error.message || err.error, {
+      toast.error(err.error.message || err.error, {
         autoClose: 2000,
       });
     }
