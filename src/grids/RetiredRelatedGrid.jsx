@@ -365,7 +365,7 @@ function RetiredRelatedGrid() {
                 setShowCreateRelatedModal={setShowCreateRelatedModal}
               />
             </Modal>
-          ) : showEditRelatedModal ? (
+          ) : showEditRelatedModal && personID ? (
             <Modal
               title={"ویرایش اطلاعات وابسته"}
               closeModal={() => setShowEditRelatedModal(false)}

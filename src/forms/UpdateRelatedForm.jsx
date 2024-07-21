@@ -1,5 +1,5 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -9,15 +9,11 @@ import {
   useGetRelatedQuery,
   useUpdateRelatedMutation,
 } from "../slices/relatedApiSlice.js";
-import {
-  useGetLookupDataQuery,
-  useGetRelationshipQuery,
-  useGetPensionaryStatusQuery,
-} from "../slices/sharedApiSlice.js";
 
 // hooks
 import {
   useFetchLookUpData,
+  useFetchPensionaryStatus,
   useFetchRelationship,
 } from "../hooks/useFetchLookUpData";
 import { useCloseCalender } from "../hooks/useCloseCalender";
@@ -53,15 +49,11 @@ import {
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
-  // LOOK UP STATES
-  const [relationCombo, setRelationCombo] = useState([]);
-  const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);
-  const [educationCombo, setEducationCombo] = useState([]);
-  const [universityCombo, setUniversityCombo] = useState([]);
-  const [pensionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
-  const [countryCombo, setCountryCombo] = useState([]);
-  const [stateCombo, setStateCombo] = useState([]);
-  const [cityCombo, setCityCombo] = useState([]);
+  // CALENDER REFS
+  const birthCalenderRef = useRef(null);
+  const maritialCalenderRef = useRef(null);
+  const startCalenderRef = useRef(null);
+  const endCalenderRef = useRef(null);
 
   // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
@@ -90,6 +82,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
   const searchParams = new URLSearchParams(location.search);
   const parentPersonID = searchParams.get("personID");
 
+  // GET MAIN DATA
   const {
     data: related,
     isSuccess,
@@ -124,35 +117,50 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
 
   const { relationships, relationshipIsLoading, relationshipIsFetching } =
     useFetchRelationship();
-  // const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
-  //   useGetRelationshipQuery();
-
-  const { data: maritialStatusComboItems, isSuccess: isMaritialComboSuccess } =
-    useGetLookupDataQuery({ lookUpType: "MaritialStatus" });
-
-  const { data: educationComboItems, isSuccess: isEducationComboSuccess } =
-    useGetLookupDataQuery({ lookUpType: "EducationType" });
-
-  const { data: universityComboItems, isSuccess: isUniversityComboSuccess } =
-    useGetLookupDataQuery({ lookUpType: "UniversityType" });
-
-  const { data: countryComboItems, isSuccess: isCountryComboSuccess } =
-    useGetLookupDataQuery({ lookUpType: "Country" });
-
-  const { data: cityComboItems, isSuccess: isCityComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "City",
-    });
-
-  const { data: stateComboItems, isSuccess: isStateComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "State",
-    });
 
   const {
-    data: pensionaryStatusComboItems,
-    isSuccess: isPensionaryStatusComboSuccess,
-  } = useGetPensionaryStatusQuery({ pensionaryStatusCategory: "L" });
+    pensionaryStatus,
+    pensionaryStatusIsLoading,
+    pensionaryStatusIsFetching,
+  } = useFetchPensionaryStatus({
+    pensionaryStatusCategory: "L",
+  });
+
+  const {
+    lookUpItems: maritialStatusItems,
+    lookUpItemsIsLoading: maritialStatusIsLoading,
+    lookUpItemsIsFetching: maritialStatusIsFetching,
+  } = useFetchLookUpData({ lookUpType: "MaritialStatus" });
+
+  const {
+    lookUpItems: educationTypes,
+    lookUpItemsIsLoading: educationTypesIsLoading,
+    lookUpItemsIsFetching: educationTypesIsFetching,
+  } = useFetchLookUpData({ lookUpType: "EducationType" });
+
+  const {
+    lookUpItems: universityTypes,
+    lookUpItemsIsLoading: universityTypesIsLoading,
+    lookUpItemsIsFetching: universityTypesIsFetching,
+  } = useFetchLookUpData({ lookUpType: "UniversityType" });
+
+  const {
+    lookUpItems: countryItems,
+    lookUpItemsIsLoading: countryItemsIsLoading,
+    lookUpItemsIsFetching: countryItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "Country" });
+
+  const {
+    lookUpItems: stateItems,
+    lookUpItemsIsLoading: stateItemsIsLoading,
+    lookUpItemsIsFetching: stateItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "State" });
+
+  const {
+    lookUpItems: cityItems,
+    lookUpItemsIsLoading: cityItemsIsLoading,
+    lookUpItemsIsFetching: cityItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "City" });
 
   // SELECT OPTIONS
   const relationOptions = optionsGenerator(
@@ -161,48 +169,39 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
     "relationshipName"
   );
 
-  // FETCH LOOKUP DATA
-  useEffect(() => {
-    if (isMaritialComboSuccess) {
-      setMaritialStatusCombo(maritialStatusComboItems.itemList);
-    }
-  }, [isMaritialComboSuccess, maritialStatusComboItems]);
+  const pensionaryStatusOptions = optionsGenerator(
+    pensionaryStatus,
+    "pensionaryStatusID",
+    "pensionaryStatusName"
+  );
 
-  useEffect(() => {
-    if (isEducationComboSuccess) {
-      setEducationCombo(educationComboItems.itemList);
-    }
-  }, [isEducationComboSuccess, educationComboItems]);
+  const maritialStatusOptions = optionsGenerator(
+    maritialStatusItems,
+    "lookUpID",
+    "lookUpName"
+  );
 
-  useEffect(() => {
-    if (isUniversityComboSuccess) {
-      setUniversityCombo(universityComboItems.itemList);
-    }
-  }, [isUniversityComboSuccess, universityComboItems]);
+  const educationOptions = optionsGenerator(
+    educationTypes,
+    "lookUpID",
+    "lookUpName"
+  );
 
-  useEffect(() => {
-    if (isPensionaryStatusComboSuccess) {
-      setPensionaryStatusCombo(pensionaryStatusComboItems.itemList);
-    }
-  }, [isPensionaryStatusComboSuccess, pensionaryStatusComboItems]);
+  const universityOptions = optionsGenerator(
+    universityTypes,
+    "lookUpID",
+    "lookUpName"
+  );
 
-  useEffect(() => {
-    if (isCountryComboSuccess) {
-      setCountryCombo(countryComboItems.itemList);
-    }
-  }, [isCountryComboSuccess, countryComboItems]);
+  const countryOptions = optionsGenerator(
+    countryItems,
+    "lookUpID",
+    "lookUpName"
+  );
 
-  useEffect(() => {
-    if (isCityComboSuccess) {
-      setCityCombo(cityComboItems.itemList);
-    }
-  }, [isCityComboSuccess, cityComboItems]);
+  const stateOptions = optionsGenerator(stateItems, "lookUpID", "lookUpName");
 
-  useEffect(() => {
-    if (isStateComboSuccess) {
-      setStateCombo(stateComboItems.itemList);
-    }
-  }, [isStateComboSuccess, stateComboItems]);
+  const cityOptions = optionsGenerator(cityItems, "lookUpID", "lookUpName");
 
   // CHANGE HANDLERS
   const handleBirthDateChange = (date) => {
@@ -386,6 +385,17 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
     }
   };
 
+  // FIX CLOSE CALENDER BUG
+  useCloseCalender(
+    [birthCalenderRef, maritialCalenderRef, startCalenderRef, endCalenderRef],
+    [
+      setIsBirthCalenderOpen,
+      setIsMritialCalenderOpen,
+      setIsSelfEmployeeStartCalenderOpen,
+      setIsSelfEmployeeEndCalenderOpen,
+    ]
+  );
+
   const content = (
     <>
       {isLoading || isFetching ? (
@@ -434,35 +444,6 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
                 <span>*</span> نسبت
               </label>
             </div>
-            {/* <div className="inputBox__form">
-              <select
-                type="text"
-                className="inputBox__form--input"
-                value={relatedObject?.relationshipWithParentID || " "}
-                required
-                name="relationshipWithParentID"
-                onChange={handleRelatedObjectChange}
-                id="relationshipWithParentID"
-              >
-                <option value=" " disabled>
-                  انتخاب نسبت
-                </option>
-                {relationCombo.map((relation) => (
-                  <option
-                    key={relation.relationshipID}
-                    value={relation.relationshipID}
-                  >
-                    {relation.relationshipName}
-                  </option>
-                ))}
-              </select>
-              <label
-                className="inputBox__form--label"
-                htmlFor="relationshipWithParentID"
-              >
-                <span>*</span> نسبت
-              </label>
-            </div> */}
             <div className="inputBox__form">
               <input
                 type="text"
@@ -564,14 +545,10 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
                 onOpenChange={handleBirthOpenChange}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isBirthCalenderOpen}
-                style={{
-                  border: "2px solid #cfcfcf",
-                  borderRadius: "6px",
-                  marginLeft: "0.5rem",
-                }}
-                wrapperStyle={{
-                  border: "none",
-                  cursor: "pointer",
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: birthCalenderRef,
                 }}
               />
               <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
@@ -584,14 +561,10 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
                 onOpenChange={handleMaritialOpenChange}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isMritialCalenderOpen}
-                style={{
-                  border: "2px solid #cfcfcf",
-                  borderRadius: "6px",
-                  marginLeft: "0.5rem",
-                }}
-                wrapperStyle={{
-                  border: "none",
-                  cursor: "pointer",
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: maritialCalenderRef,
                 }}
               />
               <div className="inputBox__form--readOnly-label">تاریخ عقد</div>
@@ -616,91 +589,97 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
             </div>
 
             <div className="inputBox__form">
-              <select
-                className="inputBox__form--input"
-                onChange={handleRelatedObjectChange}
-                value={
-                  convertToEnglishNumber(relatedObject?.pensionaryStatusID) ||
-                  " "
-                }
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={pensionaryStatusOptions}
+                onChange={handleSelectOptionChange}
+                value={pensionaryStatusOptions.find(
+                  (item) => item.value === relatedObject?.pensionaryStatusID
+                )}
                 name="pensionaryStatusID"
-                required
-                id="pensionaryStatusID"
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {pensionaryStatusCombo.map((status) => (
-                  <option
-                    key={status.pensionaryStatusID}
-                    value={status.pensionaryStatusID}
-                  >
-                    {status.pensionaryStatusName}
-                  </option>
-                ))}
-              </select>
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> وضعیت وابسته
+                  </div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={
+                  pensionaryStatusIsLoading || pensionaryStatusIsFetching
+                }
+              />
+
               <label
-                className="inputBox__form--label"
-                htmlFor="pensionaryStatusID"
+                className={
+                  relatedObject?.pensionaryStatusID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
                 <span>*</span> وضعیت وابسته
               </label>
             </div>
 
             <div className="inputBox__form">
-              <select
-                className="inputBox__form--input"
-                onChange={handleRelatedObjectChange}
-                value={relatedObject?.maritalStatusID || " "}
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={maritialStatusOptions}
+                onChange={handleSelectOptionChange}
+                value={maritialStatusOptions.find(
+                  (item) => item.value === relatedObject?.maritalStatusID
+                )}
                 name="maritalStatusID"
-                required
-                id="maritalStatusID1"
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {maritialStatusCombo.map((maritalStatus) => (
-                  <option
-                    key={maritalStatus.lookUpID}
-                    value={maritalStatus.lookUpID}
-                  >
-                    {maritalStatus.lookUpName}
-                  </option>
-                ))}
-              </select>
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">وضعیت تاهل</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={maritialStatusIsLoading || maritialStatusIsFetching}
+              />
+
               <label
-                className="inputBox__form--label"
-                htmlFor="maritalStatusID1"
+                className={
+                  relatedObject?.maritalStatusID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
                 وضعیت تاهل
               </label>
             </div>
 
             <div className="inputBox__form">
-              <select
-                type="text"
-                className="inputBox__form--input"
-                onChange={handleRelatedObjectChange}
-                value={relatedObject?.educationTypeID || " "}
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={educationOptions}
+                onChange={handleSelectOptionChange}
+                value={educationOptions.find(
+                  (item) => item.value === relatedObject?.educationTypeID
+                )}
                 name="educationTypeID"
-                required
-                id="educationTypeID1"
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {educationCombo.map((educationType) => (
-                  <option
-                    key={educationType.lookUpID}
-                    value={educationType.lookUpID}
-                  >
-                    {educationType.lookUpName}
-                  </option>
-                ))}
-              </select>
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">مدرک تحصیلی</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={educationTypesIsLoading || educationTypesIsFetching}
+              />
+
               <label
-                className="inputBox__form--label"
-                htmlFor="educationTypeID1"
+                className={
+                  relatedObject?.educationTypeID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
                 مدرک تحصیلی
               </label>
@@ -724,25 +703,34 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
             </div>
 
             <div className="inputBox__form">
-              <select
-                type="text"
-                className="inputBox__form--input"
-                onChange={handleRelatedObjectChange}
-                value={relatedObject?.universityID || " "}
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={universityOptions}
+                onChange={handleSelectOptionChange}
+                value={universityOptions.find(
+                  (item) => item.value === relatedObject?.universityID
+                )}
                 name="universityID"
-                required
-                id="universityID1"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">دانشگاه</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={
+                  universityTypesIsLoading || universityTypesIsFetching
+                }
+              />
+
+              <label
+                className={
+                  relatedObject?.universityID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {universityCombo.map((uni) => (
-                  <option key={uni.lookUpID} value={uni.lookUpID}>
-                    {uni.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label className="inputBox__form--label" htmlFor="universityID1">
                 دانشگاه
               </label>
             </div>
@@ -847,72 +835,95 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
                 ناحیه سکونت
               </label>
             </div>
+
             <div className="inputBox__form">
-              <select
-                type="text"
-                id="personCountry"
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={countryOptions}
+                onChange={handleSelectOptionChange}
+                value={countryOptions.find(
+                  (item) => item.value === relatedObject?.personCountryID
+                )}
                 name="personCountryID"
-                value={relatedObject?.personCountryID || " "}
-                className="inputBox__form--input field"
-                onChange={handleRelatedObjectChange}
-                required
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">کشور</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={countryItemsIsLoading || countryItemsIsFetching}
+              />
+
+              <label
+                className={
+                  relatedObject?.personCountryID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {countryCombo.map((country) => (
-                  <option key={country.lookUpID} value={country.lookUpID}>
-                    {country.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="personCountry" className="inputBox__form--label">
-                <span>*</span> کشور
+                کشور
               </label>
             </div>
             <div className="inputBox__form">
-              <select
-                type="text"
-                id="personState"
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={stateOptions}
+                onChange={handleSelectOptionChange}
+                value={stateOptions.find(
+                  (item) => item.value === relatedObject?.personStateID
+                )}
                 name="personStateID"
-                className="inputBox__form--input"
-                value={relatedObject?.personStateID || " "}
-                onChange={handleRelatedObjectChange}
-                required
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">استان</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={stateItemsIsLoading || stateItemsIsFetching}
+              />
+
+              <label
+                className={
+                  relatedObject?.personStateID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {stateCombo.map((state) => (
-                  <option key={state.lookUpID} value={state.lookUpID}>
-                    {state.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="personState" className="inputBox__form--label">
                 استان
               </label>
             </div>
+
             <div className="inputBox__form">
-              <select
-                type="text"
-                id="personCity"
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={cityOptions}
+                onChange={handleSelectOptionChange}
+                value={cityOptions.find(
+                  (item) => item.value === relatedObject?.personCityID
+                )}
                 name="personCityID"
-                className="inputBox__form--input"
-                value={relatedObject?.personCityID || " "}
-                onChange={handleRelatedObjectChange}
-                required
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">شهر</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={cityItemsIsLoading || cityItemsIsFetching}
+              />
+
+              <label
+                className={
+                  relatedObject?.personCityID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {cityCombo.map((city) => (
-                  <option key={city.lookUpID} value={city.lookUpID}>
-                    {city.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="personCity" className="inputBox__form--label">
                 شهر
               </label>
             </div>
@@ -1019,14 +1030,10 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
                 onOpenChange={handleSelfEmployeeStartOpenChange}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isSelfEmployeeStartCalenderOpen}
-                style={{
-                  border: "2px solid #cfcfcf",
-                  borderRadius: "6px",
-                  marginLeft: "0.5rem",
-                }}
-                wrapperStyle={{
-                  border: "none",
-                  cursor: "pointer",
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: startCalenderRef,
                 }}
               />
               <div className="inputBox__form--readOnly-label">تاریخ شروع</div>
@@ -1039,14 +1046,10 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
                 onOpenChange={handleSelfEmployeeEndOpenChange}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isSelfEmployeeEndCalenderOpen}
-                style={{
-                  border: "2px solid #cfcfcf",
-                  borderRadius: "6px",
-                  marginLeft: "0.5rem",
-                }}
-                wrapperStyle={{
-                  border: "none",
-                  cursor: "pointer",
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: endCalenderRef,
                 }}
               />
               <div className="inputBox__form--readOnly-label">تاریخ پایان</div>
