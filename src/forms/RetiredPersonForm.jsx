@@ -10,15 +10,7 @@ import { setPersonDeathDate } from "../slices/retiredStateSlice.js";
 import { useDispatch } from "react-redux";
 
 // hooks
-import {
-  useFetchGenders,
-  useFetchEducationTypes,
-  useFetchCountries,
-  useFetchStates,
-  useFetchCities,
-  useFetchHousingTypes,
-  useFetchMaritalStatus,
-} from "../hooks/useFetchLookUpData.js";
+import { useFetchLookUpData } from "../hooks/useFetchLookUpData.js";
 import { useCloseCalender } from "../hooks/useCloseCalender";
 
 // mui imports
@@ -112,27 +104,47 @@ function RetiredPersonForm() {
   }, [error]);
 
   // GET LOOK UP DATA
-  const { genders, isGenderItemsLoading, isGenderItemsFetching } =
-    useFetchGenders();
-
-  const { educationTypes, educationTypesIsLoading, educationTypesIsFetching } =
-    useFetchEducationTypes();
-
-  const { countries, countriesIsLoading, countriesIsFetching } =
-    useFetchCountries();
-
-  const { states, statesIsLoading, statesIsFetching } = useFetchStates();
-
-  const { cities, citiesIsLoading, citiesIsFetching } = useFetchCities();
-
-  const { housingTypes, housingTypesIsLoading, housingTypesIsFetching } =
-    useFetchHousingTypes();
+  const {
+    lookUpItems: genders,
+    lookUpItemsIsLoading: isGenderItemsLoading,
+    lookUpItemsIsFetching: isGenderItemsFetching,
+  } = useFetchLookUpData({ lookUpType: "Gender" });
 
   const {
-    maritalStatusItems,
-    maritalStatusItemsIsLoading,
-    maritalStatusItemsIsFetching,
-  } = useFetchMaritalStatus();
+    lookUpItems: educationTypes,
+    lookUpItemsIsLoading: educationTypesIsLoading,
+    lookUpItemsIsFetching: educationTypesIsFetching,
+  } = useFetchLookUpData({ lookUpType: "EducationType" });
+
+  const {
+    lookUpItems: countries,
+    lookUpItemsIsLoading: countriesIsLoading,
+    lookUpItemsIsFetching: countriesIsFetching,
+  } = useFetchLookUpData({ lookUpType: "Country" });
+
+  const {
+    lookUpItems: states,
+    lookUpItemsIsLoading: statesIsLoading,
+    lookUpItemsIsFetching: statesIsFetching,
+  } = useFetchLookUpData({ lookUpType: "State" });
+
+  const {
+    lookUpItems: cities,
+    lookUpItemsIsLoading: citiesIsLoading,
+    lookUpItemsIsFetching: citiesIsFetching,
+  } = useFetchLookUpData({ lookUpType: "City" });
+
+  const {
+    lookUpItems: housingTypes,
+    lookUpItemsIsLoading: housingTypesIsLoading,
+    lookUpItemsIsFetching: housingTypesIsFetching,
+  } = useFetchLookUpData({ lookUpType: "HousingType" });
+
+  const {
+    lookUpItems: maritalStatusItems,
+    lookUpItemsIsLoading: maritalStatusItemsIsLoading,
+    lookUpItemsIsFetching: maritalStatusItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "MaritialStatus" });
 
   // SELECT OPTIONS
   const genderOptions = optionsGenerator(genders, "lookUpID", "lookUpName");

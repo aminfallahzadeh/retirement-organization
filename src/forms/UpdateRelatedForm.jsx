@@ -15,6 +15,13 @@ import {
   useGetPensionaryStatusQuery,
 } from "../slices/sharedApiSlice.js";
 
+// hooks
+import {
+  useFetchLookUpData,
+  useFetchRelationship,
+} from "../hooks/useFetchLookUpData";
+import { useCloseCalender } from "../hooks/useCloseCalender";
+
 // mui imports
 import { Box, CircularProgress } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -23,6 +30,13 @@ import {
   CalendarTodayOutlined as CalenderIcon,
 } from "@mui/icons-material";
 
+// libary imports
+import { toast } from "react-toastify";
+import "jalaali-react-date-picker/lib/styles/index.css";
+import { InputDatePicker } from "jalaali-react-date-picker";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
 // helpers
 import {
   convertToPersianNumber,
@@ -30,10 +44,13 @@ import {
   convertToEnglishNumber,
 } from "../helper.js";
 
-// libary imports
-import { toast } from "react-toastify";
-import "jalaali-react-date-picker/lib/styles/index.css";
-import { InputDatePicker } from "jalaali-react-date-picker";
+// utils
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
+import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
   // LOOK UP STATES
@@ -62,12 +79,13 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
   const [isSelfEmployeeEndCalenderOpen, setIsSelfEmployeeEndCalenderOpen] =
     useState(false);
 
-  // RELATED OBJECT STATE
+  // MAIN STATE
   const [relatedObject, setRelatedObject] = useState({});
 
   const [updateRelated, { isLoading: isUpdating }] = useUpdateRelatedMutation();
 
   const location = useLocation();
+  const animatedComponents = makeAnimated();
 
   const searchParams = new URLSearchParams(location.search);
   const parentPersonID = searchParams.get("personID");
@@ -103,8 +121,11 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
   }, [error]);
 
   // GET LOOKUP DATA
-  const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
-    useGetRelationshipQuery();
+
+  const { relationships, relationshipIsLoading, relationshipIsFetching } =
+    useFetchRelationship();
+  // const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
+  //   useGetRelationshipQuery();
 
   const { data: maritialStatusComboItems, isSuccess: isMaritialComboSuccess } =
     useGetLookupDataQuery({ lookUpType: "MaritialStatus" });
@@ -133,13 +154,14 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
     isSuccess: isPensionaryStatusComboSuccess,
   } = useGetPensionaryStatusQuery({ pensionaryStatusCategory: "L" });
 
-  // FETCH LOOKUP DATA
-  useEffect(() => {
-    if (isRelationComboSuccess) {
-      setRelationCombo(relationComboItems.itemList);
-    }
-  }, [isRelationComboSuccess, relationComboItems]);
+  // SELECT OPTIONS
+  const relationOptions = optionsGenerator(
+    relationships,
+    "relationshipID",
+    "relationshipName"
+  );
 
+  // FETCH LOOKUP DATA
   useEffect(() => {
     if (isMaritialComboSuccess) {
       setMaritialStatusCombo(maritialStatusComboItems.itemList);
@@ -250,6 +272,21 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
       [name]: value,
     });
   };
+
+  // HANDLE SELECT OPTION CHANGE
+  const handleSelectOptionChange = (selectedOption, actionMeta) => {
+    const { name } = actionMeta;
+    if (selectedOption) {
+      const { value } = selectedOption;
+      setRelatedObject({ ...relatedObject, [name]: value || "" });
+    } else {
+      setRelatedObject({ ...relatedObject, [name]: null });
+    }
+  };
+
+  useEffect(() => {
+    console.log(relatedObject);
+  }, [relatedObject]);
 
   // HANDLE UPDATE RELATED
   const handleUpdateRelated = async () => {
@@ -365,6 +402,39 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
         <section className="formContainer-transparent formContainer--width-lg flex-col">
           <form method="POST" className="grid grid--col-3">
             <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={relationOptions}
+                onChange={handleSelectOptionChange}
+                value={relationOptions.find(
+                  (item) =>
+                    item.value === relatedObject?.relationshipWithParentID
+                )}
+                name="relationshipWithParentID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> نسبت
+                  </div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={relationshipIsLoading || relationshipIsFetching}
+              />
+
+              <label
+                className={
+                  relatedObject?.relationshipWithParentID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                <span>*</span> نسبت
+              </label>
+            </div>
+            {/* <div className="inputBox__form">
               <select
                 type="text"
                 className="inputBox__form--input"
@@ -392,7 +462,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
               >
                 <span>*</span> نسبت
               </label>
-            </div>
+            </div> */}
             <div className="inputBox__form">
               <input
                 type="text"
@@ -485,6 +555,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
                 نام پدر
               </label>
             </div>
+
             <div className="inputBox__form">
               <InputDatePicker
                 value={convertToPersianDate(selectedBirthDate)}

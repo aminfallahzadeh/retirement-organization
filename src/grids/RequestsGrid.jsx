@@ -71,8 +71,9 @@ function RequestsGrid({ isLoading, roles }) {
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      const data = requests.itemList.map((item) => ({
+      const data = requests.itemList.map((item, index) => ({
         id: item.requestID,
+        requestRowNum: index + 1,
         requestNO: item.requestNO || "-",
         requestTypeID: item.requestTypeID,
         personID: item.personID,
@@ -96,6 +97,16 @@ function RequestsGrid({ isLoading, roles }) {
 
   const columns = useMemo(
     () => [
+      {
+        accessorKey: "requestRowNum",
+        header: "ردیف",
+        size: 20,
+        enableSorting: false,
+        enableColumnActions: false,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
       {
         accessorKey: "requestNO",
         header: "شماره درخواست",

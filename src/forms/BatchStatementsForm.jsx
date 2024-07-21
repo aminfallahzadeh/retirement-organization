@@ -298,7 +298,7 @@ function BatchStatementsForm() {
                     position: "absolute",
                     left: "50%",
                     bottom: "-40px",
-                    zIndex: 15,
+                    zIndex: 2,
                     width: "90%",
                     transform: "translateX(-50%)",
                     visibility: uploadProgress > 0 ? "visible" : "hidden",

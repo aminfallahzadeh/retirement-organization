@@ -89,8 +89,9 @@ function RetiredRelatedGrid() {
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      const data = relateds.itemList.map((item) => ({
+      const data = relateds.itemList.map((item, index) => ({
         id: item.personID,
+        relatedRowNum: index + 1,
         pensionaryID: item.pensionaryID,
         relatedBirthDate: item.personBirthDate,
         relatedNtionalCode: item.personNationalCode,
@@ -155,6 +156,16 @@ function RetiredRelatedGrid() {
 
   const columns = useMemo(
     () => [
+      {
+        accessorKey: "relatedRowNum",
+        header: "ردیف",
+        size: 20,
+        enableSorting: false,
+        enableColumnActions: false,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
       {
         accessorKey: "relatedNtionalCode",
         header: "کد ملی",
