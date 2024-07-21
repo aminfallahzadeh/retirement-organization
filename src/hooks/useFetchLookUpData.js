@@ -9,6 +9,7 @@ import {
   useGetRelationshipQuery,
 } from "../slices/sharedApiSlice.js";
 
+// COMMON LOOK UP DATA LOGIC
 /**
  * Custom hook to fetch lookup data based on the specified type.
  *
@@ -20,8 +21,6 @@ import {
  * - `lookUpItemsIsLoading` {boolean}: A flag indicating if the data is currently loading.
  * - `lookUpItemsIsFetching` {boolean}: A flag indicating if the data is being fetched.
  */
-
-// COMMON LOOK UP DATA LOGIC
 const useFetchLookUpData = ({ lookUpType }) => {
   const [lookUpItems, setLookUpItems] = useState([]);
 

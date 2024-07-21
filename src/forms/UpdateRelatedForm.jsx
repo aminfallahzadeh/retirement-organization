@@ -283,10 +283,6 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
     }
   };
 
-  useEffect(() => {
-    console.log(relatedObject);
-  }, [relatedObject]);
-
   // HANDLE UPDATE RELATED
   const handleUpdateRelated = async () => {
     try {

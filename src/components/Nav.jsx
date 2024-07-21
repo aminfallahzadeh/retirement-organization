@@ -182,16 +182,6 @@ function Nav({ userName }) {
                     ایجاد درخواست
                   </Link>
                 </li>
-                <li
-                  className={
-                    isActivePath("personnel-statements") ? "active" : ""
-                  }
-                  onClick={() => handlePanelToggle(null)}
-                >
-                  <Link to={"/retirement-organization/personnel-statements"}>
-                    رویت احکام و تعرفه
-                  </Link>
-                </li>
 
                 {permissions && permissions.includes("Fractions") && (
                   <li
@@ -206,12 +196,18 @@ function Nav({ userName }) {
                   <a>داشبورد مدیریتی</a>
                 </li>
                 <li
-                  onClick={() => handlePanelToggle(null)}
-                  className={isActivePath("report-creator") ? "active" : ""}
+                  onClick={() => handlePanelToggle("reports")}
+                  className={activePanel === "reports" ? "active" : ""}
                 >
-                  <Link to={"/retirement-organization/report-creator"}>
-                    گزارش ساز
-                  </Link>
+                  <a>گزارشات</a>
+                  <ArrowIcon
+                    sx={{
+                      color: "#fff",
+                      transition: "all 0.25s ease",
+                      transform:
+                        activePanel === "reports" ? "rotate(-90deg)" : "",
+                    }}
+                  />
                 </li>
                 <li
                   onClick={() => handlePanelToggle("systemManagement")}
@@ -313,6 +309,24 @@ function Nav({ userName }) {
       </nav>
 
       <div className={activePanel ? "nav__panel" : "nav__panel--hidden"}>
+        {activePanel === "reports" ? (
+          <ul className="nav__panel--list">
+            <li className={isActivePath("report-creator") ? "active" : ""}>
+              <Link to={"/retirement-organization/report-creator"}>
+                گزارش ساز
+              </Link>
+            </li>
+
+            <li
+              className={isActivePath("personnel-statements") ? "active" : ""}
+            >
+              <Link to={"/retirement-organization/personnel-statements"}>
+                رویت احکام و تعرفه
+              </Link>
+            </li>
+          </ul>
+        ) : null}
+
         {activePanel === "baseInfo" ? (
           <ul className="nav__panel--list">
             <li
