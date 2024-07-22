@@ -457,7 +457,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             style={datePickerStyles}
             wrapperStyle={datePickerWrapperStyles}
             pickerProps={{
-              ref: maritialCalenderRef,
+              ref: birthCalenderRef,
             }}
           />
           <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
