@@ -26,7 +26,7 @@ function PersonnelGridsSection() {
             aria-label="tabs"
             variant="fullWidth"
           >
-            <Tab label="احکام" value="1" />
+            <Tab label="احکام کارمندی" value="1" />
             <Tab label="تعرفه" value="2" />
           </TabList>
         </Box>

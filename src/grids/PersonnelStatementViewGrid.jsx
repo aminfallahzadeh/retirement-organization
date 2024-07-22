@@ -2,6 +2,10 @@
 import { useMemo, useState } from "react";
 
 // mui imports
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
 import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
@@ -9,10 +13,6 @@ import {
   FirstPage,
   LastPage,
 } from "@mui/icons-material";
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from "material-react-table";
 
 // library imports
 import "react-loading-skeleton/dist/skeleton.css";
@@ -93,6 +93,12 @@ function PersonnelStatementViewGrid({ data }) {
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
+    initialState: {
+      density: "compact",
+      pagination: {
+        pageSize: 3,
+      },
+    },
   });
 
   const content = <MaterialReactTable table={table} />;
