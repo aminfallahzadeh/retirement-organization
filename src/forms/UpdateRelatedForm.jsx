@@ -114,7 +114,6 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
   }, [error]);
 
   // GET LOOKUP DATA
-
   const { relationships, relationshipIsLoading, relationshipIsFetching } =
     useFetchRelationship();
 

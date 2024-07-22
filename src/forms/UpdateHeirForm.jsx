@@ -1,20 +1,23 @@
 // react imports
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import {
-  useGetRelationshipQuery,
-  useGetLookupDataQuery,
-  useLazyGetLookupDataQuery,
-  useGetPensionaryStatusQuery,
-} from "../slices/sharedApiSlice.js";
+import { useLazyGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import {
   useGetHeirQuery,
   useUpdateHeirMutation,
 } from "../slices/heirApiSlice.js";
+
+// hooks
+import {
+  useFetchLookUpData,
+  useFetchPensionaryStatus,
+  useFetchRelationship,
+} from "../hooks/useFetchLookUpData";
+import { useCloseCalender } from "../hooks/useCloseCalender";
 
 // mui imports
 import { Box, CircularProgress } from "@mui/material";
@@ -24,6 +27,13 @@ import {
   CalendarTodayOutlined as CalenderIcon,
 } from "@mui/icons-material";
 
+// libary imports
+import { toast } from "react-toastify";
+import "jalaali-react-date-picker/lib/styles/index.css";
+import { InputDatePicker } from "jalaali-react-date-picker";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
 // helpers
 import {
   convertToPersianNumber,
@@ -32,21 +42,20 @@ import {
   convertToEnglishNumber,
 } from "../helper.js";
 
-// libary imports
-import { toast } from "react-toastify";
-import "jalaali-react-date-picker/lib/styles/index.css";
-import { InputDatePicker } from "jalaali-react-date-picker";
+// utils
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
+import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function UpdateHeirForm({ setShowEditHeirModal, personID }) {
+  const birthCalenderRef = useRef(null);
+  const endSubCalenderRef = useRef(null);
+
   // LOOK UP STATES
-  const [relationCombo, setRelationCombo] = useState([]);
-  const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);
-  const [pensionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
-  const [bankCombo, setBankCombo] = useState([]);
   const [bankBranchCombo, setBankBranchCombo] = useState([]);
-  const [countryCombo, setCountryCombo] = useState([]);
-  const [stateCombo, setStateCombo] = useState([]);
-  const [cityCombo, setCityCombo] = useState([]);
 
   // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
@@ -62,9 +71,18 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
   const [updateHeir, { isLoading: isUpdating }] = useUpdateHeirMutation();
 
   const location = useLocation();
+  const animatedComponents = makeAnimated();
 
   const searchParams = new URLSearchParams(location.search);
   const parentPersonID = searchParams.get("personID");
+
+  const [
+    getLookupData,
+    {
+      isLoading: isBankBranchComboLoading,
+      isFetching: isBankBranchComboFetching,
+    },
+  ] = useLazyGetLookupDataQuery();
 
   // GET MAIN DATA
   const {
@@ -98,40 +116,82 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
   }, [error]);
 
   // GET LOOK UP DATA
-  const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
-    useGetRelationshipQuery();
-
-  const { data: maritialStatusComboItems, isSuccess: isMaritialComboSuccess } =
-    useGetLookupDataQuery({ lookUpType: "MaritialStatus" });
-
-  const { data: countryComboItems, isSuccess: isCountryComboSuccess } =
-    useGetLookupDataQuery({ lookUpType: "Country" });
-
-  const { data: cityComboItems, isSuccess: isCityComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "City",
-    });
-
-  const { data: stateComboItems, isSuccess: isStateComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "State",
-    });
-
-  const [getLookupData, { isLoading: isBankBranchComboLoading }] =
-    useLazyGetLookupDataQuery();
+  const { relationships, relationshipIsLoading, relationshipIsFetching } =
+    useFetchRelationship();
 
   const {
-    data: pensionaryStatusComboItems,
-    isSuccess: isPensionaryStatusComboSuccess,
-  } = useGetPensionaryStatusQuery({ pensionaryStatusCategory: "H" });
+    lookUpItems: maritialStatusItems,
+    lookUpItemsIsLoading: maritialStatusIsLoading,
+    lookUpItemsIsFetching: maritialStatusIsFetching,
+  } = useFetchLookUpData({ lookUpType: "MaritialStatus" });
 
   const {
-    data: bankComboItems,
-    isSuccess: isBankComboSuccess,
-    isLoading: isBankComboLoading,
-  } = useGetLookupDataQuery({
-    lookUpType: "Bank",
+    lookUpItems: countryItems,
+    lookUpItemsIsLoading: countryItemsIsLoading,
+    lookUpItemsIsFetching: countryItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "Country" });
+
+  const {
+    lookUpItems: stateItems,
+    lookUpItemsIsLoading: stateItemsIsLoading,
+    lookUpItemsIsFetching: stateItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "State" });
+
+  const {
+    lookUpItems: cityItems,
+    lookUpItemsIsLoading: cityItemsIsLoading,
+    lookUpItemsIsFetching: cityItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "City" });
+
+  const {
+    pensionaryStatus,
+    pensionaryStatusIsLoading,
+    pensionaryStatusIsFetching,
+  } = useFetchPensionaryStatus({
+    pensionaryStatusCategory: "H",
   });
+
+  const {
+    lookUpItems: bankItems,
+    lookUpItemsIsLoading: bankItemsIsLoading,
+    lookUpItemsIsFetching: bankItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "Bank" });
+
+  // SELECT OPTIONS
+  const relationOptions = optionsGenerator(
+    relationships,
+    "relationshipID",
+    "relationshipName"
+  );
+
+  const maritialStatusOptions = optionsGenerator(
+    maritialStatusItems,
+    "lookUpID",
+    "lookUpName"
+  );
+
+  const countryOptions = optionsGenerator(
+    countryItems,
+    "lookUpID",
+    "lookUpName"
+  );
+
+  const stateOptions = optionsGenerator(stateItems, "lookUpID", "lookUpName");
+
+  const cityOptions = optionsGenerator(cityItems, "lookUpID", "lookUpName");
+
+  const pensionaryStatusOptions = optionsGenerator(
+    pensionaryStatus,
+    "pensionaryStatusID",
+    "pensionaryStatusName"
+  );
+
+  const bankOptions = optionsGenerator(bankItems, "lookUpID", "lookUpName");
+  const bankBranchOptions = optionsGenerator(
+    bankBranchCombo,
+    "lookUpID",
+    "lookUpName"
+  );
 
   // FETCH LOOK UP DATA
   const fetchBankBranchData = useCallback(
@@ -155,54 +215,12 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
     }
   }, [heirObject.bankID, fetchBankBranchData]);
 
-  useEffect(() => {
-    if (isBankComboSuccess) {
-      setBankCombo(bankComboItems.itemList);
-    }
-  }, [isBankComboSuccess, bankComboItems]);
-
   // GET & FETCH BANK BRANCH ON USER BANK SELECT
   useEffect(() => {
     if (heirObject.bankID) {
       fetchBankBranchData(heirObject.bankID);
     }
   }, [heirObject.bankID, fetchBankBranchData]);
-
-  useEffect(() => {
-    if (isRelationComboSuccess) {
-      setRelationCombo(relationComboItems.itemList);
-    }
-  }, [isRelationComboSuccess, relationComboItems]);
-
-  useEffect(() => {
-    if (isMaritialComboSuccess) {
-      setMaritialStatusCombo(maritialStatusComboItems.itemList);
-    }
-  }, [isMaritialComboSuccess, maritialStatusComboItems]);
-
-  useEffect(() => {
-    if (isPensionaryStatusComboSuccess) {
-      setPensionaryStatusCombo(pensionaryStatusComboItems.itemList);
-    }
-  }, [isPensionaryStatusComboSuccess, pensionaryStatusComboItems]);
-
-  useEffect(() => {
-    if (isCountryComboSuccess) {
-      setCountryCombo(countryComboItems.itemList);
-    }
-  }, [isCountryComboSuccess, countryComboItems]);
-
-  useEffect(() => {
-    if (isCityComboSuccess) {
-      setCityCombo(cityComboItems.itemList);
-    }
-  }, [isCityComboSuccess, cityComboItems]);
-
-  useEffect(() => {
-    if (isStateComboSuccess) {
-      setStateCombo(stateComboItems.itemList);
-    }
-  }, [isStateComboSuccess, stateComboItems]);
 
   // CHANGE HANDLERS
   const handleBirthDateChange = (date) => {
@@ -241,6 +259,17 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
       ...heirObject,
       [name]: value,
     });
+  };
+
+  // HANDLE SELECT OPTION CHANGE
+  const handleSelectOptionChange = (selectedOption, actionMeta) => {
+    const { name } = actionMeta;
+    if (selectedOption) {
+      const { value } = selectedOption;
+      setHeirObject({ ...heirObject, [name]: value || "" });
+    } else {
+      setHeirObject({ ...heirObject, [name]: null });
+    }
   };
 
   const handleUpdateHeir = async () => {
@@ -318,6 +347,12 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
     }
   };
 
+  // FIX CLOSE CALENDER BUG
+  useCloseCalender(
+    [birthCalenderRef, endSubCalenderRef],
+    [setIsBirthCalenderOpen, setIsBaseFinishDateCalenderOpen]
+  );
+
   const content = (
     <>
       {isLoading || isFetching ? (
@@ -334,30 +369,33 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
         <section className="formContainer-transparent formContainer--width-lg flex-col">
           <form method="POST" className="grid grid--col-3">
             <div className="inputBox__form">
-              <select
-                type="text"
-                className="inputBox__form--input"
-                onChange={handleHeirObjectChange}
-                value={heirObject?.relationshipWithParentID || " "}
-                required
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={relationOptions}
+                onChange={handleSelectOptionChange}
+                value={relationOptions.find(
+                  (item) => item.value === heirObject?.relationshipWithParentID
+                )}
                 name="relationshipWithParentID"
-                id="relationshipWithParentID"
-              >
-                <option value=" " disabled>
-                  انتخاب نسبت
-                </option>
-                {relationCombo.map((relation) => (
-                  <option
-                    key={relation.relationshipID}
-                    value={relation.relationshipID}
-                  >
-                    {relation.relationshipName}
-                  </option>
-                ))}
-              </select>
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> نسبت
+                  </div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={relationshipIsLoading || relationshipIsFetching}
+              />
+
               <label
-                className="inputBox__form--label"
-                htmlFor="relationshipWithParentID"
+                className={
+                  heirObject?.relationshipWithParentID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
                 <span>*</span> نسبت
               </label>
@@ -462,14 +500,10 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
                 onOpenChange={handleBirthOpenChange}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isBirthCalenderOpen}
-                style={{
-                  border: "2px solid #cfcfcf",
-                  borderRadius: "6px",
-                  marginLeft: "0.5rem",
-                }}
-                wrapperStyle={{
-                  border: "none",
-                  cursor: "pointer",
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: birthCalenderRef,
                 }}
               />
               <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
@@ -492,29 +526,31 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
               </label>
             </div>
             <div className="inputBox__form">
-              <select
-                className="inputBox__form--input"
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={maritialStatusOptions}
+                onChange={handleSelectOptionChange}
+                value={maritialStatusOptions.find(
+                  (item) => item.value === heirObject?.maritalStatusID
+                )}
                 name="maritalStatusID"
-                onChange={handleHeirObjectChange}
-                value={heirObject?.maritalStatusID || " "}
-                required
-                id="maritalStatusID1"
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {maritialStatusCombo.map((maritalStatus) => (
-                  <option
-                    key={maritalStatus.lookUpID}
-                    value={maritalStatus.lookUpID}
-                  >
-                    {maritalStatus.lookUpName}
-                  </option>
-                ))}
-              </select>
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">وضعیت تاهل</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={maritialStatusIsLoading || maritialStatusIsFetching}
+              />
+
               <label
-                className="inputBox__form--label"
-                htmlFor="maritalStatusID1"
+                className={
+                  heirObject?.maritalStatusID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
                 وضعیت تاهل
               </label>
@@ -583,72 +619,93 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
               </label>
             </div>
             <div className="inputBox__form">
-              <select
-                type="text"
-                id="personCountry"
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={countryOptions}
+                onChange={handleSelectOptionChange}
+                value={countryOptions.find(
+                  (item) => item.value === heirObject?.personCountryID
+                )}
                 name="personCountryID"
-                value={heirObject?.personCountryID || " "}
-                className="inputBox__form--input field"
-                onChange={handleHeirObjectChange}
-                required
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">کشور</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={countryItemsIsLoading || countryItemsIsFetching}
+              />
+
+              <label
+                className={
+                  heirObject?.personCountryID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {countryCombo.map((country) => (
-                  <option key={country.lookUpID} value={country.lookUpID}>
-                    {country.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="personCountry" className="inputBox__form--label">
-                <span>*</span> کشور
-              </label>
-            </div>
-            <div className="inputBox__form">
-              <select
-                type="text"
-                id="personState"
-                name="personStateID"
-                className="inputBox__form--input"
-                value={heirObject?.personStateID || " "}
-                onChange={handleHeirObjectChange}
-                required
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {stateCombo.map((state) => (
-                  <option key={state.lookUpID} value={state.lookUpID}>
-                    {state.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="personState" className="inputBox__form--label">
-                استان
+                کشور
               </label>
             </div>
 
             <div className="inputBox__form">
-              <select
-                type="text"
-                id="personCity"
-                name="personCityID"
-                className="inputBox__form--input"
-                value={heirObject?.personCityID || " "}
-                onChange={handleHeirObjectChange}
-                required
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={stateOptions}
+                onChange={handleSelectOptionChange}
+                value={stateOptions.find(
+                  (item) => item.value === heirObject?.personStateID
+                )}
+                name="personStateID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">استان</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={stateItemsIsLoading || stateItemsIsFetching}
+              />
+
+              <label
+                className={
+                  heirObject?.personStateID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {cityCombo.map((city) => (
-                  <option key={city.lookUpID} value={city.lookUpID}>
-                    {city.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="personCity" className="inputBox__form--label">
+                استان
+              </label>
+            </div>
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={cityOptions}
+                onChange={handleSelectOptionChange}
+                value={cityOptions.find(
+                  (item) => item.value === heirObject?.personCityID
+                )}
+                name="personCityID"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">شهر</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={cityItemsIsLoading || cityItemsIsFetching}
+              />
+
+              <label
+                className={
+                  heirObject?.personCityID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
                 شهر
               </label>
             </div>
@@ -728,31 +785,35 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
 
           <form className="grid grid--col-4">
             <div className="inputBox__form">
-              <select
-                className="inputBox__form--input"
-                onChange={handleHeirObjectChange}
-                value={
-                  convertToEnglishNumber(heirObject?.pensionaryStatusID) || " "
-                }
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={pensionaryStatusOptions}
+                onChange={handleSelectOptionChange}
+                value={pensionaryStatusOptions.find(
+                  (item) => item.value === heirObject?.pensionaryStatusID
+                )}
                 name="pensionaryStatusID"
-                required
-                id="pensionaryStatusID"
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {pensionaryStatusCombo.map((status) => (
-                  <option
-                    key={status.pensionaryStatusID}
-                    value={status.pensionaryStatusID}
-                  >
-                    {status.pensionaryStatusName}
-                  </option>
-                ))}
-              </select>
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> وضعیت موظف
+                  </div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={
+                  pensionaryStatusIsLoading || pensionaryStatusIsFetching
+                }
+              />
+
               <label
-                className="inputBox__form--label"
-                htmlFor="pensionaryStatusID"
+                className={
+                  heirObject?.pensionaryStatusID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
                 <span>*</span> وضعیت موظف
               </label>
@@ -766,14 +827,10 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
                 onOpenChange={handleBaseFinishDateOpenChange}
                 suffixIcon={<CalenderIcon color="action" />}
                 open={isBaseFinishDateCalenderOpen}
-                style={{
-                  border: "2px solid #cfcfcf",
-                  borderRadius: "6px",
-                  marginLeft: "0.5rem",
-                }}
-                wrapperStyle={{
-                  border: "none",
-                  cursor: "pointer",
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: endSubCalenderRef,
                 }}
               />
               <div className="inputBox__form--readOnly-label">
@@ -782,29 +839,42 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
             </div>
 
             <div className="inputBox__form">
-              <div className="inputBox__form--readOnly-input">
-                <div className="inputBox__form--readOnly-label">
-                  شماره وظیفه بگیری
-                </div>
-                <div className="inputBox__form--readOnly-content">
-                  {convertToPersianNumber(heirObject?.heirID) || "-"}
-                </div>
-              </div>
+              <input
+                type="text"
+                className="inputBox__form--input"
+                disabled
+                onChange={handleHeirObjectChange}
+                value={convertToPersianNumber(heirObject?.heirID) || "-"}
+                name="heirID"
+                id="heirID"
+              />
+              <label className="inputBox__form--label" htmlFor="heirID">
+                شماره وظیفه بگیری
+              </label>
             </div>
 
             <div className="inputBox__form">
-              <div className="inputBox__form--readOnly-input">
-                <div className="inputBox__form--readOnly-label">
-                  تاریخ وظیفه بگیری
-                </div>
-                <div className="inputBox__form--readOnly-content">
-                  {convertToPersianNumber(
+              <input
+                type="text"
+                className="inputBox__form--input"
+                disabled
+                onChange={handleHeirObjectChange}
+                value={
+                  convertToPersianNumber(
                     convertToPersianDateFormatted(
                       heirObject?.pensionaryStartDate
                     )
-                  ) || "-"}
-                </div>
-              </div>
+                  ) || "-"
+                }
+                name="pensionaryStartDate"
+                id="pensionaryStartDate"
+              />
+              <label
+                className="inputBox__form--label"
+                htmlFor="pensionaryStartDate"
+              >
+                تاریخ وظیفه بگیری
+              </label>
             </div>
           </form>
 
@@ -814,48 +884,76 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
 
           <form method="POST" className="grid grid--col-4">
             <div className="inputBox__form">
-              <select
-                disabled={isBankComboLoading}
-                type="text"
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={bankOptions}
+                onChange={handleSelectOptionChange}
+                value={bankOptions.find(
+                  (item) => item.value === heirObject?.bankID
+                )}
                 id="bankID"
                 name="bankID"
-                value={heirObject?.bankID || " "}
-                onChange={handleHeirObjectChange}
-                className="inputBox__form--input"
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">بانک</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={bankItemsIsLoading || bankItemsIsFetching}
+              />
+
+              <label
+                htmlFor="bankID"
+                className={
+                  heirObject?.bankID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
-                <option value=" ">انتخاب</option>
-                {bankCombo.map((bank) => (
-                  <option key={bank.lookUpID} value={bank.lookUpID}>
-                    {bank.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="bankID" className="inputBox__form--label">
                 بانک
               </label>
             </div>
 
             <div className="inputBox__form">
-              <select
-                disabled={
-                  bankBranchCombo.length === 0 || isBankBranchComboLoading
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={bankBranchOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={
+                  isBankBranchComboLoading ||
+                  isBankBranchComboFetching ||
+                  !heirObject.bankID
                 }
-                type="text"
+                value={
+                  bankBranchOptions.find(
+                    (item) => item.value === heirObject?.bankBranchID
+                  ) || null
+                }
                 id="bankBranchID"
                 name="bankBranchID"
-                value={heirObject?.bankBranchID || ""}
-                onChange={handleHeirObjectChange}
-                className="inputBox__form--input"
-                required
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">شعبه</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={
+                  isBankBranchComboLoading || isBankBranchComboFetching
+                }
+              />
+
+              <label
+                htmlFor="bankBranchID"
+                className={
+                  heirObject?.bankBranchID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
-                <option value=" ">انتخاب</option>
-                {bankBranchCombo.map((bankBranch) => (
-                  <option key={bankBranch.lookUpID} value={bankBranch.lookUpID}>
-                    {bankBranch.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="bankBranchID" className="inputBox__form--label">
                 شعبه
               </label>
             </div>

@@ -90,8 +90,9 @@ function RetiredHeirGrid() {
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      const data = heirs.itemList.map((item) => ({
+      const data = heirs.itemList.map((item, index) => ({
         id: item.personID,
+        heirRowNum: index + 1,
         pensionaryID: item.pensionaryID,
         personNationalCode: item.personNationalCode,
         personFirstName: item.personFirstName,
@@ -158,6 +159,16 @@ function RetiredHeirGrid() {
 
   const columns = useMemo(
     () => [
+      {
+        accessorKey: "heirRowNum",
+        header: "ردیف",
+        size: 20,
+        enableColumnActions: false,
+        enableSorting: false,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
       {
         accessorKey: "personNationalCode",
         header: "کد ملی",
@@ -356,7 +367,7 @@ function RetiredHeirGrid() {
         </div>
       ) : (
         <>
-          {showEditHeirModal ? (
+          {showEditHeirModal && personID ? (
             <Modal
               title={"ویرایش اطلاعات موظف"}
               closeModal={() => setShowEditHeirModal(false)}

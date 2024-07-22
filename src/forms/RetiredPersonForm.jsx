@@ -85,7 +85,11 @@ function RetiredPersonForm() {
       setPersonData(retiredPersonData?.itemList[0]);
 
       dispatch(
-        setPersonDeathDate(retiredPersonData?.itemList[0]?.personDeathDate)
+        setPersonDeathDate(
+          retiredPersonData?.itemList[0]?.personDeathDate === null
+            ? false
+            : true
+        )
       );
     }
 
@@ -235,7 +239,7 @@ function RetiredPersonForm() {
       let personDeathDate;
       let personBirthDate;
 
-      if (selectedBirthDate) {
+      if (selectedDeathDate) {
         personDeathDate = new Date(selectedDeathDate);
         personDeathDate.setMinutes(
           personDeathDate.getMinutes() - personDeathDate.getTimezoneOffset()
@@ -244,7 +248,7 @@ function RetiredPersonForm() {
         personDeathDate = null;
       }
 
-      if (selectedDeathDate) {
+      if (selectedBirthDate) {
         personBirthDate = new Date(selectedBirthDate);
         personBirthDate.setMinutes(
           personBirthDate.getMinutes() - personBirthDate.getTimezoneOffset()
@@ -295,6 +299,10 @@ function RetiredPersonForm() {
     [birthDateCalenderRef, deathDateCalenderRef],
     [setIsBirthCalenderOpen, setIsDeathCalenderOpen]
   );
+
+  useEffect(() => {
+    console.log(selectedDeathDate);
+  }, [selectedDeathDate]);
 
   const content = (
     <>

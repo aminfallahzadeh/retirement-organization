@@ -262,32 +262,6 @@ function RetiredAccountForm() {
                 شعبه
               </label>
             </div>
-
-            {/* <div className="inputBox__form">
-              <select
-                disabled={!editable || isBankBranchComboLoading}
-                type="text"
-                id="bankBranchID"
-                name="bankBranchID"
-                value={accountData?.bankBranchID || " "}
-                onChange={handleAccountDataChange}
-                className="inputBox__form--input"
-                required
-              >
-                <option value=" " disabled>
-                  انتخاب
-                </option>
-                {bankBranchCombo.map((bankBranch) => (
-                  <option key={bankBranch.lookUpID} value={bankBranch.lookUpID}>
-                    {bankBranch.lookUpName}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="bankBranchID" className="inputBox__form--label">
-                شعبه
-              </label>
-            </div> */}
-
             <div className="inputBox__form">
               <input
                 disabled={!editable || isLoading}

@@ -117,7 +117,7 @@ function RetiredPensionaryForm() {
     pensionaryStatusIsFetching,
   } = useFetchPensionaryStatus({
     pensionaryStatusCategory: "R",
-    pensionaryStatusIsDead: personDeathDate ? true : false,
+    pensionaryStatusIsDead: personDeathDate,
   });
 
   // SELECT OPTIONS

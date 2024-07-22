@@ -6,11 +6,6 @@ import { useLocation } from "react-router-dom";
 
 // redux imports
 import { useInsertRelatedMutation } from "../slices/relatedApiSlice";
-import {
-  useGetLookupDataQuery,
-  useGetRelationshipQuery,
-  useGetPensionaryStatusQuery,
-} from "../slices/sharedApiSlice.js";
 
 // hooks
 import {
@@ -52,16 +47,6 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   const startCalenderRef = useRef(null);
   const endCalenderRef = useRef(null);
 
-  // LOOKUP STATES
-  const [relationCombo, setRelationCombo] = useState([]);
-  const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);
-  const [educationCombo, setEducationCombo] = useState([]);
-  const [universityCombo, setUniversityCombo] = useState([]);
-  const [pensionaryStatusCombo, setPensionaryStatusCombo] = useState([]);
-  const [countryCombo, setCountryCombo] = useState([]);
-  const [stateCombo, setStateCombo] = useState([]);
-  const [cityCombo, setCityCombo] = useState([]);
-
   // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
   const [selectedMritialDate, setSelectedMritialDate] = useState(null);
@@ -87,84 +72,93 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   const animatedComponents = makeAnimated();
 
   // GET LOOKUP DATA
-  const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
-    useGetRelationshipQuery();
-
-  const { data: maritialStatusComboItems, isSuccess: isMaritialComboSuccess } =
-    useGetLookupDataQuery({ lookUpType: "MaritialStatus" });
-
-  const { data: educationComboItems, isSuccess: isEducationComboSuccess } =
-    useGetLookupDataQuery({ lookUpType: "EducationType" });
-
-  const { data: universityComboItems, isSuccess: isUniversityComboSuccess } =
-    useGetLookupDataQuery({ lookUpType: "UniversityType" });
-
-  const { data: countryComboItems, isSuccess: isCountryComboSuccess } =
-    useGetLookupDataQuery({ lookUpType: "Country" });
-
-  const { data: cityComboItems, isSuccess: isCityComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "City",
-    });
-
-  const { data: stateComboItems, isSuccess: isStateComboSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "State",
-    });
+  const { relationships, relationshipIsLoading, relationshipIsFetching } =
+    useFetchRelationship();
 
   const {
-    data: pensionaryStatusComboItems,
-    isSuccess: isPensionaryStatusComboSuccess,
-  } = useGetPensionaryStatusQuery({ pensionaryStatusCategory: "L" });
+    pensionaryStatus,
+    pensionaryStatusIsLoading,
+    pensionaryStatusIsFetching,
+  } = useFetchPensionaryStatus({
+    pensionaryStatusCategory: "L",
+  });
 
-  // FETCH LOOKUP DATA
-  useEffect(() => {
-    if (isRelationComboSuccess) {
-      setRelationCombo(relationComboItems.itemList);
-    }
-  }, [isRelationComboSuccess, relationComboItems]);
+  const {
+    lookUpItems: maritialStatusItems,
+    lookUpItemsIsLoading: maritialStatusIsLoading,
+    lookUpItemsIsFetching: maritialStatusIsFetching,
+  } = useFetchLookUpData({ lookUpType: "MaritialStatus" });
 
-  useEffect(() => {
-    if (isMaritialComboSuccess) {
-      setMaritialStatusCombo(maritialStatusComboItems.itemList);
-    }
-  }, [isMaritialComboSuccess, maritialStatusComboItems]);
+  const {
+    lookUpItems: educationTypes,
+    lookUpItemsIsLoading: educationTypesIsLoading,
+    lookUpItemsIsFetching: educationTypesIsFetching,
+  } = useFetchLookUpData({ lookUpType: "EducationType" });
 
-  useEffect(() => {
-    if (isEducationComboSuccess) {
-      setEducationCombo(educationComboItems.itemList);
-    }
-  }, [isEducationComboSuccess, educationComboItems]);
+  const {
+    lookUpItems: universityTypes,
+    lookUpItemsIsLoading: universityTypesIsLoading,
+    lookUpItemsIsFetching: universityTypesIsFetching,
+  } = useFetchLookUpData({ lookUpType: "UniversityType" });
 
-  useEffect(() => {
-    if (isUniversityComboSuccess) {
-      setUniversityCombo(universityComboItems.itemList);
-    }
-  }, [isUniversityComboSuccess, universityComboItems]);
+  const {
+    lookUpItems: countryItems,
+    lookUpItemsIsLoading: countryItemsIsLoading,
+    lookUpItemsIsFetching: countryItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "Country" });
 
-  useEffect(() => {
-    if (isPensionaryStatusComboSuccess) {
-      setPensionaryStatusCombo(pensionaryStatusComboItems.itemList);
-    }
-  }, [isPensionaryStatusComboSuccess, pensionaryStatusComboItems]);
+  const {
+    lookUpItems: stateItems,
+    lookUpItemsIsLoading: stateItemsIsLoading,
+    lookUpItemsIsFetching: stateItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "State" });
 
-  useEffect(() => {
-    if (isCountryComboSuccess) {
-      setCountryCombo(countryComboItems.itemList);
-    }
-  }, [isCountryComboSuccess, countryComboItems]);
+  const {
+    lookUpItems: cityItems,
+    lookUpItemsIsLoading: cityItemsIsLoading,
+    lookUpItemsIsFetching: cityItemsIsFetching,
+  } = useFetchLookUpData({ lookUpType: "City" });
 
-  useEffect(() => {
-    if (isCityComboSuccess) {
-      setCityCombo(cityComboItems.itemList);
-    }
-  }, [isCityComboSuccess, cityComboItems]);
+  // SELECT OPTIONS
+  const relationOptions = optionsGenerator(
+    relationships,
+    "relationshipID",
+    "relationshipName"
+  );
 
-  useEffect(() => {
-    if (isStateComboSuccess) {
-      setStateCombo(stateComboItems.itemList);
-    }
-  }, [isStateComboSuccess, stateComboItems]);
+  const pensionaryStatusOptions = optionsGenerator(
+    pensionaryStatus,
+    "pensionaryStatusID",
+    "pensionaryStatusName"
+  );
+
+  const maritialStatusOptions = optionsGenerator(
+    maritialStatusItems,
+    "lookUpID",
+    "lookUpName"
+  );
+
+  const educationOptions = optionsGenerator(
+    educationTypes,
+    "lookUpID",
+    "lookUpName"
+  );
+
+  const universityOptions = optionsGenerator(
+    universityTypes,
+    "lookUpID",
+    "lookUpName"
+  );
+
+  const countryOptions = optionsGenerator(
+    countryItems,
+    "lookUpID",
+    "lookUpName"
+  );
+
+  const stateOptions = optionsGenerator(stateItems, "lookUpID", "lookUpName");
+
+  const cityOptions = optionsGenerator(cityItems, "lookUpID", "lookUpName");
 
   // CHANGE HANDLERS
   const handleBirthDateChange = (date) => {
@@ -338,33 +332,33 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
     <section className="formContainer-transparent formContainer--width-lg flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>
         <div className="inputBox__form">
-          <select
-            type="text"
-            className="inputBox__form--input"
-            value={
-              convertToEnglishNumber(relatedObject?.relationshipWithParentID) ||
-              " "
-            }
-            required
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={relationOptions}
+            onChange={handleSelectOptionChange}
+            value={relationOptions.find(
+              (item) => item.value === relatedObject?.relationshipWithParentID
+            )}
             name="relationshipWithParentID"
-            onChange={handleRealtedObjectChange}
-            id="relationshipWithParentID"
-          >
-            <option value=" " disabled>
-              انتخاب نسبت
-            </option>
-            {relationCombo.map((relation) => (
-              <option
-                key={relation.relationshipID}
-                value={relation.relationshipID}
-              >
-                {relation.relationshipName}
-              </option>
-            ))}
-          </select>
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">
+                <span>*</span> نسبت
+              </div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={relationshipIsLoading || relationshipIsFetching}
+          />
+
           <label
-            className="inputBox__form--label"
-            htmlFor="relationshipWithParentID"
+            className={
+              relatedObject?.relationshipWithParentID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
             <span>*</span> نسبت
           </label>
@@ -493,88 +487,97 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             محل تولد
           </label>
         </div>
-
         <div className="inputBox__form">
-          <select
-            className="inputBox__form--input"
-            onChange={handleRealtedObjectChange}
-            value={
-              convertToEnglishNumber(relatedObject?.pensionaryStatusID) || " "
-            }
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={pensionaryStatusOptions}
+            onChange={handleSelectOptionChange}
+            value={pensionaryStatusOptions.find(
+              (item) => item.value === relatedObject?.pensionaryStatusID
+            )}
             name="pensionaryStatusID"
-            required
-            id="pensionaryStatusID"
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">
+                <span>*</span> وضعیت وابسته
+              </div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={pensionaryStatusIsLoading || pensionaryStatusIsFetching}
+          />
+
+          <label
+            className={
+              relatedObject?.pensionaryStatusID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            {pensionaryStatusCombo.map((status) => (
-              <option
-                key={status.pensionaryStatusID}
-                value={status.pensionaryStatusID}
-              >
-                {status.pensionaryStatusName}
-              </option>
-            ))}
-          </select>
-          <label className="inputBox__form--label" htmlFor="pensionaryStatusID">
             <span>*</span> وضعیت وابسته
           </label>
         </div>
 
         <div className="inputBox__form">
-          <select
-            className="inputBox__form--input"
-            onChange={handleRealtedObjectChange}
-            value={
-              convertToEnglishNumber(relatedObject?.maritalStatusID) || " "
-            }
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={maritialStatusOptions}
+            onChange={handleSelectOptionChange}
+            value={maritialStatusOptions.find(
+              (item) => item.value === relatedObject?.maritalStatusID
+            )}
             name="maritalStatusID"
-            required
-            id="maritalStatusID1"
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">وضعیت تاهل</div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={maritialStatusIsLoading || maritialStatusIsFetching}
+          />
+
+          <label
+            className={
+              relatedObject?.maritalStatusID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            {maritialStatusCombo.map((maritalStatus) => (
-              <option
-                key={maritalStatus.lookUpID}
-                value={maritalStatus.lookUpID}
-              >
-                {maritalStatus.lookUpName}
-              </option>
-            ))}
-          </select>
-          <label className="inputBox__form--label" htmlFor="maritalStatusID1">
             وضعیت تاهل
           </label>
         </div>
 
         <div className="inputBox__form">
-          <select
-            type="text"
-            className="inputBox__form--input"
-            onChange={handleRealtedObjectChange}
-            value={
-              convertToEnglishNumber(relatedObject?.educationTypeID) || " "
-            }
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={educationOptions}
+            onChange={handleSelectOptionChange}
+            value={educationOptions.find(
+              (item) => item.value === relatedObject?.educationTypeID
+            )}
             name="educationTypeID"
-            required
-            id="educationTypeID1"
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">مدرک تحصیلی</div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={educationTypesIsLoading || educationTypesIsFetching}
+          />
+
+          <label
+            className={
+              relatedObject?.educationTypeID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            {educationCombo.map((educationType) => (
-              <option
-                key={educationType.lookUpID}
-                value={educationType.lookUpID}
-              >
-                {educationType.lookUpName}
-              </option>
-            ))}
-          </select>
-          <label className="inputBox__form--label" htmlFor="educationTypeID1">
             مدرک تحصیلی
           </label>
         </div>
@@ -597,25 +600,32 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
         </div>
 
         <div className="inputBox__form">
-          <select
-            type="text"
-            className="inputBox__form--input"
-            onChange={handleRealtedObjectChange}
-            value={convertToEnglishNumber(relatedObject?.universityID) || " "}
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={universityOptions}
+            onChange={handleSelectOptionChange}
+            value={universityOptions.find(
+              (item) => item.value === relatedObject?.universityID
+            )}
             name="universityID"
-            required
-            id="universityID1"
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">دانشگاه</div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={universityTypesIsLoading || universityTypesIsFetching}
+          />
+
+          <label
+            className={
+              relatedObject?.universityID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            {universityCombo.map((uni) => (
-              <option key={uni.lookUpID} value={uni.lookUpID}>
-                {uni.lookUpName}
-              </option>
-            ))}
-          </select>
-          <label className="inputBox__form--label" htmlFor="universityID1">
             دانشگاه
           </label>
         </div>
@@ -706,73 +716,86 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
           </label>
         </div>
         <div className="inputBox__form">
-          <select
-            type="text"
-            id="personCountry"
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={countryOptions}
+            onChange={handleSelectOptionChange}
+            value={countryOptions.find(
+              (item) => item.value === relatedObject?.personCountryID
+            )}
             name="personCountryID"
-            value={
-              convertToEnglishNumber(relatedObject?.personCountryID) || " "
+            isClearable={true}
+            placeholder={<div className="react-select-placeholder">کشور</div>}
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={countryItemsIsLoading || countryItemsIsFetching}
+          />
+
+          <label
+            className={
+              relatedObject?.personCountryID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
             }
-            className="inputBox__form--input field"
-            onChange={handleRealtedObjectChange}
-            required
           >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            {countryCombo.map((country) => (
-              <option key={country.lookUpID} value={country.lookUpID}>
-                {country.lookUpName}
-              </option>
-            ))}
-          </select>
-          <label htmlFor="personCountry" className="inputBox__form--label">
-            <span>*</span> کشور
+            کشور
           </label>
         </div>
         <div className="inputBox__form">
-          <select
-            type="text"
-            id="personState"
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={stateOptions}
+            onChange={handleSelectOptionChange}
+            value={stateOptions.find(
+              (item) => item.value === relatedObject?.personStateID
+            )}
             name="personStateID"
-            className="inputBox__form--input"
-            value={convertToEnglishNumber(relatedObject?.personStateID) || " "}
-            onChange={handleRealtedObjectChange}
-            required
+            isClearable={true}
+            placeholder={<div className="react-select-placeholder">استان</div>}
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={stateItemsIsLoading || stateItemsIsFetching}
+          />
+
+          <label
+            className={
+              relatedObject?.personStateID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            {stateCombo.map((state) => (
-              <option key={state.lookUpID} value={state.lookUpID}>
-                {state.lookUpName}
-              </option>
-            ))}
-          </select>
-          <label htmlFor="personState" className="inputBox__form--label">
             استان
           </label>
         </div>
         <div className="inputBox__form">
-          <select
-            type="text"
-            id="personCity"
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={cityOptions}
+            onChange={handleSelectOptionChange}
+            value={cityOptions.find(
+              (item) => item.value === relatedObject?.personCityID
+            )}
             name="personCityID"
-            className="inputBox__form--input"
-            value={convertToEnglishNumber(relatedObject?.personCityID) || " "}
-            onChange={handleRealtedObjectChange}
-            required
+            isClearable={true}
+            placeholder={<div className="react-select-placeholder">شهر</div>}
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={cityItemsIsLoading || cityItemsIsFetching}
+          />
+
+          <label
+            className={
+              relatedObject?.personCityID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            {cityCombo.map((city) => (
-              <option key={city.lookUpID} value={city.lookUpID}>
-                {city.lookUpName}
-              </option>
-            ))}
-          </select>
-          <label htmlFor="personCity" className="inputBox__form--label">
             شهر
           </label>
         </div>
