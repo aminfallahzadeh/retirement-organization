@@ -1,13 +1,11 @@
 // react imports
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
 
 // redux imports
 import { useGetPersonnelStatementQuery } from "../slices/personnelStatementApiSlice";
-import { useLazyGetRetiredQuery } from "../slices/retiredApiSlice";
-import { useLazyGetRetirementStatementQuery } from "../slices/retirementStatementApiSlice.js";
 
 // mui imports
 import { IconButton, Tooltip, Box, CircularProgress } from "@mui/material";
@@ -17,7 +15,7 @@ import {
   ChevronRight,
   FirstPage,
   LastPage,
-  DownloadOutlined as DownloadIcon,
+  VisibilityOutlined as EyeIcon,
   Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -28,6 +26,7 @@ import {
 
 // components
 import Modal from "../components/Modal";
+import PersonnelStatementViewForm from "../forms/PersonnelStatementViewForm";
 
 // helper imports
 import {
@@ -37,7 +36,6 @@ import {
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
-import { createStatementPDF } from "../generateStatementPDF.js";
 
 // library imports
 import { toast } from "react-toastify";
@@ -45,6 +43,12 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 function PersonnelStatementGrid() {
+  // MAIN STATE
+  const [statementID, setStatementID] = useState(null);
+
+  // MODAL STATES
+  const [showStatementInfoModal, setShowStatementInfoModal] = useState(false);
+
   const [rowSelection, setRowSelection] = useState({});
   const [personnelStatementTableData, setPersonnelStatementTableData] =
     useState([]);
@@ -52,14 +56,8 @@ function PersonnelStatementGrid() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
-  const personDeathDate = searchParams.get("personDeathDate");
 
   // ACTION QUERIES
-  const [getRetired, { isFetching: isRetiredFetching }] =
-    useLazyGetRetiredQuery();
-  const [getRetirementStatement, { isFetching: isStatementFetching }] =
-    useLazyGetRetirementStatementQuery();
-
   const {
     data: statements,
     isSuccess,
@@ -75,10 +73,11 @@ function PersonnelStatementGrid() {
 
   useEffect(() => {
     if (isSuccess) {
-      const data = statements.itemList.map((item) => ({
+      const data = statements.itemList.map((item, index) => ({
         id: item.personnelStatementID,
+        personnelStatementRowNum: index + 1,
         personnelStatementSerial: item.personnelStatementSerial,
-        personnelStatementNumber: item.personnelStatementNumber,
+        personnelStatementNumber: item.personnelStatementID,
         personnelStatementTypeName: item.personnelStatementTypeName,
         personnelStatementIssueDate: item.personnelStatementIssueDate,
         personnelStatementRunDate: item.personnelStatementRunDate,
@@ -96,30 +95,23 @@ function PersonnelStatementGrid() {
     }
   }, [error]);
 
-  const handleDownload = useCallback(
-    async (RetirementStatementID) => {
-      try {
-        const retiredRes = await getRetired(personID).unwrap();
-        const statementRes = await getRetirementStatement({
-          RetirementStatementID,
-        }).unwrap();
-
-        createStatementPDF(
-          retiredRes.itemList[0],
-          statementRes,
-          personDeathDate
-        );
-      } catch (err) {
-        console.log(err);
-        toast.error("خطایی رخ داده است", { autoClose: 2000 });
-      }
-    },
-
-    [getRetired, personID, getRetirementStatement, personDeathDate]
-  );
+  // HANDLERS
+  const handleStatementViewModalChange = () => {
+    setShowStatementInfoModal(true);
+  };
 
   const columns = useMemo(
     () => [
+      {
+        accessorKey: "personnelStatementRowNum",
+        header: "ردیف",
+        size: 20,
+        enableColumnActions: false,
+        enableSorting: false,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
       {
         accessorKey: "personnelStatementTypeName",
         header: "نوع حکم",
@@ -159,7 +151,7 @@ function PersonnelStatementGrid() {
       },
       {
         accessorKey: "downloadStatement",
-        header: "مشاهده/چاپ",
+        header: "مشاهده",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
@@ -171,16 +163,16 @@ function PersonnelStatementGrid() {
           >
             <IconButton
               color="primary"
-              onClick={() => handleDownload(row.original.id)}
               sx={{ padding: "0" }}
+              onClick={handleStatementViewModalChange}
             >
-              <DownloadIcon />
+              <EyeIcon />
             </IconButton>
           </Tooltip>
         ),
       },
     ],
-    [handleDownload]
+    []
   );
 
   const table = useMaterialReactTable({
@@ -241,6 +233,14 @@ function PersonnelStatementGrid() {
     state: { rowSelection },
   });
 
+  useEffect(() => {
+    const id = Object.keys(table.getState().rowSelection)[0];
+
+    if (id) {
+      setStatementID(id);
+    }
+  }, [table, rowSelection]);
+
   const content = (
     <>
       {isLoading ? (
@@ -255,17 +255,12 @@ function PersonnelStatementGrid() {
         </div>
       ) : (
         <>
-          {isStatementFetching || isRetiredFetching ? (
-            <Modal title="در حال بارگذاری ...">
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "2rem 10rem",
-                }}
-              >
-                <CircularProgress color="primary" />
-              </Box>
+          {showStatementInfoModal && statementID ? (
+            <Modal
+              title="نمایش اطلاعات حکم"
+              closeModal={() => setShowStatementInfoModal(false)}
+            >
+              <PersonnelStatementViewForm statementID={statementID} />
             </Modal>
           ) : null}
           <MaterialReactTable table={table} />
