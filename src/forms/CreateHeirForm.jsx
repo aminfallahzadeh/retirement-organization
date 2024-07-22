@@ -293,10 +293,6 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
     [setIsBirthCalenderOpen, setIsBaseFinishDateCalenderOpen]
   );
 
-  useEffect(() => {
-    console.log(heirObject);
-  }, [heirObject]);
-
   const content = (
     <section className="formContainer-transparent formContainer--width-lg flex-col">
       <form method="POST" className="grid grid--col-3" noValidate>

@@ -98,11 +98,12 @@ function RetiredStatementsGrid() {
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      const data = statementList.map((item) => ({
+      const data = statementList.map((item, index) => ({
         id: item.retirementStatementID,
+        statementRowNum: index + 1,
         retirementStatementSerial: item.retirementStatementSerial,
         retirementStatementTypeName: item.retirementStatementTypeName,
-        retirementStatementNo: item.retirementStatementNo,
+        retirementStatementNo: item.retirementStatementNo || "-",
         retirementStatementIssueDate: item.retirementStatementIssueDate,
         retirementStatementRunDate: item.retirementStatementRunDate,
         retirementStatementIssueConfirmDate:
@@ -183,6 +184,16 @@ function RetiredStatementsGrid() {
 
   const columns = useMemo(
     () => [
+      {
+        accessorKey: "statementRowNum",
+        size: 20,
+        header: "دریف",
+        enableColumnActions: false,
+        enableSorting: false,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
       {
         accessorKey: "retirementStatementNo",
         size: 20,

@@ -9,6 +9,7 @@ import {
   useGetRetiredOrganizationQuery,
   useGetRetirementStatementTypeQuery,
 } from "../slices/sharedApiSlice.js";
+import { useGetRequestTypeQuery } from "../slices/requestApiSlice";
 
 // COMMON LOOK UP DATA LOGIC
 /**
@@ -196,10 +197,45 @@ const useFetchOrganizations = ({ organizationID = undefined }) => {
   };
 };
 
+// REQUEST TYPE LOOK UP LOGIC
+const useFetchRequestType = () => {
+  const [requestTypes, setRequestTypes] = useState([]);
+
+  // GET DATA
+  const {
+    data: requestTypesItems,
+    isSuccess: requestTypesIsSuccess,
+    isLoading: requestTypesIsLoading,
+    isFetching: requestTypesIsFetching,
+    error: requestTypesError,
+  } = useGetRequestTypeQuery({});
+
+  // FETCH DATA
+  useEffect(() => {
+    if (requestTypesIsSuccess) {
+      setRequestTypes(requestTypesItems.itemList);
+    }
+  }, [requestTypesIsSuccess, requestTypesItems]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (requestTypesError) {
+      console.log(requestTypesError);
+    }
+  }, [requestTypesError]);
+
+  return {
+    requestTypes,
+    requestTypesIsLoading,
+    requestTypesIsFetching,
+  };
+};
+
 export {
   useFetchRetirementStatementTypes,
   useFetchPensionaryStatus,
   useFetchLookUpData,
   useFetchRelationship,
   useFetchOrganizations,
+  useFetchRequestType,
 };

@@ -1,46 +1,69 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
 
 // redux imports
-import {
-  useGetRequestTypeQuery,
-  useInsertRequestMutation,
-} from "../slices/requestApiSlice";
+import { useInsertRequestMutation } from "../slices/requestApiSlice";
 
 // mui imports
 import { LoadingButton } from "@mui/lab";
 import { ArrowUpwardOutlined as SendIcon } from "@mui/icons-material";
 
+// hooks
+import { useFetchRequestType } from "../hooks/useFetchLookUpData";
+
 // library imports
 import { toast } from "react-toastify";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+// utils
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
 
 function CreateRequestForm() {
   const [insertRequest, { isLoading: isInserting }] =
     useInsertRequestMutation();
 
   const navigate = useNavigate();
+  const animatedComponents = makeAnimated();
 
   // REQUEST OBJECT STATE
   const [requestObject, setRequestObject] = useState({});
 
-  // LOOK UP STATES
-  const [requestTypeCombo, setRequestTypeCombo] = useState([]);
+  // TEST STATE
+  const personIDList = [
+    { value: "49e66fb39a124555b9329c9b7994509a", label: "-------" },
+    { value: "110117846", label: "همه" },
+    { value: "110117846", label: "علیرضا فلاح زاده ابرقويی" },
+    { value: "810e59798cc54b94b45cd0c776fff16b", label: "علی اسدی" },
+    { value: "4fba2ae8420348fc9d16b21a55fef23f", label: "امیر بابا بیک" },
+    { value: "e931cee492514557a6cba93fa7f3fbd4", label: "زهرا بابا بیک" },
+    { value: "110000256", label: "مهدی بشارت صنعتی" },
+    { value: "7777701a948e411aa204bc350utkt5", label: "سونیا گلدوست" },
+    { value: "1c81794b5d4447aba8bea1ae915ae756", label: "بهمن محمدی" },
+    { value: "19d06de3cf8c44a3b832b46ed0276b90", label: "مریم مهرجو" },
+    { value: "7777701a948e411aa204bc350a56f155", label: "شیما میرباقری" },
+    { value: "8b2a301a948e411aa204bc350a56f155", label: "احسان میرباقری" },
+  ];
 
   // GET LOOK UP DATA
-  const {
-    data: requestTypesComboItems,
-    isSuccess: isRequestTypesComboItemsSuccess,
-  } = useGetRequestTypeQuery();
+  const { requestTypes, requestTypesIsLoading, requestTypesIsFetching } =
+    useFetchRequestType();
 
-  // FETCH LOOK UP DATA
-  useEffect(() => {
-    if (isRequestTypesComboItemsSuccess) {
-      setRequestTypeCombo(requestTypesComboItems.itemList);
-    }
-  }, [isRequestTypesComboItemsSuccess, requestTypesComboItems]);
+  // SELECT OPTIONS
+  const requestTypeOptions = optionsGenerator(
+    requestTypes,
+    "requestTypeID",
+    "name"
+  );
+
+  const personsOptions = optionsGenerator(personIDList, "value", "label");
 
   // HANDLE REQUEST OBJECT CHANGE
   const handleRequestObjectChange = (e) => {
@@ -49,6 +72,17 @@ function CreateRequestForm() {
       ...requestObject,
       [name]: value,
     });
+  };
+
+  // HANDLE SELECT OPTION CHANGE
+  const handleSelectOptionChange = (selectedOption, actionMeta) => {
+    const { name } = actionMeta;
+    if (selectedOption) {
+      const { value } = selectedOption;
+      setRequestObject({ ...requestObject, [name]: value || "" });
+    } else {
+      setRequestObject({ ...requestObject, [name]: null });
+    }
   };
 
   const handleInsertRequest = async () => {
@@ -74,69 +108,70 @@ function CreateRequestForm() {
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-4 u-margin-top-md">
         <div className="inputBox__form">
-          <select
-            type="text"
-            id="requestTypeID"
-            className="inputBox__form--input"
-            value={requestObject?.requestTypeID || " "}
-            onChange={handleRequestObjectChange}
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={requestTypeOptions}
+            onChange={handleSelectOptionChange}
+            value={requestTypeOptions.find(
+              (item) => item.value === requestObject?.requestTypeID
+            )}
             name="requestTypeID"
-            required
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">
+                <span>*</span> نوع درخواست
+              </div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={requestTypesIsLoading || requestTypesIsFetching}
+          />
+
+          <label
+            className={
+              requestObject?.requestTypeID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            {requestTypeCombo?.map((requestType) => (
-              <option
-                key={requestType.requestTypeID}
-                value={requestType.requestTypeID}
-              >
-                {requestType.name}
-              </option>
-            ))}
-          </select>
-          <label htmlFor="requestTypeID" className="inputBox__form--label">
-            نوع درخواست
+            <span>*</span> نوع درخواست
           </label>
         </div>
 
         <div className="inputBox__form">
-          <select
-            id="personID"
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={personsOptions}
+            onChange={handleSelectOptionChange}
+            value={personsOptions.find(
+              (item) => item.value === requestObject?.personID
+            )}
             name="personID"
-            value={
-              requestObject?.personID || "49e66fb39a124555b9329c9b7994509a"
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">
+                <span>*</span> شماره کارمندی
+              </div>
             }
-            onChange={handleRequestObjectChange}
-            className="inputBox__form--input"
-            required
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={requestTypesIsLoading || requestTypesIsFetching}
+          />
+
+          <label
+            className={
+              requestObject?.personID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value="49e66fb39a124555b9329c9b7994509a">----</option>
-            <option value="110117846">همه</option>
-            <option value="110117846">علیرضا فلاح زاده ابرقوئی</option>
-            <option value="810e59798cc54b94b45cd0c776fff16b">علی اسدی</option>
-            <option value="4fba2ae8420348fc9d16b21a55fef23f">
-              امیر بابابیک
-            </option>
-            <option value="e931cee492514557a6cba93fa7f3fbd4">
-              زهرا بابابیک
-            </option>
-            <option value="110000256">مهدی بشارت صنعتی</option>
-            <option value="7777701a948e411aa204bc350utkt5">سونیا گلدوست</option>
-            <option value="1c81794b5d4447aba8bea1ae915ae756">بهمن محمدی</option>
-            <option value="19d06de3cf8c44a3b832b46ed0276b90">مریم مهرجو</option>
-            <option value="7777701a948e411aa204bc350a56f155">
-              شیما میرباقری
-            </option>
-            <option value="8b2a301a948e411aa204bc350a56f155">
-              احسان میرباقری
-            </option>
-          </select>
-          <label htmlFor="personID" className="inputBox__form--label">
             <span>*</span> شماره کارمندی
           </label>
         </div>
-
         <div className="inputBox__form col-span-4 row-span-3">
           <textarea
             type="text"

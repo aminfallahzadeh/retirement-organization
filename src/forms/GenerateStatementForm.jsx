@@ -1,11 +1,10 @@
 // react imports
-import { useEffect, useState } from "react";
+import { useState, useRef } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
 import { useGenerateNewRetirementStatementMutation } from "../slices/retirementStatementApiSlice.js";
 
 // mui imports
@@ -15,20 +14,37 @@ import {
   CalendarTodayOutlined as CalenderIcon,
 } from "@mui/icons-material";
 
+// hooks
+import { useFetchRetirementStatementTypes } from "../hooks/useFetchLookUpData";
+import { useCloseCalender } from "../hooks/useCloseCalender";
+
 // libary imports
 import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+// utils
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
+import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function GenerateStatementForm({ setShowGenerateStatementModal }) {
+  // CALENDER REFS
+  const runDateCalenderRef = useRef(null);
+
+  // DATE STATES
   const [slectedRunDate, setSelectedRunDate] = useState(null);
   const [isRunDateCalenderOpen, setIsRunDateCalenderOpen] = useState(false);
-
-  const [statementTypeCombo, setStatementTypeCombo] = useState([]);
 
   const [statementObject, setStatementObject] = useState({});
 
   const location = useLocation();
+  const animatedComponents = makeAnimated();
 
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
@@ -37,22 +53,28 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
   const [generateNewRetirementStatement, { isLoading: isGenerating }] =
     useGenerateNewRetirementStatementMutation();
 
-  const {
-    data: retirementStatementTypesComboItems,
-    isSuccess: isStatementTypeSuccess,
-  } = useGetRetirementStatementTypeQuery({});
+  // GET LOOK UP DATA
+  const { statementTypes, statementTypesIsFetching, statementTypesIsLoading } =
+    useFetchRetirementStatementTypes();
 
-  useEffect(() => {
-    if (isStatementTypeSuccess) {
-      setStatementTypeCombo(retirementStatementTypesComboItems.itemList);
-    }
-  }, [isStatementTypeSuccess, retirementStatementTypesComboItems]);
+  // SELECT OPTIONS
+  const statementTypeOptions = optionsGenerator(
+    statementTypes,
+    "retirementStatementTypeID",
+    "retirementStatementTypeName"
+  );
 
   // CHANGE HANDLERS
   const handleRunDateOpenChange = (open) => {
     setIsRunDateCalenderOpen(open);
   };
 
+  const handleRunDateChange = (date) => {
+    setSelectedRunDate(date);
+    setIsRunDateCalenderOpen(false);
+  };
+
+  // HANDLE MAIN DATA CHANGE
   const handleStatementDataChange = (e) => {
     const { name, value } = e.target;
     setStatementObject((statementObject) => ({
@@ -61,9 +83,15 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
     }));
   };
 
-  const handleRunDateChange = (date) => {
-    setSelectedRunDate(date);
-    setIsRunDateCalenderOpen(false);
+  // HANDLE SELECT OPTION CHANGE
+  const handleSelectOptionChange = (selectedOption, actionMeta) => {
+    const { name } = actionMeta;
+    if (selectedOption) {
+      const { value } = selectedOption;
+      setStatementObject({ ...statementObject, [name]: value || "" });
+    } else {
+      setStatementObject({ ...statementObject, [name]: null });
+    }
   };
 
   const handleGenerateStatement = async () => {
@@ -92,25 +120,24 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
     }
   };
 
-  return (
+  // FIX CLOSE CALENDER BUG
+  useCloseCalender([runDateCalenderRef], [setIsRunDateCalenderOpen]);
+
+  const content = (
     <section className="formContainer-transparent flex-col">
       <form method="POST" className="grid grid--col-2">
         <div className="inputBox__form">
           <InputDatePicker
             value={slectedRunDate}
-            defaultValue={null}
+            format={"jYYYY/jMM/jDD"}
             onChange={handleRunDateChange}
             onOpenChange={handleRunDateOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isRunDateCalenderOpen}
-            style={{
-              border: "2px solid #cfcfcf",
-              borderRadius: "6px",
-              marginLeft: "0.5rem",
-            }}
-            wrapperStyle={{
-              border: "none",
-              cursor: "pointer",
+            style={datePickerStyles}
+            wrapperStyle={datePickerWrapperStyles}
+            pickerProps={{
+              ref: runDateCalenderRef,
             }}
           />
           <div className="inputBox__form--readOnly-label">
@@ -118,28 +145,34 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
           </div>
         </div>
         <div className="inputBox__form">
-          <select
-            type="text"
-            className="inputBox__form--input"
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={statementTypeOptions}
+            onChange={handleSelectOptionChange}
+            value={statementTypeOptions.find(
+              (item) =>
+                item.value === statementObject?.retirementStatementTypeID
+            )}
             name="retirementStatementTypeID"
-            onChange={handleStatementDataChange}
-            value={statementObject?.retirementStatementTypeID}
-            required
-            id="retirementStatementTypeID"
-          >
-            <option value=" ">انتخاب نوع حکم</option>
-            {statementTypeCombo?.map((type) => (
-              <option
-                value={type.retirementStatementTypeID}
-                key={type.retirementStatementTypeID}
-              >
-                {type.retirementStatementTypeName}
-              </option>
-            ))}
-          </select>
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">
+                <span>*</span> نوع حکم
+              </div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={statementTypesIsFetching || statementTypesIsLoading}
+          />
+
           <label
-            className="inputBox__form--label"
-            htmlFor="retirementStatementTypeID"
+            className={
+              statementObject?.retirementStatementTypeID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
             <span>*</span> نوع حکم
           </label>
@@ -179,6 +212,8 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
       </div>
     </section>
   );
+
+  return content;
 }
 
 export default GenerateStatementForm;
