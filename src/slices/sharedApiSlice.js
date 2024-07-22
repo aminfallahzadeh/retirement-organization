@@ -69,6 +69,18 @@ export const sharedApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+
+    getRetiredOrganization: builder.query({
+      query: ({ organizationID }) => {
+        let url = `${SHARED_URL_HTTPS}/GetRetiredOrganization`;
+        if (organizationID) {
+          url += `?organizationID=${organizationID}`;
+        }
+        return {
+          url,
+        };
+      },
+    }),
   }),
 });
 
@@ -79,4 +91,5 @@ export const {
   useGetPensionaryStatusQuery,
   useGetRetirementStatementTypeQuery,
   useLazyGetRetirementStatementTypeQuery,
+  useGetRetiredOrganizationQuery,
 } = sharedApiSlice;

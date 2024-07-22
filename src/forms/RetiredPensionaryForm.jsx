@@ -15,6 +15,7 @@ import {
 import {
   useFetchPensionaryStatus,
   useFetchLookUpData,
+  useFetchOrganizations,
 } from "../hooks/useFetchLookUpData.js";
 import { useCloseCalender } from "../hooks/useCloseCalender";
 
@@ -101,6 +102,9 @@ function RetiredPensionaryForm() {
   }, [pensionaryError]);
 
   // GET LOOK UP DATA
+  const { organizations, organizationIsLoading, organizationIsFetching } =
+    useFetchOrganizations({});
+
   const {
     lookUpItems: employmentTypes,
     lookUpItemsIsLoading: employmentTypesIsLoading,
@@ -117,6 +121,12 @@ function RetiredPensionaryForm() {
   });
 
   // SELECT OPTIONS
+  const organizationOptions = optionsGenerator(
+    organizations,
+    "organizationID",
+    "organizationName"
+  );
+
   const employmentOptions = optionsGenerator(
     employmentTypes,
     "lookUpID",
@@ -253,23 +263,34 @@ function RetiredPensionaryForm() {
             </div>
 
             <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="retiredOrganizationID"
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={organizationOptions}
+                onChange={handleSelectOptionChange}
+                isDisabled={!editable}
+                value={organizationOptions.find(
+                  (item) => item.value === pensionaryData?.retiredOrganizationID
+                )}
                 name="retiredOrganizationID"
-                value={
-                  convertToPersianNumber(
-                    pensionaryData?.retiredOrganizationID
-                  ) ?? ""
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> آخرین محل خدمت
+                  </div>
                 }
-                onChange={handlePensionaryDataChange}
-                className="inputBox__form--input"
-                required
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={organizationIsLoading || organizationIsFetching}
               />
+
               <label
-                htmlFor="retiredOrganizationID"
-                className="inputBox__form--label"
+                className={
+                  pensionaryData?.retiredOrganizationID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
                 <span>*</span> آخرین محل خدمت
               </label>

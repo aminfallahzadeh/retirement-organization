@@ -2,11 +2,12 @@
 import { useState, useEffect } from "react";
 
 // redux imports
-import { useGetRetirementStatementTypeQuery } from "../slices/sharedApiSlice.js";
 import {
   useGetLookupDataQuery,
   useGetPensionaryStatusQuery,
   useGetRelationshipQuery,
+  useGetRetiredOrganizationQuery,
+  useGetRetirementStatementTypeQuery,
 } from "../slices/sharedApiSlice.js";
 
 // COMMON LOOK UP DATA LOGIC
@@ -162,9 +163,43 @@ const useFetchRelationship = () => {
   };
 };
 
+const useFetchOrganizations = ({ organizationID = undefined }) => {
+  const [organizations, setOrganizations] = useState([]);
+
+  // GET DATA
+  const {
+    data: organizationItems,
+    isSuccess: organizationIsSuccess,
+    isLoading: organizationIsLoading,
+    isFetching: organizationIsFetching,
+    error: organizationError,
+  } = useGetRetiredOrganizationQuery({ organizationID });
+
+  // FETCH DATA
+  useEffect(() => {
+    if (organizationIsSuccess) {
+      setOrganizations(organizationItems.itemList);
+    }
+  }, [organizationIsSuccess, organizationItems]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (organizationError) {
+      console.log(organizationError);
+    }
+  }, [organizationError]);
+
+  return {
+    organizations,
+    organizationIsLoading,
+    organizationIsFetching,
+  };
+};
+
 export {
   useFetchRetirementStatementTypes,
   useFetchPensionaryStatus,
   useFetchLookUpData,
   useFetchRelationship,
+  useFetchOrganizations,
 };

@@ -12,6 +12,14 @@ import {
   useGetPensionaryStatusQuery,
 } from "../slices/sharedApiSlice.js";
 
+// hooks
+import {
+  useFetchLookUpData,
+  useFetchPensionaryStatus,
+  useFetchRelationship,
+} from "../hooks/useFetchLookUpData";
+import { useCloseCalender } from "../hooks/useCloseCalender";
+
 // mui imports
 import { LoadingButton } from "@mui/lab";
 import {
@@ -19,15 +27,31 @@ import {
   CalendarTodayOutlined as CalenderIcon,
 } from "@mui/icons-material";
 
-// helpers
-import { convertToPersianNumber, convertToEnglishNumber } from "../helper.js";
-
 // libary imports
 import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+// helpers
+import { convertToPersianNumber, convertToEnglishNumber } from "../helper.js";
+
+// utils
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
+import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function CreateRelatedForm({ setShowCreateRelatedModal }) {
+  // CALENDER REFS
+  const birthCalenderRef = useRef(null);
+  const maritialCalenderRef = useRef(null);
+  const startCalenderRef = useRef(null);
+  const endCalenderRef = useRef(null);
+
   // LOOKUP STATES
   const [relationCombo, setRelationCombo] = useState([]);
   const [maritialStatusCombo, setMaritialStatusCombo] = useState([]);
@@ -60,6 +84,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const parentPersonID = searchParams.get("personID");
+  const animatedComponents = makeAnimated();
 
   // GET LOOKUP DATA
   const { data: relationComboItems, isSuccess: isRelationComboSuccess } =
@@ -178,12 +203,24 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
     setIsSelfEmployeeEndCalenderOpen(open);
   };
 
+  // HANDLE RELATED OBJECT CHANGE
   const handleRealtedObjectChange = (e) => {
     const { name, value } = e.target;
     setRelatedObject({
       ...relatedObject,
       [name]: convertToPersianNumber(value),
     });
+  };
+
+  // HANDLE SELECT OPTION CHANGE
+  const handleSelectOptionChange = (selectedOption, actionMeta) => {
+    const { name } = actionMeta;
+    if (selectedOption) {
+      const { value } = selectedOption;
+      setRelatedObject({ ...relatedObject, [name]: value || "" });
+    } else {
+      setRelatedObject({ ...relatedObject, [name]: null });
+    }
   };
 
   const handleInsertRelated = async () => {
@@ -285,6 +322,17 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
   useEffect(() => {
     console.log(relatedObject);
   }, [relatedObject]);
+
+  // FIX CLOSE CALENDER BUG
+  useCloseCalender(
+    [birthCalenderRef, maritialCalenderRef, startCalenderRef, endCalenderRef],
+    [
+      setIsBirthCalenderOpen,
+      setIsMritialCalenderOpen,
+      setIsSelfEmployeeStartCalenderOpen,
+      setIsSelfEmployeeEndCalenderOpen,
+    ]
+  );
 
   const content = (
     <section className="formContainer-transparent formContainer--width-lg flex-col">
@@ -406,14 +454,10 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             onOpenChange={handleBirthOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isBirthCalenderOpen}
-            style={{
-              border: "2px solid #cfcfcf",
-              borderRadius: "6px",
-              marginLeft: "0.5rem",
-            }}
-            wrapperStyle={{
-              border: "none",
-              cursor: "pointer",
+            style={datePickerStyles}
+            wrapperStyle={datePickerWrapperStyles}
+            pickerProps={{
+              ref: maritialCalenderRef,
             }}
           />
           <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
@@ -426,14 +470,10 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             onOpenChange={handleMaritialOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isMritialCalenderOpen}
-            style={{
-              border: "2px solid #cfcfcf",
-              borderRadius: "6px",
-              marginLeft: "0.5rem",
-            }}
-            wrapperStyle={{
-              border: "none",
-              cursor: "pointer",
+            style={datePickerStyles}
+            wrapperStyle={datePickerWrapperStyles}
+            pickerProps={{
+              ref: maritialCalenderRef,
             }}
           />
           <div className="inputBox__form--readOnly-label">تاریخ عقد</div>
@@ -831,14 +871,10 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             onOpenChange={handleSelfEmployeeStartOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isSelfEmployeeStartCalenderOpen}
-            style={{
-              border: "2px solid #cfcfcf",
-              borderRadius: "6px",
-              marginLeft: "0.5rem",
-            }}
-            wrapperStyle={{
-              border: "none",
-              cursor: "pointer",
+            style={datePickerStyles}
+            wrapperStyle={datePickerWrapperStyles}
+            pickerProps={{
+              ref: startCalenderRef,
             }}
           />
           <div className="inputBox__form--readOnly-label">تاریخ شروع</div>
@@ -851,14 +887,9 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
             onOpenChange={handleSelfEmployeeEndOpenChange}
             suffixIcon={<CalenderIcon color="action" />}
             open={isSelfEmployeeEndCalenderOpen}
-            style={{
-              border: "2px solid #cfcfcf",
-              borderRadius: "6px",
-              marginLeft: "0.5rem",
-            }}
-            wrapperStyle={{
-              border: "none",
-              cursor: "pointer",
+            wrapperStyle={datePickerWrapperStyles}
+            pickerProps={{
+              ref: endCalenderRef,
             }}
           />
           <div className="inputBox__form--readOnly-label">تاریخ پایان</div>
