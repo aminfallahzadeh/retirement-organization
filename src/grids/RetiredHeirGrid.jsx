@@ -104,14 +104,7 @@ function RetiredHeirGrid() {
       }));
       setHeirTableData(data);
     }
-  }, [
-    isSuccess,
-    heirs,
-    refetch,
-    showEditHeirModal,
-    showCreateHeirModal,
-    showDeleteHeirModal,
-  ]);
+  }, [isSuccess, heirs, refetch]);
 
   useEffect(() => {
     if (error) {
@@ -355,7 +348,7 @@ function RetiredHeirGrid() {
 
   const content = (
     <>
-      {isLoading ? (
+      {isLoading || isFetching ? (
         <div className="skeleton-lg">
           <Skeleton
             count={5}
@@ -375,6 +368,7 @@ function RetiredHeirGrid() {
               <UpdateHeirForm
                 setShowEditHeirModal={setShowEditHeirModal}
                 personID={personID}
+                refetch={refetch}
               />
             </Modal>
           ) : showDeleteHeirModal ? (
@@ -415,7 +409,10 @@ function RetiredHeirGrid() {
               title={"ایجاد موظف"}
               closeModal={() => setShowCreateHeirModal(false)}
             >
-              <CreateHeirForm setShowCreateHeirModal={setShowCreateHeirModal} />
+              <CreateHeirForm
+                setShowCreateHeirModal={setShowCreateHeirModal}
+                refetch={refetch}
+              />
             </Modal>
           ) : null}
           <MaterialReactTable table={table} />

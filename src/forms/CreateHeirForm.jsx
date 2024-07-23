@@ -42,7 +42,7 @@ import {
 } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
-function CreateHeirForm({ setShowCreateHeirModal }) {
+function CreateHeirForm({ setShowCreateHeirModal, refetch }) {
   const birthCalenderRef = useRef(null);
   const endSubCalenderRef = useRef(null);
 
@@ -276,6 +276,7 @@ function CreateHeirForm({ setShowCreateHeirModal }) {
         parentPersonID,
       }).unwrap();
       setShowCreateHeirModal(false);
+      refetch();
       toast.success(insertRes.message, {
         autoClose: 2000,
       });

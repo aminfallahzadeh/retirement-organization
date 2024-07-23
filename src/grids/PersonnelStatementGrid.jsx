@@ -32,6 +32,7 @@ import PersonnelStatementViewForm from "../forms/PersonnelStatementViewForm";
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
+  separateByThousands,
 } from "../helper.js";
 
 // utils imports
@@ -73,15 +74,27 @@ function PersonnelStatementGrid() {
 
   useEffect(() => {
     if (isSuccess) {
-      const data = statements.itemList.map((item, index) => ({
-        id: item.personnelStatementID,
-        personnelStatementRowNum: index + 1,
-        personnelStatementSerial: item.personnelStatementSerial,
-        personnelStatementNumber: item.personnelStatementID,
-        personnelStatementTypeName: item.personnelStatementTypeName,
-        personnelStatementIssueDate: item.personnelStatementIssueDate,
-        personnelStatementRunDate: item.personnelStatementRunDate,
-      }));
+      const data = statements.itemList.map((item, index) => {
+        let sum;
+        if (item.personnelStatementItems) {
+          sum = item.personnelStatementItems.reduce(
+            (acc, i) => acc + i.personnelStatementItemAmount,
+            0
+          );
+        } else {
+          sum = "-";
+        }
+        return {
+          id: item.personnelStatementID,
+          personnelStatementRowNum: index + 1,
+          personnelStatementSerial: item.personnelStatementSerial,
+          personnelStatementNumber: item.personnelStatementID,
+          personnelStatementTypeName: item.personnelStatementTypeName,
+          personnelStatementIssueDate: item.personnelStatementIssueDate,
+          personnelStatementRunDate: item.personnelStatementRunDate,
+          personnelSum: sum,
+        };
+      });
       setPersonnelStatementTableData(data);
     }
   }, [isSuccess, statements]);
@@ -147,6 +160,16 @@ function PersonnelStatementGrid() {
         size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianDateFormatted(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "personnelSum",
+        header: "جمع مشمول کسور",
+        size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>
+            {separateByThousands(convertToPersianNumber(renderedCellValue))}
+          </div>
         ),
       },
       {

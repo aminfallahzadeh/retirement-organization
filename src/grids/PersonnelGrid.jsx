@@ -34,16 +34,30 @@ function PersonnelGrid() {
   const columns = useMemo(
     () => [
       {
+        accessorKey: "personRowNum",
+        header: "ردیف",
+        size: 20,
+        enableSorting: false,
+        enableColumnActions: false,
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
+      },
+      {
         accessorKey: "personFirstName",
         header: "نام",
+        size: 20,
       },
       {
         accessorKey: "personLastName",
         header: "نام خانوادگی",
+        size: 20,
       },
       {
         accessorKey: "personNationalCode",
         header: "کد ملی",
+        size: 20,
+
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
@@ -51,6 +65,8 @@ function PersonnelGrid() {
       {
         accessorKey: "personID",
         header: "شماره کارمندی",
+        size: 20,
+
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),

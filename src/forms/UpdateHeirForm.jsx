@@ -50,7 +50,11 @@ import {
 } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
-function UpdateHeirForm({ setShowEditHeirModal, personID }) {
+function UpdateHeirForm({
+  setShowEditHeirModal,
+  personID,
+  refetch: gridRefetch,
+}) {
   const birthCalenderRef = useRef(null);
   const endSubCalenderRef = useRef(null);
 
@@ -336,6 +340,7 @@ function UpdateHeirForm({ setShowEditHeirModal, personID }) {
         parentPersonID,
       }).unwrap();
       setShowEditHeirModal(false);
+      gridRefetch();
       toast.success(updateRes.message, {
         autoClose: 2000,
       });

@@ -55,8 +55,9 @@ function PersonnelStatementForm() {
         });
         return;
       }
-      const mappedData = searchRes.itemList.map((item) => ({
+      const mappedData = searchRes.itemList.map((item, index) => ({
         id: item.personID,
+        personRowNum: index + 1,
         personDeathDate: item.personDeathDate,
         personID: item.personID,
         personNationalCode: item.personNationalCode,
