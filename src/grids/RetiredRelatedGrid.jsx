@@ -102,14 +102,7 @@ function RetiredRelatedGrid() {
       }));
       setRelatedTableData(data);
     }
-  }, [
-    isSuccess,
-    relateds,
-    refetch,
-    showCreateRelatedModal,
-    showEditRelatedModal,
-    showDeleteRelatedModal,
-  ]);
+  }, [isSuccess, relateds, refetch]);
 
   useEffect(() => {
     if (error) {
@@ -363,6 +356,7 @@ function RetiredRelatedGrid() {
             >
               <CreateRelatedForm
                 setShowCreateRelatedModal={setShowCreateRelatedModal}
+                refetch={refetch}
               />
             </Modal>
           ) : showEditRelatedModal && personID ? (
@@ -373,6 +367,7 @@ function RetiredRelatedGrid() {
               <UpdateRelatedForm
                 setShowEditRelatedModal={setShowEditRelatedModal}
                 personID={personID}
+                refetch={refetch}
               />
             </Modal>
           ) : showDeleteRelatedModal ? (

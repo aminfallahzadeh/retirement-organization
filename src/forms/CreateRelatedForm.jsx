@@ -1,5 +1,5 @@
 // react imports
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -40,7 +40,7 @@ import {
 } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
-function CreateRelatedForm({ setShowCreateRelatedModal }) {
+function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
   // CALENDER REFS
   const birthCalenderRef = useRef(null);
   const maritialCalenderRef = useRef(null);
@@ -302,6 +302,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
         selfEmployeeEndDate,
       }).unwrap();
       setShowCreateRelatedModal(false);
+      refetch();
       toast.success(insertRes.message, {
         autoClose: 2000,
       });
@@ -312,10 +313,6 @@ function CreateRelatedForm({ setShowCreateRelatedModal }) {
       });
     }
   };
-
-  useEffect(() => {
-    console.log(relatedObject);
-  }, [relatedObject]);
 
   // FIX CLOSE CALENDER BUG
   useCloseCalender(

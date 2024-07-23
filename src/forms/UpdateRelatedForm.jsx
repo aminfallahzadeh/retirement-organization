@@ -48,7 +48,11 @@ import {
 } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
-function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
+function UpdateRelatedForm({
+  setShowEditRelatedModal,
+  personID,
+  refetch: gridRefetch,
+}) {
   // CALENDER REFS
   const birthCalenderRef = useRef(null);
   const maritialCalenderRef = useRef(null);
@@ -369,6 +373,7 @@ function UpdateRelatedForm({ setShowEditRelatedModal, personID }) {
       }).unwrap();
       console.log(updateRes);
       setShowEditRelatedModal(false);
+      gridRefetch();
       toast.success(updateRes.message, {
         autoClose: 2000,
       });
