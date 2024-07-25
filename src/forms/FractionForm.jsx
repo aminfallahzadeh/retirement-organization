@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 // redux imports
 import { useDispatch } from "react-redux";
 import { setFractionType } from "../slices/fractionDataSlice";
+import { useInsertFractionExcelMutation } from "../slices/fractionApiSlice";
 import { useLazyGetPersonsQuery } from "../slices/personApiSlice";
 
 // hooks
@@ -73,16 +74,22 @@ function FractionForm() {
 
   // EXCEL STATES
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [isExcelFileUploaded, setIsExcelFileUploaded] = useState(false);
   const [excelFile, setExcelFile] = useState(null);
 
   // DATE STATES
   const [selectedLetterDate, setSelectedLetterDate] = useState(null);
   const [selectedPaymentDate, setSelectedPaymentDate] = useState(null);
 
+  // CALENDER STATES
   const [isLetterDateCalenderOpen, setIsLetterDateCalenderOpen] =
     useState(false);
   const [isPaymentCalenderOpen, setIsPaymentCalenderOpen] = useState(false);
+
+  // ACCESS QUERIES
+  const [
+    insertExcel,
+    { isLoading: isJariLoading, isFetching: isJariFetching },
+  ] = useInsertFractionExcelMutation();
 
   const [
     searchPersons,
@@ -167,6 +174,21 @@ function FractionForm() {
     }
   };
 
+  const handleInsertExcel = async (data, type) => {
+    console.log(type);
+    try {
+      const res = await insertExcel({ data, type }).unwrap();
+      toast.success(res.message, {
+        autoClose: 2000,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
   const handleSearchPerson = async () => {
     try {
       const searchRes = await searchPersons({
@@ -223,23 +245,28 @@ function FractionForm() {
       };
 
       reader.onload = (event) => {
-        const data = new Uint8Array(event.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
+        const excel = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(excel, { type: "array" });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-        // FIND NATIONAL CODES FROM ALL CELLS
-        const nationalCodes = [];
-        json.forEach((row) => {
-          row.forEach((cell) => {
-            if (cell !== null && cell !== undefined && cell !== "") {
-              nationalCodes.push(convertToEnglishNumber(cell.toString()));
-            }
+        // EXTRACT HEADERS AND ROWS
+        const headers = json[0];
+        const rows = json.slice(1);
+
+        // CREATE DATA OBJECT
+        const items = rows.map((row) => {
+          const obj = {};
+          row.forEach((cell, index) => {
+            obj[headers[index]] = convertToEnglishNumber(
+              cell ? cell.toString() : ""
+            );
           });
+          return obj;
         });
-        // setNationalCodesFromExcel(nationalCodes);
-        setIsExcelFileUploaded(true);
+        const type = data?.fractionTypeID;
+        handleInsertExcel(items, type);
       };
 
       reader.onloadend = () => {
@@ -627,12 +654,14 @@ function FractionForm() {
                 dir="ltr"
                 variant="contained"
                 color="warning"
-                disabled={uploadProgress > 0 || excelFile ? true : false}
+                disabled={
+                  uploadProgress > 0 || excelFile
+                    ? true
+                    : false || !data.fractionTypeID
+                }
                 sx={{ fontFamily: "sahel" }}
                 endIcon={<UploadIcon />}
-                //  loading={
-                //    isGetListFromExcelFetching || isGetListFromExcelLoading
-                //  }
+                loading={isJariLoading || isJariFetching}
                 onClick={handleExcelFileUpload}
               >
                 <span>بارگزاری اکسل</span>
