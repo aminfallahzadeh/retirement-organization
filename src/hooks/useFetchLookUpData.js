@@ -9,6 +9,8 @@ import {
   useGetRetiredOrganizationQuery,
   useGetRetirementStatementTypeQuery,
 } from "../slices/sharedApiSlice.js";
+import { useGetPersonnelStatementOffTypeQuery } from "../slices/personnelStatementApiSlice.js";
+import { useGetFractionTypeQuery } from "../slices/fractionApiSlice.js";
 import { useGetRequestTypeQuery } from "../slices/requestApiSlice";
 
 // COMMON LOOK UP DATA LOGIC
@@ -231,6 +233,76 @@ const useFetchRequestType = () => {
   };
 };
 
+// FRACTION TYPE LOOK UP LOGIC
+const useFetchFractionType = () => {
+  const [fractionTypes, setFractionTypes] = useState([]);
+
+  // GET DATA
+  const {
+    data: fractionTypesItems,
+    isSuccess: fractionTypesIsSuccess,
+    isLoading: fractionTypesIsLoading,
+    isFetching: fractionTypesIsFetching,
+    error: fractionTypesError,
+  } = useGetFractionTypeQuery({});
+
+  // FETCH DATA
+  useEffect(() => {
+    if (fractionTypesIsSuccess) {
+      setFractionTypes(fractionTypesItems.itemList);
+    }
+  }, [fractionTypesIsSuccess, fractionTypesItems]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (fractionTypesError) {
+      console.log(fractionTypesError);
+    }
+  }, [fractionTypesError]);
+
+  return {
+    fractionTypes,
+    fractionTypesIsLoading,
+    fractionTypesIsFetching,
+  };
+};
+
+// PERSONNEL STATEMENT OFF TYPE LOOK UP LOGIC
+const useFetchPersonnelStatementOffType = () => {
+  const [personnelStatementOffTypes, setPersonnelStatementOffTypes] = useState(
+    []
+  );
+
+  // GET DATA
+  const {
+    data: personnelStatementOffTypesItems,
+    isSuccess: personnelStatementOffTypesIsSuccess,
+    isLoading: personnelStatementOffTypesIsLoading,
+    isFetching: personnelStatementOffTypesIsFetching,
+    error: personnelStatementOffTypesError,
+  } = useGetPersonnelStatementOffTypeQuery({});
+
+  // FETCH DATA
+  useEffect(() => {
+    if (personnelStatementOffTypesIsSuccess) {
+      setPersonnelStatementOffTypes(personnelStatementOffTypesItems.itemList);
+    }
+  }, [personnelStatementOffTypesIsSuccess, personnelStatementOffTypesItems]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (personnelStatementOffTypesError) {
+      console.log(personnelStatementOffTypesError);
+    }
+  }, [personnelStatementOffTypesError]);
+
+  return {
+    personnelStatementOffTypes,
+    personnelStatementOffTypesIsLoading,
+    personnelStatementOffTypesIsFetching,
+  };
+};
+
 export {
   useFetchRetirementStatementTypes,
   useFetchPensionaryStatus,
@@ -238,4 +310,6 @@ export {
   useFetchRelationship,
   useFetchOrganizations,
   useFetchRequestType,
+  useFetchFractionType,
+  useFetchPersonnelStatementOffType,
 };

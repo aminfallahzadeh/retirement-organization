@@ -23,7 +23,7 @@ function FractionScreen() {
           <div className="flex-col flex-center">
             <h5 className="title-secondary">لیست دوره ها</h5>
           </div>
-          <FractionPeriodGrid />{" "}
+          <FractionPeriodGrid />
         </>
       )}
     </section>

@@ -4,13 +4,15 @@ import { useState, useEffect, useRef } from "react";
 // redux imports
 import { useDispatch } from "react-redux";
 import { setFractionType } from "../slices/fractionDataSlice";
-import { useGetLookupDataQuery } from "../slices/sharedApiSlice";
-import { useGetPersonnelStatementOffTypeQuery } from "../slices/personnelStatementApiSlice";
-import { useGetFractionTypeQuery } from "../slices/fractionApiSlice";
 import { useLazyGetPersonsQuery } from "../slices/personApiSlice";
 
 // hooks
 import { useCloseCalender } from "../hooks/useCloseCalender";
+import {
+  useFetchOrganizations,
+  useFetchFractionType,
+  useFetchPersonnelStatementOffType,
+} from "../hooks/useFetchLookUpData";
 
 // mui imports
 import {
@@ -45,7 +47,11 @@ import * as XLSX from "xlsx";
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
 // utils
-import { selectStyles, selectSettings } from "../utils/reactSelect";
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function FractionForm() {
@@ -70,11 +76,6 @@ function FractionForm() {
   const [isExcelFileUploaded, setIsExcelFileUploaded] = useState(false);
   const [excelFile, setExcelFile] = useState(null);
 
-  // LOOK UP STATES
-  const [offTypeCombo, setOffTypeCombo] = useState([]);
-  const [fractionTypeCombo, setFractionTypeCombo] = useState([]);
-  const [employmnetCombo, setEmploymnetCombo] = useState([]);
-
   // DATE STATES
   const [selectedLetterDate, setSelectedLetterDate] = useState(null);
   const [selectedPaymentDate, setSelectedPaymentDate] = useState(null);
@@ -89,88 +90,41 @@ function FractionForm() {
   ] = useLazyGetPersonsQuery();
 
   // GET LOOKUP DATA
-  const {
-    data: employmnetComboItems,
-    isSuccess: isEmploymnetComboItemsSuccess,
-    isLoading: isEmploymnetComboItemsLoading,
-    isFetching: isEmploymnetComboItemsFetching,
-    error: employmnetComboItemsError,
-  } = useGetLookupDataQuery({ lookUpType: "EmploymentType" });
+  const { organizations, organizationIsLoading, organizationIsFetching } =
+    useFetchOrganizations({});
+
+  const { fractionTypes, fractionTypesIsLoading, fractionTypesIsFetching } =
+    useFetchFractionType();
 
   const {
-    data: fractionTypeComboItems,
-    isSuccess: isFractionTypeComboItemsSuccess,
-    isLoading: isFractionTypeComboItemsLoading,
-    isFetching: isFractionTypeComboItemsFetching,
-    error: fractionTypeComboItemsError,
-  } = useGetFractionTypeQuery();
-
-  const {
-    data: offTypeComboItems,
-    isSuccess: isOffTypeComboItemsSuccess,
-    isLoading: isOffTypeComboItemsLoading,
-    isFetching: isOffTypeComboItemsFetching,
-    error: offTypeComboItemsError,
-  } = useGetPersonnelStatementOffTypeQuery();
+    personnelStatementOffTypes,
+    personnelStatementOffTypesIsLoading,
+    personnelStatementOffTypesIsFetching,
+  } = useFetchPersonnelStatementOffType();
 
   // SELECT OPTIONS
-  const offTypesOptions = offTypeCombo.map((item) => ({
-    value: item.personnelStatementOffTypeID,
-    label: item.personnelStatementOffTypeName,
-  }));
+  const offTypesOptions = optionsGenerator(
+    personnelStatementOffTypes,
+    "personnelStatementOffTypeID",
+    "personnelStatementOffTypeName"
+  );
 
-  const fractionTypesOptions = fractionTypeCombo.map((item) => ({
-    value: item.fractionTypeid,
-    label: item.fractionTypeName,
-  }));
+  const fractionTypesOptions = optionsGenerator(
+    fractionTypes,
+    "fractionTypeid",
+    "fractionTypeName"
+  );
 
-  const employmentOptions = employmnetCombo.map((item) => ({
-    value: item.lookUpID,
-    label: item.lookUpName,
-  }));
+  const organizationOptions = optionsGenerator(
+    organizations,
+    "organizationID",
+    "organizationName"
+  );
 
   const paymentTypeOptions = [
     { value: "1", label: "چک" },
     { value: "2", label: "فیش" },
   ];
-
-  // FETCH LOOKUP DATA
-  useEffect(() => {
-    if (isOffTypeComboItemsSuccess) {
-      setOffTypeCombo(offTypeComboItems.itemList);
-    }
-  }, [isOffTypeComboItemsSuccess, offTypeComboItems]);
-
-  useEffect(() => {
-    if (isFractionTypeComboItemsSuccess) {
-      setFractionTypeCombo(fractionTypeComboItems.itemList);
-    }
-  }, [isFractionTypeComboItemsSuccess, fractionTypeComboItems]);
-
-  useEffect(() => {
-    if (isEmploymnetComboItemsSuccess) {
-      setEmploymnetCombo(employmnetComboItems.itemList);
-    }
-  }, [isEmploymnetComboItemsSuccess, employmnetComboItems]);
-
-  // HANLDE ERRORS
-  useEffect(() => {
-    if (offTypeComboItemsError) {
-      console.log(offTypeComboItemsError);
-    }
-  }, [offTypeComboItemsError]);
-
-  useEffect(() => {
-    if (fractionTypeComboItemsError) {
-      console.log(fractionTypeComboItemsError);
-    }
-  }, [fractionTypeComboItemsError]);
-
-  useEffect(() => {
-    if (employmnetComboItemsError) {
-      console.log(employmnetComboItemsError);
-    }
-  }, [employmnetComboItemsError]);
 
   // DATE HANDLER
   const handleLetterCalenderOpenChange = (open) => {
@@ -316,10 +270,7 @@ function FractionForm() {
               (item) => item.value === data?.relationshipWithParentID
             )}
             onChange={handleSelectOptionChange}
-            isLoading={
-              isFractionTypeComboItemsLoading ||
-              isFractionTypeComboItemsFetching
-            }
+            isLoading={fractionTypesIsLoading || fractionTypesIsFetching}
             isClearable={true}
             placeholder={
               <div className="react-select-placeholder">نوع کسور</div>
@@ -373,6 +324,9 @@ function FractionForm() {
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleDataChange}
+            name="letterNum"
+            value={convertToPersianNumber(data.letterNum) || ""}
             required
             id="letterNum"
           />
@@ -411,7 +365,8 @@ function FractionForm() {
             )}
             name="offTypeID"
             isLoading={
-              isOffTypeComboItemsLoading || isOffTypeComboItemsFetching
+              personnelStatementOffTypesIsLoading ||
+              personnelStatementOffTypesIsFetching
             }
             isClearable={true}
             placeholder={
@@ -508,50 +463,77 @@ function FractionForm() {
           </>
         )}
 
-        <Select
-          closeMenuOnSelect={true}
-          components={animatedComponents}
-          isClearable={true}
-          options={employmentOptions}
-          name="employmentTypeID"
-          placeholder={
-            <div className="react-select-placeholder">
-              <span>*</span> نام سازمان
-            </div>
-          }
-          noOptionsMessage={selectSettings.noOptionsMessage}
-          loadingMessage={selectSettings.loadingMessage}
-          isLoading={
-            isEmploymnetComboItemsFetching || isEmploymnetComboItemsLoading
-          }
-          styles={selectStyles}
-        />
+        <div className="inputBox__form">
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            onChange={handleSelectOptionChange}
+            isClearable={true}
+            options={organizationOptions}
+            name="employmentTypeID"
+            placeholder={
+              <div className="react-select-placeholder">
+                <span>*</span> نام سازمان
+              </div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            isLoading={organizationIsLoading || organizationIsFetching}
+            styles={selectStyles}
+          />
+
+          <label
+            className={
+              data?.employmentTypeID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
+          >
+            <span>*</span> نام سازمان
+          </label>
+        </div>
 
         <div></div>
         <div></div>
         <div></div>
         <div></div>
 
-        <Select
-          closeMenuOnSelect={true}
-          components={animatedComponents}
-          isClearable={true}
-          options={paymentTypeOptions}
-          name="employmentTypeID"
-          placeholder={
-            <div className="react-select-placeholder">
-              <span>*</span> نوع پرداخت
-            </div>
-          }
-          noOptionsMessage={selectSettings.noOptionsMessage}
-          loadingMessage={selectSettings.loadingMessage}
-          styles={selectStyles}
-        />
+        <div className="inputBox__form">
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            isClearable={true}
+            onChange={handleSelectOptionChange}
+            options={paymentTypeOptions}
+            name="payTypeID"
+            placeholder={
+              <div className="react-select-placeholder">
+                <span>*</span> نوع پرداخت
+              </div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+          />
+
+          <label
+            className={
+              data?.payTypeID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
+          >
+            <span>*</span> نام سازمان
+          </label>
+        </div>
 
         <div className="inputBox__form">
           <input
             type="text"
             className="inputBox__form--input"
+            onChange={handleDataChange}
+            name="payNum"
+            value={convertToPersianNumber(data.payNum) || ""}
             required
             id="payNum"
           />
