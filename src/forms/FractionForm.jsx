@@ -18,7 +18,6 @@ import {
 // mui imports
 import {
   CalendarTodayOutlined as CalenderIcon,
-  CalculateOutlined as CalculateIcon,
   FactCheckOutlined as CheckIcon,
   DeleteOutline as RemoveIcon,
 } from "@mui/icons-material";
@@ -570,6 +569,21 @@ function FractionForm() {
         </div>
 
         <div className="inputBox__form">
+          <input
+            type="text"
+            className="inputBox__form--input"
+            onChange={handleDataChange}
+            name="amount"
+            value={convertToPersianNumber(data.amount) || ""}
+            required
+            id="amount"
+          />
+          <label className="inputBox__form--label" htmlFor="amount">
+            مبلغ
+          </label>
+        </div>
+
+        <div className="inputBox__form">
           <InputDatePicker
             defaultValue={null}
             onChange={handlePaymenrDateChange}
@@ -586,46 +600,9 @@ function FractionForm() {
           />
           <div className="inputBox__form--readOnly-label">تاریخ پرداخت</div>
         </div>
-      </form>
 
-      {frMode === "solo" && (
-        <div className="fraction--total">
-          <div className="fraction--total__items">
-            <p>
-              جمع مشمول کسور : <span>۱۰۰۰۰۰</span>
-            </p>
-            <p>
-              سهم کارفرما : <span>۱۰۰۰۰۰</span>
-            </p>
-            <p>
-              سهم کارمند : <span>۱۰۰۰۰۰</span>
-            </p>
-            <p>
-              مانده بدهی : <span>۱۰۰۰۰۰</span>
-            </p>
-          </div>
-
-          <div className="fraction--total__btn">
-            <Button
-              dir="ltr"
-              endIcon={<CalculateIcon />}
-              variant="contained"
-              type="submit"
-              color="warning"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>محاسبه</span>
-            </Button>
-          </div>
-        </div>
-      )}
-
-      <div style={{ marginRight: "auto" }} className="flex-row">
         {frMode === "group" ? (
-          <div
-            style={{ marginRight: "auto" }}
-            className="flex-row flex-center col-span-2"
-          >
+          <div style={{ marginRight: "auto" }} className="flex-row flex-center">
             {excelFile && (
               <div className="excel">
                 <IconButton
@@ -691,18 +668,19 @@ function FractionForm() {
             </div>
           </div>
         ) : (
-          <Button
-            dir="ltr"
-            endIcon={<ArchiveIcon />}
-            variant="contained"
-            type="submit"
-            color="primary"
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>آرشیو مستندات</span>
-          </Button>
+          <div style={{ marginRight: "auto" }}>
+            <Button
+              dir="ltr"
+              endIcon={<ArchiveIcon />}
+              variant="contained"
+              color="primary"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>آرشیو مستندات</span>
+            </Button>
+          </div>
         )}
-      </div>
+      </form>
     </section>
   );
 

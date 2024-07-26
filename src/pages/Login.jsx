@@ -242,7 +242,7 @@ function Login() {
                 <canvas
                   ref={canvasRef}
                   width="130"
-                  height="40"
+                  height="43"
                   className="login__credentials--captcha-canvas"
                 >
                   {captchaText}
