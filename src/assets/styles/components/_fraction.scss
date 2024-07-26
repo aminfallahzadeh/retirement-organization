@@ -34,3 +34,28 @@
         }
     }
 }
+
+.fraction-item {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    column-gap: 10px;
+    position: relative;
+    color: var(--color-accent-primary);
+    line-height: 0;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: -10px;
+        height: 25px;
+        border-radius: 20px;
+        width: 2px;
+        background-color: var(--color-accent-primary);
+    }
+    span {
+        color: var(--color-txt-primary);
+    }
+}

@@ -58,9 +58,9 @@ function FractionPeriodGrid() {
     const mappedData = periodsTableData.map((item, index) => ({
       id: item.id,
       periodRowNum: index + 1,
-      periodYear: item.periodYear,
-      periodMonth: item.periodMonth,
-      periodDay: item.periodDay,
+      periodYear: item.periodYear || "-",
+      periodMonth: item.periodMonth || "-",
+      periodDay: item.periodDay || "-",
     }));
 
     setData(mappedData);

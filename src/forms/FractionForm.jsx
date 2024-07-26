@@ -440,7 +440,11 @@ function FractionForm() {
                 ) : (
                   <Tooltip title="استعلام">
                     <span>
-                      <IconButton color="primary" onClick={handleSearchPerson}>
+                      <IconButton
+                        color="primary"
+                        onClick={handleSearchPerson}
+                        disabled={!data.personNationalCode}
+                      >
                         <CheckIcon />
                       </IconButton>
                     </span>

@@ -32,24 +32,37 @@ function FractionScreen() {
       )}
 
       {fractionType === "solo" && (
-        <div className="formContainer">
-          <div className="fraction--total">
-            <div className="fraction--total__items">
-              <p>
-                جمع مشمول کسور : <span>۱۰۰۰۰۰</span>
+        <>
+          <div className="flex-col flex-center">
+            <h5 className="title-secondary">محاسبه کسورات</h5>
+          </div>
+
+          <div className="formContainer flex-col">
+            <div className="grid grid--col-5">
+              <p className="fraction-item">
+                جمع مشمول کسور : <span>-</span>
               </p>
-              <p>
-                سهم کارفرما : <span>۱۰۰۰۰۰</span>
+              <p className="fraction-item">
+                سهم کارفرما : <span>-</span>
               </p>
-              <p>
-                سهم کارمند : <span>۱۰۰۰۰۰</span>
+              <p className="fraction-item">
+                سهم کارمند : <span>-</span>
               </p>
-              <p>
-                مانده بدهی : <span>۱۰۰۰۰۰</span>
+              <p className="fraction-item">
+                مانده بدهی : <span>-</span>
+              </p>
+              <p className="fraction-item">
+                درصد سهم کارفرما : <span>-</span>
+              </p>
+              <p className="fraction-item">
+                درصد سهم کارمند : <span>-</span>
+              </p>
+              <p className="fraction-item">
+                مانده بستانکاری : <span>-</span>
               </p>
             </div>
 
-            <div className="fraction--total__btn">
+            <div style={{ marginRight: "auto" }}>
               <Button
                 dir="ltr"
                 endIcon={<CalculateIcon />}
@@ -62,7 +75,7 @@ function FractionScreen() {
               </Button>
             </div>
           </div>
-        </div>
+        </>
       )}
     </section>
   );
