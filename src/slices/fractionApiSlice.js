@@ -46,6 +46,14 @@ export const fractionApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+
+    calculateFraction: builder.mutation({
+      query: (data) => ({
+        url: `${FRACTION_URL_HTTPS}/CalculateFraction`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -53,4 +61,5 @@ export const {
   useGetFractionItemViewQuery,
   useGetFractionTypeQuery,
   useInsertFractionExcelMutation,
+  useCalculateFractionMutation,
 } = fractionApiSlice;

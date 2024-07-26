@@ -1,9 +1,10 @@
 // react imports
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 
 // redux imports
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setFractionType } from "../slices/fractionDataSlice";
+import { setData } from "../slices/calculateFractionDataSlice";
 import { useInsertFractionExcelMutation } from "../slices/fractionApiSlice";
 import { useLazyGetPersonsQuery } from "../slices/personApiSlice";
 
@@ -69,7 +70,8 @@ function FractionForm() {
   const [frMode, setFrMode] = useState("group");
 
   // MAIN STATES
-  const [data, setData] = useState({});
+  // const [data, setData] = useState({});
+  const { data } = useSelector((state) => state.calculateFractionData);
 
   // EXCEL STATES
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -142,11 +144,31 @@ function FractionForm() {
   };
 
   const handleLetterDateChange = (date) => {
+    let letterDate;
+    if (date) {
+      letterDate = new Date(date);
+      letterDate.setMinutes(
+        letterDate.getMinutes() - letterDate.getTimezoneOffset()
+      );
+    } else {
+      letterDate = null;
+    }
+    dispatch(setData({ ...data, letterDate: letterDate.toDateString() }));
     setSelectedLetterDate(date);
     setIsLetterDateCalenderOpen(false);
   };
 
   const handlePaymenrDateChange = (date) => {
+    let paymentDate;
+    if (date) {
+      paymentDate = new Date(date);
+      paymentDate.setMinutes(
+        paymentDate.getMinutes() - paymentDate.getTimezoneOffset()
+      );
+    } else {
+      paymentDate = null;
+    }
+    dispatch(setData({ ...data, paymentDate: paymentDate.toDateString() }));
     setSelectedPaymentDate(date);
     setIsPaymentCalenderOpen(false);
   };
@@ -159,7 +181,7 @@ function FractionForm() {
   // HANDLE MAIN DATA CHANGE
   const handleDataChange = (e) => {
     const { name, value } = e.target;
-    setData({ ...data, [name]: value });
+    dispatch(setData({ ...data, [name]: value }));
   };
 
   // HANDLE SELECT OPTION CHANGE
@@ -167,9 +189,9 @@ function FractionForm() {
     const { name } = actionMeta;
     if (selectedOption) {
       const { value } = selectedOption;
-      setData({ ...data, [name]: value || "" });
+      dispatch(setData({ ...data, [name]: value || "" }));
     } else {
-      setData({ ...data, [name]: null });
+      dispatch(setData({ ...data, [name]: null }));
     }
   };
 
@@ -204,12 +226,15 @@ function FractionForm() {
         });
         return;
       }
-      setData({
-        ...data,
-        personFirstName: searchRes.itemList[0].personFirstName,
-        personLastName: searchRes.itemList[0].personLastName,
-        personID: searchRes.itemList[0].personID,
-      });
+
+      dispatch(
+        setData({
+          ...data,
+          personFirstName: searchRes.itemList[0].personFirstName,
+          personLastName: searchRes.itemList[0].personLastName,
+          personID: searchRes.itemList[0].personID,
+        })
+      );
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -226,10 +251,6 @@ function FractionForm() {
     setExcelFile(null);
     setUploadProgress(0);
   };
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   const handleExcelFileChange = (e) => {
     const file = e.target.files[0];
@@ -351,12 +372,12 @@ function FractionForm() {
             type="text"
             className="inputBox__form--input"
             onChange={handleDataChange}
-            name="letterNum"
-            value={convertToPersianNumber(data.letterNum) || ""}
+            name="letterNO"
+            value={convertToPersianNumber(data.letterNO) || ""}
             required
-            id="letterNum"
+            id="letterNO"
           />
-          <label className="inputBox__form--label" htmlFor="letterNum">
+          <label className="inputBox__form--label" htmlFor="letterNO">
             شماره نامه
           </label>
         </div>
@@ -389,7 +410,7 @@ function FractionForm() {
             value={offTypesOptions.find(
               (item) => item.value === data?.relationshipWithParentID
             )}
-            name="offTypeID"
+            name="personnelStatementOffTypeID"
             isLoading={
               personnelStatementOffTypesIsLoading ||
               personnelStatementOffTypesIsFetching
@@ -405,7 +426,7 @@ function FractionForm() {
 
           <label
             className={
-              data?.offTypeID
+              data?.personnelStatementOffTypeID
                 ? "inputBox__form--readOnly-label"
                 : "inputBox__form--readOnly-label-hidden"
             }
@@ -500,7 +521,7 @@ function FractionForm() {
             onChange={handleSelectOptionChange}
             isClearable={true}
             options={organizationOptions}
-            name="employmentTypeID"
+            name="organazationID"
             placeholder={
               <div className="react-select-placeholder">
                 <span>*</span> نام سازمان
@@ -514,7 +535,7 @@ function FractionForm() {
 
           <label
             className={
-              data?.employmentTypeID
+              data?.organazationID
                 ? "inputBox__form--readOnly-label"
                 : "inputBox__form--readOnly-label-hidden"
             }
@@ -535,7 +556,7 @@ function FractionForm() {
             isClearable={true}
             onChange={handleSelectOptionChange}
             options={paymentTypeOptions}
-            name="payTypeID"
+            name="paymentTypeID"
             placeholder={
               <div className="react-select-placeholder">
                 <span>*</span> نوع پرداخت
@@ -548,7 +569,7 @@ function FractionForm() {
 
           <label
             className={
-              data?.payTypeID
+              data?.paymentTypeID
                 ? "inputBox__form--readOnly-label"
                 : "inputBox__form--readOnly-label-hidden"
             }
@@ -562,12 +583,12 @@ function FractionForm() {
             type="text"
             className="inputBox__form--input"
             onChange={handleDataChange}
-            name="payNum"
-            value={convertToPersianNumber(data.payNum) || ""}
+            name="paymentNO"
+            value={convertToPersianNumber(data.paymentNO) || ""}
             required
-            id="payNum"
+            id="paymentNO"
           />
-          <label className="inputBox__form--label" htmlFor="payNum">
+          <label className="inputBox__form--label" htmlFor="paymentNO">
             شماره
           </label>
         </div>
