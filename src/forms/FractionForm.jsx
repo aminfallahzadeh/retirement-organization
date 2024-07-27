@@ -426,6 +426,7 @@ function FractionForm() {
             open={isLetterDateCalenderOpen}
             style={datePickerStyles}
             wrapperStyle={datePickerWrapperStyles}
+            placement="bottom"
             pickerProps={{
               ref: letterCalenderRef,
             }}
@@ -653,6 +654,7 @@ function FractionForm() {
             open={isPaymentCalenderOpen}
             style={datePickerStyles}
             wrapperStyle={datePickerWrapperStyles}
+            placement="top"
             pickerProps={{
               ref: paymenrCalenderRef,
             }}

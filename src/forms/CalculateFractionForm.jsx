@@ -40,6 +40,7 @@ function CalculateFractionForm() {
         personNationalCode: convertToEnglishNumber(data.personNationalCode),
         letterDate: new Date(data.letterDate),
         paymentDate: new Date(data.paymentDate),
+        save: false,
         periods: periodsArray,
       }).unwrap();
 
