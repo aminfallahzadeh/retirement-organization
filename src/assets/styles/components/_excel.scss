@@ -10,10 +10,13 @@
     }
 
     &__name {
+        display: inline-block;
         font-size: 14px;
         font-weight: 300;
         color: var(--color-txt-primary);
         text-align: center;
-        line-height: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }

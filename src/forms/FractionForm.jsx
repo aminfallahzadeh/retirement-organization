@@ -144,30 +144,64 @@ function FractionForm() {
   };
 
   const handleLetterDateChange = (date) => {
-    let letterDate;
-    if (date) {
-      letterDate = new Date(date);
-      letterDate.setMinutes(
-        letterDate.getMinutes() - letterDate.getTimezoneOffset()
-      );
-    } else {
-      letterDate = null;
+    console.log("Selected date:", date);
+
+    if (!date) {
+      console.log("Date is null or undefined");
+      dispatch(setData({ ...data, letterDate: null }));
+      setSelectedLetterDate(null);
+      setIsLetterDateCalenderOpen(false);
+      return;
     }
+
+    let letterDate = new Date(date);
+    console.log("Converted letterDate:", letterDate);
+
+    if (isNaN(letterDate.getTime())) {
+      console.error("Invalid date value");
+      dispatch(setData({ ...data, letterDate: null }));
+      setSelectedLetterDate(null);
+      setIsLetterDateCalenderOpen(false);
+      return;
+    }
+
+    letterDate.setMinutes(
+      letterDate.getMinutes() - letterDate.getTimezoneOffset()
+    );
+    console.log("Adjusted letterDate:", letterDate);
+
     dispatch(setData({ ...data, letterDate: letterDate.toDateString() }));
     setSelectedLetterDate(date);
     setIsLetterDateCalenderOpen(false);
   };
 
   const handlePaymenrDateChange = (date) => {
-    let paymentDate;
-    if (date) {
-      paymentDate = new Date(date);
-      paymentDate.setMinutes(
-        paymentDate.getMinutes() - paymentDate.getTimezoneOffset()
-      );
-    } else {
-      paymentDate = null;
+    console.log("Selected date:", date);
+
+    if (!date) {
+      console.log("Date is null or undefined");
+      dispatch(setData({ ...data, paymentDate: null }));
+      setSelectedPaymentDate(null);
+      setIsPaymentCalenderOpen(false);
+      return;
     }
+
+    let paymentDate = new Date(date);
+    console.log("Converted paymentDate:", paymentDate);
+
+    if (isNaN(paymentDate.getTime())) {
+      console.error("Invalid date value");
+      dispatch(setData({ ...data, paymentDate: null }));
+      setSelectedPaymentDate(null);
+      setIsPaymentCalenderOpen(false);
+      return;
+    }
+
+    paymentDate.setMinutes(
+      paymentDate.getMinutes() - paymentDate.getTimezoneOffset()
+    );
+    console.log("Adjusted paymentDate:", paymentDate);
+
     dispatch(setData({ ...data, paymentDate: paymentDate.toDateString() }));
     setSelectedPaymentDate(date);
     setIsPaymentCalenderOpen(false);
@@ -283,6 +317,7 @@ function FractionForm() {
               cell ? cell.toString() : ""
             );
           });
+          obj["saved"] = true;
           return obj;
         });
         const type = data?.fractionTypeID;
@@ -349,7 +384,7 @@ function FractionForm() {
               checked={frMode === "group"}
             />
             <label htmlFor="groupTyped" className="checkboxContainer__label">
-              گروهی
+              سازمانی
             </label>
           </div>
 
@@ -383,7 +418,6 @@ function FractionForm() {
         </div>
         <div className="inputBox__form">
           <InputDatePicker
-            defaultValue={null}
             onChange={handleLetterDateChange}
             value={selectedLetterDate}
             onOpenChange={handleLetterCalenderOpenChange}
@@ -628,21 +662,6 @@ function FractionForm() {
 
         {frMode === "group" ? (
           <div style={{ marginRight: "auto" }} className="flex-row flex-center">
-            {excelFile && (
-              <div className="excel">
-                <IconButton
-                  color="error"
-                  size="small"
-                  onClick={handleRemoveExcelFile}
-                  sx={{ padding: 0 }}
-                >
-                  <RemoveIcon />
-                </IconButton>
-                <span className="excel__name">{excelFile.name}</span>
-                <img src="./images/excel-icon.png" className="excel__image" />
-              </div>
-            )}
-
             <div style={{ position: "relative" }}>
               <input
                 type="file"
@@ -669,6 +688,32 @@ function FractionForm() {
                 <span>بارگزاری اکسل</span>
               </LoadingButton>
 
+              {excelFile && (
+                <div
+                  className="excel"
+                  style={{
+                    position: "absolute",
+                    top: "-100%",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: "100%",
+                  }}
+                >
+                  <IconButton
+                    color="error"
+                    size="small"
+                    onClick={handleRemoveExcelFile}
+                    sx={{ padding: 0 }}
+                  >
+                    <RemoveIcon />
+                  </IconButton>
+                  <Tooltip title={excelFile.name}>
+                    <span className="excel__name">{excelFile.name}</span>
+                  </Tooltip>
+                  <img src="./images/excel-icon.png" className="excel__image" />
+                </div>
+              )}
+
               <Box
                 sx={{
                   position: "absolute",
@@ -686,6 +731,7 @@ function FractionForm() {
                   color="warning"
                   sx={{ borderRadius: "40px" }}
                 />
+
                 <span style={{ fontFamily: "IranYekan", fontSize: "12px" }}>
                   {uploadProgress}%
                 </span>
