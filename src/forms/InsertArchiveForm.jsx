@@ -97,22 +97,21 @@ function InsertArchiveForm({ setShowAddImageModal }) {
   };
 
   return (
-    <section className="formContainer">
-      <form
-        method="POST"
-        className="inputBox__form inputBox__form--input-height-40"
-      >
-        <input
-          type="text"
-          id="documentID"
-          className="inputBox__form--input"
-          value={convertToPersianNumber(documentID)}
-          onChange={handleDocumentIDChange}
-          required
-        />
-        <label className="inputBox__form--label" htmlFor="documentID">
-          شماره سند
-        </label>
+    <section className="formContainer-transparent">
+      <form method="POST" className="grid grid--col-1">
+        <div className="inputBox__form">
+          <input
+            type="text"
+            id="documentID"
+            className="inputBox__form--input"
+            value={convertToPersianNumber(documentID)}
+            onChange={handleDocumentIDChange}
+            required
+          />
+          <label className="inputBox__form--label" htmlFor="documentID">
+            شماره سند
+          </label>
+        </div>
       </form>
 
       <p className="paragraph-primary" style={{ textAlign: "center" }}>

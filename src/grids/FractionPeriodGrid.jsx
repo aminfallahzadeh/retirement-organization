@@ -132,25 +132,6 @@ function FractionPeriodGrid() {
         cursor: "pointer",
       },
     }),
-    // renderTopToolbarCustomActions: () => (
-    //   <Tooltip
-    //     title={
-    //       <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
-    //         ایجاد دوره
-    //       </span>
-    //     }
-    //   >
-    //     <span>
-    //       <IconButton
-    //         aria-label="refresh"
-    //         color="success"
-    //         onClick={addPeriodModalOpenChange}
-    //       >
-    //         <AddIcon fontSize="small" />
-    //       </IconButton>
-    //     </span>
-    //   </Tooltip>
-    // ),
     muiPaginationProps: {
       shape: "rounded",
       showRowsPerPage: false,

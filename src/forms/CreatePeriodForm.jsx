@@ -1,5 +1,5 @@
 // react imports
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // redux imports
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +19,12 @@ function CreatePeriodForm() {
   const { periodsTableData } = useSelector((state) => state.fractionData);
 
   const dispatch = useDispatch();
+
+  const buttonDisbaled =
+    data.periodMonth === "" ||
+    !data.periodMonth ||
+    data.periodYear === "" ||
+    !data.periodYear;
 
   // HADNLE MAIN DATA CHANGE
   const handleDataChange = (e) => {
@@ -75,10 +81,6 @@ function CreatePeriodForm() {
     setData({});
   };
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   return (
     <section className="formContainer-transparent flex-col">
       <form className="grid grid--col-4">
@@ -91,9 +93,10 @@ function CreatePeriodForm() {
             onChange={handleDataChange}
             required
             id="periodDay"
+            maxLength={2}
           />
           <label className="inputBox__form--label" htmlFor="periodDay">
-            <span>*</span> روز
+            روز
           </label>
         </div>
 
@@ -106,6 +109,7 @@ function CreatePeriodForm() {
             onChange={handleDataChange}
             required
             id="periodMonth"
+            maxLength={2}
           />
           <label className="inputBox__form--label" htmlFor="periodMonth">
             <span>*</span> ماه
@@ -121,6 +125,8 @@ function CreatePeriodForm() {
             onChange={handleDataChange}
             required
             id="periodYear"
+            maxLength={4}
+            minLength={4}
           />
           <label className="inputBox__form--label" htmlFor="periodYear">
             <span>*</span> سال
@@ -133,6 +139,7 @@ function CreatePeriodForm() {
             endIcon={<AddIcon />}
             variant="contained"
             color="success"
+            disabled={buttonDisbaled}
             sx={{ fontFamily: "sahel" }}
             onClick={handleAddPeriod}
           >

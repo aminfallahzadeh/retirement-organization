@@ -184,7 +184,7 @@ const StyledTreeItem = React.forwardRef(function StyledTreeItem(props, ref) {
   );
 });
 
-function ArchiveTree({ setPreviewImage }) {
+function ArchiveTree({ setPreviewImage = undefined }) {
   const [imageData, setImageData] = useState([]);
 
   // modal states
@@ -209,6 +209,8 @@ function ArchiveTree({ setPreviewImage }) {
 
   const baseInfoPath =
     location.pathname === "/retirement-organization/electronic-statement";
+  const fractionPath =
+    location.pathname === "/retirement-organization/fraction";
 
   const { archiveStructureData } = useSelector((state) => state.archiveData);
 
@@ -311,7 +313,7 @@ function ArchiveTree({ setPreviewImage }) {
         personID: "",
       }).unwrap();
       setShowDeleteImageModal(false);
-      setPreviewImage(null);
+      if (!fractionPath) setPreviewImage(null);
       toast.success(deleteImgRes.message, {
         autoClose: 2000,
       });
@@ -609,12 +611,9 @@ function ArchiveTree({ setPreviewImage }) {
       {showAddImageModal && (
         <Modal
           title={
-            <>
-              اضافه کردن برگه به{" "}
-              <span style={{ color: "#fe6700" }}>
-                &quot;{selectedArchiveData.name}&quot;
-              </span>
-            </>
+            <span style={{ color: "#fe6700" }}>
+              &quot;{selectedArchiveData.name}&quot;
+            </span>
           }
           closeModal={() => setShowAddImageModal(false)}
         >

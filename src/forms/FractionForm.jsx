@@ -36,6 +36,9 @@ import {
   ArchiveOutlined as ArchiveIcon,
 } from "@mui/icons-material";
 
+// components
+import ArchiveTree from "../components/ArchiveTree";
+
 // library imports
 import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
@@ -62,6 +65,10 @@ import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 function FractionForm() {
   // EXCEL FILE UPLOAD REF
   const excelFileUploadRef = useRef(null);
+
+  // CONTROLL STATES
+  const [isPeronIDAvailable, setIsPersonIDAvailable] = useState(false);
+  const [isArchiveOpen, setIsArchiveOpen] = useState(false);
 
   // CALENEDER REF
   const letterCalenderRef = useRef(null);
@@ -286,6 +293,8 @@ function FractionForm() {
         return;
       }
 
+      const personID = searchRes.itemList[0].personID;
+
       dispatch(
         setData({
           ...data,
@@ -294,6 +303,17 @@ function FractionForm() {
           personID: searchRes.itemList[0].personID,
         })
       );
+
+      // Update URL params
+      const params = new URLSearchParams(window.location.search);
+      params.set("personID", personID);
+      window.history.replaceState(
+        {},
+        "",
+        `${window.location.pathname}?${params.toString()}`
+      );
+
+      setIsPersonIDAvailable(true);
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -309,6 +329,10 @@ function FractionForm() {
   const handleRemoveExcelFile = () => {
     setExcelFile(null);
     setUploadProgress(0);
+  };
+
+  const handleArchiveModalOpenChange = () => {
+    setIsArchiveOpen(true);
   };
 
   const handleExcelFileChange = (e) => {
@@ -771,7 +795,9 @@ function FractionForm() {
               dir="ltr"
               endIcon={<ArchiveIcon />}
               variant="contained"
+              disabled={!isPeronIDAvailable}
               color="primary"
+              onClick={handleArchiveModalOpenChange}
               sx={{ fontFamily: "sahel" }}
             >
               <span>آرشیو مستندات</span>
@@ -779,6 +805,12 @@ function FractionForm() {
           </div>
         )}
       </form>
+
+      {isArchiveOpen && (
+        <div className="flex-row flex-center">
+          <ArchiveTree />
+        </div>
+      )}
     </section>
   );
 
