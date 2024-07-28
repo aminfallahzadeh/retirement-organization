@@ -14,7 +14,11 @@ const fractionDataSlice = createSlice({
     },
 
     setPeriodsTableData: (state, action) => {
-      state.periodsTableData = [...state.periodsTableData, action.payload];
+      if (Array.isArray(action.payload)) {
+        state.periodsTableData = action.payload;
+      } else {
+        state.periodsTableData = [...state.periodsTableData, action.payload];
+      }
     },
 
     removePeriodRecord(state, action) {

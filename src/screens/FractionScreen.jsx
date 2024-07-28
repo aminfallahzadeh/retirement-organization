@@ -1,5 +1,10 @@
+// react imports
+import { useEffect } from "react";
+
 // redux imports
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setPeriodsTableData } from "../slices/fractionDataSlice";
+import { setData } from "../slices/calculateFractionDataSlice";
 
 // components
 import FractionForm from "../forms/FractionForm";
@@ -8,6 +13,15 @@ import CalculateFractionForm from "../forms/CalculateFractionForm";
 
 function FractionScreen() {
   const { fractionType } = useSelector((state) => state.fractionData);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    return () => {
+      dispatch(setPeriodsTableData([]));
+      dispatch(setData({}));
+    };
+  }, [dispatch]);
 
   const content = (
     <section className="flex-col u-margin-bottom-xl">
