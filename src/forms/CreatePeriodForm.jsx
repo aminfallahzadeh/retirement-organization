@@ -10,7 +10,7 @@ import { Button } from "@mui/material";
 import { Save as SaveIcon } from "@mui/icons-material";
 
 // helpers
-import { convertToPersianNumber } from "../helper";
+import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
 function CreatePeriodForm({ setShowAddPeriodModal }) {
   const [data, setData] = useState({});
@@ -26,6 +26,9 @@ function CreatePeriodForm({ setShowAddPeriodModal }) {
   const handleAddPeriod = () => {
     const newRecord = {
       ...data,
+      periodDay: convertToEnglishNumber(data.periodDay),
+      periodMonth: convertToEnglishNumber(data.periodMonth),
+      periodYear: convertToEnglishNumber(data.periodYear),
       id: Date.now(),
     };
     dispatch(setPeriodsTableData(newRecord));
