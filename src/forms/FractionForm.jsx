@@ -1,5 +1,5 @@
 // react imports
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 // redux imports
 import { useDispatch, useSelector } from "react-redux";
@@ -45,7 +45,11 @@ import makeAnimated from "react-select/animated";
 import * as XLSX from "xlsx";
 
 // helpers
-import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
+import {
+  convertToPersianNumber,
+  convertToEnglishNumber,
+  findById,
+} from "../helper";
 
 // utils
 import {
@@ -133,6 +137,27 @@ function FractionForm() {
     { value: "1", label: "چک" },
     { value: "2", label: "فیش" },
   ];
+
+  // EXTRACT COEFS
+  useEffect(() => {
+    if (data.personnelStatementOffTypeID) {
+      const selected = findById(
+        personnelStatementOffTypes,
+        data.personnelStatementOffTypeID,
+        "personnelStatementOffTypeID"
+      );
+
+      dispatch(
+        setData({
+          ...data,
+          personelPercent: selected?.fractionPersonnelCoef,
+          organazationPercent: selected?.fractionOrganizationCoef,
+        })
+      );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.personnelStatementOffTypeID, dispatch, personnelStatementOffTypes]);
 
   // DATE HANDLER
   const handleLetterCalenderOpenChange = (open) => {

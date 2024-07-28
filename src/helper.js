@@ -91,23 +91,46 @@ export const convertObjectToPersianDate = (obj) => {
   return result;
 };
 
+// export const separateByThousands = (num) => {
+//   if (num) {
+//     var result = "";
+//     const [integerPart, decimalPart] = num.toString().split(".");
+
+//     for (var i = 0; i < integerPart.length; i++) {
+//       var c = integerPart.substr(integerPart.length - i - 1, 1);
+//       if ((i % 3 == 0) & (i > 0)) {
+//         result = c + "," + result;
+//       } else {
+//         result = c + result;
+//       }
+//     }
+//     return decimalPart ? result + "." + decimalPart : result;
+//   }
+
+//   return;
+// };
+
 export const separateByThousands = (num) => {
-  // if (num.toString().includes(",")) {
-  //   return num;
-  // }
+  if (num || num === 0) {
+    var result = "";
+    const isNegative = num < 0;
+    const absoluteNum = Math.abs(num);
+    const [integerPart, decimalPart] = absoluteNum.toString().split(".");
 
-  var result = "";
-  const [integerPart, decimalPart] = num.toString().split(".");
-
-  for (var i = 0; i < integerPart.length; i++) {
-    var c = integerPart.substr(integerPart.length - i - 1, 1);
-    if ((i % 3 == 0) & (i > 0)) {
-      result = c + "," + result;
-    } else {
-      result = c + result;
+    for (var i = 0; i < integerPart.length; i++) {
+      var c = integerPart.substr(integerPart.length - i - 1, 1);
+      if ((i % 3 == 0) & (i > 0)) {
+        result = c + "," + result;
+      } else {
+        result = c + result;
+      }
     }
+
+    result = decimalPart ? result + "." + decimalPart : result;
+    return isNegative ? result + "-" : result;
   }
-  return decimalPart ? result + "." + decimalPart : result;
+
+  return;
 };
 
 export const removeSeparators = (str) => {
