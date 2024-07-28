@@ -1,8 +1,8 @@
 // react imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // redux imports
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setPeriodsTableData } from "../slices/fractionDataSlice.js";
 
 // mui imports
@@ -11,9 +11,12 @@ import { Save as SaveIcon } from "@mui/icons-material";
 
 // helpers
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
+import { toast } from "react-toastify";
 
 function CreatePeriodForm({ setShowAddPeriodModal }) {
   const [data, setData] = useState({});
+
+  const { periodsTableData } = useSelector((state) => state.fractionData);
 
   const dispatch = useDispatch();
 
@@ -24,6 +27,18 @@ function CreatePeriodForm({ setShowAddPeriodModal }) {
   };
 
   const handleAddPeriod = () => {
+    const isDuplicate = periodsTableData.some((item) => {
+      return (
+        item.periodMonth === convertToEnglishNumber(data.periodMonth) &&
+        item.periodYear === convertToEnglishNumber(data.periodYear)
+      );
+    });
+
+    if (isDuplicate) {
+      toast.error("دوره تکراری است");
+      return;
+    }
+
     const newRecord = {
       ...data,
       periodDay: convertToEnglishNumber(data.periodDay),
@@ -35,6 +50,10 @@ function CreatePeriodForm({ setShowAddPeriodModal }) {
     setData({});
     setShowAddPeriodModal(false);
   };
+
+  useEffect(() => {
+    console.log(convertToEnglishNumber(data.periodMonth));
+  }, [data]);
 
   return (
     <section className="formContainer-transparent flex-col">
