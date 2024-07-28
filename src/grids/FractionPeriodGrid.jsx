@@ -12,7 +12,6 @@ import {
   ChevronRight,
   FirstPage,
   LastPage,
-  Add as AddIcon,
   DeleteOutline as DeleteIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -22,7 +21,6 @@ import {
 } from "material-react-table";
 
 // components
-import Modal from "../components/Modal";
 import CreatePeriodForm from "../forms/CreatePeriodForm.jsx";
 
 // library imports
@@ -36,16 +34,11 @@ import { defaultTableOptions } from "../utils.js";
 
 function FractionPeriodGrid() {
   const [rowSelection, setRowSelection] = useState({});
-  const [showAddPeriodModal, setShowAddPeriodModal] = useState(false);
   const [data, setData] = useState([]);
 
   const { periodsTableData } = useSelector((state) => state.fractionData);
 
   const dispatch = useDispatch();
-
-  const addPeriodModalOpenChange = () => {
-    setShowAddPeriodModal(true);
-  };
 
   const removePeriodHandler = useCallback(
     (id) => {
@@ -139,25 +132,25 @@ function FractionPeriodGrid() {
         cursor: "pointer",
       },
     }),
-    renderTopToolbarCustomActions: () => (
-      <Tooltip
-        title={
-          <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
-            ایجاد دوره
-          </span>
-        }
-      >
-        <span>
-          <IconButton
-            aria-label="refresh"
-            color="success"
-            onClick={addPeriodModalOpenChange}
-          >
-            <AddIcon fontSize="small" />
-          </IconButton>
-        </span>
-      </Tooltip>
-    ),
+    // renderTopToolbarCustomActions: () => (
+    //   <Tooltip
+    //     title={
+    //       <span style={{ fontFamily: "sahel", fontSize: "0.8rem" }}>
+    //         ایجاد دوره
+    //       </span>
+    //     }
+    //   >
+    //     <span>
+    //       <IconButton
+    //         aria-label="refresh"
+    //         color="success"
+    //         onClick={addPeriodModalOpenChange}
+    //       >
+    //         <AddIcon fontSize="small" />
+    //       </IconButton>
+    //     </span>
+    //   </Tooltip>
+    // ),
     muiPaginationProps: {
       shape: "rounded",
       showRowsPerPage: false,
@@ -182,14 +175,8 @@ function FractionPeriodGrid() {
 
   const content = (
     <>
-      {showAddPeriodModal && (
-        <Modal
-          title="ایجاد دوره"
-          closeModal={() => setShowAddPeriodModal(false)}
-        >
-          <CreatePeriodForm setShowAddPeriodModal={setShowAddPeriodModal} />
-        </Modal>
-      )}
+      <CreatePeriodForm />
+
       <MaterialReactTable table={table} />
     </>
   );

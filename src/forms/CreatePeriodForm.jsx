@@ -1,5 +1,5 @@
 // react imports
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 // redux imports
 import { useDispatch, useSelector } from "react-redux";
@@ -7,13 +7,13 @@ import { setPeriodsTableData } from "../slices/fractionDataSlice.js";
 
 // mui imports
 import { Button } from "@mui/material";
-import { Save as SaveIcon } from "@mui/icons-material";
+import { Add as AddIcon } from "@mui/icons-material";
 
 // helpers
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 import { toast } from "react-toastify";
 
-function CreatePeriodForm({ setShowAddPeriodModal }) {
+function CreatePeriodForm() {
   const [data, setData] = useState({});
 
   const { periodsTableData } = useSelector((state) => state.fractionData);
@@ -39,25 +39,49 @@ function CreatePeriodForm({ setShowAddPeriodModal }) {
       return;
     }
 
+    let periodDay;
+
+    if (!data.periodDay || data.periodDay === "") {
+      if (
+        convertToEnglishNumber(data.periodMonth) === "01" ||
+        convertToEnglishNumber(data.periodMonth) === "03" ||
+        convertToEnglishNumber(data.periodMonth) === "04" ||
+        convertToEnglishNumber(data.periodMonth) === "05" ||
+        convertToEnglishNumber(data.periodMonth) === "06"
+      ) {
+        periodDay = "31";
+      } else if (
+        convertToEnglishNumber(data.periodMonth) === "07" ||
+        convertToEnglishNumber(data.periodMonth) === "08" ||
+        convertToEnglishNumber(data.periodMonth) === "09" ||
+        convertToEnglishNumber(data.periodMonth) === "10" ||
+        convertToEnglishNumber(data.periodMonth) === "11" ||
+        convertToEnglishNumber(data.periodMonth) === "12"
+      ) {
+        periodDay = "30";
+      }
+    } else {
+      periodDay = data.periodDay;
+    }
+
     const newRecord = {
       ...data,
-      periodDay: convertToEnglishNumber(data.periodDay),
+      periodDay,
       periodMonth: convertToEnglishNumber(data.periodMonth),
       periodYear: convertToEnglishNumber(data.periodYear),
       id: Date.now(),
     };
     dispatch(setPeriodsTableData(newRecord));
     setData({});
-    setShowAddPeriodModal(false);
   };
 
   useEffect(() => {
-    console.log(convertToEnglishNumber(data.periodMonth));
+    console.log(data);
   }, [data]);
 
   return (
     <section className="formContainer-transparent flex-col">
-      <form className="grid grid--col-2">
+      <form className="grid grid--col-4">
         <div className="inputBox__form">
           <input
             type="text"
@@ -69,7 +93,7 @@ function CreatePeriodForm({ setShowAddPeriodModal }) {
             id="periodDay"
           />
           <label className="inputBox__form--label" htmlFor="periodDay">
-            روز
+            <span>*</span> روز
           </label>
         </div>
 
@@ -84,7 +108,7 @@ function CreatePeriodForm({ setShowAddPeriodModal }) {
             id="periodMonth"
           />
           <label className="inputBox__form--label" htmlFor="periodMonth">
-            ماه
+            <span>*</span> ماه
           </label>
         </div>
 
@@ -99,23 +123,23 @@ function CreatePeriodForm({ setShowAddPeriodModal }) {
             id="periodYear"
           />
           <label className="inputBox__form--label" htmlFor="periodYear">
-            سال
+            <span>*</span> سال
           </label>
         </div>
-      </form>
 
-      <div style={{ marginRight: "auto" }}>
-        <Button
-          dir="ltr"
-          endIcon={<SaveIcon />}
-          variant="contained"
-          color="success"
-          sx={{ fontFamily: "sahel" }}
-          onClick={handleAddPeriod}
-        >
-          <span>ذخیره</span>
-        </Button>
-      </div>
+        <div className="flex-row flex-center">
+          <Button
+            dir="ltr"
+            endIcon={<AddIcon />}
+            variant="contained"
+            color="success"
+            sx={{ fontFamily: "sahel" }}
+            onClick={handleAddPeriod}
+          >
+            <span>اضافه کردن دوره</span>
+          </Button>
+        </div>
+      </form>
     </section>
   );
 }
