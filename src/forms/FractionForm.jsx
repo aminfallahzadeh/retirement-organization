@@ -34,6 +34,7 @@ import { LoadingButton } from "@mui/lab";
 import {
   UploadOutlined as UploadIcon,
   ArchiveOutlined as ArchiveIcon,
+  Close as CloseIcon,
 } from "@mui/icons-material";
 
 // components
@@ -332,7 +333,7 @@ function FractionForm() {
   };
 
   const handleArchiveModalOpenChange = () => {
-    setIsArchiveOpen(true);
+    setIsArchiveOpen(!isArchiveOpen);
   };
 
   const handleExcelFileChange = (e) => {
@@ -793,14 +794,18 @@ function FractionForm() {
           <div style={{ marginRight: "auto" }}>
             <Button
               dir="ltr"
-              endIcon={<ArchiveIcon />}
+              endIcon={isArchiveOpen ? <CloseIcon /> : <ArchiveIcon />}
               variant="contained"
               disabled={!isPeronIDAvailable}
-              color="primary"
+              color={isArchiveOpen ? "error" : "primary"}
               onClick={handleArchiveModalOpenChange}
               sx={{ fontFamily: "sahel" }}
             >
-              <span>آرشیو مستندات</span>
+              {isArchiveOpen ? (
+                <span>بستن آوشیو</span>
+              ) : (
+                <span>آرشیو مستندات</span>
+              )}
             </Button>
           </div>
         )}
