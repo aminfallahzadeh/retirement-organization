@@ -1,5 +1,5 @@
 // react imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // redux imports
 import { useDispatch, useSelector } from "react-redux";
@@ -80,6 +80,10 @@ function CreatePeriodForm() {
     dispatch(setPeriodsTableData(newRecord));
     setData({});
   };
+
+  useEffect(() => {
+    console.log(periodsTableData);
+  }, [periodsTableData]);
 
   return (
     <section className="formContainer-transparent flex-col">

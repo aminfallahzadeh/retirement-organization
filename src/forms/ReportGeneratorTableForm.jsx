@@ -3,6 +3,11 @@ import { useState, useEffect, useCallback } from "react";
 
 // redux import
 import {
+  setSelectIDs,
+  setQueryCondi,
+} from "../slices/reportGeneratorDataSlice";
+import { useSelector, useDispatch } from "react-redux";
+import {
   useLazyGetColsQuery,
   useLazyGetLookupValueQuery,
 } from "../slices/reportGeneratorsApiSlice";
@@ -55,6 +60,9 @@ function ReportGeneratorTableForm() {
   ] = useLazyGetLookupValueQuery();
 
   const animatedComponents = makeAnimated();
+  const dispatch = useDispatch();
+
+  const { queryCondi } = useSelector((state) => state.reportGeneratorData);
 
   // GET LOOK UP DATA
   const {
@@ -143,6 +151,7 @@ function ReportGeneratorTableForm() {
       const condiText = condiData.text;
       result = `${colText} ${op} ${condiText}`;
     } else {
+      dispatch(setQueryCondi(queryCondi + `#${colId}#${op}#${condi}`));
       result = `${colText} ${op} ${condi}`;
     }
 
@@ -177,7 +186,18 @@ function ReportGeneratorTableForm() {
     setData({ ...data, [name]: value });
   };
 
+  useEffect(() => {
+    if (data.tableSelects && data.tableSelects.length === 1) {
+      dispatch(setSelectIDs(data.tableSelects[0] + "$"));
+    } else if (data.tableSelects && data.tableSelects.length === 0) {
+      dispatch(setSelectIDs(""));
+    } else if (data.tableSelects && data.tableSelects.length > 1) {
+      dispatch(setSelectIDs(data.tableSelects.join("$") + "$"));
+    }
+  }, [data.tableSelects, dispatch]);
+
   const handleDeleteAllconditions = () => {
+    dispatch(setQueryCondi(""));
     setConditionText("");
     setDisableAddButton(false);
     setDisableOperators(true);
@@ -185,6 +205,7 @@ function ReportGeneratorTableForm() {
 
   const addConditionElement = (element) => {
     setConditionText((prev) => `${prev} ${element}`);
+    dispatch(setQueryCondi(queryCondi + `$${element}$`));
     setDisableAddButton(false);
     setDisableOperators(true);
   };
@@ -410,7 +431,7 @@ function ReportGeneratorTableForm() {
 
             <label
               className={
-                data?.tableSelects.length > 0
+                data?.tableSelects && data?.tableSelects.length > 0
                   ? "inputBox__form--readOnly-label"
                   : "inputBox__form--readOnly-label-hidden"
               }

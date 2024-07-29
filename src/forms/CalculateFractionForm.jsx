@@ -45,7 +45,7 @@ function CalculateFractionForm() {
         period: convertToEnglishNumber(
           `${period.periodYear}/${period.periodMonth}`
         ),
-        days: Number(period.periodDay) || null,
+        days: Number(convertToEnglishNumber(period.periodDay)),
       }));
 
       const res = await calculateFraction({

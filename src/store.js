@@ -18,6 +18,7 @@ import slipsDataSliceReducer from "./slices/slipsDataSlice";
 import batchStatementsDataSliceReducer from "./slices/batchStatementsDataSlice";
 import fractionDataSliceReducer from "./slices/fractionDataSlice";
 import calculateFractionDataSliceReducer from "./slices/calculateFractionDataSlice";
+import reportGeneratorDataSliceReducer from "./slices/reportGeneratorDataSlice";
 
 const store = configureStore({
   reducer: {
@@ -39,6 +40,7 @@ const store = configureStore({
     batchStatementsData: batchStatementsDataSliceReducer,
     fractionData: fractionDataSliceReducer,
     calculateFractionData: calculateFractionDataSliceReducer,
+    reportGeneratorData: reportGeneratorDataSliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),
