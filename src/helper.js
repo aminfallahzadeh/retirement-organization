@@ -91,6 +91,42 @@ export const convertObjectToPersianDate = (obj) => {
   return result;
 };
 
+export const separateByThousands = (num) => {
+  // Convert input to a float
+  num = parseFloat(convertToEnglishNumber(num));
+
+  // Check if the conversion resulted in NaN
+  if (isNaN(num)) {
+    return "";
+  }
+
+  // Check if the number is 0
+  if (num === 0) {
+    return "۰";
+  }
+
+  let result = "";
+  const isNegative = num < 0;
+  const absoluteNum = Math.abs(num);
+  const [integerPart, decimalPart] = absoluteNum.toString().split(".");
+
+  for (let i = 0; i < integerPart.length; i++) {
+    const c = integerPart.substr(integerPart.length - i - 1, 1);
+    if (i % 3 === 0 && i > 0) {
+      result = c + "," + convertToPersianNumber(result);
+    } else {
+      result = c + convertToPersianNumber(result);
+    }
+  }
+
+  result = decimalPart
+    ? convertToPersianNumber(result) + "." + decimalPart
+    : convertToPersianNumber(result);
+  return isNegative
+    ? "-" + convertToPersianNumber(result)
+    : convertToPersianNumber(result);
+};
+
 // export const separateByThousands = (num) => {
 //   if (num) {
 //     var result = "";
@@ -110,28 +146,32 @@ export const convertObjectToPersianDate = (obj) => {
 //   return;
 // };
 
-export const separateByThousands = (num) => {
-  if (num || num === 0) {
-    var result = "";
-    const isNegative = num < 0;
-    const absoluteNum = Math.abs(num);
-    const [integerPart, decimalPart] = absoluteNum.toString().split(".");
+// export const separateByThousands = (num) => {
+//   // Convert input to a float
+//   num = parseFloat(num);
 
-    for (var i = 0; i < integerPart.length; i++) {
-      var c = integerPart.substr(integerPart.length - i - 1, 1);
-      if ((i % 3 == 0) & (i > 0)) {
-        result = c + "," + result;
-      } else {
-        result = c + result;
-      }
-    }
+//   // Check if the conversion resulted in NaN
+//   if (isNaN(num)) {
+//     return "";
+//   }
 
-    result = decimalPart ? result + "." + decimalPart : result;
-    return isNegative ? result + "-" : result;
-  }
+//   let result = "";
+//   const isNegative = num < 0;
+//   const absoluteNum = Math.abs(num);
+//   const [integerPart, decimalPart] = absoluteNum.toString().split(".");
 
-  return;
-};
+//   for (let i = 0; i < integerPart.length; i++) {
+//     const c = integerPart.substr(integerPart.length - i - 1, 1);
+//     if (i % 3 === 0 && i > 0) {
+//       result = c + "," + result;
+//     } else {
+//       result = c + result;
+//     }
+//   }
+
+//   result = decimalPart ? result + "." + decimalPart : result;
+//   return isNegative ? "-" + result : result;
+// };
 
 export const removeSeparators = (str) => {
   return str.toString().replace(/,/g, "");

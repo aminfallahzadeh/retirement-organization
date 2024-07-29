@@ -92,18 +92,18 @@ function CreatePeriodForm() {
           <input
             type="text"
             className="inputBox__form--input"
-            name="periodDay"
-            value={convertToPersianNumber(data.periodDay) || ""}
+            name="periodYear"
+            value={convertToPersianNumber(data.periodYear) || ""}
             onChange={handleDataChange}
             required
-            id="periodDay"
-            maxLength={2}
+            id="periodYear"
+            maxLength={4}
+            minLength={4}
           />
-          <label className="inputBox__form--label" htmlFor="periodDay">
-            روز
+          <label className="inputBox__form--label" htmlFor="periodYear">
+            <span>*</span> سال
           </label>
         </div>
-
         <div className="inputBox__form">
           <input
             type="text"
@@ -119,21 +119,19 @@ function CreatePeriodForm() {
             <span>*</span> ماه
           </label>
         </div>
-
         <div className="inputBox__form">
           <input
             type="text"
             className="inputBox__form--input"
-            name="periodYear"
-            value={convertToPersianNumber(data.periodYear) || ""}
+            name="periodDay"
+            value={convertToPersianNumber(data.periodDay) || ""}
             onChange={handleDataChange}
             required
-            id="periodYear"
-            maxLength={4}
-            minLength={4}
+            id="periodDay"
+            maxLength={2}
           />
-          <label className="inputBox__form--label" htmlFor="periodYear">
-            <span>*</span> سال
+          <label className="inputBox__form--label" htmlFor="periodDay">
+            روز
           </label>
         </div>
 
