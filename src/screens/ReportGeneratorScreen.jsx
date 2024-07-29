@@ -1,5 +1,4 @@
 // components
-import ConditionSelectionForm from "../forms/ConditionSelectionForm";
 import ReportGeneratorTableForm from "../forms/ReportGeneratorTableForm";
 
 function ReportGeneratorScreen() {
@@ -12,8 +11,6 @@ function ReportGeneratorScreen() {
       </div>
 
       <ReportGeneratorTableForm />
-
-      <ConditionSelectionForm />
     </section>
   );
   return content;

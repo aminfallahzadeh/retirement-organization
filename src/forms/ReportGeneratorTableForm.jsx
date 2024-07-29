@@ -22,6 +22,9 @@ import {
   Add as AddIcon,
 } from "@mui/icons-material";
 
+// components
+import ConditionSelectionForm from "./ConditionSelectionForm";
+
 // library imports
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
@@ -42,7 +45,7 @@ function ReportGeneratorTableForm() {
   const [disableOperators, setDisableOperators] = useState(true);
 
   // MAIN STATES
-  const [data, setData] = useState({ operator: "=" });
+  const [data, setData] = useState({ operator: "%3D" });
   const [conditionText, setConditionText] = useState("");
 
   // LOOK UP STATES
@@ -81,11 +84,11 @@ function ReportGeneratorTableForm() {
   const fetureOptions = optionsGenerator(featureCombo, "id", "columnTitle");
 
   const operatorOptions = [
-    { value: "=", label: "=" },
-    { value: ">", label: ">" },
-    { value: "<", label: "<" },
-    { value: ">=", label: ">=" },
-    { value: "<=", label: "<=" },
+    { value: "%3D", label: "=" },
+    { value: "%3E", label: ">" },
+    { value: "%3C", label: "<" },
+    { value: "%3E%3D", label: ">=" },
+    { value: "%3C%3D", label: "<=" },
     { value: "LIKE", label: "LIKE" },
   ];
 
@@ -145,14 +148,15 @@ function ReportGeneratorTableForm() {
     let result;
     const colData = findById(featureCombo, colId);
     const colText = colData.columnTitle;
+    const opText = findById(operatorOptions, op, "value").label;
 
     if (isLookup) {
       const condiData = findById(conditionCombo, condi, "value");
       const condiText = condiData.text;
-      result = `${colText} ${op} ${condiText}`;
+      result = `${colText} ${opText} ${condiText}`;
     } else {
-      dispatch(setQueryCondi(queryCondi + `#${colId}#${op}#${condi}`));
-      result = `${colText} ${op} ${condi}`;
+      dispatch(setQueryCondi(queryCondi + `%23${colId}%23${op}%23${condi}`));
+      result = `${colText} ${opText} ${condi}`;
     }
 
     setConditionText(conditionText + " " + result);
@@ -188,11 +192,11 @@ function ReportGeneratorTableForm() {
 
   useEffect(() => {
     if (data.tableSelects && data.tableSelects.length === 1) {
-      dispatch(setSelectIDs(data.tableSelects[0] + "$"));
+      dispatch(setSelectIDs(data.tableSelects[0] + "%24"));
     } else if (data.tableSelects && data.tableSelects.length === 0) {
       dispatch(setSelectIDs(""));
     } else if (data.tableSelects && data.tableSelects.length > 1) {
-      dispatch(setSelectIDs(data.tableSelects.join("$") + "$"));
+      dispatch(setSelectIDs(data.tableSelects.join("%24") + "%24"));
     }
   }, [data.tableSelects, dispatch]);
 
@@ -441,6 +445,13 @@ function ReportGeneratorTableForm() {
           </div>
         </div>
       </form>
+
+      <ConditionSelectionForm
+        fetureOptions={fetureOptions}
+        isColsLoading={isColsLoading}
+        isColsFetching={isColsFetching}
+        tableName={data.TableName}
+      />
     </section>
   );
 
