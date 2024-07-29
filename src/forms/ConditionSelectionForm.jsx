@@ -8,40 +8,6 @@ function ConditionSelectionForm() {
   return (
     <section className="formContainer">
       <form method="POST" className="flex-col">
-        <div className="condition__features">
-          <h4 className="condition__box--title">خصوصیات جدول:</h4>
-
-          <div className="condition__features--container grid grid--col-3">
-            <div className="condition__features--box row-span-3">
-              <p>شماره ملی</p>
-              <p>نام</p>
-              <p>نام خانوادگی</p>
-              <p>جمع حقوق</p>
-              <p>حقوق مبنا</p>
-            </div>
-            <div className="condition__features--btns row-span-3">
-              <Button
-                dir="ltr"
-                variant="contained"
-                color="info"
-                sx={{ fontFamily: "sahel" }}
-              >
-                <span>&lsaquo;&lsaquo;</span>
-              </Button>
-
-              <Button
-                dir="ltr"
-                variant="contained"
-                color="info"
-                sx={{ fontFamily: "sahel" }}
-              >
-                <span>&rsaquo;&rsaquo;</span>
-              </Button>
-            </div>
-            <div className="condition__features--box row-span-3"></div>
-          </div>
-        </div>
-
         <div className="flex-col">
           <h4 className="condition__box--title">دسته بندی:</h4>
 

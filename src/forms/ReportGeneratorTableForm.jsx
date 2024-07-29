@@ -3,10 +3,12 @@ import { useState, useEffect, useCallback } from "react";
 
 // redux import
 import {
-  useGetTablesQuery,
   useLazyGetColsQuery,
   useLazyGetLookupValueQuery,
 } from "../slices/reportGeneratorsApiSlice";
+
+// hooks
+import { useFetchReportGeneratorTables } from "../hooks/useFetchLookUpData";
 
 // mui imports
 import { IconButton, Tooltip, Button } from "@mui/material";
@@ -15,8 +17,19 @@ import {
   Add as AddIcon,
 } from "@mui/icons-material";
 
+// library imports
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
 // helpers
 import { findById } from "../helper";
+
+// utils
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
 
 function ReportGeneratorTableForm() {
   // CONTROLLED STATES
@@ -28,7 +41,6 @@ function ReportGeneratorTableForm() {
   const [conditionText, setConditionText] = useState("");
 
   // LOOK UP STATES
-  const [tableCombo, setTableCombo] = useState([]);
   const [featureCombo, setFeatureCombo] = useState([]);
   const [conditionCombo, setConditionCombo] = useState([]);
 
@@ -42,25 +54,34 @@ function ReportGeneratorTableForm() {
     { isLoading: isLookupLoading, isFetching: isLookupFetching },
   ] = useLazyGetLookupValueQuery();
 
+  const animatedComponents = makeAnimated();
+
+  // GET LOOK UP DATA
   const {
-    data: tables,
-    isSuccess: isTablesSuccess,
-    isLoading: isTablesLoading,
-    isFetching: isTablesFetching,
-    error: tablesError,
-  } = useGetTablesQuery();
+    reportGeneratorTables,
+    reportGeneratorTablesIsLoading,
+    reportGeneratorTablesIsFetching,
+  } = useFetchReportGeneratorTables();
 
-  useEffect(() => {
-    if (isTablesSuccess) {
-      setTableCombo(tables.itemList);
-    }
-  }, [tables, isTablesSuccess]);
+  // SELECT OPTIONS
+  const tableOptions = optionsGenerator(
+    reportGeneratorTables,
+    "tableName",
+    "tableNameFarsi"
+  );
 
-  useEffect(() => {
-    if (tablesError) {
-      console.log(tablesError);
-    }
-  }, [tablesError]);
+  const fetureOptions = optionsGenerator(featureCombo, "id", "columnTitle");
+
+  const operatorOptions = [
+    { value: "=", label: "=" },
+    { value: ">", label: ">" },
+    { value: "<", label: "<" },
+    { value: ">=", label: ">=" },
+    { value: "<=", label: "<=" },
+    { value: "LIKE", label: "LIKE" },
+  ];
+
+  const conditionOptions = optionsGenerator(conditionCombo, "value", "text");
 
   // GET COLS FUNCTION
   const fetchColsData = useCallback(
@@ -130,8 +151,29 @@ function ReportGeneratorTableForm() {
     setDisableOperators(false);
   };
 
+  // HANDLE DATA CHANGE
   const handleDataChange = (e) => {
     const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+  };
+
+  // HANDLE SELECT OPTION CHANGE
+  const handleSelectOptionChange = (selectedOption, actionMeta) => {
+    const { name } = actionMeta;
+    if (selectedOption) {
+      const { value } = selectedOption;
+      setData({ ...data, [name]: value || "" });
+    } else {
+      setData({ ...data, [name]: null });
+    }
+  };
+
+  // HADNLE MULTI SELECT CHANGE
+  const handleMultiSelectChange = (selectedOptions, actionMeta) => {
+    const name = actionMeta.name;
+    const value = selectedOptions
+      ? selectedOptions.map((item) => item.value)
+      : [];
     setData({ ...data, [name]: value });
   };
 
@@ -147,77 +189,94 @@ function ReportGeneratorTableForm() {
     setDisableOperators(true);
   };
 
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   const content = (
     <section className="formContainer flex-col">
       <form method="POST" className="flex-col">
         <div className="grid grid--col-4">
           <div className="inputBox__form">
-            <select
-              className="inputBox__form--input"
-              id="selectTable"
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={tableOptions}
+              onChange={handleSelectOptionChange}
+              value={tableOptions.find(
+                (item) => item.value === data?.TableName
+              )}
               name="TableName"
-              onChange={handleDataChange}
-              defaultValue=""
-              disabled={isTablesLoading || isTablesFetching}
+              isClearable={true}
+              placeholder={<div className="react-select-placeholder">جدول</div>}
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+              isLoading={
+                reportGeneratorTablesIsLoading ||
+                reportGeneratorTablesIsFetching
+              }
+            />
+
+            <label
+              className={
+                data?.TableName
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
             >
-              <option value="" disabled>
-                انتخاب کنید
-              </option>
-
-              {tableCombo.map((item) => (
-                <option value={item.tableName} key={item.id}>
-                  {item.tableNameFarsi}
-                </option>
-              ))}
-            </select>
-
-            <label className="inputBox__form--label" htmlFor="selectTable">
-              انتخاب جدول
+              جدول
             </label>
           </div>
         </div>
 
         <div className="grid grid--col-4-mid-sm-last-sm">
           <div className="inputBox__form">
-            <select
-              className="inputBox__form--input"
-              id="selectFeature"
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={fetureOptions}
+              onChange={handleSelectOptionChange}
+              value={fetureOptions.find(
+                (item) => item.value === data?.columnid
+              )}
               name="columnid"
-              defaultValue=""
-              onChange={handleDataChange}
-              disabled={isColsLoading || isColsFetching || !data.TableName}
-            >
-              <option value="" disabled>
-                انتخاب کنید
-              </option>
+              isClearable={true}
+              placeholder={
+                <div className="react-select-placeholder">خصوصیت</div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+              isLoading={isColsLoading || isColsFetching}
+              isDisabled={isColsLoading || isColsFetching || !data.TableName}
+            />
 
-              {featureCombo.map((item) => (
-                <option value={item.id} key={item.id}>
-                  {item.columnTitle}
-                </option>
-              ))}
-            </select>
-            <label className="inputBox__form--label" htmlFor="selectFeature">
+            <label
+              className={
+                data?.columnid
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
+            >
               خصوصیت
             </label>
           </div>
 
-          <div className="inputBox__form">
-            <select
-              className="inputBox__form--input"
-              value={data.operator}
-              onChange={handleDataChange}
-              id="operator"
-              name="operator"
-            >
-              <option value="=">=</option>
-              <option value=">">&gt;</option>
-              <option value="<">&lt;</option>
-              <option value=">=">&#8805;</option>
-              <option value="<=">&#8804;</option>
-              <option value="like">like</option>
-            </select>
-          </div>
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={operatorOptions}
+            onChange={handleSelectOptionChange}
+            value={operatorOptions.find(
+              (item) => item.value === data?.operator
+            )}
+            name="operator"
+            isClearable={false}
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+          />
 
           {data.columnid && !isLookup && (
             <div className="inputBox__form">
@@ -238,27 +297,31 @@ function ReportGeneratorTableForm() {
 
           {data.columnid && isLookup && (
             <div className="inputBox__form">
-              <select
-                className="inputBox__form--input"
-                defaultValue=""
-                id="selectCondition"
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                options={conditionOptions}
+                onChange={handleSelectOptionChange}
+                value={fetureOptions.find(
+                  (item) => item.value === data?.condition
+                )}
                 name="condition"
-                onChange={handleDataChange}
-                disabled={isLookupFetching || isLookupLoading}
-              >
-                <option value="" disabled>
-                  انتخاب کنید
-                </option>
-                {conditionCombo.map((item) => (
-                  <option value={item.value} key={item.value}>
-                    {item.text}
-                  </option>
-                ))}
-              </select>
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">شرط</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+                isLoading={isLookupFetching || isLookupLoading}
+              />
 
               <label
-                className="inputBox__form--label"
-                htmlFor="selectCondition"
+                className={
+                  data?.condition
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
               >
                 شرط
               </label>
@@ -319,6 +382,41 @@ function ReportGeneratorTableForm() {
           <div className="condition__box row-span-3">
             <h4 className="condition__box--title">شروط انتخاب شده:</h4>
             <p>{conditionText}</p>
+          </div>
+        </div>
+
+        <div className="grid grid--col-3">
+          <div className="inputBox__form">
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={fetureOptions}
+              onChange={handleMultiSelectChange}
+              value={fetureOptions.find(
+                (item) => item.value === data?.tableSelects
+              )}
+              name="tableSelects"
+              isMulti
+              isClearable={true}
+              placeholder={
+                <div className="react-select-placeholder">خصوصیات جدول</div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+              isLoading={isColsLoading || isColsFetching}
+              isDisabled={isColsLoading || isColsFetching || !data.TableName}
+            />
+
+            <label
+              className={
+                data?.tableSelects.length > 0
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
+            >
+              خصوصیات جدول
+            </label>
           </div>
         </div>
       </form>

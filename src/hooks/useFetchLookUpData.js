@@ -12,6 +12,7 @@ import {
 import { useGetPersonnelStatementOffTypeQuery } from "../slices/personnelStatementApiSlice.js";
 import { useGetFractionTypeQuery } from "../slices/fractionApiSlice.js";
 import { useGetRequestTypeQuery } from "../slices/requestApiSlice";
+import { useGetTablesQuery } from "../slices/reportGeneratorsApiSlice";
 
 // COMMON LOOK UP DATA LOGIC
 /**
@@ -303,6 +304,40 @@ const useFetchPersonnelStatementOffType = () => {
   };
 };
 
+// REPORT GENERATOR TABLES LOOK UP LOGIC
+const useFetchReportGeneratorTables = () => {
+  const [reportGeneratorTables, setReportGeneratorTables] = useState([]);
+
+  // GET DATA
+  const {
+    data: reportGeneratorTablesItems,
+    isSuccess: reportGeneratorTablesIsSuccess,
+    isLoading: reportGeneratorTablesIsLoading,
+    isFetching: reportGeneratorTablesIsFetching,
+    error: reportGeneratorTablesError,
+  } = useGetTablesQuery({});
+
+  // FETCH DATA
+  useEffect(() => {
+    if (reportGeneratorTablesIsSuccess) {
+      setReportGeneratorTables(reportGeneratorTablesItems.itemList);
+    }
+  }, [reportGeneratorTablesIsSuccess, reportGeneratorTablesItems]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (reportGeneratorTablesError) {
+      console.log(reportGeneratorTablesError);
+    }
+  }, [reportGeneratorTablesError]);
+
+  return {
+    reportGeneratorTables,
+    reportGeneratorTablesIsLoading,
+    reportGeneratorTablesIsFetching,
+  };
+};
+
 export {
   useFetchRetirementStatementTypes,
   useFetchPensionaryStatus,
@@ -312,4 +347,5 @@ export {
   useFetchRequestType,
   useFetchFractionType,
   useFetchPersonnelStatementOffType,
+  useFetchReportGeneratorTables,
 };
