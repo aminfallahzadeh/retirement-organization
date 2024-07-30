@@ -360,16 +360,25 @@ function FractionForm() {
         const rows = json.slice(1);
 
         // CREATE DATA OBJECT
-        const items = rows.map((row) => {
-          const obj = {};
-          row.forEach((cell, index) => {
-            obj[headers[index]] = convertToEnglishNumber(
-              cell ? cell.toString() : ""
-            );
-          });
-          obj["saved"] = true;
-          return obj;
-        });
+        const items = rows
+          .map((row) => {
+            if (
+              row.every(
+                (cell) => cell === null || cell === undefined || cell === ""
+              )
+            ) {
+              return null;
+            }
+            const obj = {};
+            row.forEach((cell, index) => {
+              obj[headers[index]] = convertToEnglishNumber(
+                cell ? cell.toString() : ""
+              );
+            });
+            obj["saved"] = true;
+            return obj;
+          })
+          .filter((item) => item !== null);
         const type = data?.fractionTypeID;
         handleInsertExcel(items, type);
       };

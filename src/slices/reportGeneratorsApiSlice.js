@@ -36,39 +36,20 @@ export const reportGeneratorApiSlice = apiSlice.injectEndpoints({
         cmbGroupFunction2,
         cmbGroupFunction3,
       }) => {
-        let url = `${REPORT_GENERATOR_HTTPS}/GenerateReport?txtSelectPart=${txtSelectPart}&ConditionsCode=${ConditionsCode}`;
+        // Ensure default values
+        cmbGroupField0 = cmbGroupField0 ?? "1000";
+        cmbGroupFunction0 = cmbGroupFunction0 ?? "none";
 
-        if (cmbGroupField0) {
-          url += `&cmbGroupField0=${cmbGroupField0}`;
-        }
+        cmbGroupField1 = cmbGroupField1 ?? "1000";
+        cmbGroupFunction1 = cmbGroupFunction1 ?? "none";
 
-        if (cmbGroupFunction0) {
-          url += `&cmbGroupFunction0=${cmbGroupFunction0}`;
-        }
+        cmbGroupField2 = cmbGroupField2 ?? "1000";
+        cmbGroupFunction2 = cmbGroupFunction2 ?? "none";
 
-        if (cmbGroupField1) {
-          url += `&cmbGroupField1=${cmbGroupField1}`;
-        }
+        cmbGroupField3 = cmbGroupField3 ?? "1000";
+        cmbGroupFunction3 = cmbGroupFunction3 ?? "none";
 
-        if (cmbGroupFunction1) {
-          url += `&cmbGroupFunction1=${cmbGroupFunction1}`;
-        }
-
-        if (cmbGroupField2) {
-          url += `&cmbGroupField2=${cmbGroupField2}`;
-        }
-
-        if (cmbGroupFunction2) {
-          url += `&cmbGroupFunction2=${cmbGroupFunction2}`;
-        }
-
-        if (cmbGroupField3) {
-          url += `&cmbGroupField3=${cmbGroupField3}`;
-        }
-
-        if (cmbGroupFunction3) {
-          url += `&cmbGroupFunction3=${cmbGroupFunction3}`;
-        }
+        let url = `${REPORT_GENERATOR_HTTPS}/GenerateReport?txtSelectPart=${txtSelectPart}&ConditionsCode=${ConditionsCode}&cmbGroupField0=${cmbGroupField0}&cmbGroupFunction0=${cmbGroupFunction0}&cmbGroupField1=${cmbGroupField1}&cmbGroupFunction1=${cmbGroupFunction1}&cmbGroupField2=${cmbGroupField2}&cmbGroupFunction2=${cmbGroupFunction2}&cmbGroupField3=${cmbGroupField3}&cmbGroupFunction3=${cmbGroupFunction3}`;
 
         return {
           url,
