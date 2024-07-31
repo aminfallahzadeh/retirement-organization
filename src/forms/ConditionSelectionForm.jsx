@@ -69,10 +69,8 @@ function ConditionSelectionForm({
         ConditionsCode: queryCondi,
         ForSave: false,
       });
-
       console.log(res);
-
-      toast.success(res.data.message, {
+      toast.success(res.message || res?.error?.data.message, {
         autoClose: 2000,
       });
     } catch (err) {

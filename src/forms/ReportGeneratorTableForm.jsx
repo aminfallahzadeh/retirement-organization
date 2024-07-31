@@ -209,7 +209,7 @@ function ReportGeneratorTableForm() {
 
   const addConditionElement = (element) => {
     setConditionText((prev) => `${prev} ${element}`);
-    dispatch(setQueryCondi(queryCondi + `$${element}$`));
+    dispatch(setQueryCondi(queryCondi + `%24${element}%24`));
     setDisableAddButton(false);
     setDisableOperators(true);
   };
@@ -390,7 +390,7 @@ function ReportGeneratorTableForm() {
 
         <div className="grid grid--col-2-first-sm">
           <div className="grid grid--col-2">
-            {["OR", "AND", "(", ")", "NULL", "%"].map((element) => (
+            {["or", "and", "(", ")", "null", "%"].map((element) => (
               <Button
                 key={element}
                 dir="ltr"
@@ -400,7 +400,7 @@ function ReportGeneratorTableForm() {
                 onClick={() => addConditionElement(element)}
                 sx={{ fontFamily: "sahel" }}
               >
-                <span>{element}</span>
+                <span>{element.toUpperCase()}</span>
               </Button>
             ))}
           </div>
