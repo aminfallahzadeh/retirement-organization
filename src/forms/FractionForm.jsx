@@ -379,6 +379,7 @@ function FractionForm() {
             obj["letterDate"] = new Date(data.letterDate);
             obj["paymentDate"] = new Date(data.paymentDate);
             obj["paymentTypeID"] = data.paymentTypeID;
+            obj["paymentNO"] = convertToEnglishNumber(data.paymentNO);
             return obj;
           })
           .filter((item) => item !== null);
@@ -663,27 +664,26 @@ function FractionForm() {
                 : "inputBox__form--readOnly-label-hidden"
             }
           >
-            <span>*</span> نام سازمان
+            <span>*</span> نوع پرداخت
           </label>
         </div>
 
+        <div className="inputBox__form">
+          <input
+            type="text"
+            className="inputBox__form--input"
+            onChange={handleDataChange}
+            name="paymentNO"
+            value={convertToPersianNumber(data.paymentNO) || ""}
+            required
+            id="paymentNO"
+          />
+          <label className="inputBox__form--label" htmlFor="paymentNO">
+            شماره
+          </label>
+        </div>
         {frMode === "solo" && (
           <>
-            <div className="inputBox__form">
-              <input
-                type="text"
-                className="inputBox__form--input"
-                onChange={handleDataChange}
-                name="paymentNO"
-                value={convertToPersianNumber(data.paymentNO) || ""}
-                required
-                id="paymentNO"
-              />
-              <label className="inputBox__form--label" htmlFor="paymentNO">
-                شماره
-              </label>
-            </div>
-
             <div className="inputBox__form">
               <input
                 type="text"
