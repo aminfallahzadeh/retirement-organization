@@ -47,6 +47,11 @@ export const retiredApiSlice = apiSlice.injectEndpoints({
         url: `${RETIRED_URL_HTTPS}/GetRetired?personID=${personID}`,
       }),
     }),
+    getAllPensionaries: builder.query({
+      query: (personID) => ({
+        url: `${RETIRED_URL_HTTPS}/GetAllPensionaries?personID=${personID}`,
+      }),
+    }),
   }),
 });
 
@@ -59,4 +64,5 @@ export const {
   useUpdateRetiredAccountMutation,
   useGetRetiredQuery,
   useLazyGetRetiredQuery,
+  useGetAllPensionariesQuery,
 } = retiredApiSlice;

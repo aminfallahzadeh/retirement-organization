@@ -1,14 +1,12 @@
 // react imports
 import { useState, useEffect, useRef } from "react";
 
-// rrd imports
-import { useLocation } from "react-router-dom";
-
 // redux imports
 import { useSelector } from "react-redux";
 import {
   useUpdateRetiredPensionaryMutation,
   useGetRetiredPensionaryQuery,
+  useGetAllPensionariesQuery,
 } from "../slices/retiredApiSlice.js";
 
 // hooks
@@ -27,6 +25,9 @@ import {
   Save as SaveIcon,
   EditOutlined as EditIcon,
 } from "@mui/icons-material";
+
+// components
+import PensionaryStatusHistoryGrid from "../grids/PensionaryStatusHistoryGrid";
 
 // helpers
 import {
@@ -52,6 +53,7 @@ import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function RetiredPensionaryForm() {
   const retirementCalenderRef = useRef(null);
+  const changeStatusCalenderRef = useRef(null);
 
   const [editable, setEditable] = useState(false);
 
@@ -59,8 +61,16 @@ function RetiredPensionaryForm() {
 
   // DATE STATES
   const [selectedRetriementDate, setSelectedRetriementDate] = useState(null);
+  const [selectedChangeStatusDate, setSelectedChangeStatusDate] =
+    useState(null);
+
+  const [isChangeStatusCalenderOpen, setIsChangeStatusCalenderOpen] =
+    useState(false);
   const [isRetriementCalenderOpen, setIsRetirementCalenderOpen] =
     useState(false);
+
+  // TABLE STATES
+  const [statusHistoryTableData, setStatusHistoryTableData] = useState([]);
 
   // PENSIONARY STATES
   const [pensionaryData, setPensionaryData] = useState(null);
@@ -68,13 +78,19 @@ function RetiredPensionaryForm() {
   const [updateRetiredPensionary, { isLoading: isUpdating }] =
     useUpdateRetiredPensionaryMutation();
 
-  const location = useLocation();
-
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
   const { personDeathDate } = useSelector((state) => state.retiredState);
 
+  // GET PENSIONARY STATUS HISTORY
+  const {
+    data: statusHistory,
+    isSuccess: isStatusHistorySuccess,
+    error: statusHistoryError,
+  } = useGetAllPensionariesQuery(personID);
+
+  // GET PENSIONARY DATA
   const {
     data: pensionary,
     isSuccess: isPensionarySuccess,
@@ -83,6 +99,20 @@ function RetiredPensionaryForm() {
     error: pensionaryError,
     refetch: refetchPensionary,
   } = useGetRetiredPensionaryQuery(personID);
+
+  // FETCH STATUS DATA
+  useEffect(() => {
+    if (isStatusHistorySuccess) {
+      const mappedData = statusHistory?.itemList.map((item, index) => ({
+        id: item.pensionaryID,
+        pensionaryStatusRowNum: index + 1,
+        pensionaryStatusName: item.pensionaryStatusName || "-",
+        pensionaryStartdate:
+          convertToPersianDate(item.pensionaryStartdate) || "-",
+      }));
+      setStatusHistoryTableData(mappedData);
+    }
+  }, [isStatusHistorySuccess, statusHistory]);
 
   // FETCH MAIN DATA
   useEffect(() => {
@@ -100,6 +130,18 @@ function RetiredPensionaryForm() {
       });
     }
   }, [pensionaryError]);
+
+  useEffect(() => {
+    if (statusHistoryError) {
+      console.log(statusHistoryError);
+      toast.error(
+        statusHistoryError?.data?.message || statusHistoryError.error,
+        {
+          autoClose: 2000,
+        }
+      );
+    }
+  }, [statusHistoryError]);
 
   // GET LOOK UP DATA
   const { organizations, organizationIsLoading, organizationIsFetching } =
@@ -146,6 +188,12 @@ function RetiredPensionaryForm() {
     );
   }, [pensionaryData?.retirementDate]);
 
+  useEffect(() => {
+    setSelectedChangeStatusDate(
+      convertToPersianDate(pensionaryData?.pensionaryStartDate)
+    );
+  }, [pensionaryData?.pensionaryStartDate]);
+
   // CHANGE HANDLERs
   const handleEditable = () => {
     setEditable(true);
@@ -155,9 +203,18 @@ function RetiredPensionaryForm() {
     setIsRetirementCalenderOpen(open);
   };
 
+  const handleChangeStatusOpenChange = (open) => {
+    setIsChangeStatusCalenderOpen(open);
+  };
+
   const handleRetiredDateChange = (date) => {
     setSelectedRetriementDate(date);
     setIsRetirementCalenderOpen(false);
+  };
+
+  const handleChangeStatusDateChange = (date) => {
+    setSelectedChangeStatusDate(date);
+    setIsChangeStatusCalenderOpen(false);
   };
 
   // HADNLE DATA CHANGE
@@ -182,6 +239,7 @@ function RetiredPensionaryForm() {
     try {
       // Adjusting for timezone difference
       let retirementDate;
+      let pensionaryStartDate;
 
       if (selectedRetriementDate) {
         retirementDate = new Date(selectedRetriementDate);
@@ -190,6 +248,16 @@ function RetiredPensionaryForm() {
         );
       } else {
         retirementDate = null;
+      }
+
+      if (selectedChangeStatusDate) {
+        pensionaryStartDate = new Date(selectedChangeStatusDate);
+        pensionaryStartDate.setMinutes(
+          pensionaryStartDate.getMinutes() -
+            pensionaryStartDate.getTimezoneOffset()
+        );
+      } else {
+        pensionaryStartDate = null;
       }
 
       const updateRes = await updateRetiredPensionary({
@@ -210,6 +278,7 @@ function RetiredPensionaryForm() {
           convertToEnglishNumber(pensionaryData.retiredGrantDuration)
         ),
         retirementDate,
+        pensionaryStartDate,
         personID,
       }).unwrap();
       refetchPensionary();
@@ -227,7 +296,10 @@ function RetiredPensionaryForm() {
   };
 
   // FIX CLOSE CALENDER BUG
-  useCloseCalender([retirementCalenderRef], [setIsRetirementCalenderOpen]);
+  useCloseCalender(
+    [retirementCalenderRef, changeStatusCalenderRef],
+    [setIsRetirementCalenderOpen, setIsChangeStatusCalenderOpen]
+  );
 
   const content = (
     <>
@@ -408,6 +480,27 @@ function RetiredPensionaryForm() {
               </label>
             </div>
 
+            <div className="inputBox__form">
+              <InputDatePicker
+                disabled={!editable}
+                value={selectedChangeStatusDate}
+                defaultValue={null}
+                onChange={handleChangeStatusDateChange}
+                onOpenChange={handleChangeStatusOpenChange}
+                format={"jYYYY/jMM/jDD"}
+                suffixIcon={<CalenderIcon color="action" />}
+                open={isChangeStatusCalenderOpen}
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: changeStatusCalenderRef,
+                }}
+              />
+              <div className="inputBox__form--readOnly-label">
+                تاریخ تغییر وضعیت
+              </div>
+            </div>
+
             <div className="inputBox__form StaffInfoForm__flex--item">
               <input
                 disabled={!editable}
@@ -474,6 +567,14 @@ function RetiredPensionaryForm() {
               </label>
             </div>
           </form>
+
+          <div className="flex-col flex-center">
+            <h5 className="title-secondary">تاریخچه وضعیت ها</h5>
+          </div>
+
+          <PensionaryStatusHistoryGrid
+            statusHistoryTableData={statusHistoryTableData}
+          />
 
           <div style={{ marginRight: "auto" }} className="flex-row">
             <LoadingButton
