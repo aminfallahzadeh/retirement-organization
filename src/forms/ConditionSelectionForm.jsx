@@ -37,15 +37,17 @@ function ConditionSelectionForm({
   );
 
   // ACCEESS REPORT GENERATOR QUERY
-  const [generateReport, { isLoading: isGenerating }] =
-    useLazyGenerateReportQuery();
+  const [
+    generateReport,
+    { isLoading: isGenerating, isFetching: isGenerateFetching },
+  ] = useLazyGenerateReportQuery();
 
   // SELECT OPTIONS
   const aggrefateOptions = [
-    { value: "MIN", label: "MIN" },
-    { value: "MAX", label: "MAX" },
-    { value: "COUNT", label: "COUNT" },
-    { value: "AVG", label: "AVG" },
+    { value: "Min", label: "MIN" },
+    { value: "Max", label: "MAX" },
+    { value: "Count", label: "COUNT" },
+    { value: "Avg", label: "AVG" },
   ];
 
   // HANDLE SELECT OPTION CHANGE
@@ -65,9 +67,14 @@ function ConditionSelectionForm({
         ...data,
         txtSelectPart: selectIDs,
         ConditionsCode: queryCondi,
+        ForSave: false,
       });
 
       console.log(res);
+
+      toast.success(res.data.message, {
+        autoClose: 2000,
+      });
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -350,7 +357,7 @@ function ConditionSelectionForm({
               variant="contained"
               endIcon={<PlayIcon />}
               onClick={generateReportHandler}
-              loading={isGenerating}
+              loading={isGenerating || isGenerateFetching}
               color="success"
               sx={{ fontFamily: "sahel" }}
             >

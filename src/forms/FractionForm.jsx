@@ -82,7 +82,6 @@ function FractionForm() {
   const [frMode, setFrMode] = useState("group");
 
   // MAIN STATES
-  // const [data, setData] = useState({});
   const { data } = useSelector((state) => state.calculateFractionData);
 
   // EXCEL STATES
@@ -142,8 +141,8 @@ function FractionForm() {
   );
 
   const paymentTypeOptions = [
-    { value: "1", label: "چک" },
-    { value: "2", label: "فیش" },
+    { value: "d621c0cd-1381-44d9-9d59-a1c772931080", label: "چک" },
+    { value: "39363fd7-5dc7-4195-89f0-5eb62c667127", label: "فیش" },
   ];
 
   // EXTRACT COEFS
@@ -376,6 +375,9 @@ function FractionForm() {
               );
             });
             obj["saved"] = true;
+            obj["letterNO"] = convertToEnglishNumber(data.letterNO);
+            obj["paymentDate"] = new Date(data.paymentDate);
+            obj["paymentTypeID"] = data.paymentTypeID;
             return obj;
           })
           .filter((item) => item !== null);
