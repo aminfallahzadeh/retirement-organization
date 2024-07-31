@@ -2,12 +2,19 @@
 import { useMemo } from "react";
 
 // mui imports
-import { PaginationItem } from "@mui/material";
+import {
+  PaginationItem,
+  Box,
+  IconButton,
+  Tooltip,
+  CircularProgress,
+} from "@mui/material";
 import {
   ChevronLeft,
   ChevronRight,
   FirstPage,
   LastPage,
+  Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import {
   MaterialReactTable,
@@ -26,7 +33,12 @@ import {
   convertToPersianNumber,
 } from "../helper.js";
 
-function PensionaryStatusHistoryGrid({ statusHistoryTableData }) {
+function PensionaryStatusHistoryGrid({
+  statusHistoryTableData,
+  isLoading,
+  isFetching,
+  handleRefresh,
+}) {
   const columns = useMemo(
     () => [
       {
@@ -73,6 +85,27 @@ function PensionaryStatusHistoryGrid({ statusHistoryTableData }) {
         zIndex: 0,
       },
     },
+    renderTopToolbarCustomActions: () => (
+      <Box>
+        {isLoading || isFetching ? (
+          <IconButton aria-label="refresh" color="info" disabled>
+            <CircularProgress size={20} value={100} />
+          </IconButton>
+        ) : (
+          <Tooltip title="بروز رسانی">
+            <span>
+              <IconButton
+                aria-label="refresh"
+                color="info"
+                onClick={handleRefresh}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
+      </Box>
+    ),
     muiPaginationProps: {
       size: "small",
       shape: "rounded",

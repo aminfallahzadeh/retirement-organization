@@ -87,6 +87,9 @@ function RetiredPensionaryForm() {
   const {
     data: statusHistory,
     isSuccess: isStatusHistorySuccess,
+    isLoading: isStatusHistoryLoading,
+    isFetching: isStatusHistoryFetching,
+    refetch: refetchStatusHistory,
     error: statusHistoryError,
   } = useGetAllPensionariesQuery(personID);
 
@@ -199,6 +202,10 @@ function RetiredPensionaryForm() {
     setEditable(true);
   };
 
+  const hadnleRefreshStatusHistoryTable = () => {
+    refetchStatusHistory();
+  };
+
   const handleRetiredOpenChange = (open) => {
     setIsRetirementCalenderOpen(open);
   };
@@ -283,6 +290,7 @@ function RetiredPensionaryForm() {
       }).unwrap();
       refetchPensionary();
       setEditable(false);
+      refetchStatusHistory();
       // setIsPensionarySaved(true);
       toast.success(updateRes.message, {
         autoClose: 2000,
@@ -574,6 +582,9 @@ function RetiredPensionaryForm() {
 
           <PensionaryStatusHistoryGrid
             statusHistoryTableData={statusHistoryTableData}
+            isLoading={isStatusHistoryLoading}
+            isFetching={isStatusHistoryFetching}
+            handleRefresh={hadnleRefreshStatusHistoryTable}
           />
 
           <div style={{ marginRight: "auto" }} className="flex-row">
