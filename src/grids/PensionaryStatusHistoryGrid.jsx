@@ -1,5 +1,5 @@
 // react imports
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 // mui imports
 import {
@@ -39,6 +39,11 @@ function PensionaryStatusHistoryGrid({
   isFetching,
   handleRefresh,
 }) {
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 3,
+  });
+
   const columns = useMemo(
     () => [
       {
@@ -123,6 +128,8 @@ function PensionaryStatusHistoryGrid({
         />
       ),
     },
+    onPaginationChange: setPagination,
+    state: { pagination },
   });
 
   const content = <MaterialReactTable table={table} />;
