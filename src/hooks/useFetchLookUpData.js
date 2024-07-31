@@ -11,7 +11,10 @@ import {
 } from "../slices/sharedApiSlice.js";
 import { useGetPersonnelStatementOffTypeQuery } from "../slices/personnelStatementApiSlice.js";
 import { useGetFractionTypeQuery } from "../slices/fractionApiSlice.js";
-import { useGetRequestTypeQuery } from "../slices/requestApiSlice";
+import {
+  useGetRequestTypeQuery,
+  useGetRequestTypeAttachmentQuery,
+} from "../slices/requestApiSlice";
 import { useGetTablesQuery } from "../slices/reportGeneratorsApiSlice";
 
 // COMMON LOOK UP DATA LOGIC
@@ -338,6 +341,40 @@ const useFetchReportGeneratorTables = () => {
   };
 };
 
+// REQUEST ATTACHMENT TYPES LOOK UP LOGIC
+const useFetchRequestAttachmentTypes = (requestTypeID) => {
+  const [requestAttachmentTypes, setRequestAttachmentTypes] = useState([]);
+
+  // GET DATA
+  const {
+    data: requestAttachmentTypesItems,
+    isSuccess: requestAttachmentTypesIsSuccess,
+    isLoading: requestAttachmentTypesIsLoading,
+    isFetching: requestAttachmentTypesIsFetching,
+    error: requestAttachmentTypesError,
+  } = useGetRequestTypeAttachmentQuery(requestTypeID);
+
+  // FETCH DATA
+  useEffect(() => {
+    if (requestAttachmentTypesIsSuccess) {
+      setRequestAttachmentTypes(requestAttachmentTypesItems.itemList);
+    }
+  }, [requestAttachmentTypesIsSuccess, requestAttachmentTypesItems]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (requestAttachmentTypesError) {
+      console.log(requestAttachmentTypesError);
+    }
+  }, [requestAttachmentTypesError]);
+
+  return {
+    requestAttachmentTypes,
+    requestAttachmentTypesIsLoading,
+    requestAttachmentTypesIsFetching,
+  };
+};
+
 export {
   useFetchRetirementStatementTypes,
   useFetchPensionaryStatus,
@@ -348,4 +385,5 @@ export {
   useFetchFractionType,
   useFetchPersonnelStatementOffType,
   useFetchReportGeneratorTables,
+  useFetchRequestAttachmentTypes,
 };

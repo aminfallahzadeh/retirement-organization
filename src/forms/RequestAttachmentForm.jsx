@@ -2,68 +2,57 @@
 import { useState, useEffect, useRef } from "react";
 
 // redux imports
-import {
-  useGetRequestTypeAttachmentQuery,
-  useInsertRequestAttachmentMutation,
-} from "../slices/requestApiSlice";
+import { useInsertRequestAttachmentMutation } from "../slices/requestApiSlice";
+
+// hooks
+import { useFetchRequestAttachmentTypes } from "../hooks/useFetchLookUpData";
 
 // mui imports
-import { CircularProgress, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { DriveFolderUploadOutlined as UploadIcon } from "@mui/icons-material";
 
 // library imports
 import { toast } from "react-toastify";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
-function RequestAttachmentForm({ setShowInsertAttachmentModal }) {
-  const [attachmentTypesCombo, setAttachmentTypesCombo] = useState([]);
-  const [selectedAttachmentID, setSelectedAttachmentID] = useState(" ");
-  const [description, setDescription] = useState("");
+// utils
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
+
+function RequestAttachmentForm({ setShowInsertAttachmentModal, refetch }) {
+  // MAIN STATE
+  const [data, setData] = useState({});
   const [image, setImage] = useState(null);
 
   const searchParams = new URLSearchParams(location.search);
   const requestTypeID = searchParams.get("type");
   const requestID = searchParams.get("requestID");
+  const animatedComponents = makeAnimated();
 
   const [insertAttachment, { isLoading: isInserting }] =
     useInsertRequestAttachmentMutation();
 
   const inputFileRef = useRef(null);
 
-  // FETCH COMBO DATA
+  // GET LOOK UP DATA
   const {
-    data: attachmentTypes,
-    isLoading: isTypeLoading,
-    isSuccess: isTypeSuccess,
-    isFetching: isTypeFetching,
-    error: isTypeError,
-  } = useGetRequestTypeAttachmentQuery(requestTypeID);
+    requestAttachmentTypes,
+    requestAttachmentTypesIsLoading,
+    requestAttachmentTypesIsFetching,
+  } = useFetchRequestAttachmentTypes(requestTypeID);
 
-  useEffect(() => {
-    if (isTypeSuccess) {
-      setAttachmentTypesCombo(attachmentTypes.itemList);
-    }
-  }, [isTypeSuccess, attachmentTypes]);
-
-  // HADNLE ERROR
-  useEffect(() => {
-    if (isTypeError) {
-      console.log(isTypeError);
-      toast.error(isTypeError?.data?.message || isTypeError.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [isTypeError]);
+  // SELECT OPTIONS
+  const attachmentTypesOptions = optionsGenerator(
+    requestAttachmentTypes,
+    "requestTypeAttachmentID",
+    "name"
+  );
 
   // HANDLE CHANGE
-  const handleSelectedAttachmentIDChange = (e) => {
-    setSelectedAttachmentID(e.target.value);
-  };
-
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
-  };
-
   const handleUploadButtonClick = () => {
     inputFileRef.current.click();
   };
@@ -95,18 +84,36 @@ function RequestAttachmentForm({ setShowInsertAttachmentModal }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [image]);
 
+  // HANDLE SELECT OPTION CHANGE
+  const handleSelectOptionChange = (selectedOption, actionMeta) => {
+    const { name } = actionMeta;
+    if (selectedOption) {
+      const { value } = selectedOption;
+      setData({ ...data, [name]: value || "" });
+    } else {
+      setData({ ...data, [name]: null });
+    }
+  };
+
+  // HANDLE DATA CHANGE
+  const handleDataChange = (e) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+  };
+
   // INSERT IMAGE HANDLER
   const handleInsertAttachment = async () => {
     try {
       const insertImageRes = await insertAttachment({
         contentType: "",
         requestAttachmentID: "",
-        attachementTypeID: selectedAttachmentID,
+        attachementTypeID: data.attachementTypeID,
         requestID,
         attachment: image,
-        attachementDesc: description,
+        attachementDesc: data.attachementDesc,
       }).unwrap();
       setShowInsertAttachmentModal(false);
+      refetch();
       toast.success(insertImageRes.message, {
         autoClose: 2000,
       });
@@ -119,78 +126,77 @@ function RequestAttachmentForm({ setShowInsertAttachmentModal }) {
   };
 
   const content = (
-    <>
-      {isTypeLoading || isTypeFetching ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            padding: "2rem 10rem",
-          }}
-        >
-          <CircularProgress color="primary" />
-        </Box>
-      ) : (
-        <section className="formContainer flex-col">
-          <form method="POST" className="grid grid--col-2" noValidate>
-            <div className="inputBox__form">
-              <select
-                className="inputBox__form--input"
-                required
-                id="attachmentTypeList"
-                onChange={handleSelectedAttachmentIDChange}
-                value={selectedAttachmentID}
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-                {attachmentTypesCombo?.map((attachmentType) => (
-                  <option
-                    key={attachmentType.requestTypeAttachmentID}
-                    value={attachmentType.requestTypeAttachmentID}
-                  >
-                    {attachmentType.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="inputBox__form">
-              <textarea
-                className="inputBox__form--input"
-                required
-                id="attachmentDesc"
-                onChange={handleDescriptionChange}
-                value={description}
-              />
-              <label className="inputBox__form--label" htmlFor="attachmentDesc">
-                توضیحات
-              </label>
-            </div>
-          </form>
-
-          <input
-            type="file"
-            ref={inputFileRef}
-            style={{ display: "none" }}
-            onChange={handleImageChange}
+    <section className="formContainer flex-col">
+      <form method="POST" className="grid grid--col-2" noValidate>
+        <div className="inputBox__form">
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={attachmentTypesOptions}
+            onChange={handleSelectOptionChange}
+            value={attachmentTypesOptions.find(
+              (item) => item.value === data?.attachementTypeID
+            )}
+            name="attachementTypeID"
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">نوع پیوست</div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+            isLoading={
+              requestAttachmentTypesIsLoading ||
+              requestAttachmentTypesIsFetching
+            }
           />
 
-          <LoadingButton
-            dir="ltr"
-            endIcon={<UploadIcon />}
-            loading={isInserting}
-            aria-label="upload"
-            onClick={handleUploadButtonClick}
-            variant="contained"
-            color="primary"
-            sx={{ fontFamily: "sahel" }}
+          <label
+            className={
+              data?.attachementTypeID
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <span>بارگزاری</span>
-          </LoadingButton>
-        </section>
-      )}
-    </>
+            نوع پیوست
+          </label>
+        </div>
+        <div className="inputBox__form">
+          <textarea
+            className="inputBox__form--input"
+            required
+            name="attachementDesc"
+            id="attachmentDesc"
+            onChange={handleDataChange}
+            value={data.attachementDesc}
+          />
+          <label className="inputBox__form--label" htmlFor="attachmentDesc">
+            توضیحات
+          </label>
+        </div>
+      </form>
+
+      <input
+        type="file"
+        ref={inputFileRef}
+        style={{ display: "none" }}
+        onChange={handleImageChange}
+        accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"
+      />
+
+      <LoadingButton
+        dir="ltr"
+        endIcon={<UploadIcon />}
+        loading={isInserting}
+        aria-label="upload"
+        onClick={handleUploadButtonClick}
+        variant="contained"
+        color="primary"
+        sx={{ fontFamily: "sahel" }}
+      >
+        <span>بارگزاری</span>
+      </LoadingButton>
+    </section>
   );
 
   return content;

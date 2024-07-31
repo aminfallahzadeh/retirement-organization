@@ -88,6 +88,29 @@ export const requestApiSlice = apiSlice.injectEndpoints({
         url: `${REQUEST_URL_HTTPS}/GetRequestTypeAttachment?requestTypeID=${requestTypeID}`,
       }),
     }),
+
+    deleteRequestAttachment: builder.mutation({
+      // VIEW MODEL
+      /*
+        {
+          "requestAttachmentID": "string",
+          "requestID": "string",
+          "attachementTypeID": "string",
+          "attachementDesc": "string",
+          "attachment": "string",
+          "contentType": "string",
+          "insertUserID": "string",
+          "insertTime": "2024-07-31T18:32:23.781Z",
+          "updateUserID": "string",
+          "updateTime": "2024-07-31T18:32:23.781Z"
+        }     
+      */
+      query: (data) => ({
+        url: `${REQUEST_URL_HTTPS}/DeleteRequestAttachment`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -102,4 +125,5 @@ export const {
   useGetRequestAttachmentQuery,
   useInsertRequestAttachmentMutation,
   useGetRequestTypeAttachmentQuery,
+  useDeleteRequestAttachmentMutation,
 } = requestApiSlice;

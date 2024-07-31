@@ -5,7 +5,10 @@ import { useMemo, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useGetRequestAttachmentQuery } from "../slices/requestApiSlice.js";
+import {
+  useGetRequestAttachmentQuery,
+  useDeleteRequestAttachmentMutation,
+} from "../slices/requestApiSlice.js";
 
 // components
 import Modal from "../components/Modal";
@@ -18,11 +21,15 @@ import {
   Tooltip,
   CircularProgress,
   PaginationItem,
+  Button,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import {
   Refresh as RefreshIcon,
   VisibilityOutlined as EyeIcon,
   DeleteOutline as DeleteIcon,
+  Close as CloseIcon,
+  Done as DoneIcon,
   ChevronLeft,
   ChevronRight,
   FirstPage,
@@ -46,9 +53,16 @@ import { defaultTableOptions } from "../utils.js";
 import { convertToPersianNumber } from "../helper.js";
 
 function RequestAttachmentsGrid() {
+  // CONTOLL STATESS
+  const [showDeleteAttachmentModal, setShowDeleteAttachmentModal] =
+    useState(false);
+
+  // TABLE STATES
   const [rowSelection, setRowSelection] = useState({});
   const [attachmentsTableData, setAttachmentsTableData] = useState([]);
 
+  // MAIN STATES
+  const [attachmentID, setAttachmentID] = useState("");
   const [showInsertAttachmentModal, setShowInsertAttachmentModal] =
     useState(false);
 
@@ -56,6 +70,9 @@ function RequestAttachmentsGrid() {
 
   const searchParams = new URLSearchParams(location.search);
   const requestID = searchParams.get("requestID");
+
+  const [deleteAttachment, { isLoading: isDeletingAttachment }] =
+    useDeleteRequestAttachmentMutation();
 
   const {
     data: attachments,
@@ -74,13 +91,14 @@ function RequestAttachmentsGrid() {
     refetch();
     if (isSuccess) {
       const data = attachments.itemList.map((item, index) => ({
+        id: item.requestAttachmentID,
         attachmentsRowNum: index + 1,
         attachmentDesc: item.attachementDesc || "-",
         attachmentName: item.attachmentName || "-",
       }));
       setAttachmentsTableData(data);
     }
-  }, [isSuccess, refetch, attachments, showInsertAttachmentModal]);
+  }, [isSuccess, refetch, attachments]);
 
   useEffect(() => {
     if (error) {
@@ -93,6 +111,29 @@ function RequestAttachmentsGrid() {
   // CHANGE HANDLERS
   const handleShowInsertAttachmentModalChange = () => {
     setShowInsertAttachmentModal(true);
+  };
+
+  const handleShowDeleteAttachmentModalChange = () => {
+    setShowDeleteAttachmentModal(true);
+  };
+
+  // HANLDE REMOVE ATTACHMENT
+  const handleDeleteAttachment = async () => {
+    try {
+      const deleteRes = await deleteAttachment({
+        requestAttachmentID: attachmentID,
+      });
+      toast.success(deleteRes.message, {
+        autoClose: 2000,
+      });
+      setShowDeleteAttachmentModal(false);
+      refetch();
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
   };
 
   const columns = useMemo(
@@ -125,7 +166,11 @@ function RequestAttachmentsGrid() {
         size: 20,
         Cell: () => (
           <Tooltip>
-            <IconButton color="error" sx={{ padding: "0" }}>
+            <IconButton
+              color="error"
+              sx={{ padding: "0" }}
+              onClick={handleShowDeleteAttachmentModalChange}
+            >
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -229,6 +274,15 @@ function RequestAttachmentsGrid() {
     state: { rowSelection },
   });
 
+  // SAVE ID ON ROW SELECTION
+  useEffect(() => {
+    const id = Object.keys(table.getState().rowSelection)[0];
+
+    if (id) {
+      setAttachmentID(id);
+    }
+  }, [table, rowSelection, attachmentsTableData]);
+
   const content = (
     <>
       {isLoading ? (
@@ -250,7 +304,44 @@ function RequestAttachmentsGrid() {
             >
               <RequestAttachmentForm
                 setShowInsertAttachmentModal={setShowInsertAttachmentModal}
+                refetch={refetch}
               />
+            </Modal>
+          )}
+
+          {showDeleteAttachmentModal && (
+            <Modal
+              title="حذف پیوست"
+              closeModal={() => setShowDeleteAttachmentModal(false)}
+            >
+              <p className="paragraph-primary">
+                آیا از حذف این پیوست اطمینان دارید؟
+              </p>
+              <div className="flex-row flex-center">
+                <LoadingButton
+                  dir="ltr"
+                  endIcon={<DoneIcon />}
+                  loading={isDeletingAttachment}
+                  onClick={handleDeleteAttachment}
+                  variant="contained"
+                  color="success"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>بله</span>
+                </LoadingButton>
+
+                <Button
+                  dir="ltr"
+                  endIcon={<CloseIcon />}
+                  disabled={isDeletingAttachment}
+                  onClick={() => setShowDeleteAttachmentModal(false)}
+                  variant="contained"
+                  color="error"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>خیر</span>
+                </Button>
+              </div>
             </Modal>
           )}
           <MaterialReactTable table={table} />
