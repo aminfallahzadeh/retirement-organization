@@ -376,6 +376,7 @@ function FractionForm() {
             });
             obj["saved"] = true;
             obj["letterNO"] = convertToEnglishNumber(data.letterNO);
+            obj["letterDate"] = new Date(data.letterDate);
             obj["paymentDate"] = new Date(data.paymentDate);
             obj["paymentTypeID"] = data.paymentTypeID;
             return obj;
@@ -477,6 +478,7 @@ function FractionForm() {
             شماره نامه
           </label>
         </div>
+
         <div className="inputBox__form">
           <InputDatePicker
             onChange={handleLetterDateChange}
@@ -495,44 +497,43 @@ function FractionForm() {
           <div className="inputBox__form--readOnly-label">تاریخ نامه</div>
         </div>
 
-        <div></div>
+        <div>&nbsp;</div>
 
-        <div className="inputBox__form">
-          <Select
-            closeMenuOnSelect={true}
-            options={offTypesOptions}
-            components={animatedComponents}
-            onChange={handleSelectOptionChange}
-            value={offTypesOptions.find(
-              (item) => item.value === data?.relationshipWithParentID
-            )}
-            name="personnelStatementOffTypeID"
-            isLoading={
-              personnelStatementOffTypesIsLoading ||
-              personnelStatementOffTypesIsFetching
-            }
-            isClearable={true}
-            placeholder={
-              <div className="react-select-placeholder">نوع سابقه</div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            styles={selectStyles}
-          />
-
-          <label
-            className={
-              data?.personnelStatementOffTypeID
-                ? "inputBox__form--readOnly-label"
-                : "inputBox__form--readOnly-label-hidden"
-            }
-          >
-            نوع سابقه
-          </label>
-        </div>
-
-        {frMode === "solo" ? (
+        {frMode === "solo" && (
           <>
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                options={offTypesOptions}
+                components={animatedComponents}
+                onChange={handleSelectOptionChange}
+                value={offTypesOptions.find(
+                  (item) => item.value === data?.relationshipWithParentID
+                )}
+                name="personnelStatementOffTypeID"
+                isLoading={
+                  personnelStatementOffTypesIsLoading ||
+                  personnelStatementOffTypesIsFetching
+                }
+                isClearable={true}
+                placeholder={
+                  <div className="react-select-placeholder">نوع سابقه</div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                styles={selectStyles}
+              />
+
+              <label
+                className={
+                  data?.personnelStatementOffTypeID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                نوع سابقه
+              </label>
+            </div>
             <div className="inputBox__form">
               <input
                 type="text"
@@ -600,50 +601,42 @@ function FractionForm() {
                 </div>
               </div>
             </div>
-          </>
-        ) : (
-          <>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+            <div className="inputBox__form">
+              <Select
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                onChange={handleSelectOptionChange}
+                isClearable={true}
+                options={organizationOptions}
+                name="organazationID"
+                placeholder={
+                  <div className="react-select-placeholder">
+                    <span>*</span> نام سازمان
+                  </div>
+                }
+                noOptionsMessage={selectSettings.noOptionsMessage}
+                loadingMessage={selectSettings.loadingMessage}
+                isLoading={organizationIsLoading || organizationIsFetching}
+                styles={selectStyles}
+              />
+
+              <label
+                className={
+                  data?.organazationID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                <span>*</span> نام سازمان
+              </label>
+            </div>
+
+            <div>&nbsp;</div>
+            <div>&nbsp;</div>
+            <div>&nbsp;</div>
+            <div>&nbsp;</div>
           </>
         )}
-
-        <div className="inputBox__form">
-          <Select
-            closeMenuOnSelect={true}
-            components={animatedComponents}
-            onChange={handleSelectOptionChange}
-            isClearable={true}
-            options={organizationOptions}
-            name="organazationID"
-            placeholder={
-              <div className="react-select-placeholder">
-                <span>*</span> نام سازمان
-              </div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            isLoading={organizationIsLoading || organizationIsFetching}
-            styles={selectStyles}
-          />
-
-          <label
-            className={
-              data?.organazationID
-                ? "inputBox__form--readOnly-label"
-                : "inputBox__form--readOnly-label-hidden"
-            }
-          >
-            <span>*</span> نام سازمان
-          </label>
-        </div>
-
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
 
         <div className="inputBox__form">
           <Select
@@ -674,35 +667,39 @@ function FractionForm() {
           </label>
         </div>
 
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            onChange={handleDataChange}
-            name="paymentNO"
-            value={convertToPersianNumber(data.paymentNO) || ""}
-            required
-            id="paymentNO"
-          />
-          <label className="inputBox__form--label" htmlFor="paymentNO">
-            شماره
-          </label>
-        </div>
+        {frMode === "solo" && (
+          <>
+            <div className="inputBox__form">
+              <input
+                type="text"
+                className="inputBox__form--input"
+                onChange={handleDataChange}
+                name="paymentNO"
+                value={convertToPersianNumber(data.paymentNO) || ""}
+                required
+                id="paymentNO"
+              />
+              <label className="inputBox__form--label" htmlFor="paymentNO">
+                شماره
+              </label>
+            </div>
 
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            onChange={handleDataChange}
-            name="amount"
-            value={convertToPersianNumber(data.amount) || ""}
-            required
-            id="amount"
-          />
-          <label className="inputBox__form--label" htmlFor="amount">
-            مبلغ
-          </label>
-        </div>
+            <div className="inputBox__form">
+              <input
+                type="text"
+                className="inputBox__form--input"
+                onChange={handleDataChange}
+                name="amount"
+                value={convertToPersianNumber(data.amount) || ""}
+                required
+                id="amount"
+              />
+              <label className="inputBox__form--label" htmlFor="amount">
+                مبلغ
+              </label>
+            </div>
+          </>
+        )}
 
         <div className="inputBox__form">
           <InputDatePicker
@@ -722,105 +719,104 @@ function FractionForm() {
           />
           <div className="inputBox__form--readOnly-label">تاریخ پرداخت</div>
         </div>
+      </form>
+      {frMode === "group" ? (
+        <div style={{ marginRight: "auto" }} className="flex-row flex-center">
+          <div style={{ position: "relative" }}>
+            <input
+              type="file"
+              ref={excelFileUploadRef}
+              style={{ display: "none" }}
+              onChange={handleExcelFileChange}
+              accept=".xlsx, .xls"
+            />
 
-        {frMode === "group" ? (
-          <div style={{ marginRight: "auto" }} className="flex-row flex-center">
-            <div style={{ position: "relative" }}>
-              <input
-                type="file"
-                ref={excelFileUploadRef}
-                style={{ display: "none" }}
-                onChange={handleExcelFileChange}
-                accept=".xlsx, .xls"
-              />
+            <LoadingButton
+              dir="ltr"
+              variant="contained"
+              color="warning"
+              disabled={
+                uploadProgress > 0 || excelFile
+                  ? true
+                  : false || !data.fractionTypeID
+              }
+              sx={{ fontFamily: "sahel" }}
+              endIcon={<UploadIcon />}
+              loading={isJariLoading || isJariFetching}
+              onClick={handleExcelFileUpload}
+            >
+              <span>بارگزاری اکسل</span>
+            </LoadingButton>
 
-              <LoadingButton
-                dir="ltr"
-                variant="contained"
-                color="warning"
-                disabled={
-                  uploadProgress > 0 || excelFile
-                    ? true
-                    : false || !data.fractionTypeID
-                }
-                sx={{ fontFamily: "sahel" }}
-                endIcon={<UploadIcon />}
-                loading={isJariLoading || isJariFetching}
-                onClick={handleExcelFileUpload}
-              >
-                <span>بارگزاری اکسل</span>
-              </LoadingButton>
-
-              {excelFile && (
-                <div
-                  className="excel"
-                  style={{
-                    position: "absolute",
-                    top: "-100%",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: "100%",
-                  }}
-                >
-                  <IconButton
-                    color="error"
-                    size="small"
-                    onClick={handleRemoveExcelFile}
-                    sx={{ padding: 0 }}
-                  >
-                    <RemoveIcon />
-                  </IconButton>
-                  <Tooltip title={excelFile.name}>
-                    <span className="excel__name">{excelFile.name}</span>
-                  </Tooltip>
-                  <img src="./images/excel-icon.png" className="excel__image" />
-                </div>
-              )}
-
-              <Box
-                sx={{
+            {excelFile && (
+              <div
+                className="excel"
+                style={{
                   position: "absolute",
+                  top: "-100%",
                   left: "50%",
-                  bottom: "-40px",
-                  zIndex: 2,
-                  width: "90%",
                   transform: "translateX(-50%)",
-                  visibility: uploadProgress > 0 ? "visible" : "hidden",
+                  width: "100%",
                 }}
               >
-                <LinearProgress
-                  variant="determinate"
-                  value={uploadProgress}
-                  color="warning"
-                  sx={{ borderRadius: "40px" }}
-                />
+                <IconButton
+                  color="error"
+                  size="small"
+                  onClick={handleRemoveExcelFile}
+                  sx={{ padding: 0 }}
+                >
+                  <RemoveIcon />
+                </IconButton>
+                <Tooltip title={excelFile.name}>
+                  <span className="excel__name">{excelFile.name}</span>
+                </Tooltip>
+                <img src="./images/excel-icon.png" className="excel__image" />
+              </div>
+            )}
 
-                <span style={{ fontFamily: "IranYekan", fontSize: "12px" }}>
-                  {uploadProgress}%
-                </span>
-              </Box>
-            </div>
-          </div>
-        ) : (
-          <div style={{ marginRight: "auto" }}>
-            <Button
-              dir="ltr"
-              endIcon={isArchiveOpen ? <CloseIcon /> : <ArchiveIcon />}
-              variant="contained"
-              disabled={!isPeronIDAvailable}
-              color={isArchiveOpen ? "error" : "primary"}
-              onClick={handleArchiveModalOpenChange}
-              sx={{ fontFamily: "sahel" }}
+            <Box
+              sx={{
+                position: "absolute",
+                left: "50%",
+                bottom: "-40px",
+                zIndex: 2,
+                width: "90%",
+                transform: "translateX(-50%)",
+                visibility: uploadProgress > 0 ? "visible" : "hidden",
+              }}
             >
-              {isArchiveOpen ? (
-                <span>بستن آوشیو</span>
-              ) : (
-                <span>آرشیو مستندات</span>
-              )}
-            </Button>
+              <LinearProgress
+                variant="determinate"
+                value={uploadProgress}
+                color="warning"
+                sx={{ borderRadius: "40px" }}
+              />
+
+              <span style={{ fontFamily: "IranYekan", fontSize: "12px" }}>
+                {uploadProgress}%
+              </span>
+            </Box>
           </div>
-        )}
-      </form>
+        </div>
+      ) : (
+        <div style={{ marginRight: "auto" }}>
+          <Button
+            dir="ltr"
+            endIcon={isArchiveOpen ? <CloseIcon /> : <ArchiveIcon />}
+            variant="contained"
+            disabled={!isPeronIDAvailable}
+            color={isArchiveOpen ? "error" : "primary"}
+            onClick={handleArchiveModalOpenChange}
+            sx={{ fontFamily: "sahel" }}
+          >
+            {isArchiveOpen ? (
+              <span>بستن آوشیو</span>
+            ) : (
+              <span>آرشیو مستندات</span>
+            )}
+          </Button>
+        </div>
+      )}
 
       {isArchiveOpen && (
         <div className="flex-row flex-center">

@@ -122,7 +122,7 @@ function RequestsGrid({ isLoading, roles }) {
       },
       {
         accessorKey: "personName",
-        header: "ارسال کننده",
+        header: "درخواست کننده",
         size: 20,
       },
       {
