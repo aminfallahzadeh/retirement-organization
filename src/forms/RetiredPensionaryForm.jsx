@@ -64,6 +64,7 @@ function RetiredPensionaryForm() {
   const [selectedChangeStatusDate, setSelectedChangeStatusDate] =
     useState(null);
 
+  // CALENDER STATES
   const [isChangeStatusCalenderOpen, setIsChangeStatusCalenderOpen] =
     useState(false);
   const [isRetriementCalenderOpen, setIsRetirementCalenderOpen] =
@@ -105,6 +106,7 @@ function RetiredPensionaryForm() {
 
   // FETCH STATUS DATA
   useEffect(() => {
+    refetchStatusHistory();
     if (isStatusHistorySuccess) {
       const mappedData = statusHistory?.itemList.map((item, index) => ({
         id: item.pensionaryID,
@@ -115,7 +117,11 @@ function RetiredPensionaryForm() {
       }));
       setStatusHistoryTableData(mappedData);
     }
-  }, [isStatusHistorySuccess, statusHistory]);
+
+    return () => {
+      setStatusHistoryTableData([]);
+    };
+  }, [refetchStatusHistory, isStatusHistorySuccess, statusHistory]);
 
   // FETCH MAIN DATA
   useEffect(() => {

@@ -1,10 +1,8 @@
 // react imports
 import { useState, useEffect, useRef } from "react";
 
-// rrd imports
-import { useLocation } from "react-router-dom";
-
 // redux imports
+import { useGetAllPensionariesQuery } from "../slices/retiredApiSlice.js";
 import {
   useGetRelatedQuery,
   useUpdateRelatedMutation,
@@ -25,6 +23,9 @@ import {
   Save as SaveIcon,
   CalendarTodayOutlined as CalenderIcon,
 } from "@mui/icons-material";
+
+// components
+import PensionaryStatusHistoryGrid from "../grids/PensionaryStatusHistoryGrid";
 
 // libary imports
 import { toast } from "react-toastify";
@@ -58,6 +59,7 @@ function UpdateRelatedForm({
   const maritialCalenderRef = useRef(null);
   const startCalenderRef = useRef(null);
   const endCalenderRef = useRef(null);
+  const changeStatusCalenderRef = useRef(null);
 
   // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
@@ -65,6 +67,8 @@ function UpdateRelatedForm({
   const [selectedSelfEmployeeStartDate, setSelectedSelfEmployeeStartDate] =
     useState(null);
   const [selectedSelfEmployeeEndDate, setSelectedSelfEmployeeEndDate] =
+    useState(null);
+  const [selectedChangeStatusDate, setSelectedChangeStatusDate] =
     useState(null);
 
   // CALENDER STATES
@@ -74,17 +78,31 @@ function UpdateRelatedForm({
     useState(false);
   const [isSelfEmployeeEndCalenderOpen, setIsSelfEmployeeEndCalenderOpen] =
     useState(false);
+  const [isChangeStatusCalenderOpen, setIsChangeStatusCalenderOpen] =
+    useState(false);
+
+  // TABLE STATES
+  const [statusHistoryTableData, setStatusHistoryTableData] = useState([]);
 
   // MAIN STATE
   const [relatedObject, setRelatedObject] = useState({});
 
   const [updateRelated, { isLoading: isUpdating }] = useUpdateRelatedMutation();
 
-  const location = useLocation();
   const animatedComponents = makeAnimated();
 
   const searchParams = new URLSearchParams(location.search);
   const parentPersonID = searchParams.get("personID");
+
+  // GET STATUS HISTORY
+  const {
+    data: statusHistory,
+    isSuccess: isStatusHistorySuccess,
+    isLoading: isStatusHistoryLoading,
+    isFetching: isStatusHistoryFetching,
+    refetch: refetchStatusHistory,
+    error: statusHistoryError,
+  } = useGetAllPensionariesQuery(personID);
 
   // GET MAIN DATA
   const {
@@ -95,6 +113,25 @@ function UpdateRelatedForm({
     refetch,
     error,
   } = useGetRelatedQuery(personID);
+
+  // FETCH STATUS HISTORY
+  useEffect(() => {
+    refetchStatusHistory();
+    if (isStatusHistorySuccess) {
+      const mappedData = statusHistory?.itemList.map((item, index) => ({
+        id: item.pensionaryID,
+        pensionaryStatusRowNum: index + 1,
+        pensionaryStatusName: item.pensionaryStatusName || "-",
+        pensionaryStartdate:
+          convertToPersianDate(item.pensionaryStartdate) || "-",
+      }));
+      setStatusHistoryTableData(mappedData);
+    }
+
+    return () => {
+      setStatusHistoryTableData([]);
+    };
+  }, [refetchStatusHistory, isStatusHistorySuccess, statusHistory]);
 
   // FETCH MAIN DATA
   useEffect(() => {
@@ -116,6 +153,18 @@ function UpdateRelatedForm({
       });
     }
   }, [error]);
+
+  useEffect(() => {
+    if (statusHistoryError) {
+      console.log(statusHistoryError);
+      toast.error(
+        statusHistoryError?.data?.message || statusHistoryError.error,
+        {
+          autoClose: 2000,
+        }
+      );
+    }
+  }, [statusHistoryError]);
 
   // GET LOOKUP DATA
   const { relationships, relationshipIsLoading, relationshipIsFetching } =
@@ -227,6 +276,15 @@ function UpdateRelatedForm({
     setIsSelfEmployeeEndCalenderOpen(false);
   };
 
+  const handleChangeStatusDateChange = (date) => {
+    setSelectedChangeStatusDate(date);
+    setIsChangeStatusCalenderOpen(false);
+  };
+
+  const handleChangeStatusOpenChange = (open) => {
+    setIsChangeStatusCalenderOpen(open);
+  };
+
   const handleBirthOpenChange = (open) => {
     setIsBirthCalenderOpen(open);
   };
@@ -284,6 +342,10 @@ function UpdateRelatedForm({
     } else {
       setRelatedObject({ ...relatedObject, [name]: null });
     }
+  };
+
+  const hadnleRefreshStatusHistoryTable = () => {
+    refetchStatusHistory();
   };
 
   // HANDLE UPDATE RELATED
@@ -387,12 +449,19 @@ function UpdateRelatedForm({
 
   // FIX CLOSE CALENDER BUG
   useCloseCalender(
-    [birthCalenderRef, maritialCalenderRef, startCalenderRef, endCalenderRef],
+    [
+      birthCalenderRef,
+      maritialCalenderRef,
+      startCalenderRef,
+      endCalenderRef,
+      changeStatusCalenderRef,
+    ],
     [
       setIsBirthCalenderOpen,
       setIsMritialCalenderOpen,
       setIsSelfEmployeeStartCalenderOpen,
       setIsSelfEmployeeEndCalenderOpen,
+      setIsChangeStatusCalenderOpen,
     ]
   );
 
@@ -621,6 +690,26 @@ function UpdateRelatedForm({
               >
                 <span>*</span> وضعیت وابسته
               </label>
+            </div>
+
+            <div className="inputBox__form">
+              <InputDatePicker
+                value={selectedChangeStatusDate}
+                defaultValue={null}
+                onChange={handleChangeStatusDateChange}
+                onOpenChange={handleChangeStatusOpenChange}
+                format={"jYYYY/jMM/jDD"}
+                suffixIcon={<CalenderIcon color="action" />}
+                open={isChangeStatusCalenderOpen}
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: changeStatusCalenderRef,
+                }}
+              />
+              <div className="inputBox__form--readOnly-label">
+                تاریخ تغییر وضعیت
+              </div>
             </div>
 
             <div className="inputBox__form">
@@ -999,8 +1088,19 @@ function UpdateRelatedForm({
             </div>
           </form>
 
+          <div className="flex-col flex-center">
+            <h5 className="title-secondary">تاریخچه وضعیت ها</h5>
+          </div>
+
+          <PensionaryStatusHistoryGrid
+            statusHistoryTableData={statusHistoryTableData}
+            isLoading={isStatusHistoryLoading}
+            isFetching={isStatusHistoryFetching}
+            handleRefresh={hadnleRefreshStatusHistoryTable}
+          />
+
           <div className="Modal__header u-margin-top-sm">
-            <h4 className="title-secondary"> اطلاعات خویش فرمایی</h4>
+            <h4 className="title-secondary">اطلاعات خویش فرمایی</h4>
           </div>
 
           <form method="POST" className="grid grid--col-4">

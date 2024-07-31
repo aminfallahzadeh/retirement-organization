@@ -123,12 +123,6 @@ function PensionaryStatusHistoryGrid({
         />
       ),
     },
-    initialState: {
-      density: "compact",
-      pagination: {
-        pageSize: 3,
-      },
-    },
   });
 
   const content = <MaterialReactTable table={table} />;
