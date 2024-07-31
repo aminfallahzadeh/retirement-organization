@@ -356,6 +356,7 @@ function UpdateRelatedForm({
       let personMaritalDate;
       let selfEmployeeStartDate;
       let selfEmployeeEndDate;
+      let pensionaryStartDate;
 
       if (selectedBirthDate) {
         personBirthDate = new Date(selectedBirthDate);
@@ -364,6 +365,16 @@ function UpdateRelatedForm({
         );
       } else {
         personBirthDate = null;
+      }
+
+      if (selectedChangeStatusDate) {
+        pensionaryStartDate = new Date(selectedChangeStatusDate);
+        pensionaryStartDate.setMinutes(
+          pensionaryStartDate.getMinutes() -
+            pensionaryStartDate.getTimezoneOffset()
+        );
+      } else {
+        pensionaryStartDate = null;
       }
 
       if (selectedMritialDate) {
@@ -432,6 +443,7 @@ function UpdateRelatedForm({
         personMaritalDate,
         selfEmployeeStartDate,
         selfEmployeeEndDate,
+        pensionaryStartDate,
       }).unwrap();
       console.log(updateRes);
       setShowEditRelatedModal(false);

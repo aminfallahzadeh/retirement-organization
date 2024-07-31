@@ -1,10 +1,8 @@
 // react imports
 import { useState, useEffect, useCallback, useRef } from "react";
 
-// rrd imports
-import { useLocation } from "react-router-dom";
-
 // redux imports
+import { useGetAllPensionariesQuery } from "../slices/retiredApiSlice.js";
 import { useLazyGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import {
   useGetHeirQuery,
@@ -26,6 +24,9 @@ import {
   Save as SaveIcon,
   CalendarTodayOutlined as CalenderIcon,
 } from "@mui/icons-material";
+
+// components
+import PensionaryStatusHistoryGrid from "../grids/PensionaryStatusHistoryGrid";
 
 // libary imports
 import { toast } from "react-toastify";
@@ -57,16 +58,25 @@ function UpdateHeirForm({
 }) {
   const birthCalenderRef = useRef(null);
   const endSubCalenderRef = useRef(null);
+  const changeStatusCalenderRef = useRef(null);
 
   // LOOK UP STATES
   const [bankBranchCombo, setBankBranchCombo] = useState([]);
 
+  // TABLE STATES
+  const [statusHistoryTableData, setStatusHistoryTableData] = useState([]);
+
   // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
+  useState(null);
+  const [selectedChangeStatusDate, setSelectedChangeStatusDate] =
+    useState(null);
 
   const [selectedBaseFinishDate, setSelectedBaseFinishDate] = useState(null);
   const [isBaseFinishDateCalenderOpen, setIsBaseFinishDateCalenderOpen] =
+    useState(false);
+  const [isChangeStatusCalenderOpen, setIsChangeStatusCalenderOpen] =
     useState(false);
 
   // HEIR OBJECT STATE
@@ -74,7 +84,6 @@ function UpdateHeirForm({
 
   const [updateHeir, { isLoading: isUpdating }] = useUpdateHeirMutation();
 
-  const location = useLocation();
   const animatedComponents = makeAnimated();
 
   const searchParams = new URLSearchParams(location.search);
@@ -88,6 +97,16 @@ function UpdateHeirForm({
     },
   ] = useLazyGetLookupDataQuery();
 
+  // GET STATUS HISTORY
+  const {
+    data: statusHistory,
+    isSuccess: isStatusHistorySuccess,
+    isLoading: isStatusHistoryLoading,
+    isFetching: isStatusHistoryFetching,
+    refetch: refetchStatusHistory,
+    error: statusHistoryError,
+  } = useGetAllPensionariesQuery(personID);
+
   // GET MAIN DATA
   const {
     data: heir,
@@ -97,6 +116,25 @@ function UpdateHeirForm({
     error,
     refetch,
   } = useGetHeirQuery(personID);
+
+  // FETCH STATUS HISTORY
+  useEffect(() => {
+    refetchStatusHistory();
+    if (isStatusHistorySuccess) {
+      const mappedData = statusHistory?.itemList.map((item, index) => ({
+        id: item.pensionaryID,
+        pensionaryStatusRowNum: index + 1,
+        pensionaryStatusName: item.pensionaryStatusName || "-",
+        pensionaryStartdate:
+          convertToPersianDate(item.pensionaryStartdate) || "-",
+      }));
+      setStatusHistoryTableData(mappedData);
+    }
+
+    return () => {
+      setStatusHistoryTableData([]);
+    };
+  }, [refetchStatusHistory, isStatusHistorySuccess, statusHistory]);
 
   // FETCH MAIN DATA
   useEffect(() => {
@@ -118,6 +156,18 @@ function UpdateHeirForm({
       });
     }
   }, [error]);
+
+  useEffect(() => {
+    if (statusHistoryError) {
+      console.log(statusHistoryError);
+      toast.error(
+        statusHistoryError?.data?.message || statusHistoryError.error,
+        {
+          autoClose: 2000,
+        }
+      );
+    }
+  }, [statusHistoryError]);
 
   // GET LOOK UP DATA
   const { relationships, relationshipIsLoading, relationshipIsFetching } =
@@ -237,6 +287,15 @@ function UpdateHeirForm({
     setIsBaseFinishDateCalenderOpen(false);
   };
 
+  const handleChangeStatusDateChange = (date) => {
+    setSelectedChangeStatusDate(date);
+    setIsChangeStatusCalenderOpen(false);
+  };
+
+  const handleChangeStatusOpenChange = (open) => {
+    setIsChangeStatusCalenderOpen(open);
+  };
+
   const handleBirthOpenChange = (open) => {
     setIsBirthCalenderOpen(open);
   };
@@ -276,10 +335,15 @@ function UpdateHeirForm({
     }
   };
 
+  const hadnleRefreshStatusHistoryTable = () => {
+    refetchStatusHistory();
+  };
+
   const handleUpdateHeir = async () => {
     try {
       // Adjusting for timezone difference
       let personBirthDate;
+      let pensionaryStartDate;
       let personBaseFinishDate;
 
       if (selectedBirthDate) {
@@ -289,6 +353,16 @@ function UpdateHeirForm({
         );
       } else {
         personBirthDate = null;
+      }
+
+      if (selectedChangeStatusDate) {
+        pensionaryStartDate = new Date(selectedChangeStatusDate);
+        pensionaryStartDate.setMinutes(
+          pensionaryStartDate.getMinutes() -
+            pensionaryStartDate.getTimezoneOffset()
+        );
+      } else {
+        pensionaryStartDate = null;
       }
 
       if (selectedBaseFinishDate) {
@@ -338,6 +412,7 @@ function UpdateHeirForm({
         ledgerCode:
           parseInt(convertToEnglishNumber(heirObject.ledgerCode)) || 0,
         parentPersonID,
+        pensionaryStartDate,
       }).unwrap();
       setShowEditHeirModal(false);
       gridRefetch();
@@ -354,8 +429,12 @@ function UpdateHeirForm({
 
   // FIX CLOSE CALENDER BUG
   useCloseCalender(
-    [birthCalenderRef, endSubCalenderRef],
-    [setIsBirthCalenderOpen, setIsBaseFinishDateCalenderOpen]
+    [birthCalenderRef, endSubCalenderRef, changeStatusCalenderRef],
+    [
+      setIsBirthCalenderOpen,
+      setIsBaseFinishDateCalenderOpen,
+      setIsChangeStatusCalenderOpen,
+    ]
   );
 
   const content = (
@@ -784,7 +863,7 @@ function UpdateHeirForm({
             </div>
           </form>
 
-          <div className="Modal__header u-margin-top-sm">
+          <div className="flex-col flex-center">
             <h4 className="title-secondary"> اطلاعات وظیفه بگیری </h4>
           </div>
 
@@ -826,6 +905,26 @@ function UpdateHeirForm({
 
             <div className="inputBox__form">
               <InputDatePicker
+                value={selectedChangeStatusDate}
+                defaultValue={null}
+                onChange={handleChangeStatusDateChange}
+                onOpenChange={handleChangeStatusOpenChange}
+                format={"jYYYY/jMM/jDD"}
+                suffixIcon={<CalenderIcon color="action" />}
+                open={isChangeStatusCalenderOpen}
+                style={datePickerStyles}
+                wrapperStyle={datePickerWrapperStyles}
+                pickerProps={{
+                  ref: changeStatusCalenderRef,
+                }}
+              />
+              <div className="inputBox__form--readOnly-label">
+                تاریخ تغییر وضعیت
+              </div>
+            </div>
+
+            <div className="inputBox__form">
+              <InputDatePicker
                 value={selectedBaseFinishDate}
                 onChange={handleBaseFinishDateChange}
                 format={"jYYYY/jMM/jDD"}
@@ -838,9 +937,7 @@ function UpdateHeirForm({
                   ref: endSubCalenderRef,
                 }}
               />
-              <div className="inputBox__form--readOnly-label">
-                تاریخ مبنای قطع سهم
-              </div>
+              <div className="inputBox__form--readOnly-label">تاریخ</div>
             </div>
 
             <div className="inputBox__form">
@@ -883,7 +980,22 @@ function UpdateHeirForm({
             </div>
           </form>
 
+          <div className="flex-col flex-center">
+            <h5 className="title-secondary">تاریخچه وضعیت ها</h5>
+          </div>
+
+          <PensionaryStatusHistoryGrid
+            statusHistoryTableData={statusHistoryTableData}
+            isLoading={isStatusHistoryLoading}
+            isFetching={isStatusHistoryFetching}
+            handleRefresh={hadnleRefreshStatusHistoryTable}
+          />
+
           <div className="Modal__header u-margin-top-sm">
+            <h4 className="title-secondary">اطلاعات خویش فرمایی</h4>
+          </div>
+
+          <div className="flex-col flex-center">
             <h4 className="title-secondary"> اطلاعات بانکی وظیفه بگیر </h4>
           </div>
 
