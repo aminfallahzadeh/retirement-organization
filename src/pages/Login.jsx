@@ -2,6 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 
+// redux imports
+import { useGetAnnounceQuery } from "../slices/announceApiSlice.js";
+
 // mui imports
 import {
   Login as LoginIcon,
@@ -11,6 +14,7 @@ import {
 } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+
 // helpers
 import { generateCaptcha } from "../helper.js";
 
@@ -24,6 +28,12 @@ import { useNavigate } from "react-router-dom";
 
 // library imports
 import { toast } from "react-toastify";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 // helpers
 import { convertToEnglishNumber } from "../helper.js";
@@ -47,6 +57,29 @@ function Login() {
   } = useForm();
 
   const [login, { isLoading }] = useLoginMutation();
+
+  // GET NEWS
+  const {
+    data: announces,
+    isSuccess: isAnnounceSuccess,
+    isLoading: isAnnounceLoading,
+    isFetching: isAnnounceFetching,
+    error: isAnnounceError,
+  } = useGetAnnounceQuery();
+
+  // FETCH ANNOUNCES
+  useEffect(() => {
+    if (isAnnounceSuccess) {
+      console.log(announces.itemList);
+    }
+  }, [isAnnounceSuccess, announces]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (isAnnounceError) {
+      console.log(isAnnounceError);
+    }
+  }, [isAnnounceError]);
 
   // CHECK IF USER IS ALREADY LOGGED IN
   useEffect(() => {
@@ -163,7 +196,35 @@ function Login() {
           </div>
         </div>
 
-        <div className="login__info--container"></div>
+        <div className="login__info--container">
+          <Swiper
+            navigation={true}
+            pagination={{ clickable: true }}
+            modules={[Navigation, Pagination]}
+          >
+            <SwiperSlide>
+              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
+              استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در
+              ستون و سطرآنچنان که لازم است لورم ایپسوم متن ساختگی با تولید سادگی
+              نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و
+              متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است{" "}
+            </SwiperSlide>
+            <SwiperSlide>
+              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
+              استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در
+              ستون و سطرآنچنان که لازم است لورم ایپسوم متن ساختگی با تولید سادگی
+              نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و
+              متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است{" "}
+            </SwiperSlide>
+            <SwiperSlide>
+              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
+              استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در
+              ستون و سطرآنچنان که لازم است لورم ایپسوم متن ساختگی با تولید سادگی
+              نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و
+              متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است{" "}
+            </SwiperSlide>
+          </Swiper>
+        </div>
         <div className="login__credentials">
           <div className="login__credentials--title">
             <h1>ورود به سامانه</h1>

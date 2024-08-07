@@ -17,3 +17,4 @@ export const FRACTION_URL_HTTPS = "https://185.129.238.13/api/Fraction";
 export const PAY_URL_HTTPS = "https://185.129.238.13/api/Pay";
 export const REPORT_GENERATOR_HTTPS =
   "https://185.129.238.13/api/ReportGenerator";
+export const ANNOUNCE_HTTPS = "https://185.129.238.13/api/Announce";
