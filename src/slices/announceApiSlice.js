@@ -11,7 +11,27 @@ export const announceApiSlice = apiSlice.injectEndpoints({
         url: `${ANNOUNCE_HTTPS}/GetAnnounce`,
       }),
     }),
+
+    insertAnnounce: builder.mutation({
+      query: (data) => ({
+        url: `${ANNOUNCE_HTTPS}/InsertAnnounce`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    deleteAnnounce: builder.mutation({
+      query: (data) => ({
+        url: `${ANNOUNCE_HTTPS}/DeleteAnnounce`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetAnnounceQuery } = announceApiSlice;
+export const {
+  useGetAnnounceQuery,
+  useInsertAnnounceMutation,
+  useDeleteAnnounceMutation,
+} = announceApiSlice;

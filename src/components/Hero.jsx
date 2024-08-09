@@ -1,5 +1,5 @@
 // components
-import { Logo, Banner } from "./SVGs";
+import { Banner } from "./SVGs";
 
 function Hero() {
   return (

@@ -346,6 +346,11 @@ function Nav({ userName }) {
                 اطلاعات پایه ۲
               </Link>
             </li>
+            <li className={isActivePath("insert-announce") ? "active" : ""}>
+              <Link to="/retirement-organization/insert-announce">
+                ثبت اطلاعیه
+              </Link>
+            </li>
           </ul>
         ) : activePanel === "systemManagement" ? (
           <ul className="nav__panel--list">
