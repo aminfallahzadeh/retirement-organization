@@ -182,7 +182,6 @@ function Nav({ userName }) {
                     ایجاد درخواست
                   </Link>
                 </li>
-
                 {permissions && permissions.includes("Fractions") && (
                   <li
                     className={isActivePath("fraction") ? "active" : ""}
@@ -191,9 +190,13 @@ function Nav({ userName }) {
                     <Link to={"/retirement-organization/fraction"}>کسورات</Link>
                   </li>
                 )}
-
-                <li onClick={() => handlePanelToggle(null)}>
-                  <a>داشبورد مدیریتی</a>
+                <li
+                  className={isActivePath("dashboard") ? "active" : ""}
+                  onClick={() => handlePanelToggle(null)}
+                >
+                  <Link to={"/retirement-organization/dashboard"}>
+                    داشبورد مدیریتی
+                  </Link>
                 </li>
                 <li
                   onClick={() => handlePanelToggle("reports")}

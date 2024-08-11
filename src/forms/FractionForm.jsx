@@ -176,8 +176,6 @@ function FractionForm() {
   };
 
   const handleLetterDateChange = (date) => {
-    console.log("Selected date:", date);
-
     if (!date) {
       console.log("Date is null or undefined");
       dispatch(setData({ ...data, letterDate: null }));

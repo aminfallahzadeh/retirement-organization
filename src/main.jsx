@@ -43,6 +43,7 @@ import ReportGeneratorScreen from "./screens/ReportGeneratorScreen.jsx";
 import BaseInfoScreen from "./screens/BaseInfoScreen.jsx";
 import BaseInfoScreen2 from "./screens/BaseInfoScreen2.jsx";
 import InsertAnnounceScreen from "./screens/InsertAnnounceScreen.jsx";
+import DashboardScreen from "./screens/DashboardScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -138,6 +139,11 @@ const router = createBrowserRouter(
         <Route
           path="/retirement-organization/insert-announce"
           element={<InsertAnnounceScreen />}
+        />
+
+        <Route
+          path="/retirement-organization/dashboard"
+          element={<DashboardScreen />}
         />
       </Route>
       <Route path="*" element={<Error />} />
