@@ -4,8 +4,7 @@
     font-family: inherit;
     background: transparent;
     text-align: justify;
-    padding: 50px 60px;
-    color: var(--color-white);
+    padding: 10px 60px 60px 60px;
 }
 
 .swiper-slide img {
@@ -13,4 +12,36 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.announce-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: right;
+    width: 100%;
+
+    &__title {
+        color: var(--color-white);
+        position: relative;
+        font-size: 15px;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: -10px;
+            height: 25px;
+            border-radius: 20px;
+            width: 2px;
+            background-color: var(--color-accent-primary);
+        }
+    }
+
+    &__text {
+        font-size: 12px;
+        color: var(--color-white);
+        height: 100%;
+    }
 }

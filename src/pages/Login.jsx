@@ -45,6 +45,9 @@ function Login() {
   const [userInputCaptcha, setUserInputCaptcha] = useState("");
   const [isRotated, setIsRotated] = useState(false);
 
+  // ANNOUNCE STATE\
+  const [announceitems, setAnnounceItems] = useState([]);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const canvasRef = useRef(null);
@@ -65,14 +68,16 @@ function Login() {
     isLoading: isAnnounceLoading,
     isFetching: isAnnounceFetching,
     error: isAnnounceError,
+    refetch,
   } = useGetAnnounceQuery();
 
   // FETCH ANNOUNCES
   useEffect(() => {
+    refetch;
     if (isAnnounceSuccess) {
-      console.log(announces.itemList);
+      setAnnounceItems(announces.itemList);
     }
-  }, [isAnnounceSuccess, announces]);
+  }, [isAnnounceSuccess, announces, refetch]);
 
   // HANDLE ERROR
   useEffect(() => {
@@ -213,30 +218,16 @@ function Login() {
               pagination={{ clickable: true }}
               modules={[Navigation, Pagination]}
             >
-              <SwiperSlide>
-                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-                استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله
-                در ستون و سطرآنچنان که لازم است لورم ایپسوم متن ساختگی با تولید
-                سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
-                چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم
-                است{" "}
-              </SwiperSlide>
-              <SwiperSlide>
-                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-                استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله
-                در ستون و سطرآنچنان که لازم است لورم ایپسوم متن ساختگی با تولید
-                سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
-                چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم
-                است{" "}
-              </SwiperSlide>
-              <SwiperSlide>
-                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-                استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله
-                در ستون و سطرآنچنان که لازم است لورم ایپسوم متن ساختگی با تولید
-                سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
-                چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم
-                است{" "}
-              </SwiperSlide>
+              {announceitems.map((item) => (
+                <SwiperSlide key={item.announceID}>
+                  <div className="announce-container">
+                    <h5 className="announce-container__title">{item.title}</h5>
+                    <p className="announce-container__text">
+                      {item.description}
+                    </p>
+                  </div>
+                </SwiperSlide>
+              ))}
             </Swiper>
           )}
         </div>

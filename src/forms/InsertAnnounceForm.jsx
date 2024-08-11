@@ -1,5 +1,5 @@
 // react imports
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 
 // redux imports
 import { useInsertAnnounceMutation } from "../slices/announceApiSlice";
@@ -22,7 +22,7 @@ import { InputDatePicker } from "jalaali-react-date-picker";
 // utils
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
-function InsertAnnounceForm() {
+function InsertAnnounceForm({ setIsRefresh }) {
   const runDateCalenderRef = useRef(null);
 
   // MAIN STATE
@@ -51,15 +51,6 @@ function InsertAnnounceForm() {
     setIsSendDateCalenderOpen(open);
   };
 
-  // DEBUGGING
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
-    console.log(selectedSendDate);
-  }, [selectedSendDate]);
-
   const handleInsertAnnounce = async () => {
     try {
       let runDate;
@@ -81,6 +72,7 @@ function InsertAnnounceForm() {
       toast.success(res.message, {
         autoClose: 2000,
       });
+      setIsRefresh((prev) => !prev);
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -136,6 +128,7 @@ function InsertAnnounceForm() {
             name="description"
             onChange={handleDataChange}
             className="inputBox__form--input"
+            maxLength={500}
             required
           ></textarea>
           <label htmlFor="description" className="inputBox__form--label">
