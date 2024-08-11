@@ -68,11 +68,15 @@ function InsertAnnounceForm({ setIsRefresh }) {
         isDeleted: false,
         description: data.description,
       }).unwrap();
-      console.log(res);
       toast.success(res.message, {
         autoClose: 2000,
       });
       setIsRefresh((prev) => !prev);
+      setSelectedSendDate(null);
+      setData({
+        title: "",
+        description: "",
+      });
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -126,6 +130,7 @@ function InsertAnnounceForm({ setIsRefresh }) {
             type="text"
             id="description"
             name="description"
+            value={data.description || ""}
             onChange={handleDataChange}
             className="inputBox__form--input"
             maxLength={500}

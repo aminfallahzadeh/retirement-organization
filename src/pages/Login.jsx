@@ -72,10 +72,16 @@ function Login() {
   } = useGetAnnounceQuery();
 
   // FETCH ANNOUNCES
+
   useEffect(() => {
+    const today = new Date();
     refetch;
     if (isAnnounceSuccess) {
-      setAnnounceItems(announces.itemList);
+      const filteredAnnounces = announces.itemList.filter((item) => {
+        const runDate = new Date(item.runDate);
+        return runDate <= today;
+      });
+      setAnnounceItems(filteredAnnounces);
     }
   }, [isAnnounceSuccess, announces, refetch]);
 

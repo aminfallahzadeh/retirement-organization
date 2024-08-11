@@ -271,7 +271,7 @@ function AnnounceGrid({ isRefresh }) {
           closeModal={() => setShowDeleteModal(false)}
         >
           <p className="paragraph-primary">
-            آیا از حذف این موظف اطمینان دارید؟
+            آیا از حذف این اطلاعیه اطمینان دارید؟
           </p>
           <div className="flex-row flex-center">
             <LoadingButton
