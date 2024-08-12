@@ -198,6 +198,8 @@ function StatementItemsForm({ isDraftGenerated, setIsDraftGenerated }) {
         statementSerial: item.retirementStatementSerial || "-",
         statementType: item.retirementStatementTypeName || "-",
         statementNumber: item.retirementStatementNo || "-",
+        statemenrIssueDate: item.retirementStatementIssueDate || "-",
+        statementRunDate: item.retirementStatementRunDate || "-",
       }));
       setGroupStatementTableData(mappedData);
       setIsDraftGenerated(true);
