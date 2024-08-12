@@ -26,16 +26,79 @@ import { convertToEnglishNumber } from "../helper";
 
 // library imports
 import { toast } from "react-toastify";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+// utils
+import { selectStyles, selectSettings } from "../utils/reactSelect";
 
 function SlipsForm() {
   const [isSlipExists, setIsSlipExists] = useState(null);
-  const [issueType, setIssueType] = useState("1");
 
   // MAIN STATE
-  const [slipObject, setSlipObject] = useState({});
+  const [data, setData] = useState({});
 
   const dispatch = useDispatch();
+  const animatedComponents = makeAnimated();
 
+  // SELECT OPTIONS
+  const issueTypeOptions = [
+    { value: "1", label: "گروهی" },
+    { value: "2", label: "انفرادی" },
+  ];
+
+  const payTypeOptions = [
+    { value: "M", label: "شهرداری" },
+    { value: "C", label: "کشوری" },
+    { value: "E", label: "مزایا" },
+  ];
+
+  const currentYearOptions = [
+    { value: "1403", label: "۱۴۰۳" },
+    { value: "1402", label: "۱۴۰۲" },
+    { value: "1401", label: "۱۴۰۱" },
+    { value: "1400", label: "۱۴۰۰" },
+    { value: "1399", label: "۱۳۹۹" },
+    { value: "1398", label: "۱۳۹۸" },
+    { value: "1397", label: "۱۳۹۷" },
+    { value: "1396", label: "۱۳۹۶" },
+    { value: "1395", label: "۱۳۹۵" },
+    { value: "1394", label: "۱۳۹۴" },
+    { value: "1393", label: "۱۳۹۳" },
+    { value: "1392", label: "۱۳۹۲" },
+    { value: "1391", label: "۱۳۰۱" },
+    { value: "1390", label: "۱۳۹۰" },
+  ];
+
+  const currentMonthOptions = [
+    { value: "1", label: "فروردین" },
+    { value: "2", label: "اردیبهشت" },
+    { value: "3", label: "خرداد" },
+    { value: "4", label: "تیر" },
+    { value: "5", label: "مرداد" },
+    { value: "6", label: "شهریور" },
+    { value: "7", label: "مهر" },
+    { value: "8", label: "آبان" },
+    { value: "9", label: "آذر" },
+    { value: "10", label: "دی" },
+    { value: "11", label: "بهمن" },
+    { value: "12", label: "اسفند" },
+  ];
+
+  const personsOptions = [
+    { value: "49e66fb39a124555b9329c9b7994509a", label: "amin amin" },
+    { value: "810e59798cc54b94b45cd0c776fff16b", label: "علی اسدی" },
+    { value: "4fba2ae8420348fc9d16b21a55fef23f", label: "امیر بابیک" },
+    { value: "e931cee492514557a6cba93fa7f3fbd4", label: "زهرا بابیک" },
+    { value: "110000256", label: "مهدی بشارت صنعتی" },
+    { value: "7777701a948e411aa204bc350utkt5", label: "سونیا گلدوست" },
+    { value: "1c81794b5d4447aba8bea1ae915ae756", label: "بهمن محمدی" },
+    { value: "19d06de3cf8c44a3b832b46ed0276b90", label: "مریم مهرجو" },
+    { value: "7777701a948e411aa204bc350a56f155", label: "شیما میرباقری" },
+    { value: "8b2a301a948e411aa204bc350a56f155", label: "احسان میرباقری" },
+  ];
+
+  // ACCESS QUERIES
   const [existPaySlip, { isLoading: isChecking }] = useLazyExistPaySlipQuery();
   const [getPayList, { isLoading: isGettingPayList }] =
     useLazyGetPayListQuery();
@@ -66,37 +129,40 @@ function SlipsForm() {
   );
 
   // CHANGE HANLDERS
-  const handleSlipObjectChange = (e) => {
-    const { name, value } = e.target;
-    setSlipObject({ ...slipObject, [name]: value });
-  };
+  // const handleSlipObjectChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setSlipObject({ ...slipObject, [name]: value });
+  // };
 
-  const handleIssueTypeChange = (e) => {
-    setIssueType(e.target.value);
+  // HANDLE SELECT OPTION CHANGE
+  const handleSelectOptionChange = (selectedOption, actionMeta) => {
+    const { name } = actionMeta;
+    if (selectedOption) {
+      const { value } = selectedOption;
+      setData({ ...data, [name]: value || "" });
+    } else {
+      setData({ ...data, [name]: null });
+    }
   };
 
   // CHECK SLIP EXISTANCE ON USER DATA ENTER
   useEffect(() => {
-    if (
-      slipObject.payType &&
-      slipObject.currentYear &&
-      slipObject.currentMonth
-    ) {
+    if (data.payType && data.currentYear && data.currentMonth) {
       slipChecker({
-        payType: slipObject.payType,
-        currentYear: slipObject.currentYear,
-        currentMonth: slipObject.currentMonth,
+        payType: data.payType,
+        currentYear: data.currentYear,
+        currentMonth: data.currentMonth,
       });
     }
-  }, [slipChecker, slipObject]);
+  }, [slipChecker, data]);
 
   // GET PAY LST HANDLER
   const getPayListHandler = async () => {
     try {
       const res = await getPayList({
-        currentYear: parseInt(slipObject.currentYear),
-        currentMonth: parseInt(slipObject.currentMonth),
-        payType: slipObject.payType,
+        currentYear: parseInt(data.currentYear),
+        currentMonth: parseInt(data.currentMonth),
+        payType: data.payType,
       }).unwrap();
       const mappedData = res.itemList.map((item, index) => ({
         id: item.payID,
@@ -120,8 +186,8 @@ function SlipsForm() {
     try {
       const date = new Date();
       const res = await issuePay({
-        currentYear: parseInt(slipObject.currentYear),
-        currentMonth: parseInt(slipObject.currentMonth),
+        currentYear: parseInt(data.currentYear),
+        currentMonth: parseInt(data.currentMonth),
         requestID,
         payDate: date.toISOString(),
       }).unwrap();
@@ -143,10 +209,10 @@ function SlipsForm() {
       const date = new Date();
       const res = await insertPay({
         payDate: date.toISOString(),
-        currentYear: parseInt(slipObject.currentYear),
-        currentMonth: parseInt(slipObject.currentMonth),
+        currentYear: parseInt(data.currentYear),
+        currentMonth: parseInt(data.currentMonth),
         requestID,
-        personID: convertToEnglishNumber(slipObject.personID),
+        personID: convertToEnglishNumber(data.personID),
       }).unwrap();
       setIsSlipExists(true);
       toast.success(res.message, {
@@ -160,155 +226,168 @@ function SlipsForm() {
     }
   };
 
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   const content = (
     <section className="formContainer flex-col">
       <form method="POST" className="grid grid--col-4" noValidate>
         <div className="inputBox__form">
-          <select
-            name="condition"
-            className="inputBox__form--input"
-            onChange={handleIssueTypeChange}
-            value={issueType}
-            required
-            id="condition"
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={issueTypeOptions}
+            onChange={handleSelectOptionChange}
+            value={issueTypeOptions.find(
+              (item) => item.value === data?.issueType
+            )}
+            name="issueType"
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">
+                <span>*</span> نوع صدور
+              </div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+          />
+
+          <label
+            className={
+              data?.issueType
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value="1">گروهی</option>
-            <option value="2">انفرادی</option>
-          </select>
-          <label className="inputBox__form--label" htmlFor="condition">
-            نوع صدور
+            <span>*</span> نوع صدور
           </label>
         </div>
 
         <div className="inputBox__form">
-          <select
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={payTypeOptions}
+            onChange={handleSelectOptionChange}
+            value={payTypeOptions.find((item) => item.value === data?.payType)}
             name="payType"
-            className="inputBox__form--input"
-            onChange={handleSlipObjectChange}
-            value={slipObject?.payType || " "}
-            required
-            id="payType"
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">
+                <span>*</span> نوع فیش
+              </div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+          />
+
+          <label
+            className={
+              data?.payType
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value=" " disabled>
-              انتخاب کنید{" "}
-            </option>
-            <option value="M">شهرداری</option>
-            <option value="C" disabled>
-              کشوری
-            </option>
-            <option value="E" disabled>
-              مزایا
-            </option>
-          </select>
-          <label className="inputBox__form--label" htmlFor="payType">
-            نوع فیش
+            <span>*</span> نوع فیش
           </label>
         </div>
 
         <div className="inputBox__form">
-          <select
-            className="inputBox__form--input"
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={currentYearOptions}
+            onChange={handleSelectOptionChange}
+            value={currentYearOptions.find(
+              (item) => item.value === data?.currentYear
+            )}
             name="currentYear"
-            onChange={handleSlipObjectChange}
-            value={slipObject?.currentYear || " "}
-            required
-            id="year"
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">
+                <span>*</span> سال مالی
+              </div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+          />
+
+          <label
+            className={
+              data?.currentYear
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            <option value="1403">۱۴۰۳</option>
-            <option value="1402">۱۴۰۲</option>
-            <option value="1401">۱۴۰۱</option>
-            <option value="1400">۱۴۰۰</option>
-            <option value="1399">۱۳۹۹</option>
-            <option value="1398">۱۳۹۸</option>
-            <option value="1397">۱۳۹۷</option>
-            <option value="1396">۱۳۹۶</option>
-            <option value="1395">۱۳۹۵</option>
-            <option value="1394">۱۳۹۴</option>
-            <option value="1393">۱۳۹۳</option>
-            <option value="1392">۱۳۹۲</option>
-            <option value="1391">۱۳۹۱</option>
-            <option value="1390">۱۳۹۰</option>
-          </select>
-          <label className="inputBox__form--label" htmlFor="year">
-            سال مالی
+            <span>*</span> سال مالی
           </label>
         </div>
 
         <div className="inputBox__form">
-          <select
-            className="inputBox__form--input"
-            required
+          <Select
+            closeMenuOnSelect={true}
+            components={animatedComponents}
+            options={currentMonthOptions}
+            onChange={handleSelectOptionChange}
+            value={currentMonthOptions.find(
+              (item) => item.value === data?.currentMonth
+            )}
             name="currentMonth"
-            onChange={handleSlipObjectChange}
-            value={slipObject?.currentMonth || " "}
-            id="month"
+            isClearable={true}
+            placeholder={
+              <div className="react-select-placeholder">
+                <span>*</span> ماه
+              </div>
+            }
+            noOptionsMessage={selectSettings.noOptionsMessage}
+            loadingMessage={selectSettings.loadingMessage}
+            styles={selectStyles}
+          />
+
+          <label
+            className={
+              data?.currentMonth
+                ? "inputBox__form--readOnly-label"
+                : "inputBox__form--readOnly-label-hidden"
+            }
           >
-            <option value=" " disabled>
-              انتخاب کنید
-            </option>
-            <option value="1">فروردین</option>
-            <option value="2">اردیبهشت</option>
-            <option value="3">خرداد</option>
-            <option value="4">تیر</option>
-            <option value="5">مرداد</option>
-            <option value="6">شهریور</option>
-            <option value="7">مهر</option>
-            <option value="8">آبان</option>
-            <option value="9">آذر</option>
-            <option value="10">دی</option>
-            <option value="11">بهمن</option>
-            <option value="12">اسفند</option>
-          </select>
-          <label className="inputBox__form--label" htmlFor="month">
-            ماه
+            <span>*</span> ماه
           </label>
         </div>
 
-        {issueType === "2" && isSlipExists === false && (
+        {data.issueType === "2" && isSlipExists === false && (
           <div className="inputBox__form">
-            <select
-              id="personID"
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              options={personsOptions}
+              onChange={handleSelectOptionChange}
+              value={personsOptions.find(
+                (item) => item.value === data?.personID
+              )}
               name="personID"
-              value={slipObject?.personID || " "}
-              onChange={handleSlipObjectChange}
-              className="inputBox__form--input"
-              required
-            >
-              <option value=" " disabled>
-                انتخاب کنید
-              </option>
+              isClearable={true}
+              placeholder={
+                <div className="react-select-placeholder">
+                  <span>*</span> شماره کارمندی
+                </div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+            />
 
-              <option value="49e66fb39a124555b9329c9b7994509a">
-                amin amin
-              </option>
-              <option value="810e59798cc54b94b45cd0c776fff16b">علی اسدی</option>
-              <option value="4fba2ae8420348fc9d16b21a55fef23f">
-                امیر بابابیک
-              </option>
-              <option value="e931cee492514557a6cba93fa7f3fbd4">
-                زهرا بابابیک
-              </option>
-              <option value="110000256">مهدی بشارت صنعتی</option>
-              <option value="7777701a948e411aa204bc350utkt5">
-                سونیا گلدوست
-              </option>
-              <option value="1c81794b5d4447aba8bea1ae915ae756">
-                بهمن محمدی
-              </option>
-              <option value="19d06de3cf8c44a3b832b46ed0276b90">
-                مریم مهرجو
-              </option>
-              <option value="7777701a948e411aa204bc350a56f155">
-                شیما میرباقری
-              </option>
-              <option value="8b2a301a948e411aa204bc350a56f155">
-                احسان میرباقری
-              </option>
-            </select>
-            <label htmlFor="personID" className="inputBox__form--label">
+            <label
+              className={
+                data?.personID
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
+            >
               <span>*</span> شماره کارمندی
             </label>
           </div>
@@ -322,7 +401,7 @@ function SlipsForm() {
             endIcon={<EyeIcon />}
             loading={isChecking || isGettingPayList}
             onClick={getPayListHandler}
-            disabled={Object.keys(slipObject).length < 3}
+            disabled={Object.keys(data).length < 4}
             variant="contained"
             color="primary"
             sx={{ fontFamily: "sahel" }}
@@ -335,9 +414,11 @@ function SlipsForm() {
             endIcon={<ExportIcon />}
             loading={isChecking || isInserting || isIssuing}
             onClick={
-              issueType === "2" ? insertSoloPayHandler : insertGroupPayHandler
+              data.issueType === "2"
+                ? insertSoloPayHandler
+                : insertGroupPayHandler
             }
-            disabled={Object.keys(slipObject).length < 3}
+            disabled={Object.keys(data).length < 4}
             variant="contained"
             color="warning"
             sx={{ fontFamily: "sahel" }}
