@@ -52,7 +52,7 @@ function SlipsForm() {
   const form_data = watch();
 
   useEffect(() => {
-    console.log(Object.values(form_data));
+    console.log(form_data);
   }, [form_data]);
 
   // SELECT OPTIONS
@@ -448,12 +448,12 @@ function SlipsForm() {
               endIcon={<EyeIcon />}
               loading={isChecking || isGettingPayList}
               onClick={getPayListHandler}
-              disabled={
-                Object.keys(form_data).length < 4 ||
-                Object.values(form_data).some(
-                  (value) => value === null || value === undefined
-                )
-              }
+              // disabled={
+              //   Object.keys(form_data).length < 4 ||
+              //   Object.values(form_data).some(
+              //     (value) => value === null || value === undefined
+              //   )
+              // }
               variant="contained"
               color="primary"
               sx={{ fontFamily: "sahel" }}
