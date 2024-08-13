@@ -1,5 +1,6 @@
 // react imports
 import { useState, useEffect, useCallback } from "react";
+import { useForm, Controller } from "react-hook-form";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -35,11 +36,24 @@ import { selectStyles, selectSettings } from "../utils/reactSelect";
 function SlipsForm() {
   const [isSlipExists, setIsSlipExists] = useState(null);
 
-  // MAIN STATE
-  const [data, setData] = useState({});
-
   const dispatch = useDispatch();
   const animatedComponents = makeAnimated();
+
+  // ACCESS REACT HOOK FORM CONTROL
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+    watch,
+  } = useForm();
+
+  // DEBUGGING
+  // ACCESS REACT HOOK FORM DATA
+  const form_data = watch();
+
+  useEffect(() => {
+    console.log(Object.values(form_data));
+  }, [form_data]);
 
   // SELECT OPTIONS
   const issueTypeOptions = [
@@ -128,41 +142,29 @@ function SlipsForm() {
     [existPaySlip]
   );
 
-  // CHANGE HANLDERS
-  // const handleSlipObjectChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setSlipObject({ ...slipObject, [name]: value });
-  // };
-
-  // HANDLE SELECT OPTION CHANGE
-  const handleSelectOptionChange = (selectedOption, actionMeta) => {
-    const { name } = actionMeta;
-    if (selectedOption) {
-      const { value } = selectedOption;
-      setData({ ...data, [name]: value || "" });
-    } else {
-      setData({ ...data, [name]: null });
-    }
-  };
-
   // CHECK SLIP EXISTANCE ON USER DATA ENTER
   useEffect(() => {
-    if (data.payType && data.currentYear && data.currentMonth) {
+    if (form_data.payType && form_data.currentYear && form_data.currentMonth) {
       slipChecker({
-        payType: data.payType,
-        currentYear: data.currentYear,
-        currentMonth: data.currentMonth,
+        payType: form_data.payType,
+        currentYear: form_data.currentYear,
+        currentMonth: form_data.currentMonth,
       });
     }
-  }, [slipChecker, data]);
+  }, [
+    slipChecker,
+    form_data.payType,
+    form_data.currentYear,
+    form_data.currentMonth,
+  ]);
 
   // GET PAY LST HANDLER
   const getPayListHandler = async () => {
     try {
       const res = await getPayList({
-        currentYear: parseInt(data.currentYear),
-        currentMonth: parseInt(data.currentMonth),
-        payType: data.payType,
+        currentYear: parseInt(form_data.currentYear),
+        currentMonth: parseInt(form_data.currentMonth),
+        payType: form_data.payType,
       }).unwrap();
       const mappedData = res.itemList.map((item, index) => ({
         id: item.payID,
@@ -181,252 +183,299 @@ function SlipsForm() {
     }
   };
 
-  // ISSUE GROUP SLIP HANDLER
-  const insertGroupPayHandler = async () => {
-    try {
-      const date = new Date();
-      const res = await issuePay({
-        currentYear: parseInt(data.currentYear),
-        currentMonth: parseInt(data.currentMonth),
-        requestID,
-        payDate: date.toISOString(),
-      }).unwrap();
-      setIsSlipExists(true);
-      getPayListHandler();
-      toast.success(res.message, {
-        autoClose: 2000,
-      });
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-      });
+  // ON SUBMIT hANDLER
+  const onSubmit = async (data) => {
+    if (data.issueType === "2") {
+      try {
+        const date = new Date();
+        const res = await insertPay({
+          payDate: date.toISOString(),
+          currentYear: parseInt(data.currentYear),
+          currentMonth: parseInt(data.currentMonth),
+          requestID,
+          personID: convertToEnglishNumber(data.personID),
+        }).unwrap();
+        setIsSlipExists(true);
+        toast.success(res.message, {
+          autoClose: 2000,
+        });
+      } catch (err) {
+        console.log(err);
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
+    } else {
+      try {
+        const date = new Date();
+        const res = await issuePay({
+          currentYear: parseInt(form_data.currentYear),
+          currentMonth: parseInt(form_data.currentMonth),
+          requestID,
+          payDate: date.toISOString(),
+        }).unwrap();
+        setIsSlipExists(true);
+        getPayListHandler();
+        toast.success(res.message, {
+          autoClose: 2000,
+        });
+      } catch (err) {
+        console.log(err);
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
     }
   };
-
-  const insertSoloPayHandler = async () => {
-    try {
-      const date = new Date();
-      const res = await insertPay({
-        payDate: date.toISOString(),
-        currentYear: parseInt(data.currentYear),
-        currentMonth: parseInt(data.currentMonth),
-        requestID,
-        personID: convertToEnglishNumber(data.personID),
-      }).unwrap();
-      setIsSlipExists(true);
-      toast.success(res.message, {
-        autoClose: 2000,
-      });
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-      });
-    }
-  };
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   const content = (
     <section className="formContainer flex-col">
-      <form method="POST" className="grid grid--col-4" noValidate>
-        <div className="inputBox__form">
-          <Select
-            closeMenuOnSelect={true}
-            components={animatedComponents}
-            options={issueTypeOptions}
-            onChange={handleSelectOptionChange}
-            value={issueTypeOptions.find(
-              (item) => item.value === data?.issueType
-            )}
-            name="issueType"
-            isClearable={true}
-            placeholder={
-              <div className="react-select-placeholder">
-                <span>*</span> نوع صدور
-              </div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            styles={selectStyles}
-          />
-
-          <label
-            className={
-              data?.issueType
-                ? "inputBox__form--readOnly-label"
-                : "inputBox__form--readOnly-label-hidden"
-            }
-          >
-            <span>*</span> نوع صدور
-          </label>
-        </div>
-
-        <div className="inputBox__form">
-          <Select
-            closeMenuOnSelect={true}
-            components={animatedComponents}
-            options={payTypeOptions}
-            onChange={handleSelectOptionChange}
-            value={payTypeOptions.find((item) => item.value === data?.payType)}
-            name="payType"
-            isClearable={true}
-            placeholder={
-              <div className="react-select-placeholder">
-                <span>*</span> نوع فیش
-              </div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            styles={selectStyles}
-          />
-
-          <label
-            className={
-              data?.payType
-                ? "inputBox__form--readOnly-label"
-                : "inputBox__form--readOnly-label-hidden"
-            }
-          >
-            <span>*</span> نوع فیش
-          </label>
-        </div>
-
-        <div className="inputBox__form">
-          <Select
-            closeMenuOnSelect={true}
-            components={animatedComponents}
-            options={currentYearOptions}
-            onChange={handleSelectOptionChange}
-            value={currentYearOptions.find(
-              (item) => item.value === data?.currentYear
-            )}
-            name="currentYear"
-            isClearable={true}
-            placeholder={
-              <div className="react-select-placeholder">
-                <span>*</span> سال مالی
-              </div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            styles={selectStyles}
-          />
-
-          <label
-            className={
-              data?.currentYear
-                ? "inputBox__form--readOnly-label"
-                : "inputBox__form--readOnly-label-hidden"
-            }
-          >
-            <span>*</span> سال مالی
-          </label>
-        </div>
-
-        <div className="inputBox__form">
-          <Select
-            closeMenuOnSelect={true}
-            components={animatedComponents}
-            options={currentMonthOptions}
-            onChange={handleSelectOptionChange}
-            value={currentMonthOptions.find(
-              (item) => item.value === data?.currentMonth
-            )}
-            name="currentMonth"
-            isClearable={true}
-            placeholder={
-              <div className="react-select-placeholder">
-                <span>*</span> ماه
-              </div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            styles={selectStyles}
-          />
-
-          <label
-            className={
-              data?.currentMonth
-                ? "inputBox__form--readOnly-label"
-                : "inputBox__form--readOnly-label-hidden"
-            }
-          >
-            <span>*</span> ماه
-          </label>
-        </div>
-
-        {data.issueType === "2" && isSlipExists === false && (
+      <form
+        method="POST"
+        className="flex-col"
+        noValidate
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="grid grid--col-4">
           <div className="inputBox__form">
-            <Select
-              closeMenuOnSelect={true}
-              components={animatedComponents}
-              options={personsOptions}
-              onChange={handleSelectOptionChange}
-              value={personsOptions.find(
-                (item) => item.value === data?.personID
+            <Controller
+              name="issueType"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  closeMenuOnSelect={true}
+                  components={animatedComponents}
+                  options={issueTypeOptions}
+                  onChange={(val) => onChange(val ? val.value : null)}
+                  value={issueTypeOptions.find((c) => c.value === value)}
+                  isClearable={true}
+                  placeholder={
+                    <div className="react-select-placeholder">
+                      <span>*</span> نوع صدور
+                    </div>
+                  }
+                  noOptionsMessage={selectSettings.noOptionsMessage}
+                  loadingMessage={selectSettings.loadingMessage}
+                  styles={selectStyles}
+                />
               )}
-              name="personID"
-              isClearable={true}
-              placeholder={
-                <div className="react-select-placeholder">
-                  <span>*</span> شماره کارمندی
-                </div>
-              }
-              noOptionsMessage={selectSettings.noOptionsMessage}
-              loadingMessage={selectSettings.loadingMessage}
-              styles={selectStyles}
             />
 
             <label
               className={
-                data?.personID
+                form_data?.issueType
                   ? "inputBox__form--readOnly-label"
                   : "inputBox__form--readOnly-label-hidden"
               }
             >
-              <span>*</span> شماره کارمندی
+              <span>*</span> نوع صدور
             </label>
-          </div>
-        )}
-      </form>
 
-      <div style={{ marginRight: "auto" }} className="flex-row">
-        {isSlipExists === true ? (
-          <LoadingButton
-            dir="ltr"
-            endIcon={<EyeIcon />}
-            loading={isChecking || isGettingPayList}
-            onClick={getPayListHandler}
-            disabled={Object.keys(data).length < 4}
-            variant="contained"
-            color="primary"
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>مشاهده</span>
-          </LoadingButton>
-        ) : (
-          <LoadingButton
-            dir="ltr"
-            endIcon={<ExportIcon />}
-            loading={isChecking || isInserting || isIssuing}
-            onClick={
-              data.issueType === "2"
-                ? insertSoloPayHandler
-                : insertGroupPayHandler
-            }
-            disabled={Object.keys(data).length < 4}
-            variant="contained"
-            color="warning"
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>صدور</span>
-          </LoadingButton>
-        )}
-      </div>
+            {errors.issueType && (
+              <span className="error-form">نوع صدور اجباری است</span>
+            )}
+          </div>
+
+          <div className="inputBox__form">
+            <Controller
+              name="payType"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  closeMenuOnSelect={true}
+                  components={animatedComponents}
+                  options={payTypeOptions}
+                  onChange={(val) => onChange(val ? val.value : null)}
+                  value={payTypeOptions.find((c) => c.value === value)}
+                  isClearable={true}
+                  placeholder={
+                    <div className="react-select-placeholder">
+                      <span>*</span> نوع فیش
+                    </div>
+                  }
+                  noOptionsMessage={selectSettings.noOptionsMessage}
+                  loadingMessage={selectSettings.loadingMessage}
+                  styles={selectStyles}
+                />
+              )}
+            />
+
+            <label
+              className={
+                form_data?.payType
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
+            >
+              <span>*</span> نوع فیش
+            </label>
+
+            {errors.payType && (
+              <span className="error-form">نوع فیش اجباری است</span>
+            )}
+          </div>
+
+          <div className="inputBox__form">
+            <Controller
+              name="currentYear"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  closeMenuOnSelect={true}
+                  components={animatedComponents}
+                  options={currentYearOptions}
+                  onChange={(val) => onChange(val ? val.value : null)}
+                  value={currentYearOptions.find((c) => c.value === value)}
+                  isClearable={true}
+                  placeholder={
+                    <div className="react-select-placeholder">
+                      <span>*</span> سال مالی
+                    </div>
+                  }
+                  noOptionsMessage={selectSettings.noOptionsMessage}
+                  loadingMessage={selectSettings.loadingMessage}
+                  styles={selectStyles}
+                />
+              )}
+            />
+
+            <label
+              className={
+                form_data?.currentYear
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
+            >
+              <span>*</span> سال مالی
+            </label>
+
+            {errors.currentYear && (
+              <span className="error-form">سال مالی اجباری است</span>
+            )}
+          </div>
+
+          <div className="inputBox__form">
+            <Controller
+              name="currentMonth"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  closeMenuOnSelect={true}
+                  components={animatedComponents}
+                  options={currentMonthOptions}
+                  isClearable={true}
+                  onChange={(val) => onChange(val ? val.value : null)}
+                  value={currentMonthOptions.find((c) => c.value === value)}
+                  placeholder={
+                    <div className="react-select-placeholder">
+                      <span>*</span> ماه
+                    </div>
+                  }
+                  noOptionsMessage={selectSettings.noOptionsMessage}
+                  loadingMessage={selectSettings.loadingMessage}
+                  styles={selectStyles}
+                />
+              )}
+            />
+
+            <label
+              className={
+                form_data?.currentMonth
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
+            >
+              <span>*</span> ماه
+            </label>
+
+            {errors.currentMonth && (
+              <span className="error-form">ماه اجباری است</span>
+            )}
+          </div>
+
+          {form_data.issueType === "2" && isSlipExists === false && (
+            <div className="inputBox__form">
+              <Controller
+                name="personID"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    closeMenuOnSelect={true}
+                    components={animatedComponents}
+                    options={personsOptions}
+                    isClearable={true}
+                    onChange={(val) => onChange(val ? val.value : null)}
+                    value={personsOptions.find((c) => c.value === value)}
+                    placeholder={
+                      <div className="react-select-placeholder">
+                        <span>*</span> شماره کارمندی
+                      </div>
+                    }
+                    noOptionsMessage={selectSettings.noOptionsMessage}
+                    loadingMessage={selectSettings.loadingMessage}
+                    styles={selectStyles}
+                  />
+                )}
+              />
+
+              <label
+                className={
+                  form_data?.personID
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                <span>*</span> شماره کارمندی
+              </label>
+
+              {errors.personID && (
+                <span className="error-form">شماره کارمندی اجباری است</span>
+              )}
+            </div>
+          )}
+
+          {/* <input type="submit" /> */}
+        </div>
+        <div style={{ marginRight: "auto" }} className="flex-row">
+          {isSlipExists === true ? (
+            <LoadingButton
+              dir="ltr"
+              endIcon={<EyeIcon />}
+              loading={isChecking || isGettingPayList}
+              onClick={getPayListHandler}
+              disabled={
+                Object.keys(form_data).length < 4 ||
+                Object.values(form_data).some(
+                  (value) => value === null || value === undefined
+                )
+              }
+              variant="contained"
+              color="primary"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>مشاهده</span>
+            </LoadingButton>
+          ) : (
+            <LoadingButton
+              dir="ltr"
+              endIcon={<ExportIcon />}
+              type="submit"
+              loading={isChecking || isInserting || isIssuing}
+              onClick={handleSubmit}
+              variant="contained"
+              color="warning"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>صدور</span>
+            </LoadingButton>
+          )}
+        </div>
+      </form>
     </section>
   );
 
