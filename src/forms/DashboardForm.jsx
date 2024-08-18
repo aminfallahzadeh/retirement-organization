@@ -1,5 +1,5 @@
 // react imports
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 // redux imports
 import { useLazyDashboardReportQuery } from "../slices/reportApiSlice";
@@ -22,6 +22,10 @@ import { InputDatePicker } from "jalaali-react-date-picker";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
+// components
+import DashboardSumGrid from "../grids/DashboardGrids/DashboardSumGrid";
+import DashboardHouseRightGrid from "../grids/DashboardGrids/DashboardHouseRightGrid";
+
 // utils
 import {
   selectStyles,
@@ -35,8 +39,15 @@ function DashboardForm() {
   const tillCalenderRef = useRef(null);
   const fromCalenderRef = useRef(null);
 
+  // CONTROL STATES
+  const [showGrids, setShowGrids] = useState(false);
+
   // MAIN STATE
   const [data, setData] = useState({});
+
+  // GRID DATA STATES
+  const [sumTableData, setSumTableData] = useState([]);
+  const [houseRightTableData, setHouseRightTableData] = useState([]);
 
   // DATE STATES
   const [selectedTillDate, setSelectedTillDate] = useState(null);
@@ -64,7 +75,7 @@ function DashboardForm() {
   const retiredTypeOptions = [
     { value: "true", label: "بازنشسته" },
     { value: "false", label: "مستمری بگیر" },
-    { value: "null", label: "هر دو" },
+    { value: "", label: "هر دو" },
   ];
 
   const organizationOptions = optionsGenerator(
@@ -72,6 +83,31 @@ function DashboardForm() {
     "organizationID",
     "organizationName"
   );
+
+  // SEPERATORS
+  const sumTableKeys = [
+    "AliveRetireds",
+    "AliveRetiredsMen",
+    "AliveRetiredsWomen",
+  ];
+
+  const houseRightTableKeys = [
+    "HomeRightOfAllAliveRetireds",
+    "HomeRightOfAliveMenRetireds",
+    "HomeRightOfAliveWomenRetireds",
+  ];
+
+  // CREATE SUM TABLE DATA FUNCTION
+  const createSumTableData = (data, keys, setState) => {
+    const result = data
+      .filter((item) => keys.includes(item.dscEng))
+      .reduce((acc, item) => {
+        acc[item.dscEng] = item.val;
+        return acc;
+      }, {});
+
+    setState([result]);
+  };
 
   // HANDLE SELECT OPTION CHANGE
   const handleSelectOptionChange = (selectedOption, actionMeta) => {
@@ -133,6 +169,13 @@ function DashboardForm() {
         organizationID: data.organizationID,
       }).unwrap(``);
       console.log(res);
+      createSumTableData(res.itemList, sumTableKeys, setSumTableData);
+      createSumTableData(
+        res.itemList,
+        houseRightTableKeys,
+        setHouseRightTableData
+      );
+      setShowGrids(true);
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error, {
@@ -146,6 +189,10 @@ function DashboardForm() {
     [tillCalenderRef, fromCalenderRef],
     [setIsTillDateCalenderOpen, setIsFromCalenderOpen]
   );
+
+  useEffect(() => {
+    console.log("sum data", sumTableData);
+  }, [sumTableData]);
 
   const content = (
     <section className="flex-col">
@@ -257,6 +304,12 @@ function DashboardForm() {
           <span>تولید گزارش</span>
         </LoadingButton>
       </div>
+      {showGrids && (
+        <div className="flex flex-row">
+          <DashboardSumGrid data={sumTableData} />
+          <DashboardHouseRightGrid data={houseRightTableData} />
+        </div>
+      )}
     </section>
   );
   return content;
