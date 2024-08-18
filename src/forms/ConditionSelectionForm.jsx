@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { useLazyGenerateReportQuery } from "../slices/reportGeneratorsApiSlice";
 
 // mui imports
-import { Button } from "@mui/material";
+import { Button, Box, CircularProgress } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
   PlayArrowOutlined as PlayIcon,
@@ -17,12 +17,14 @@ import {
 import { toast } from "react-toastify";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import * as XLSX from "xlsx";
 
 // utils
 import { selectStyles, selectSettings } from "../utils/reactSelect";
 
 // components
 import ReportGeneratorGrid from "../grids/ReportGeneratorGrid";
+import Modal from "../components/Modal";
 
 function ConditionSelectionForm({
   fetureOptions,
@@ -32,6 +34,9 @@ function ConditionSelectionForm({
 }) {
   // MAIN STATE
   const [data, setData] = useState({});
+
+  // CONTORL STATES
+  const [exportDisable, setExportDisable] = useState(true);
 
   // FORWARDING PROPS
   const [tableData, setTableData] = useState([]);
@@ -78,6 +83,7 @@ function ConditionSelectionForm({
       }).unwrap();
       const resData = JSON.parse(res.noneobject);
       setTableData(resData);
+      setExportDisable(false);
       console.log(resData);
       toast.success(res.message || res?.error?.data.message, {
         autoClose: 2000,
@@ -88,6 +94,25 @@ function ConditionSelectionForm({
         autoClose: 2000,
       });
     }
+  };
+
+  // CREATE EXCEL FUNCTION
+  const exportToExcel = (data, fileName) => {
+    // Convert the array of objects to a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    // Create a new workbook
+    const workbook = XLSX.utils.book_new();
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    // Write the workbook to a file
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
+  };
+
+  const handleExport = () => {
+    exportToExcel(tableData, "گزارش");
   };
 
   useEffect(() => {
@@ -152,7 +177,7 @@ function ConditionSelectionForm({
                   loadingMessage={selectSettings.loadingMessage}
                   styles={selectStyles}
                   isLoading={isColsLoading || isColsFetching}
-                  isDisabled={!tableName}
+                  isDisabled={!tableName || !data.cmbGroupField0}
                 />
 
                 <label
@@ -216,7 +241,7 @@ function ConditionSelectionForm({
                   loadingMessage={selectSettings.loadingMessage}
                   styles={selectStyles}
                   isLoading={isColsLoading || isColsFetching}
-                  isDisabled={!tableName}
+                  isDisabled={!tableName || !data.cmbGroupField1}
                 />
 
                 <label
@@ -280,7 +305,7 @@ function ConditionSelectionForm({
                   loadingMessage={selectSettings.loadingMessage}
                   styles={selectStyles}
                   isLoading={isColsLoading || isColsFetching}
-                  isDisabled={!tableName}
+                  isDisabled={!tableName || !data.cmbGroupField2}
                 />
 
                 <label
@@ -344,7 +369,7 @@ function ConditionSelectionForm({
                   loadingMessage={selectSettings.loadingMessage}
                   styles={selectStyles}
                   isLoading={isColsLoading || isColsFetching}
-                  isDisabled={!tableName}
+                  isDisabled={!tableName || !data.cmbGroupField3}
                 />
 
                 <label
@@ -376,6 +401,8 @@ function ConditionSelectionForm({
                 dir="ltr"
                 endIcon={<DownloadIcon />}
                 variant="contained"
+                disabled={exportDisable}
+                onClick={handleExport}
                 color="success"
                 sx={{ fontFamily: "sahel" }}
               >
@@ -387,6 +414,23 @@ function ConditionSelectionForm({
       </section>
 
       <ReportGeneratorGrid tableData={tableData} />
+
+      {isGenerating || isGenerateFetching ? (
+        <Modal title={"در حال ایجاد گزارش"}>
+          <p className="paragraph-primary" style={{ textAlign: "center" }}>
+            لطفا منتظر بمانید...
+          </p>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "2rem 10rem",
+            }}
+          >
+            <CircularProgress color="primary" />
+          </Box>
+        </Modal>
+      ) : null}
     </>
   );
   return content;
