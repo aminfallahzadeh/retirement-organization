@@ -20,6 +20,7 @@ import { LoadingButton } from "@mui/lab";
 import {
   VisibilityOutlined as EyeIcon,
   ImportExportOutlined as ExportIcon,
+  UploadOutlined as UploadIcon,
 } from "@mui/icons-material";
 
 // helpers
@@ -442,38 +443,50 @@ function SlipsForm() {
           {/* <input type="submit" /> */}
         </div>
         <div style={{ marginRight: "auto" }} className="flex-row">
-          {isSlipExists === true ? (
+          {isSlipExists === true && (
             <LoadingButton
               dir="ltr"
               endIcon={<EyeIcon />}
               loading={isChecking || isGettingPayList}
               onClick={getPayListHandler}
-              // disabled={
-              //   Object.keys(form_data).length < 4 ||
-              //   Object.values(form_data).some(
-              //     (value) => value === null || value === undefined
-              //   )
-              // }
               variant="contained"
               color="primary"
               sx={{ fontFamily: "sahel" }}
             >
               <span>مشاهده</span>
             </LoadingButton>
-          ) : (
+          )}
+
+          {form_data.payType === "C" && (
             <LoadingButton
               dir="ltr"
-              endIcon={<ExportIcon />}
-              type="submit"
-              loading={isChecking || isInserting || isIssuing}
-              onClick={handleSubmit}
               variant="contained"
               color="warning"
+              //  disabled={
+              //    uploadProgress > 0 || excelFile
+              //      ? true
+              //      : false || !data.fractionTypeID
+              //  }
               sx={{ fontFamily: "sahel" }}
+              endIcon={<UploadIcon />}
+              //  loading={isJariLoading || isJariFetching}
+              //  onClick={handleExcelFileUpload}
             >
-              <span>صدور</span>
+              <span>بارگزاری اکسل</span>
             </LoadingButton>
           )}
+          <LoadingButton
+            dir="ltr"
+            endIcon={<ExportIcon />}
+            type="submit"
+            loading={isChecking || isInserting || isIssuing}
+            onClick={handleSubmit}
+            variant="contained"
+            color="warning"
+            sx={{ fontFamily: "sahel" }}
+          >
+            <span>صدور</span>
+          </LoadingButton>
         </div>
       </form>
     </section>

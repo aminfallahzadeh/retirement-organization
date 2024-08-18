@@ -1,5 +1,8 @@
 // react imports
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+
+// redux imports
+import { useLazyDashboardReportQuery } from "../slices/reportApiSlice";
 
 // mui imports
 import { LoadingButton } from "@mui/lab";
@@ -44,15 +47,24 @@ function DashboardForm() {
 
   const animatedComponents = makeAnimated();
 
+  // ACCESS DASHBOARD REPORT QUERY
+  const [
+    getDashboardReport,
+    {
+      isLoading: dashboardReportIsLoading,
+      isFetching: dashboardReportIsFetching,
+    },
+  ] = useLazyDashboardReportQuery();
+
   // GET LOOK UP DATA
   const { organizations, organizationIsLoading, organizationIsFetching } =
     useFetchOrganizations({});
 
   // SELECT OPTIONS
   const retiredTypeOptions = [
-    { value: "1", label: "بازنشسته" },
-    { value: "2", label: "مستمری بگیر" },
-    { value: "3", label: "هر دو" },
+    { value: "true", label: "بازنشسته" },
+    { value: "false", label: "مستمری بگیر" },
+    { value: "null", label: "هر دو" },
   ];
 
   const organizationOptions = optionsGenerator(
@@ -91,6 +103,44 @@ function DashboardForm() {
     setIsFromCalenderOpen(open);
   };
 
+  const getDashbaordReportHandler = async () => {
+    try {
+      let startDate;
+      let finishDate;
+
+      if (selectedFromDate) {
+        startDate = new Date(selectedFromDate);
+        startDate.setMinutes(
+          startDate.getMinutes() + startDate.getTimezoneOffset()
+        );
+      } else {
+        startDate = null;
+      }
+
+      if (selectedTillDate) {
+        finishDate = new Date(selectedTillDate);
+        finishDate.setMinutes(
+          finishDate.getMinutes() + finishDate.getTimezoneOffset()
+        );
+      } else {
+        finishDate = null;
+      }
+
+      const res = await getDashboardReport({
+        startDate: startDate.toISOString(),
+        finishDate: finishDate.toISOString(),
+        applicantTypeIsRetired: data.applicantTypeIsRetired,
+        organizationID: data.organizationID,
+      }).unwrap(``);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
   // FIX CLOSE CALENDER BUG
   useCloseCalender(
     [tillCalenderRef, fromCalenderRef],
@@ -107,9 +157,9 @@ function DashboardForm() {
             components={animatedComponents}
             onChange={handleSelectOptionChange}
             value={retiredTypeOptions.find(
-              (item) => item.value === data?.retiredType
+              (item) => item.value === data?.applicantTypeIsRetired
             )}
-            name="retiredType"
+            name="applicantTypeIsRetired"
             isClearable={true}
             placeholder={
               <div className="react-select-placeholder">نوع بازنشسته</div>
@@ -121,7 +171,7 @@ function DashboardForm() {
 
           <label
             className={
-              data?.retiredType
+              data?.applicantTypeIsRetired
                 ? "inputBox__form--readOnly-label"
                 : "inputBox__form--readOnly-label-hidden"
             }
@@ -137,9 +187,9 @@ function DashboardForm() {
             components={animatedComponents}
             onChange={handleSelectOptionChange}
             value={organizationOptions.find(
-              (item) => item.value === data?.organizationTypeID
+              (item) => item.value === data?.organizationID
             )}
-            name="organizationTypeID"
+            name="organizationID"
             isLoading={organizationIsLoading || organizationIsFetching}
             isClearable={true}
             placeholder={<div className="react-select-placeholder">سازمان</div>}
@@ -150,7 +200,7 @@ function DashboardForm() {
 
           <label
             className={
-              data?.organizationTypeID
+              data?.organizationID
                 ? "inputBox__form--readOnly-label"
                 : "inputBox__form--readOnly-label-hidden"
             }
@@ -169,7 +219,6 @@ function DashboardForm() {
             open={isFromCalenderOpen}
             style={datePickerStyles}
             wrapperStyle={datePickerWrapperStyles}
-            placement="bottom"
             pickerProps={{
               ref: fromCalenderRef,
             }}
@@ -187,7 +236,6 @@ function DashboardForm() {
             open={isTillDateCalenderOpen}
             style={datePickerStyles}
             wrapperStyle={datePickerWrapperStyles}
-            placement="bottom"
             pickerProps={{
               ref: tillCalenderRef,
             }}
@@ -200,8 +248,8 @@ function DashboardForm() {
         <LoadingButton
           dir="ltr"
           endIcon={<GenerateIcon />}
-          //   onClick={handleInsertHeir}
-          //   loading={isLoading}
+          onClick={getDashbaordReportHandler}
+          loading={dashboardReportIsLoading || dashboardReportIsFetching}
           variant="contained"
           color="success"
           sx={{ fontFamily: "sahel" }}
