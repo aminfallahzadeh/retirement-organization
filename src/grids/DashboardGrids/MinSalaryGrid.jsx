@@ -10,26 +10,37 @@ import { defaultTableOptions } from "../../utils.js";
 // helpers
 import { convertToPersianNumber } from "../../helper.js";
 
-export const DashboardSumGrid = ({ data }) => {
+export const MinSalaryGrid = ({ data }) => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "AliveRetireds",
-        header: "مجموع مرد و زن",
+        accessorKey: "MinSalaryWith30YearsExperience",
+        header: "حداقل حقوق سالانه با ۳۰ سال سابقه",
+        size: 150,
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
       },
       {
-        accessorKey: "AliveRetiredsMen",
-        header: "تعداد مرد",
+        accessorKey: "Number1",
+        size: 150,
+        header: "تعداد",
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
       },
       {
-        accessorKey: "AliveRetiredsWomen",
-        header: "تعداد زن",
+        accessorKey: "MinSalaryWithLessThan30YearsExperience",
+        size: 150,
+        header: "حداقل حقوق سالانه با کمتر از ۳۰ سال سابقه",
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
+      },
+      {
+        accessorKey: "Number2",
+        size: 150,
+        header: "تعداد",
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
@@ -63,7 +74,6 @@ export const DashboardSumGrid = ({ data }) => {
       align: "center",
       sx: {
         border: "1px solid rgba(81, 81, 81, .5)",
-        fontStyle: "italic",
         fontWeight: "normal",
         fontFamily: "IranYekan",
       },
@@ -74,10 +84,9 @@ export const DashboardSumGrid = ({ data }) => {
         border: "1px solid rgba(81, 81, 81, .5)",
       },
     },
-    renderCaption: () => "مجموع مستمری بگیران",
   });
 
   return <MRT_Table table={table} />;
 };
 
-export default DashboardSumGrid;
+export default MinSalaryGrid;

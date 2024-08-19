@@ -10,26 +10,26 @@ import { defaultTableOptions } from "../../utils.js";
 // helpers
 import { convertToPersianNumber } from "../../helper.js";
 
-export const DashboardSumGrid = ({ data }) => {
+export const RelatedRightWomenGrid = ({ data }) => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "AliveRetireds",
-        header: "مجموع مرد و زن",
+        accessorKey: "SumMaritalAmountsOfWomenRetireds",
+        header: "مجموع حق عائله مندی",
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
       },
       {
-        accessorKey: "AliveRetiredsMen",
-        header: "تعداد مرد",
+        accessorKey: "SumDaughterAmountsOfWomenRetireds",
+        header: "مجموع حق اولاد دختر",
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
       },
       {
-        accessorKey: "AliveRetiredsWomen",
-        header: "تعداد زن",
+        accessorKey: "SumSonAmountsOfWomenRetireds",
+        header: "مجموع حق اولاد پسر",
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
@@ -74,10 +74,10 @@ export const DashboardSumGrid = ({ data }) => {
         border: "1px solid rgba(81, 81, 81, .5)",
       },
     },
-    renderCaption: () => "مجموع مستمری بگیران",
+    renderCaption: () => "مستمری بگیر زن",
   });
 
   return <MRT_Table table={table} />;
 };
 
-export default DashboardSumGrid;
+export default RelatedRightWomenGrid;

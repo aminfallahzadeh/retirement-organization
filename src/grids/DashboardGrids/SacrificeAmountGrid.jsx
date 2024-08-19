@@ -10,26 +10,53 @@ import { defaultTableOptions } from "../../utils.js";
 // helpers
 import { convertToPersianNumber } from "../../helper.js";
 
-export const DashboardSumGrid = ({ data }) => {
+export const SacrificeAmountGrid = ({ data }) => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "AliveRetireds",
-        header: "مجموع مرد و زن",
+        accessorKey: "Sacrificed",
+        header: "شهید",
+        size: 150,
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
       },
       {
-        accessorKey: "AliveRetiredsMen",
-        header: "تعداد مرد",
+        accessorKey: "SacrificedFamily",
+        header: "خانواده شهید",
+        size: 150,
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
       },
       {
-        accessorKey: "AliveRetiredsWomen",
-        header: "تعداد زن",
+        accessorKey: "ChildOfSacrificed",
+        header: "فرزند شهید",
+        size: 150,
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
+      },
+      {
+        accessorKey: "Warrior",
+        header: "رزمنده",
+        size: 150,
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
+      },
+      {
+        accessorKey: "Captive",
+        header: "آزاده",
+        size: 150,
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
+      },
+      {
+        accessorKey: "Valiant",
+        header: "جانباز",
+        size: 150,
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
@@ -74,10 +101,10 @@ export const DashboardSumGrid = ({ data }) => {
         border: "1px solid rgba(81, 81, 81, .5)",
       },
     },
-    renderCaption: () => "مجموع مستمری بگیران",
+    renderCaption: () => "تعداد مشمولین وضعیت ایثارگری",
   });
 
   return <MRT_Table table={table} />;
 };
 
-export default DashboardSumGrid;
+export default SacrificeAmountGrid;

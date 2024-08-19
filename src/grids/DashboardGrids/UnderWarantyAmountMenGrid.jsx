@@ -10,26 +10,26 @@ import { defaultTableOptions } from "../../utils.js";
 // helpers
 import { convertToPersianNumber } from "../../helper.js";
 
-export const DashboardSumGrid = ({ data }) => {
+export const UnderWarantyAmountMenGrid = ({ data }) => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "AliveRetireds",
-        header: "مجموع مرد و زن",
+        accessorKey: "SpouseOfAliveMenRetireds",
+        header: "عائله مندی",
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
       },
       {
-        accessorKey: "AliveRetiredsMen",
-        header: "تعداد مرد",
+        accessorKey: "DaughterOfAliveMenRetireds",
+        header: "دختر",
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
       },
       {
-        accessorKey: "AliveRetiredsWomen",
-        header: "تعداد زن",
+        accessorKey: "SonOfAliveMenRetireds",
+        header: "پسر",
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
@@ -74,10 +74,10 @@ export const DashboardSumGrid = ({ data }) => {
         border: "1px solid rgba(81, 81, 81, .5)",
       },
     },
-    renderCaption: () => "مجموع مستمری بگیران",
+    renderCaption: () => "مستمری بگیر مرد",
   });
 
   return <MRT_Table table={table} />;
 };
 
-export default DashboardSumGrid;
+export default UnderWarantyAmountMenGrid;

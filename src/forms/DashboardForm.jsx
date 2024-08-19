@@ -1,5 +1,5 @@
 // react imports
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 
 // redux imports
 import { useLazyDashboardReportQuery } from "../slices/reportApiSlice";
@@ -25,6 +25,14 @@ import makeAnimated from "react-select/animated";
 // components
 import DashboardSumGrid from "../grids/DashboardGrids/DashboardSumGrid";
 import DashboardHouseRightGrid from "../grids/DashboardGrids/DashboardHouseRightGrid";
+import UnderWarantyAmountMenGrid from "../grids/DashboardGrids/UnderWarantyAmountMenGrid";
+import UnderWarantyAmountWomenGrid from "../grids/DashboardGrids/UnderWarantyAmountWomenGrid";
+import RelatedRightMenGrid from "../grids/DashboardGrids/RelatedRightMenGrid";
+import RelatedRightWomenGrid from "../grids/DashboardGrids/RelatedRightWomenGrid";
+import SupplementaryGrid from "../grids/DashboardGrids/SupplementaryGrid";
+import SacrificeCondtionsGrid from "../grids/DashboardGrids/SacrificeCondtionsGrid";
+import SacrificeAmountGrid from "../grids/DashboardGrids/SacrificeAmountGrid";
+import MinSalaryGrid from "../grids/DashboardGrids/MinSalaryGrid";
 
 // utils
 import {
@@ -48,6 +56,18 @@ function DashboardForm() {
   // GRID DATA STATES
   const [sumTableData, setSumTableData] = useState([]);
   const [houseRightTableData, setHouseRightTableData] = useState([]);
+  const [uderWarantyMenTableData, setUderWarantyMenTableData] = useState([]);
+  const [underWarantyWomenTableData, setUnderWarantyWomenTableData] = useState(
+    []
+  );
+  const [relatedRightMenTableData, setRelatedRightMenTableData] = useState([]);
+  const [relatedRightWomenTableData, setRelatedRightWomenTableData] = useState(
+    []
+  );
+  const [supplementaryTableData, setSupplementaryTableData] = useState([]);
+  const [ssacrificeTableData, setSsacrificeTableData] = useState([]);
+  const [sacrificeAmountTableData, setSacrificeAmountTableData] = useState([]);
+  const [minSalaryTableData, setMinSalaryTableData] = useState([]);
 
   // DATE STATES
   const [selectedTillDate, setSelectedTillDate] = useState(null);
@@ -95,6 +115,56 @@ function DashboardForm() {
     "HomeRightOfAllAliveRetireds",
     "HomeRightOfAliveMenRetireds",
     "HomeRightOfAliveWomenRetireds",
+  ];
+
+  const underWarantyMenSumKeys = [
+    "SpouseOfAliveMenRetireds",
+    "SonOfAliveMenRetireds",
+    "DaughterOfAliveMenRetireds",
+  ];
+
+  const uderWarantyWomenKeys = [
+    "SpouseOfAliveWomenRetireds",
+    "SonOfAliveWomenRetireds",
+    "DaughterOfAliveWomenRetireds",
+  ];
+
+  const relatedRightMenKeys = [
+    "SumMaritalAmountsOfMenRetireds",
+    "SumDaughterAmountsOfMenRetireds",
+    "SumSonAmountsOfMenRetireds",
+  ];
+
+  const relatedRightWomenKeyss = [
+    "SumMaritalAmountsOfWomenRetireds",
+    "SumDaughterAmountsOfWomenRetireds",
+    "SumSonAmountsOfWomenRetireds",
+  ];
+
+  const supplementaryKeys = [
+    "SumSupplementaryAmounts",
+    "SumSupplementaryAmountsOfWomenRetireds",
+    "SumSupplementaryAmountsOfMenRetireds",
+  ];
+
+  const sacrificeConditionsKeys = [
+    "CountOfAllPensionariesWith1SacrificationState",
+    "CountOfAllPensionariesWith2SacrificationState",
+    "CountOfAllPensionariesWith3SacrificationState",
+  ];
+
+  const sacrificeAmountKeys = [
+    "Sacrificed",
+    "SacrificedFamily",
+    "ChildOfSacrificed",
+    "Warrior",
+    "Captive",
+    "Valiant",
+  ];
+
+  const minSalaryKeys = [
+    "MinSalaryWith30YearsExperience",
+    "MinSalaryWithLessThan30YearsExperience",
   ];
 
   // CREATE SUM TABLE DATA FUNCTION
@@ -167,14 +237,50 @@ function DashboardForm() {
         finishDate: finishDate.toISOString(),
         applicantTypeIsRetired: data.applicantTypeIsRetired,
         organizationID: data.organizationID,
-      }).unwrap(``);
-      console.log(res);
+      }).unwrap();
+      console.log(res.itemList);
       createSumTableData(res.itemList, sumTableKeys, setSumTableData);
       createSumTableData(
         res.itemList,
         houseRightTableKeys,
         setHouseRightTableData
       );
+      createSumTableData(
+        res.itemList,
+        underWarantyMenSumKeys,
+        setUderWarantyMenTableData
+      );
+      createSumTableData(
+        res.itemList,
+        uderWarantyWomenKeys,
+        setUnderWarantyWomenTableData
+      );
+      createSumTableData(
+        res.itemList,
+        relatedRightMenKeys,
+        setRelatedRightMenTableData
+      );
+      createSumTableData(
+        res.itemList,
+        relatedRightWomenKeyss,
+        setRelatedRightWomenTableData
+      );
+      createSumTableData(
+        res.itemList,
+        supplementaryKeys,
+        setSupplementaryTableData
+      );
+      createSumTableData(
+        res.itemList,
+        sacrificeConditionsKeys,
+        setSsacrificeTableData
+      );
+      createSumTableData(
+        res.itemList,
+        sacrificeAmountKeys,
+        setSacrificeAmountTableData
+      );
+      createSumTableData(res.itemList, minSalaryKeys, setMinSalaryTableData);
       setShowGrids(true);
     } catch (err) {
       console.log(err);
@@ -190,12 +296,8 @@ function DashboardForm() {
     [setIsTillDateCalenderOpen, setIsFromCalenderOpen]
   );
 
-  useEffect(() => {
-    console.log("sum data", sumTableData);
-  }, [sumTableData]);
-
   const content = (
-    <section className="flex-col">
+    <section className="flex-col u-margin-bottom-md">
       <form method="POST" className="grid grid--col-5" noValidate>
         <div className="inputBox__form">
           <Select
@@ -305,9 +407,50 @@ function DashboardForm() {
         </LoadingButton>
       </div>
       {showGrids && (
-        <div className="flex flex-row">
-          <DashboardSumGrid data={sumTableData} />
-          <DashboardHouseRightGrid data={houseRightTableData} />
+        <div className="flex-col flex-center">
+          <div className="flex-row">
+            <DashboardSumGrid data={sumTableData} />
+            <DashboardHouseRightGrid data={houseRightTableData} />
+          </div>
+
+          <div className="flex-center">
+            <h5
+              className="title-secondary"
+              style={{ marginBottom: "0", marginTop: "20px" }}
+            >
+              تعداد افراد تحت تکفل
+            </h5>
+          </div>
+
+          <div className="flex-row">
+            <div className="flex-col">
+              <UnderWarantyAmountMenGrid data={uderWarantyMenTableData} />
+              <SupplementaryGrid data={supplementaryTableData} />
+            </div>
+            <div className="flex-col">
+              <UnderWarantyAmountWomenGrid data={underWarantyWomenTableData} />
+              <SacrificeCondtionsGrid data={ssacrificeTableData} />
+            </div>
+          </div>
+
+          <div className="flex-center">
+            <h5
+              className="title-secondary"
+              style={{ marginBottom: "0", marginTop: "20px" }}
+            >
+              حق عائله و اولاد افراد تحت تکفل
+            </h5>
+          </div>
+
+          <div className="flex-row">
+            <RelatedRightMenGrid data={relatedRightMenTableData} />
+            <RelatedRightWomenGrid data={relatedRightWomenTableData} />
+          </div>
+
+          <div className="flex-col flex-center">
+            <SacrificeAmountGrid data={sacrificeAmountTableData} />
+          </div>
+          <MinSalaryGrid data={minSalaryTableData} />
         </div>
       )}
     </section>

@@ -7,20 +7,32 @@ import { MRT_Table, useMaterialReactTable } from "material-react-table";
 // utils imports
 import { defaultTableOptions } from "../../utils.js";
 
+// helpers
+import { convertToPersianNumber } from "../../helper.js";
+
 export const DashboardHouseRightGrid = ({ data }) => {
   const columns = useMemo(
     () => [
       {
         accessorKey: "HomeRightOfAllAliveRetireds",
         header: "کل",
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
       },
       {
         accessorKey: "HomeRightOfAliveMenRetireds",
         header: "زن",
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
       },
       {
         accessorKey: "HomeRightOfAliveWomenRetireds",
         header: "مرد",
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
       },
     ],
     []
