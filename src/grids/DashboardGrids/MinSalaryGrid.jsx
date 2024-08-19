@@ -22,14 +22,6 @@ export const MinSalaryGrid = ({ data }) => {
         ),
       },
       {
-        accessorKey: "Number1",
-        size: 150,
-        header: "تعداد",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-      {
         accessorKey: "MinSalaryWithLessThan30YearsExperience",
         size: 150,
         header: "حداقل حقوق سالانه با کمتر از ۳۰ سال سابقه",
@@ -38,9 +30,17 @@ export const MinSalaryGrid = ({ data }) => {
         ),
       },
       {
-        accessorKey: "Number2",
+        accessorKey: "MaxSalary",
         size: 150,
-        header: "تعداد",
+        header: "سقف حقوق پرداختی",
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
+      },
+      {
+        accessorKey: "test",
+        size: 150,
+        header: "حداکثر حقوق بالا سقف",
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),

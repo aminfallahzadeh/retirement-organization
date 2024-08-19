@@ -164,6 +164,7 @@ function DashboardForm() {
 
   const minSalaryKeys = [
     "MinSalaryWith30YearsExperience",
+    "MaxSalary",
     "MinSalaryWithLessThan30YearsExperience",
   ];
 
