@@ -9,6 +9,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import PersonnelStatementGrid from "../../grids/PersonnelStatementGrid";
 import PersonnelFractionGrid from "../../grids/PersonnelFractionGrid";
 import PersonnelTariffGrid from "../../grids/PersonnelTariffGrid";
+import RetiredStatementsGrid from "../../grids/RetiredStatementsGrid";
 
 function PersonnelGridsSection() {
   const [value, setValue] = useState("1");
@@ -28,6 +29,7 @@ function PersonnelGridsSection() {
           >
             <Tab label="احکام کارمندی" value="1" />
             <Tab label="تعرفه" value="2" />
+            <Tab label="احکام بازنشستگی" value="3" />
           </TabList>
         </Box>
         <TabPanel
@@ -48,6 +50,14 @@ function PersonnelGridsSection() {
             <PersonnelTariffGrid />
             <PersonnelFractionGrid />
           </div>
+        </TabPanel>
+        <TabPanel
+          value="3"
+          sx={{
+            padding: "0",
+          }}
+        >
+          <RetiredStatementsGrid />
         </TabPanel>
       </TabContext>
     </section>

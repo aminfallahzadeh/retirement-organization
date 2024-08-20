@@ -1,9 +1,6 @@
 // react imports
 import { useEffect, useMemo, useState, useCallback } from "react";
 
-// rrd imports
-import { useLocation } from "react-router-dom";
-
 // redux imports
 import { useSelector } from "react-redux";
 import {
@@ -73,7 +70,6 @@ function RetiredStatementsGrid() {
   const [showDeleteStatementModal, setShowDeleteStatementModal] =
     useState(false);
 
-  const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
