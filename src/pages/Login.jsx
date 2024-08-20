@@ -26,6 +26,9 @@ import { setCredentials } from "../slices/authSlice";
 // rrd imports
 import { useNavigate } from "react-router-dom";
 
+// components
+import { Logo } from "../components/SVGs.jsx";
+
 // library imports
 import { toast } from "react-toastify";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -363,6 +366,19 @@ function Login() {
               <h5>رمز عبور خود را فراموش کرده اید؟</h5>
             </div>
           </form>
+        </div>
+
+        <div className="login-logo">
+          <div className="hero__logo">
+            <Logo color="white" />
+          </div>
+
+          <h1
+            className="heading-primary"
+            style={{ color: "white", textShadow: "1px 1px 5px black" }}
+          >
+            سامانه بازنشستگان و وظیفه بگیران
+          </h1>
         </div>
       </div>
     </div>

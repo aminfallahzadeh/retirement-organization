@@ -22,7 +22,6 @@ function Hero() {
               className="hero__logo--txt"
             />
           </div>
-          {/* <Logo /> */}
 
           <h1 className="heading-primary">سامانه بازنشستگان و وظیفه بگیران</h1>
         </div>

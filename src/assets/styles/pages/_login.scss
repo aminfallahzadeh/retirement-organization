@@ -17,6 +17,7 @@
         position: relative;
         width: 35rem;
         height: 35rem;
+
         border-radius: 1.5rem;
         transform: translateX(-25%);
         -webkit-box-shadow: 4px 5px 7px 1px #a6a6a6;
@@ -24,6 +25,7 @@
         box-shadow: 4px 5px 7px 1px #a6a6a6;
 
         &--container {
+            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -179,4 +181,14 @@
             }
         }
     }
+}
+
+.login-logo {
+    position: absolute;
+    width: 100%;
+    bottom: 10%;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
