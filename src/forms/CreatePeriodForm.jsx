@@ -50,6 +50,7 @@ function CreatePeriodForm() {
     if (!data.periodDay || data.periodDay === "") {
       if (
         convertToEnglishNumber(data.periodMonth) === "01" ||
+        convertToEnglishNumber(data.periodMonth) === "02" ||
         convertToEnglishNumber(data.periodMonth) === "03" ||
         convertToEnglishNumber(data.periodMonth) === "04" ||
         convertToEnglishNumber(data.periodMonth) === "05" ||
