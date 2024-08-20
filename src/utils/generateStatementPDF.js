@@ -9,7 +9,7 @@ import {
   convertToPersianDateFormatted,
   separateByThousands,
   reverseString,
-} from "./helper";
+} from "../helper";
 
 // -------------------------------------------------------------
 export const createStatementPDF = async (retired, statement, isDead) => {
@@ -275,7 +275,11 @@ export const createStatementPDF = async (retired, statement, isDead) => {
     const textField = form.getTextField(fieldName);
     if (textField) {
       textField.setText(fieldValue);
-      textField.setAlignment(TextAlignment.Center);
+      if (fieldName === "retirementStatementDesc") {
+        textField.setAlignment(TextAlignment.Right);
+      } else {
+        textField.setAlignment(TextAlignment.Center);
+      }
       textField.setFontSize(8);
       textField.updateAppearances(customFont);
     }

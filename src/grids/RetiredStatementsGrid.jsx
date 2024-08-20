@@ -1,6 +1,9 @@
 // react imports
 import { useEffect, useMemo, useState, useCallback } from "react";
 
+// rrd imports
+import { useLocation } from "react-router-dom";
+
 // redux imports
 import { useSelector } from "react-redux";
 import {
@@ -54,7 +57,7 @@ import {
 } from "../helper.js";
 
 // utils imports
-import { createStatementPDF } from "../generateStatementPDF.js";
+import { createStatementPDF } from "../utils/generateStatementPDF.js";
 import { defaultTableOptions } from "../utils.js";
 
 function RetiredStatementsGrid() {
@@ -70,6 +73,7 @@ function RetiredStatementsGrid() {
   const [showDeleteStatementModal, setShowDeleteStatementModal] =
     useState(false);
 
+  const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
@@ -134,9 +138,9 @@ function RetiredStatementsGrid() {
     setShowGenerateStatementModal(true);
   };
 
-  const handleDeleteStatementModalChange = () => {
+  const handleDeleteStatementModalChange = useCallback(() => {
     setShowDeleteStatementModal(true);
-  };
+  }, []);
 
   const handleDownload = useCallback(
     async (RetirementStatementID) => {
@@ -178,8 +182,8 @@ function RetiredStatementsGrid() {
     }
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    const baseColumns = [
       {
         accessorKey: "statementRowNum",
         size: 20,
@@ -251,7 +255,12 @@ function RetiredStatementsGrid() {
           </Tooltip>
         ),
       },
-      {
+    ];
+
+    if (
+      location.pathname !== "/retirement-organization/personnel-statements/info"
+    ) {
+      baseColumns.push({
         accessorKey: "removeStatement",
         header: "حذف حکم",
         enableSorting: false,
@@ -281,10 +290,11 @@ function RetiredStatementsGrid() {
             </span>
           </Tooltip>
         ),
-      },
-    ],
-    [handleDownload]
-  );
+      });
+    }
+
+    return baseColumns;
+  }, [handleDownload, handleDeleteStatementModalChange, location.pathname]);
 
   const table = useMaterialReactTable({
     ...defaultTableOptions,
