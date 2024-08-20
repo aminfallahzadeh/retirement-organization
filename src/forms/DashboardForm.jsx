@@ -233,6 +233,23 @@ function DashboardForm() {
         finishDate = null;
       }
 
+      if (startDate && finishDate) {
+        const yearDifference =
+          finishDate.getFullYear() - startDate.getFullYear();
+        const monthDifference = finishDate.getMonth() - startDate.getMonth();
+        const dayDifference = finishDate.getDate() - startDate.getDate();
+
+        if (
+          yearDifference > 1 ||
+          (yearDifference === 1 && (monthDifference > 0 || dayDifference > 0))
+        ) {
+          toast.error("فاصله بین تاریخ‌ها نباید بیش از یک سال باشد", {
+            autoClose: 2000,
+          });
+          return;
+        }
+      }
+
       const res = await getDashboardReport({
         startDate: startDate.toISOString(),
         finishDate: finishDate.toISOString(),
