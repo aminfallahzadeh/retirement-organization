@@ -155,7 +155,7 @@ function RequestsGrid({ isLoading, roles }) {
               to={
                 row.original.requestTypeID ===
                 "62A54585-F331-434A-9027-C9F3060F683A"
-                  ? `/retirement-organization/slips?requestID=${row.original.id}`
+                  ? `/retirement-organization/group-slips?requestID=${row.original.id}`
                   : row.original.requestTypeID ===
                     "6E7BA26E-A1DC-4A5E-9700-17820A36158D"
                   ? `/retirement-organization/batch-statements?requestID=${row.original.id}`

@@ -6,10 +6,10 @@ import { IconButton, Tooltip } from "@mui/material";
 import { ArrowBack as BackIcon } from "@mui/icons-material";
 
 // components
-import SlipsForm from "../forms/SlipsForm";
+import GroupSlipsForm from "../forms/GroupSlipsForm";
 import SlipsPreviewGrid from "../grids/SlipsPreviewGrid";
 
-function SlipsScreen() {
+function GroupSlipsScreen() {
   const navigate = useNavigate();
 
   const content = (
@@ -30,7 +30,7 @@ function SlipsScreen() {
           </Tooltip>
         </div>
       </div>
-      <SlipsForm />
+      <GroupSlipsForm />
       <SlipsPreviewGrid />
     </section>
   );
@@ -38,4 +38,4 @@ function SlipsScreen() {
   return content;
 }
 
-export default SlipsScreen;
+export default GroupSlipsScreen;

@@ -34,7 +34,7 @@ import makeAnimated from "react-select/animated";
 // utils
 import { selectStyles, selectSettings } from "../utils/reactSelect";
 
-function SlipsForm() {
+function GroupSlipsForm() {
   const [isSlipExists, setIsSlipExists] = useState(null);
 
   const dispatch = useDispatch();
@@ -243,14 +243,15 @@ function SlipsForm() {
               name="issueType"
               control={control}
               rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
+              render={({ field: { onChange } }) => (
                 <Select
                   closeMenuOnSelect={true}
                   components={animatedComponents}
                   options={issueTypeOptions}
                   onChange={(val) => onChange(val ? val.value : null)}
-                  value={issueTypeOptions.find((c) => c.value === value)}
+                  value={issueTypeOptions.find((c) => c.value === "1")}
                   isClearable={true}
+                  isDisabled={true}
                   placeholder={
                     <div className="react-select-placeholder">
                       <span>*</span> نوع صدور
@@ -495,4 +496,4 @@ function SlipsForm() {
   return content;
 }
 
-export default SlipsForm;
+export default GroupSlipsForm;

@@ -33,7 +33,6 @@ import GroupsScreen from "./screens/GroupsScreen";
 import UsersScreen from "./screens/UsersScreen";
 import RequestScreen from "./screens/RequestScreen";
 import BatchStatementsScreen from "./screens/BatchStatementsScreen";
-import SlipsScreen from "./screens/SlipsScreen";
 import PersonnelStatementsScreen from "./screens/PersonnelStatementsScreen";
 import ElectronicStatementScreen from "./screens/ElectronicStatementScreen";
 import CreateRequestScreen from "./screens/CreateRequestScreen";
@@ -44,6 +43,7 @@ import BaseInfoScreen from "./screens/BaseInfoScreen.jsx";
 import BaseInfoScreen2 from "./screens/BaseInfoScreen2.jsx";
 import InsertAnnounceScreen from "./screens/InsertAnnounceScreen.jsx";
 import DashboardScreen from "./screens/DashboardScreen.jsx";
+import GroupSlipsScreen from "./screens/GroupSlipsScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -92,8 +92,8 @@ const router = createBrowserRouter(
         />
 
         <Route
-          path="/retirement-organization/slips"
-          element={<SlipsScreen />}
+          path="/retirement-organization/group-slips"
+          element={<GroupSlipsScreen />}
         />
 
         <Route
