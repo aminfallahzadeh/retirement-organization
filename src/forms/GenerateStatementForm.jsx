@@ -25,6 +25,9 @@ import { InputDatePicker } from "jalaali-react-date-picker";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
+// helpers
+import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
+
 // utils
 import { selectSettings, optionsGenerator } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
@@ -52,6 +55,24 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
   // GET LOOK UP DATA
   const { statementTypes, statementTypesIsFetching, statementTypesIsLoading } =
     useFetchRetirementStatementTypes();
+
+  const baseSalaryOptions = [
+    "100",
+    "11",
+    "14",
+    "16",
+    "36",
+    "37",
+    "38",
+    "39",
+    "69",
+    "5",
+    "57",
+    "6",
+    "65",
+    "96",
+    "97",
+  ];
 
   // SELECT OPTIONS
   const statementTypeOptions = optionsGenerator(
@@ -103,6 +124,7 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
         retirementStatementRunDate,
         personID,
         requestID,
+        newAmount: convertToEnglishNumber(statementObject?.newAmount) || 0,
       }).unwrap();
       setShowGenerateStatementModal(false);
       toast.success(generateRes.message, {
@@ -207,6 +229,25 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
             <span>*</span> نوع حکم
           </label>
         </div>
+
+        {baseSalaryOptions.includes(
+          statementObject?.retirementStatementTypeID
+        ) && (
+          <div className="inputBox__form">
+            <input
+              type="text"
+              className="inputBox__form--input"
+              onChange={handleStatementDataChange}
+              name="newAmount"
+              value={convertToPersianNumber(statementObject?.newAmount) || ""}
+              required
+              id="newAmount"
+            />
+            <label className="inputBox__form--label" htmlFor="newAmount">
+              <span>*</span> حقوق مبنا
+            </label>
+          </div>
+        )}
 
         <div className="inputBox__form col-span-2 row-span-2">
           <textarea
