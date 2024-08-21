@@ -35,10 +35,12 @@ import {
   UploadOutlined as UploadIcon,
   ArchiveOutlined as ArchiveIcon,
   Close as CloseIcon,
+  Done as DoneIcon,
 } from "@mui/icons-material";
 
 // components
 import ArchiveTree from "../components/ArchiveTree";
+import Modal from "../components/Modal";
 
 // library imports
 import { toast } from "react-toastify";
@@ -70,6 +72,8 @@ function FractionForm() {
   // CONTROLL STATES
   const [isPeronIDAvailable, setIsPersonIDAvailable] = useState(false);
   const [isArchiveOpen, setIsArchiveOpen] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(true);
+  const [savedDataLength, setSavedDataLength] = useState(0);
 
   // CALENEDER REF
   const letterCalenderRef = useRef(null);
@@ -263,14 +267,26 @@ function FractionForm() {
     console.log(type);
     try {
       const res = await insertExcel({ data, type }).unwrap();
+      setShowResultModal(true);
       toast.success(res.message, {
         autoClose: 2000,
       });
     } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-      });
+      if (err.data.error === "period exists") {
+        toast.error("دوره تکراری می باشد", {
+          autoClose: 2000,
+        });
+      } else if (err.data.error === "PersonnelID not found") {
+        toast.error("شماره کارمندی یافت نشد", {
+          autoClose: 2000,
+        });
+      } else {
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
+
+      console.log(err?.data.error);
     }
   };
 
@@ -333,6 +349,10 @@ function FractionForm() {
     setIsArchiveOpen(!isArchiveOpen);
   };
 
+  const handleCloseModal = () => {
+    setShowResultModal(false);
+  };
+
   const handleExcelFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -382,6 +402,7 @@ function FractionForm() {
           })
           .filter((item) => item !== null);
         const type = data?.fractionTypeID;
+        setSavedDataLength(items.length - 1);
         handleInsertExcel(items, type);
       };
 
@@ -401,427 +422,449 @@ function FractionForm() {
   );
 
   const content = (
-    <section className="formContainer flex-col">
-      <form method="POST" className="grid grid--col-5" noValidate>
-        <div className="inputBox__form">
-          <Select
-            closeMenuOnSelect={true}
-            options={fractionTypesOptions}
-            components={animatedComponents}
-            name="fractionTypeID"
-            value={fractionTypesOptions.find(
-              (item) => item.value === data?.relationshipWithParentID
-            )}
-            onChange={handleSelectOptionChange}
-            isLoading={fractionTypesIsLoading || fractionTypesIsFetching}
-            isClearable={true}
-            placeholder={
-              <div className="react-select-placeholder">نوع کسور</div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            styles={selectStyles}
-          />
+    <>
+      {showResultModal && (
+        <Modal title={"نتیجه"}>
+          <p className="paragraph-primary">
+            تعداد {savedDataLength} رکورد ثبت شد{" "}
+          </p>
 
-          <label
-            className={
-              data?.fractionTypeID
-                ? "inputBox__form--readOnly-label"
-                : "inputBox__form--readOnly-label-hidden"
-            }
-          >
-            نوع کسور
-          </label>
-        </div>
-
-        <div className="checkboxContainer">
-          <div className="checkboxContainer__item">
-            <input
-              type="radio"
-              id="groupTyped"
-              name="frType"
-              value="group"
-              onChange={handleFrTypeChange}
-              checked={frMode === "group"}
-            />
-            <label htmlFor="groupTyped" className="checkboxContainer__label">
-              سازمانی
-            </label>
-          </div>
-
-          <div className="checkboxContainer__item">
-            <input
-              type="radio"
-              id="soloTyped"
-              name="frType"
-              value="solo"
-              onChange={handleFrTypeChange}
-            />
-            <label htmlFor="soloTyped" className="checkboxContainer__label">
-              انفرادی
-            </label>
-          </div>
-        </div>
-
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            onChange={handleDataChange}
-            name="letterNO"
-            value={convertToPersianNumber(data.letterNO) || ""}
-            required
-            id="letterNO"
-          />
-          <label className="inputBox__form--label" htmlFor="letterNO">
-            شماره نامه
-          </label>
-        </div>
-
-        <div className="inputBox__form">
-          <InputDatePicker
-            onChange={handleLetterDateChange}
-            value={selectedLetterDate}
-            onOpenChange={handleLetterCalenderOpenChange}
-            format={"jYYYY/jMM/jDD"}
-            suffixIcon={<CalenderIcon color="action" />}
-            open={isLetterDateCalenderOpen}
-            style={datePickerStyles}
-            wrapperStyle={datePickerWrapperStyles}
-            placement="bottom"
-            pickerProps={{
-              ref: letterCalenderRef,
-            }}
-          />
-          <div className="inputBox__form--readOnly-label">تاریخ نامه</div>
-        </div>
-
-        <div>&nbsp;</div>
-
-        {frMode === "solo" && (
-          <>
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                options={offTypesOptions}
-                components={animatedComponents}
-                onChange={handleSelectOptionChange}
-                value={offTypesOptions.find(
-                  (item) => item.value === data?.relationshipWithParentID
-                )}
-                name="personnelStatementOffTypeID"
-                isLoading={
-                  personnelStatementOffTypesIsLoading ||
-                  personnelStatementOffTypesIsFetching
-                }
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">نوع سابقه</div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-              />
-
-              <label
-                className={
-                  data?.personnelStatementOffTypeID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                نوع سابقه
-              </label>
-            </div>
-            <div className="inputBox__form">
-              <input
-                type="text"
-                className="inputBox__form--input"
-                required
-                name="personNationalCode"
-                id="personNationalCode"
-                onChange={handleDataChange}
-                value={convertToPersianNumber(data.personNationalCode) || ""}
-              />
-              <label
-                className="inputBox__form--label"
-                htmlFor="personNationalCode"
-              >
-                <span>*</span> شماره ملی
-              </label>
-              <div className="inputBox__form--icon">
-                {isPersonsLoading || isPersonsFetching ? (
-                  <IconButton aria-label="search" color="info" disabled>
-                    <CircularProgress size={20} value={100} />
-                  </IconButton>
-                ) : (
-                  <Tooltip title="استعلام">
-                    <span>
-                      <IconButton
-                        color="primary"
-                        onClick={handleSearchPerson}
-                        disabled={!data.personNationalCode}
-                      >
-                        <CheckIcon />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                )}
-              </div>
-            </div>
-
-            <div className="inputBox__form">
-              <div className="inputBox__form--readOnly-input">
-                <div className="inputBox__form--readOnly-label">نام</div>
-                <div className="inputBox__form--readOnly-content">
-                  {data.personFirstName || "-"}
-                </div>
-              </div>
-            </div>
-
-            <div className="inputBox__form">
-              <div className="inputBox__form--readOnly-input">
-                <div className="inputBox__form--readOnly-label">
-                  نام خانوادگی
-                </div>
-                <div className="inputBox__form--readOnly-content">
-                  {data.personLastName || "-"}
-                </div>
-              </div>
-            </div>
-
-            <div className="inputBox__form">
-              <div className="inputBox__form--readOnly-input">
-                <div className="inputBox__form--readOnly-label">
-                  شماره کارمندی
-                </div>
-                <div className="inputBox__form--readOnly-content">
-                  {convertToPersianNumber(data.personID) || "-"}
-                </div>
-              </div>
-            </div>
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                onChange={handleSelectOptionChange}
-                isClearable={true}
-                options={organizationOptions}
-                name="organazationID"
-                placeholder={
-                  <div className="react-select-placeholder">
-                    <span>*</span> نام سازمان
-                  </div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                isLoading={organizationIsLoading || organizationIsFetching}
-                styles={selectStyles}
-              />
-
-              <label
-                className={
-                  data?.organazationID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                <span>*</span> نام سازمان
-              </label>
-            </div>
-
-            <div>&nbsp;</div>
-            <div>&nbsp;</div>
-            <div>&nbsp;</div>
-            <div>&nbsp;</div>
-          </>
-        )}
-
-        <div className="inputBox__form">
-          <Select
-            closeMenuOnSelect={true}
-            components={animatedComponents}
-            isClearable={true}
-            onChange={handleSelectOptionChange}
-            options={paymentTypeOptions}
-            name="paymentTypeID"
-            placeholder={
-              <div className="react-select-placeholder">
-                <span>*</span> نوع پرداخت
-              </div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            styles={selectStyles}
-          />
-
-          <label
-            className={
-              data?.paymentTypeID
-                ? "inputBox__form--readOnly-label"
-                : "inputBox__form--readOnly-label-hidden"
-            }
-          >
-            <span>*</span> نوع پرداخت
-          </label>
-        </div>
-
-        <div className="inputBox__form">
-          <input
-            type="text"
-            className="inputBox__form--input"
-            onChange={handleDataChange}
-            name="paymentNO"
-            value={convertToPersianNumber(data.paymentNO) || ""}
-            required
-            id="paymentNO"
-          />
-          <label className="inputBox__form--label" htmlFor="paymentNO">
-            شماره
-          </label>
-        </div>
-        {frMode === "solo" && (
-          <>
-            <div className="inputBox__form">
-              <input
-                type="text"
-                className="inputBox__form--input"
-                onChange={handleDataChange}
-                name="amount"
-                value={convertToPersianNumber(data.amount) || ""}
-                required
-                id="amount"
-              />
-              <label className="inputBox__form--label" htmlFor="amount">
-                مبلغ
-              </label>
-            </div>
-          </>
-        )}
-
-        <div className="inputBox__form">
-          <InputDatePicker
-            defaultValue={null}
-            onChange={handlePaymenrDateChange}
-            value={selectedPaymentDate}
-            onOpenChange={handlePaymentCalenderOpenChange}
-            format={"jYYYY/jMM/jDD"}
-            suffixIcon={<CalenderIcon color="action" />}
-            open={isPaymentCalenderOpen}
-            style={datePickerStyles}
-            wrapperStyle={datePickerWrapperStyles}
-            placement="top"
-            pickerProps={{
-              ref: paymenrCalenderRef,
-            }}
-          />
-          <div className="inputBox__form--readOnly-label">تاریخ پرداخت</div>
-        </div>
-      </form>
-      {frMode === "group" ? (
-        <div style={{ marginRight: "auto" }} className="flex-row flex-center">
-          <div style={{ position: "relative" }}>
-            <input
-              type="file"
-              ref={excelFileUploadRef}
-              style={{ display: "none" }}
-              onChange={handleExcelFileChange}
-              accept=".xlsx, .xls"
-            />
-
-            <LoadingButton
+          <div className="flex-row flex-center">
+            <Button
               dir="ltr"
+              endIcon={<DoneIcon />}
+              onClick={handleCloseModal}
               variant="contained"
-              color="warning"
-              disabled={
-                uploadProgress > 0 || excelFile
-                  ? true
-                  : false || !data.fractionTypeID
-              }
+              color="success"
               sx={{ fontFamily: "sahel" }}
-              endIcon={<UploadIcon />}
-              loading={isJariLoading || isJariFetching}
-              onClick={handleExcelFileUpload}
             >
-              <span>بارگزاری اکسل</span>
-            </LoadingButton>
+              <span>تایید</span>
+            </Button>
+          </div>
+        </Modal>
+      )}
+      <section className="formContainer flex-col">
+        <form method="POST" className="grid grid--col-5" noValidate>
+          <div className="inputBox__form">
+            <Select
+              closeMenuOnSelect={true}
+              options={fractionTypesOptions}
+              components={animatedComponents}
+              name="fractionTypeID"
+              value={fractionTypesOptions.find(
+                (item) => item.value === data?.relationshipWithParentID
+              )}
+              onChange={handleSelectOptionChange}
+              isLoading={fractionTypesIsLoading || fractionTypesIsFetching}
+              isClearable={true}
+              placeholder={
+                <div className="react-select-placeholder">نوع کسور</div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+            />
 
-            {excelFile && (
-              <div
-                className="excel"
-                style={{
+            <label
+              className={
+                data?.fractionTypeID
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
+            >
+              نوع کسور
+            </label>
+          </div>
+
+          <div className="checkboxContainer">
+            <div className="checkboxContainer__item">
+              <input
+                type="radio"
+                id="groupTyped"
+                name="frType"
+                value="group"
+                onChange={handleFrTypeChange}
+                checked={frMode === "group"}
+              />
+              <label htmlFor="groupTyped" className="checkboxContainer__label">
+                سازمانی
+              </label>
+            </div>
+
+            <div className="checkboxContainer__item">
+              <input
+                type="radio"
+                id="soloTyped"
+                name="frType"
+                value="solo"
+                onChange={handleFrTypeChange}
+              />
+              <label htmlFor="soloTyped" className="checkboxContainer__label">
+                انفرادی
+              </label>
+            </div>
+          </div>
+
+          <div className="inputBox__form">
+            <input
+              type="text"
+              className="inputBox__form--input"
+              onChange={handleDataChange}
+              name="letterNO"
+              value={convertToPersianNumber(data.letterNO) || ""}
+              required
+              id="letterNO"
+            />
+            <label className="inputBox__form--label" htmlFor="letterNO">
+              شماره نامه
+            </label>
+          </div>
+
+          <div className="inputBox__form">
+            <InputDatePicker
+              onChange={handleLetterDateChange}
+              value={selectedLetterDate}
+              onOpenChange={handleLetterCalenderOpenChange}
+              format={"jYYYY/jMM/jDD"}
+              suffixIcon={<CalenderIcon color="action" />}
+              open={isLetterDateCalenderOpen}
+              style={datePickerStyles}
+              wrapperStyle={datePickerWrapperStyles}
+              placement="bottom"
+              pickerProps={{
+                ref: letterCalenderRef,
+              }}
+            />
+            <div className="inputBox__form--readOnly-label">تاریخ نامه</div>
+          </div>
+
+          <div>&nbsp;</div>
+
+          {frMode === "solo" && (
+            <>
+              <div className="inputBox__form">
+                <Select
+                  closeMenuOnSelect={true}
+                  options={offTypesOptions}
+                  components={animatedComponents}
+                  onChange={handleSelectOptionChange}
+                  value={offTypesOptions.find(
+                    (item) => item.value === data?.relationshipWithParentID
+                  )}
+                  name="personnelStatementOffTypeID"
+                  isLoading={
+                    personnelStatementOffTypesIsLoading ||
+                    personnelStatementOffTypesIsFetching
+                  }
+                  isClearable={true}
+                  placeholder={
+                    <div className="react-select-placeholder">نوع سابقه</div>
+                  }
+                  noOptionsMessage={selectSettings.noOptionsMessage}
+                  loadingMessage={selectSettings.loadingMessage}
+                  styles={selectStyles}
+                />
+
+                <label
+                  className={
+                    data?.personnelStatementOffTypeID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  نوع سابقه
+                </label>
+              </div>
+              <div className="inputBox__form">
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  required
+                  name="personNationalCode"
+                  id="personNationalCode"
+                  onChange={handleDataChange}
+                  value={convertToPersianNumber(data.personNationalCode) || ""}
+                />
+                <label
+                  className="inputBox__form--label"
+                  htmlFor="personNationalCode"
+                >
+                  <span>*</span> شماره ملی
+                </label>
+                <div className="inputBox__form--icon">
+                  {isPersonsLoading || isPersonsFetching ? (
+                    <IconButton aria-label="search" color="info" disabled>
+                      <CircularProgress size={20} value={100} />
+                    </IconButton>
+                  ) : (
+                    <Tooltip title="استعلام">
+                      <span>
+                        <IconButton
+                          color="primary"
+                          onClick={handleSearchPerson}
+                          disabled={!data.personNationalCode}
+                        >
+                          <CheckIcon />
+                        </IconButton>
+                      </span>
+                    </Tooltip>
+                  )}
+                </div>
+              </div>
+
+              <div className="inputBox__form">
+                <div className="inputBox__form--readOnly-input">
+                  <div className="inputBox__form--readOnly-label">نام</div>
+                  <div className="inputBox__form--readOnly-content">
+                    {data.personFirstName || "-"}
+                  </div>
+                </div>
+              </div>
+
+              <div className="inputBox__form">
+                <div className="inputBox__form--readOnly-input">
+                  <div className="inputBox__form--readOnly-label">
+                    نام خانوادگی
+                  </div>
+                  <div className="inputBox__form--readOnly-content">
+                    {data.personLastName || "-"}
+                  </div>
+                </div>
+              </div>
+
+              <div className="inputBox__form">
+                <div className="inputBox__form--readOnly-input">
+                  <div className="inputBox__form--readOnly-label">
+                    شماره کارمندی
+                  </div>
+                  <div className="inputBox__form--readOnly-content">
+                    {convertToPersianNumber(data.personID) || "-"}
+                  </div>
+                </div>
+              </div>
+              <div className="inputBox__form">
+                <Select
+                  closeMenuOnSelect={true}
+                  components={animatedComponents}
+                  onChange={handleSelectOptionChange}
+                  isClearable={true}
+                  options={organizationOptions}
+                  name="organazationID"
+                  placeholder={
+                    <div className="react-select-placeholder">
+                      <span>*</span> نام سازمان
+                    </div>
+                  }
+                  noOptionsMessage={selectSettings.noOptionsMessage}
+                  loadingMessage={selectSettings.loadingMessage}
+                  isLoading={organizationIsLoading || organizationIsFetching}
+                  styles={selectStyles}
+                />
+
+                <label
+                  className={
+                    data?.organazationID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  <span>*</span> نام سازمان
+                </label>
+              </div>
+
+              <div>&nbsp;</div>
+              <div>&nbsp;</div>
+              <div>&nbsp;</div>
+              <div>&nbsp;</div>
+            </>
+          )}
+
+          <div className="inputBox__form">
+            <Select
+              closeMenuOnSelect={true}
+              components={animatedComponents}
+              isClearable={true}
+              onChange={handleSelectOptionChange}
+              options={paymentTypeOptions}
+              name="paymentTypeID"
+              placeholder={
+                <div className="react-select-placeholder">
+                  <span>*</span> نوع پرداخت
+                </div>
+              }
+              noOptionsMessage={selectSettings.noOptionsMessage}
+              loadingMessage={selectSettings.loadingMessage}
+              styles={selectStyles}
+            />
+
+            <label
+              className={
+                data?.paymentTypeID
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
+            >
+              <span>*</span> نوع پرداخت
+            </label>
+          </div>
+
+          <div className="inputBox__form">
+            <input
+              type="text"
+              className="inputBox__form--input"
+              onChange={handleDataChange}
+              name="paymentNO"
+              value={convertToPersianNumber(data.paymentNO) || ""}
+              required
+              id="paymentNO"
+            />
+            <label className="inputBox__form--label" htmlFor="paymentNO">
+              شماره
+            </label>
+          </div>
+          {frMode === "solo" && (
+            <>
+              <div className="inputBox__form">
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  onChange={handleDataChange}
+                  name="amount"
+                  value={convertToPersianNumber(data.amount) || ""}
+                  required
+                  id="amount"
+                />
+                <label className="inputBox__form--label" htmlFor="amount">
+                  مبلغ
+                </label>
+              </div>
+            </>
+          )}
+
+          <div className="inputBox__form">
+            <InputDatePicker
+              defaultValue={null}
+              onChange={handlePaymenrDateChange}
+              value={selectedPaymentDate}
+              onOpenChange={handlePaymentCalenderOpenChange}
+              format={"jYYYY/jMM/jDD"}
+              suffixIcon={<CalenderIcon color="action" />}
+              open={isPaymentCalenderOpen}
+              style={datePickerStyles}
+              wrapperStyle={datePickerWrapperStyles}
+              placement="top"
+              pickerProps={{
+                ref: paymenrCalenderRef,
+              }}
+            />
+            <div className="inputBox__form--readOnly-label">تاریخ پرداخت</div>
+          </div>
+        </form>
+        {frMode === "group" ? (
+          <div style={{ marginRight: "auto" }} className="flex-row flex-center">
+            <div style={{ position: "relative" }}>
+              <input
+                type="file"
+                ref={excelFileUploadRef}
+                style={{ display: "none" }}
+                onChange={handleExcelFileChange}
+                accept=".xlsx, .xls"
+              />
+
+              <LoadingButton
+                dir="ltr"
+                variant="contained"
+                color="warning"
+                disabled={
+                  uploadProgress > 0 || excelFile
+                    ? true
+                    : false || !data.fractionTypeID
+                }
+                sx={{ fontFamily: "sahel" }}
+                endIcon={<UploadIcon />}
+                loading={isJariLoading || isJariFetching}
+                onClick={handleExcelFileUpload}
+              >
+                <span>بارگزاری اکسل</span>
+              </LoadingButton>
+
+              {excelFile && (
+                <div
+                  className="excel"
+                  style={{
+                    position: "absolute",
+                    top: "-100%",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: "100%",
+                  }}
+                >
+                  <IconButton
+                    color="error"
+                    size="small"
+                    onClick={handleRemoveExcelFile}
+                    sx={{ padding: 0 }}
+                  >
+                    <RemoveIcon />
+                  </IconButton>
+                  <Tooltip title={excelFile.name}>
+                    <span className="excel__name">{excelFile.name}</span>
+                  </Tooltip>
+                  <img src="./images/excel-icon.png" className="excel__image" />
+                </div>
+              )}
+
+              <Box
+                sx={{
                   position: "absolute",
-                  top: "-100%",
                   left: "50%",
+                  bottom: "-40px",
+                  zIndex: 2,
+                  width: "90%",
                   transform: "translateX(-50%)",
-                  width: "100%",
+                  visibility: uploadProgress > 0 ? "visible" : "hidden",
                 }}
               >
-                <IconButton
-                  color="error"
-                  size="small"
-                  onClick={handleRemoveExcelFile}
-                  sx={{ padding: 0 }}
-                >
-                  <RemoveIcon />
-                </IconButton>
-                <Tooltip title={excelFile.name}>
-                  <span className="excel__name">{excelFile.name}</span>
-                </Tooltip>
-                <img src="./images/excel-icon.png" className="excel__image" />
-              </div>
-            )}
+                <LinearProgress
+                  variant="determinate"
+                  value={uploadProgress}
+                  color="warning"
+                  sx={{ borderRadius: "40px" }}
+                />
 
-            <Box
-              sx={{
-                position: "absolute",
-                left: "50%",
-                bottom: "-40px",
-                zIndex: 2,
-                width: "90%",
-                transform: "translateX(-50%)",
-                visibility: uploadProgress > 0 ? "visible" : "hidden",
-              }}
-            >
-              <LinearProgress
-                variant="determinate"
-                value={uploadProgress}
-                color="warning"
-                sx={{ borderRadius: "40px" }}
-              />
-
-              <span style={{ fontFamily: "IranYekan", fontSize: "12px" }}>
-                {uploadProgress}%
-              </span>
-            </Box>
+                <span style={{ fontFamily: "IranYekan", fontSize: "12px" }}>
+                  {uploadProgress}%
+                </span>
+              </Box>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div style={{ marginRight: "auto" }}>
-          <Button
-            dir="ltr"
-            endIcon={isArchiveOpen ? <CloseIcon /> : <ArchiveIcon />}
-            variant="contained"
-            disabled={!isPeronIDAvailable}
-            color={isArchiveOpen ? "error" : "primary"}
-            onClick={handleArchiveModalOpenChange}
-            sx={{ fontFamily: "sahel" }}
-          >
-            {isArchiveOpen ? (
-              <span>بستن آوشیو</span>
-            ) : (
-              <span>آرشیو مستندات</span>
-            )}
-          </Button>
-        </div>
-      )}
+        ) : (
+          <div style={{ marginRight: "auto" }}>
+            <Button
+              dir="ltr"
+              endIcon={isArchiveOpen ? <CloseIcon /> : <ArchiveIcon />}
+              variant="contained"
+              disabled={!isPeronIDAvailable}
+              color={isArchiveOpen ? "error" : "primary"}
+              onClick={handleArchiveModalOpenChange}
+              sx={{ fontFamily: "sahel" }}
+            >
+              {isArchiveOpen ? (
+                <span>بستن آوشیو</span>
+              ) : (
+                <span>آرشیو مستندات</span>
+              )}
+            </Button>
+          </div>
+        )}
 
-      {isArchiveOpen && (
-        <div className="flex-row flex-center">
-          <ArchiveTree />
-        </div>
-      )}
-    </section>
+        {isArchiveOpen && (
+          <div className="flex-row flex-center">
+            <ArchiveTree />
+          </div>
+        )}
+      </section>
+    </>
   );
 
   return content;
