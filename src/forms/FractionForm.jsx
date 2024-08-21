@@ -72,7 +72,7 @@ function FractionForm() {
   // CONTROLL STATES
   const [isPeronIDAvailable, setIsPersonIDAvailable] = useState(false);
   const [isArchiveOpen, setIsArchiveOpen] = useState(false);
-  const [showResultModal, setShowResultModal] = useState(true);
+  const [showResultModal, setShowResultModal] = useState(false);
   const [savedDataLength, setSavedDataLength] = useState(0);
 
   // CALENEDER REF
@@ -189,8 +189,6 @@ function FractionForm() {
     }
 
     let letterDate = new Date(date);
-    console.log("Converted letterDate:", letterDate);
-
     if (isNaN(letterDate.getTime())) {
       console.error("Invalid date value");
       dispatch(setData({ ...data, letterDate: null }));
@@ -202,7 +200,6 @@ function FractionForm() {
     letterDate.setMinutes(
       letterDate.getMinutes() - letterDate.getTimezoneOffset()
     );
-    console.log("Adjusted letterDate:", letterDate);
 
     dispatch(setData({ ...data, letterDate: letterDate.toDateString() }));
     setSelectedLetterDate(date);
@@ -210,10 +207,7 @@ function FractionForm() {
   };
 
   const handlePaymenrDateChange = (date) => {
-    console.log("Selected date:", date);
-
     if (!date) {
-      console.log("Date is null or undefined");
       dispatch(setData({ ...data, paymentDate: null }));
       setSelectedPaymentDate(null);
       setIsPaymentCalenderOpen(false);
@@ -221,7 +215,6 @@ function FractionForm() {
     }
 
     let paymentDate = new Date(date);
-    console.log("Converted paymentDate:", paymentDate);
 
     if (isNaN(paymentDate.getTime())) {
       console.error("Invalid date value");
@@ -234,7 +227,6 @@ function FractionForm() {
     paymentDate.setMinutes(
       paymentDate.getMinutes() - paymentDate.getTimezoneOffset()
     );
-    console.log("Adjusted paymentDate:", paymentDate);
 
     dispatch(setData({ ...data, paymentDate: paymentDate.toDateString() }));
     setSelectedPaymentDate(date);
@@ -272,11 +264,11 @@ function FractionForm() {
         autoClose: 2000,
       });
     } catch (err) {
-      if (err.data.error === "period exists") {
+      if (err?.data?.error === "period exists") {
         toast.error("دوره تکراری می باشد", {
           autoClose: 2000,
         });
-      } else if (err.data.error === "PersonnelID not found") {
+      } else if (err?.data?.error === "PersonnelID not found") {
         toast.error("شماره کارمندی یافت نشد", {
           autoClose: 2000,
         });
@@ -351,6 +343,20 @@ function FractionForm() {
 
   const handleCloseModal = () => {
     setShowResultModal(false);
+    dispatch(
+      setData({
+        fractionTypeID: null,
+        letterNO: null,
+        paymentTypeID: null,
+        paymentNO: null,
+      })
+    );
+
+    setSelectedLetterDate(null);
+    setSelectedPaymentDate(null);
+
+    setExcelFile(null);
+    setUploadProgress(0);
   };
 
   const handleExcelFileChange = (e) => {
@@ -402,7 +408,7 @@ function FractionForm() {
           })
           .filter((item) => item !== null);
         const type = data?.fractionTypeID;
-        setSavedDataLength(items.length - 1);
+        setSavedDataLength(items.length);
         handleInsertExcel(items, type);
       };
 
@@ -426,7 +432,7 @@ function FractionForm() {
       {showResultModal && (
         <Modal title={"نتیجه"}>
           <p className="paragraph-primary">
-            تعداد {savedDataLength} رکورد ثبت شد{" "}
+            تعداد {savedDataLength} رکورد ثبت شد
           </p>
 
           <div className="flex-row flex-center">
@@ -451,9 +457,11 @@ function FractionForm() {
               options={fractionTypesOptions}
               components={animatedComponents}
               name="fractionTypeID"
-              value={fractionTypesOptions.find(
-                (item) => item.value === data?.relationshipWithParentID
-              )}
+              value={
+                fractionTypesOptions.find(
+                  (item) => item.value === data?.fractionTypeID
+                ) || null
+              }
               onChange={handleSelectOptionChange}
               isLoading={fractionTypesIsLoading || fractionTypesIsFetching}
               isClearable={true}
@@ -684,6 +692,11 @@ function FractionForm() {
               closeMenuOnSelect={true}
               components={animatedComponents}
               isClearable={true}
+              value={
+                paymentTypeOptions.find(
+                  (item) => item.value === data?.paymentTypeID
+                ) || null
+              }
               onChange={handleSelectOptionChange}
               options={paymentTypeOptions}
               name="paymentTypeID"
