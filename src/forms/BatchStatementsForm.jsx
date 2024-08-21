@@ -176,15 +176,28 @@ function BatchStatementsForm() {
 
         // FIND NATIONAL CODES FROM ALL CELLS
         const nationalCodes = [];
+        let invalidCodes = false;
+
         json.forEach((row) => {
           row.forEach((cell) => {
             if (cell !== null && cell !== undefined && cell !== "") {
-              nationalCodes.push(convertToEnglishNumber(cell.toString()));
+              const code = convertToEnglishNumber(cell.toString());
+              if (code.length !== 10) {
+                invalidCodes = true;
+              }
+              nationalCodes.push(code);
             }
           });
         });
-        setNationalCodesFromExcel(nationalCodes);
-        setIsExcelFileUploaded(true);
+
+        if (invalidCodes) {
+          setExcelFile(null);
+          setUploadProgress(0);
+          toast.error("فایل دارای کد ملی نا معتبر است");
+        } else {
+          setNationalCodesFromExcel(nationalCodes);
+          setIsExcelFileUploaded(true);
+        }
       };
 
       reader.onloadend = () => {
