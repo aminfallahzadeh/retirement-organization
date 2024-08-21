@@ -97,7 +97,7 @@ function DashboardForm() {
   const retiredTypeOptions = [
     { value: "true", label: "بازنشسته" },
     { value: "false", label: "مستمری بگیر" },
-    { value: "", label: "هر دو" },
+    { value: "null", label: "هر دو" },
   ];
 
   const organizationOptions = optionsGenerator(
@@ -255,8 +255,12 @@ function DashboardForm() {
       const res = await getDashboardReport({
         startDate: startDate.toISOString(),
         finishDate: finishDate.toISOString(),
-        applicantTypeIsRetired: data.applicantTypeIsRetired,
-        organizationID: data.organizationID,
+        applicantTypeIsRetired:
+          data.applicantTypeIsRetired === "null"
+            ? null
+            : data.applicantTypeIsRetired,
+        organizationID:
+          data.organizationID === "null" ? null : data.organizationID,
       }).unwrap();
       console.log(res.itemList);
       createSumTableData(res.itemList, sumTableKeys, setSumTableData);
@@ -371,7 +375,10 @@ function DashboardForm() {
           <div className="inputBox__form">
             <Select
               closeMenuOnSelect={true}
-              options={organizationOptions}
+              options={[
+                { value: "null", label: "همه موارد" },
+                ...organizationOptions,
+              ]}
               components={animatedComponents}
               onChange={handleSelectOptionChange}
               value={organizationOptions.find(
