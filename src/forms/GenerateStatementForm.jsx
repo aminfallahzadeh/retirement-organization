@@ -26,11 +26,7 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
 // utils
-import {
-  selectStyles,
-  selectSettings,
-  optionsGenerator,
-} from "../utils/reactSelect";
+import { selectSettings, optionsGenerator } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
 function GenerateStatementForm({ setShowGenerateStatementModal }) {
@@ -163,7 +159,41 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
             }
             noOptionsMessage={selectSettings.noOptionsMessage}
             loadingMessage={selectSettings.loadingMessage}
-            styles={selectStyles}
+            styles={{
+              container: (base) => ({
+                ...base,
+                position: "relative",
+                height: "100%",
+              }),
+              control: (base) => ({
+                ...base,
+                fontFamily: "IranYekan",
+                cursor: "pointer",
+                fontSize: "12px",
+                height: "100%",
+                maxWidth: "100%",
+                maxHeight: "100%",
+                overflow: "auto",
+                textOverflow: "ellipsis",
+                position: "relative",
+              }),
+              menu: (base) => ({
+                ...base,
+                fontFamily: "IranYekan",
+                zIndex: "5",
+                height: "200px",
+              }),
+              option: (base) => ({
+                ...base,
+                cursor: "pointer",
+              }),
+              menuList: (base) => ({
+                ...base,
+                fontFamily: "IranYekan",
+                zIndex: "5",
+                height: "200px",
+              }),
+            }}
             isLoading={statementTypesIsFetching || statementTypesIsLoading}
           />
 

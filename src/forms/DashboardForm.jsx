@@ -348,7 +348,9 @@ function DashboardForm() {
               name="applicantTypeIsRetired"
               isClearable={true}
               placeholder={
-                <div className="react-select-placeholder">نوع بازنشسته</div>
+                <div className="react-select-placeholder">
+                  <span>*</span> نوع بازنشسته
+                </div>
               }
               noOptionsMessage={selectSettings.noOptionsMessage}
               loadingMessage={selectSettings.loadingMessage}
@@ -362,7 +364,7 @@ function DashboardForm() {
                   : "inputBox__form--readOnly-label-hidden"
               }
             >
-              نوع بازنشسته
+              <span>*</span> نوع بازنشسته
             </label>
           </div>
 
@@ -379,7 +381,9 @@ function DashboardForm() {
               isLoading={organizationIsLoading || organizationIsFetching}
               isClearable={true}
               placeholder={
-                <div className="react-select-placeholder">سازمان</div>
+                <div className="react-select-placeholder">
+                  <span>*</span> سازمان
+                </div>
               }
               noOptionsMessage={selectSettings.noOptionsMessage}
               loadingMessage={selectSettings.loadingMessage}
@@ -393,7 +397,7 @@ function DashboardForm() {
                   : "inputBox__form--readOnly-label-hidden"
               }
             >
-              سازمان
+              <span>*</span> سازمان
             </label>
           </div>
 
@@ -411,7 +415,9 @@ function DashboardForm() {
                 ref: fromCalenderRef,
               }}
             />
-            <div className="inputBox__form--readOnly-label">تاریخ از</div>
+            <div className="inputBox__form--readOnly-label">
+              <span>*</span> تاریخ از
+            </div>
           </div>
 
           <div className="inputBox__form">
@@ -428,7 +434,9 @@ function DashboardForm() {
                 ref: tillCalenderRef,
               }}
             />
-            <div className="inputBox__form--readOnly-label">تاریخ تا</div>
+            <div className="inputBox__form--readOnly-label">
+              <span>*</span> تاریخ تا
+            </div>
           </div>
         </form>
 
