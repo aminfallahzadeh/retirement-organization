@@ -1,5 +1,5 @@
 // react imports
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 // redux imports
 import { useLazyDashboardReportQuery } from "../slices/reportApiSlice";
@@ -170,6 +170,10 @@ function DashboardForm() {
     "MinSalaryWithLessThan30YearsExperience",
   ];
 
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   // CREATE SUM TABLE DATA FUNCTION
   const createSumTableData = (data, keys, setState) => {
     const result = data
@@ -259,8 +263,7 @@ function DashboardForm() {
           data.applicantTypeIsRetired === "null"
             ? null
             : data.applicantTypeIsRetired,
-        organizationID:
-          data.organizationID === "null" ? null : data.organizationID,
+        organizationID: data.organizationID,
       }).unwrap();
       console.log(res.itemList);
       createSumTableData(res.itemList, sumTableKeys, setSumTableData);
