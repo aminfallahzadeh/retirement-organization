@@ -10,33 +10,89 @@ import { defaultTableOptions } from "../../utils.js";
 // helpers
 import { convertToPersianNumber } from "../../helper.js";
 
-export const DashboardHouseRightGrid = ({ data }) => {
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: "HomeRightOfAllAliveRetireds",
-        header: "کل",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-      {
-        accessorKey: "HomeRightOfAliveMenRetireds",
-        header: "زن",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-      {
-        accessorKey: "HomeRightOfAliveWomenRetireds",
-        header: "مرد",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-    ],
-    []
-  );
+export const DashboardHouseRightGrid = ({ data, retiredType }) => {
+  // const columns = useMemo(
+  //   () => [
+  //     {
+  //       accessorKey: "HomeRightOfAllAliveRetireds",
+  //       header: "کل",
+  //       Cell: ({ renderedCellValue }) => (
+  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
+  //       ),
+  //     },
+  //     {
+  //       accessorKey: "HomeRightOfAliveMenRetireds",
+  //       header: "زن",
+  //       Cell: ({ renderedCellValue }) => (
+  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
+  //       ),
+  //     },
+  //     {
+  //       accessorKey: "HomeRightOfAliveWomenRetireds",
+  //       header: "مرد",
+  //       Cell: ({ renderedCellValue }) => (
+  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
+  //       ),
+  //     },
+  //   ],
+  //   []
+  // );
+
+  const columns = useMemo(() => {
+    let baseColumns;
+
+    if (retiredType === "true") {
+      baseColumns = [
+        {
+          accessorKey: "HomeRightOfAllAliveRetireds",
+          header: "کل",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "HomeRightOfAliveMenRetireds",
+          header: "مرد",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "HomeRightOfAliveWomenRetireds",
+          header: "زن",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+      ];
+    } else {
+      baseColumns = [
+        {
+          accessorKey: "HomeRightOfAllDeadRetireds",
+          header: "کل",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "HomeRightOfDeadMenRetireds",
+          header: "مرد",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "HomeRightOfDeadWomenRetireds",
+          header: "زن",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+      ];
+    }
+
+    return baseColumns;
+  }, [retiredType]);
 
   const table = useMaterialReactTable({
     ...defaultTableOptions,
@@ -63,7 +119,6 @@ export const DashboardHouseRightGrid = ({ data }) => {
       align: "center",
       sx: {
         border: "1px solid rgba(81, 81, 81, .5)",
-        fontStyle: "italic",
         fontWeight: "normal",
         fontFamily: "IranYekan",
       },

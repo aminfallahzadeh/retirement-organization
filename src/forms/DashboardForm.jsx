@@ -106,17 +106,31 @@ function DashboardForm() {
     "organizationName"
   );
 
-  // SEPERATORS
-  const sumTableKeys = [
+  // DATA TABLE KEYS
+  // RETIRED SUM KEYS
+  const retiredSumTableKeys = [
     "AliveRetireds",
     "AliveRetiredsMen",
     "AliveRetiredsWomen",
   ];
 
-  const houseRightTableKeys = [
+  const deadSumTableKeys = [
+    "DeadRetireds",
+    "DeadMenRetireds",
+    "DeadWomenRetireds",
+  ];
+
+  // HOME RIGHT KEYS
+  const retiredHomeRightKeys = [
     "HomeRightOfAllAliveRetireds",
     "HomeRightOfAliveMenRetireds",
     "HomeRightOfAliveWomenRetireds",
+  ];
+
+  const deadHomeRightKeys = [
+    "HomeRightOfAllDeadRetireds",
+    "HomeRightOfDeadMenRetireds",
+    "HomeRightOfDeadWomenRetireds",
   ];
 
   const underWarantyMenSumKeys = [
@@ -174,6 +188,11 @@ function DashboardForm() {
     console.log(data);
   }, [data]);
 
+  // RESET REPORT ON DATA CHANGE
+  useEffect(() => {
+    setShowGrids(false);
+  }, [data, selectedFromDate, selectedTillDate]);
+
   // CREATE SUM TABLE DATA FUNCTION
   const createSumTableData = (data, keys, setState) => {
     const result = data
@@ -221,6 +240,10 @@ function DashboardForm() {
       let startDate;
       let finishDate;
 
+      // TABLE DATA
+      let sumTableKeys;
+      let homeRightKeys;
+
       if (selectedFromDate) {
         startDate = new Date(selectedFromDate);
         startDate.setMinutes(
@@ -256,6 +279,18 @@ function DashboardForm() {
         }
       }
 
+      if (data.applicantTypeIsRetired === "true") {
+        sumTableKeys = retiredSumTableKeys;
+      } else {
+        sumTableKeys = deadSumTableKeys;
+      }
+
+      if (data.applicantTypeIsRetired === "true") {
+        homeRightKeys = retiredHomeRightKeys;
+      } else {
+        homeRightKeys = deadHomeRightKeys;
+      }
+
       const res = await getDashboardReport({
         startDate: startDate.toISOString(),
         finishDate: finishDate.toISOString(),
@@ -266,12 +301,9 @@ function DashboardForm() {
         organizationID: data.organizationID,
       }).unwrap();
       console.log(res.itemList);
+      console.log(sumTableKeys);
       createSumTableData(res.itemList, sumTableKeys, setSumTableData);
-      createSumTableData(
-        res.itemList,
-        houseRightTableKeys,
-        setHouseRightTableData
-      );
+      createSumTableData(res.itemList, homeRightKeys, setHouseRightTableData);
       createSumTableData(
         res.itemList,
         underWarantyMenSumKeys,
@@ -465,9 +497,30 @@ function DashboardForm() {
         </div>
         {showGrids && (
           <div className="flex-col flex-center">
+            <div className="flex-center">
+              <h5
+                className="title-secondary"
+                style={{ marginBottom: "0", marginTop: "20px" }}
+              >
+                {`گزارش آماری ${
+                  data.applicantTypeIsRetired === "true"
+                    ? "بازنشسته"
+                    : data.applicantTypeIsRetired === "false"
+                    ? "مستمری بگیر"
+                    : "بازنشسته و مستمری بگیر"
+                }`}
+              </h5>
+            </div>
+
             <div className="flex-row">
-              <DashboardSumGrid data={sumTableData} />
-              <DashboardHouseRightGrid data={houseRightTableData} />
+              <DashboardSumGrid
+                data={sumTableData}
+                retiredType={data.applicantTypeIsRetired}
+              />
+              <DashboardHouseRightGrid
+                data={houseRightTableData}
+                retiredType={data.applicantTypeIsRetired}
+              />
             </div>
 
             <div className="flex-center">

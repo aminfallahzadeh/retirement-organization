@@ -106,7 +106,11 @@ function CreateRequestForm() {
 
   const content = (
     <section className="formContainer flex-col">
-      <form method="POST" className="grid grid--col-4 u-margin-top-md">
+      <form
+        method="POST"
+        className="grid grid--col-4 u-margin-top-md"
+        noValidate
+      >
         <div className="inputBox__form">
           <Select
             closeMenuOnSelect={true}

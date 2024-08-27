@@ -1,5 +1,6 @@
 // react imports
 import { useState, useEffect, useRef } from "react";
+import { useForm, Controller } from "react-hook-form";
 
 // reduxt imports
 import {
@@ -67,6 +68,28 @@ function RetiredPersonForm() {
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
 
+  // ACCESS REACT HOOK FORM CONTROL
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+    register,
+    watch,
+    setValue,
+  } = useForm();
+
+  // DEBUGGING
+  // ACCESS REACT HOOK FORM DATA
+  const form_data = watch();
+
+  useEffect(() => {
+    console.log(form_data);
+  }, [form_data]);
+
+  useEffect(() => {
+    console.log(selectedBirthDate);
+  }, [selectedBirthDate]);
+
   const [updateRetiredPerson, { isLoading: isUpdating }] =
     useUpdateRetiredPersonMutation();
 
@@ -82,7 +105,12 @@ function RetiredPersonForm() {
   // fetch data
   useEffect(() => {
     if (isSuccess) {
-      setPersonData(retiredPersonData?.itemList[0]);
+      const data = retiredPersonData?.itemList[0];
+      setPersonData(data);
+
+      Object.keys(data).forEach((key) => {
+        setValue(key, data[key]);
+      });
 
       dispatch(
         setPersonDeathDate(
@@ -96,7 +124,7 @@ function RetiredPersonForm() {
     return () => {
       dispatch(setPersonDeathDate(null));
     };
-  }, [dispatch, isSuccess, retiredPersonData?.itemList]);
+  }, [dispatch, isSuccess, retiredPersonData?.itemList, setValue]);
 
   // handle error
   useEffect(() => {
@@ -203,15 +231,6 @@ function RetiredPersonForm() {
     setIsDeathCalenderOpen(open);
   };
 
-  // checkbox handler
-  const handleCheckBoxChange = (e) => {
-    const { name, checked } = e.target;
-    setPersonData({
-      ...personData,
-      [name]: checked,
-    });
-  };
-
   // handle data change
   const handlePersonDataChange = (e) => {
     const { name, value } = e.target;
@@ -221,19 +240,12 @@ function RetiredPersonForm() {
     });
   };
 
-  // HANDLE SELECT OPTION CHANGE
-  const handleSelectOptionChange = (selectedOption, actionMeta) => {
-    const { name } = actionMeta;
-    if (selectedOption) {
-      const { value } = selectedOption;
-      setPersonData({ ...personData, [name]: value || "" });
-    } else {
-      setPersonData({ ...personData, [name]: null });
-    }
-  };
+  // const onSubmit = () => {
+  //   console.log(form_data);
+  // };
 
   // handle update retired person
-  const handleUpdateRetired = async () => {
+  const onSubmit = async () => {
     try {
       // Adjusting for timezone difference
       let personDeathDate;
@@ -318,810 +330,1080 @@ function RetiredPersonForm() {
         </Box>
       ) : (
         <section className="flex-col">
-          <form method="POST" className="grid grid--col-3" noValidate>
-            <div className="row-span-2 flex-row flex-row--grow-second">
-              <div className="formPic">
-                <PersonOutlinedIcon sx={{ fontSize: 70, color: "#707070" }} />
+          <form
+            method="POST"
+            className="flex-col"
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+          >
+            <div className="grid grid--col-4">
+              <div className="row-span-2 flex-row flex-row--grow-second">
+                <div className="formPic">
+                  <PersonOutlinedIcon sx={{ fontSize: 70, color: "#707070" }} />
+                </div>
+
+                <div className="flex-col flex-center flex-col--grow flex-col--gap-lg">
+                  <div className="inputBox__form">
+                    {errors.personFirstName && (
+                      <span className="error-form">
+                        {errors.personFirstName.message}
+                      </span>
+                    )}
+                    <input
+                      disabled={!editable}
+                      type="text"
+                      name="personFirstName"
+                      id="personFirstName"
+                      className="inputBox__form--input"
+                      value={form_data?.personFirstName || ""}
+                      required
+                      {...register("personFirstName", {
+                        required: "نام را وارد کنید",
+                        pattern: {
+                          value: /^[آ-ی\s]+$/,
+                          message: "از حروف فارسی استفاده کنید",
+                        },
+                      })}
+                    />
+                    <label
+                      htmlFor="personFirstName"
+                      className="inputBox__form--label"
+                    >
+                      <span>*</span> نام
+                    </label>
+                  </div>
+                  <div className="inputBox__form">
+                    {errors.personFirstName && (
+                      <span className="error-form">
+                        {errors.personLastName.message}
+                      </span>
+                    )}
+                    <input
+                      disabled={!editable}
+                      type="text"
+                      name="personLastName"
+                      id="personLastName"
+                      className="inputBox__form--input"
+                      value={form_data?.personLastName || ""}
+                      required
+                      {...register("personLastName", {
+                        required: "نام خانوادگی را وارد کنید",
+                        pattern: {
+                          value: /^[آ-ی\s]+$/,
+                          message: "از حروف فارسی استفاده کنید",
+                        },
+                      })}
+                    />
+                    <label
+                      htmlFor="personLastName"
+                      className="inputBox__form--label"
+                    >
+                      <span>*</span> نام خانوادگی
+                    </label>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex-col flex-center flex-col--grow flex-col--gap-lg">
-                <div className="inputBox__form">
-                  <input
+              <div className="inputBox__form">
+                {errors.personNationalCode && (
+                  <span className="error-form">
+                    {errors.personNationalCode.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  name="personNationalCode"
+                  id="personNationalCode"
+                  className="inputBox__form--input"
+                  value={
+                    convertToPersianNumber(form_data?.personNationalCode) ?? ""
+                  }
+                  required
+                  {...register("personNationalCode", {
+                    required: "کد ملی را وارد کنید",
+                    minLength: {
+                      value: 10,
+                      message: "کد ملی باید ۱۰ رقم باشد",
+                    },
+                    maxLength: {
+                      value: 10,
+                      message: "کد ملی باید ۱۰ رقم باشد",
+                    },
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "کد ملی باید فقط شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="personNationalCode"
+                  className="inputBox__form--label"
+                >
+                  <span>*</span> کد ملی
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                {errors.personCertificateNo && (
+                  <span className="error-form">
+                    {errors.personCertificateNo.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  name="personCertificateNo"
+                  id="personCertificateNo"
+                  className="inputBox__form--input"
+                  value={
+                    convertToPersianNumber(form_data?.personCertificateNo) ?? ""
+                  }
+                  required
+                  {...register("personCertificateNo", {
+                    required: "شماره شناسنامه را وارد کنید",
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: " شماره شناسنامه باید فقط شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="personCertificateNo"
+                  className="inputBox__form--label"
+                >
+                  <span>*</span> شماره شناسنامه
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                {errors.personFatherName && (
+                  <span className="error-form">
+                    {errors.personFatherName.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="personFatherName"
+                  name="personFatherName"
+                  className="inputBox__form--input"
+                  value={form_data?.personFatherName || ""}
+                  required
+                  {...register("personFatherName", {
+                    pattern: {
+                      value: /^[آ-ی\s]+$/,
+                      message: "از حروف فارسی استفاده کنید",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="personFatherName"
+                  className="inputBox__form--label"
+                >
+                  نام پدر
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <Controller
+                  name="genderID"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={genderOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      isDisabled={!editable}
+                      value={genderOptions.find(
+                        (c) => c.value === form_data?.genderID
+                      )}
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">
+                          <span>*</span> جنسیت
+                        </div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={isGenderItemsLoading || isGenderItemsFetching}
+                    />
+                  )}
+                />
+
+                <label
+                  className={
+                    personData?.genderID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  <span>*</span> جنسیت
+                </label>
+
+                {errors.genderID && (
+                  <span className="error-form"> جنسیت اجباری است</span>
+                )}
+              </div>
+
+              <div className="inputBox__form">
+                <InputDatePicker
+                  disabled={!editable}
+                  value={selectedBirthDate}
+                  defaultValue={null}
+                  format={"jYYYY/jMM/jDD"}
+                  onChange={handleBirthDateChange}
+                  onOpenChange={handleBirthOpenChange}
+                  suffixIcon={<CalenderIcon color="action" />}
+                  open={isBirthCalenderOpen}
+                  style={datePickerStyles}
+                  wrapperStyle={datePickerWrapperStyles}
+                  pickerProps={{
+                    ref: birthDateCalenderRef,
+                  }}
+                />
+                <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
+              </div>
+
+              <div className="inputBox__form">
+                {errors.personBirthPlace && (
+                  <span className="error-form">
+                    {errors.personBirthPlace.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  name="personBirthPlace"
+                  id="personBirthPlace"
+                  className="inputBox__form--input"
+                  value={form_data?.personBirthPlace || ""}
+                  required
+                  {...register("personBirthPlace", {
+                    pattern: {
+                      value: /^[آ-ی\s]+$/,
+                      message: "از حروف فارسی استفاده کنید",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="personBirthPlace"
+                  className="inputBox__form--label"
+                >
+                  محل تولد
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                {errors.personPreviousName && (
+                  <span className="error-form">
+                    {errors.personPreviousName.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="personPreviousName"
+                  name="personPreviousName"
+                  className="inputBox__form--input"
+                  value={form_data?.personPreviousName || ""}
+                  required
+                  {...register("personPreviousName", {
+                    pattern: {
+                      value: /^[آ-ی\s]+$/,
+                      message: "از حروف فارسی استفاده کنید",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="personPreviousName"
+                  className="inputBox__form--label"
+                >
+                  نام و نام خانوادگی قبلی
+                </label>
+              </div>
+
+              <div
+                className={
+                  !editable
+                    ? "checkboxContainer--disabled col-span-3"
+                    : "checkboxContainer col-span-3"
+                }
+              >
+                <p className="inputBox__form--readOnly-label">
+                  وضعیت ایثارگری:
+                </p>
+
+                <div className="checkboxContainer__item">
+                  <Checkbox
+                    size="small"
+                    color="success"
                     disabled={!editable}
-                    type="text"
-                    name="personFirstName"
-                    id="personFirstName"
-                    className="inputBox__form--input"
-                    value={personData?.personFirstName || ""}
-                    onChange={handlePersonDataChange}
-                    required
+                    checked={!!form_data?.personIsSacrificedFamily}
+                    name="personIsSacrificedFamily"
+                    id="personIsSacrificedFamily"
+                    sx={{
+                      padding: 0.5,
+                    }}
+                    {...register("personIsSacrificedFamily")}
                   />
                   <label
-                    htmlFor="personFirstName"
-                    className="inputBox__form--label"
+                    htmlFor="personIsSacrificedFamily"
+                    className={
+                      !editable
+                        ? "checkboxContainer__label--disabled"
+                        : "checkboxContainer__label"
+                    }
                   >
-                    <span>*</span> نام
+                    خانواده شهید
                   </label>
                 </div>
-                <div className="inputBox__form">
-                  <input
+
+                <div className="checkboxContainer__item">
+                  <Checkbox
+                    size="small"
+                    color="success"
                     disabled={!editable}
-                    type="text"
-                    name="personLastName"
-                    id="personLastName"
-                    className="inputBox__form--input"
-                    value={personData?.personLastName || ""}
-                    onChange={handlePersonDataChange}
-                    required
+                    id="personIsWarrior"
+                    name="personIsWarrior"
+                    checked={!!form_data?.personIsWarrior}
+                    sx={{
+                      padding: 0.5,
+                    }}
+                    {...register("personIsWarrior")}
                   />
                   <label
-                    htmlFor="personLastName"
-                    className="inputBox__form--label"
+                    htmlFor="personIsWarrior"
+                    className={
+                      !editable
+                        ? "checkboxContainer__label--disabled"
+                        : "checkboxContainer__label"
+                    }
                   >
-                    <span>*</span> نام خانوادگی
+                    رزمنده
+                  </label>
+                </div>
+
+                <div className="checkboxContainer__item">
+                  <Checkbox
+                    size="small"
+                    color="success"
+                    disabled={!editable}
+                    id="personIsChildOfSacrificed"
+                    name="personIsChildOfSacrificed"
+                    checked={!!form_data?.personIsChildOfSacrificed}
+                    sx={{
+                      padding: 0.5,
+                    }}
+                    {...register("personIsChildOfSacrificed")}
+                  />
+
+                  <label
+                    htmlFor="personIsChildOfSacrificed"
+                    className={
+                      !editable
+                        ? "checkboxContainer__label--disabled"
+                        : "checkboxContainer__label"
+                    }
+                  >
+                    فرزند شهید
+                  </label>
+                </div>
+
+                <div className="checkboxContainer__item">
+                  <Checkbox
+                    size="small"
+                    color="success"
+                    disabled={!editable}
+                    id="personIsValiant"
+                    name="personIsValiant"
+                    checked={!!form_data?.personIsValiant}
+                    sx={{
+                      padding: 0.5,
+                    }}
+                    {...register("personIsValiant")}
+                  />
+
+                  <label
+                    htmlFor="personIsValiant"
+                    className={
+                      !editable
+                        ? "checkboxContainer__label--disabled"
+                        : "checkboxContainer__label"
+                    }
+                  >
+                    جانباز
+                  </label>
+                </div>
+
+                <div className="checkboxContainer__item">
+                  <Checkbox
+                    size="small"
+                    color="success"
+                    disabled={!editable}
+                    id="personIsSacrificed"
+                    name="personIsSacrificed"
+                    checked={!!form_data?.personIsSacrificed}
+                    sx={{
+                      padding: 0.5,
+                    }}
+                    {...register("personIsSacrificed")}
+                  />
+
+                  <label
+                    htmlFor="personIsSacrificed"
+                    className={
+                      !editable
+                        ? "checkboxContainer__label--disabled"
+                        : "checkboxContainer__label"
+                    }
+                  >
+                    شهید
+                  </label>
+                </div>
+
+                <div className="checkboxContainer__item">
+                  <Checkbox
+                    size="small"
+                    color="success"
+                    disabled={!editable}
+                    id="personIsCaptive"
+                    name="personIsCaptive"
+                    checked={!!form_data?.personIsCaptive}
+                    sx={{
+                      padding: 0.5,
+                    }}
+                    {...register("personIsCaptive")}
+                  />
+                  <label
+                    htmlFor="personIsCaptive"
+                    className={
+                      !editable
+                        ? "checkboxContainer__label--disabled"
+                        : "checkboxContainer__label"
+                    }
+                  >
+                    آزاده
                   </label>
                 </div>
               </div>
-            </div>
 
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                name="personNationalCode"
-                id="personNationalCode"
-                className="inputBox__form--input"
-                value={
-                  convertToPersianNumber(personData?.personNationalCode) ?? ""
-                }
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label
-                htmlFor="personNationalCode"
-                className="inputBox__form--label"
-              >
-                <span>*</span> کد ملی
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                name="personCertificateNo"
-                id="personCertificateNo"
-                className="inputBox__form--input"
-                value={
-                  convertToPersianNumber(personData?.personCertificateNo) ?? ""
-                }
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label
-                htmlFor="personCertificateNo"
-                className="inputBox__form--label"
-              >
-                <span>*</span> شماره شناسنامه
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="personFatherName"
-                name="personFatherName"
-                className="inputBox__form--input"
-                value={personData?.personFatherName || ""}
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label
-                htmlFor="personFatherName"
-                className="inputBox__form--label"
-              >
-                نام پدر
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={genderOptions}
-                onChange={handleSelectOptionChange}
-                isDisabled={!editable}
-                value={genderOptions.find(
-                  (item) => item.value === personData?.genderID
-                )}
-                name="genderID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">
-                    <span>*</span> جنسیت
+              <div className="inputBox__form">
+                <div className="inputBox__form--readOnly-input">
+                  <div className="inputBox__form--readOnly-label">
+                    شماره بازنشستگی
                   </div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={isGenderItemsLoading || isGenderItemsFetching}
-              />
-
-              <label
-                className={
-                  personData?.genderID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                <span>*</span> جنسیت
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <InputDatePicker
-                disabled={!editable}
-                value={selectedBirthDate}
-                defaultValue={null}
-                format={"jYYYY/jMM/jDD"}
-                onChange={handleBirthDateChange}
-                onOpenChange={handleBirthOpenChange}
-                suffixIcon={<CalenderIcon color="action" />}
-                open={isBirthCalenderOpen}
-                style={datePickerStyles}
-                wrapperStyle={datePickerWrapperStyles}
-                pickerProps={{
-                  ref: birthDateCalenderRef,
-                }}
-              />
-              <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                name="personBirthPlace"
-                id="personBirthPlace"
-                className="inputBox__form--input"
-                value={personData?.personBirthPlace || ""}
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label
-                htmlFor="personBirthPlace"
-                className="inputBox__form--label"
-              >
-                محل تولد
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="personPreviousName"
-                name="personPreviousName"
-                className="inputBox__form--input"
-                value={personData?.personPreviousName || ""}
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label
-                htmlFor="personPreviousName"
-                className="inputBox__form--label"
-              >
-                نام و نام خانوادگی قبلی
-              </label>
-            </div>
-
-            <div
-              className={
-                !editable
-                  ? "checkboxContainer--disabled col-span-3"
-                  : "checkboxContainer col-span-3"
-              }
-            >
-              <p className="inputBox__form--readOnly-label">وضعیت ایثارگری:</p>
-
-              <div className="checkboxContainer__item">
-                <Checkbox
-                  size="small"
-                  color="success"
-                  disabled={!editable}
-                  checked={!!personData?.personIsSacrificedFamily}
-                  name="personIsSacrificedFamily"
-                  id="personIsSacrificedFamily"
-                  onChange={handleCheckBoxChange}
-                  sx={{
-                    padding: 0.5,
-                  }}
-                />
-                <label
-                  htmlFor="personIsSacrificedFamily"
-                  className={
-                    !editable
-                      ? "checkboxContainer__label--disabled"
-                      : "checkboxContainer__label"
-                  }
-                >
-                  خانواده شهید
-                </label>
-              </div>
-
-              <div className="checkboxContainer__item">
-                <Checkbox
-                  size="small"
-                  color="success"
-                  disabled={!editable}
-                  id="personIsWarrior"
-                  name="personIsWarrior"
-                  checked={!!personData?.personIsWarrior}
-                  onChange={handleCheckBoxChange}
-                  sx={{
-                    padding: 0.5,
-                  }}
-                />
-                <label
-                  htmlFor="personIsWarrior"
-                  className={
-                    !editable
-                      ? "checkboxContainer__label--disabled"
-                      : "checkboxContainer__label"
-                  }
-                >
-                  رزمنده
-                </label>
-              </div>
-
-              <div className="checkboxContainer__item">
-                <Checkbox
-                  size="small"
-                  color="success"
-                  disabled={!editable}
-                  id="personIsChildOfSacrificed"
-                  name="personIsChildOfSacrificed"
-                  checked={!!personData?.personIsChildOfSacrificed}
-                  onChange={handleCheckBoxChange}
-                  sx={{
-                    padding: 0.5,
-                  }}
-                />
-
-                <label
-                  htmlFor="personIsChildOfSacrificed"
-                  className={
-                    !editable
-                      ? "checkboxContainer__label--disabled"
-                      : "checkboxContainer__label"
-                  }
-                >
-                  فرزند شهید
-                </label>
-              </div>
-
-              <div className="checkboxContainer__item">
-                <Checkbox
-                  size="small"
-                  color="success"
-                  disabled={!editable}
-                  id="personIsValiant"
-                  name="personIsValiant"
-                  checked={!!personData?.personIsValiant}
-                  onChange={handleCheckBoxChange}
-                  sx={{
-                    padding: 0.5,
-                  }}
-                />
-
-                <label
-                  htmlFor="personIsValiant"
-                  className={
-                    !editable
-                      ? "checkboxContainer__label--disabled"
-                      : "checkboxContainer__label"
-                  }
-                >
-                  جانباز
-                </label>
-              </div>
-
-              <div className="checkboxContainer__item">
-                <Checkbox
-                  size="small"
-                  color="success"
-                  disabled={!editable}
-                  id="personIsSacrificed"
-                  name="personIsSacrificed"
-                  checked={!!personData?.personIsSacrificed}
-                  onChange={handleCheckBoxChange}
-                  sx={{
-                    padding: 0.5,
-                  }}
-                />
-
-                <label
-                  htmlFor="personIsSacrificed"
-                  className={
-                    !editable
-                      ? "checkboxContainer__label--disabled"
-                      : "checkboxContainer__label"
-                  }
-                >
-                  شهید
-                </label>
-              </div>
-
-              <div className="checkboxContainer__item">
-                <Checkbox
-                  size="small"
-                  color="success"
-                  disabled={!editable}
-                  id="personIsCaptive"
-                  name="personIsCaptive"
-                  checked={!!personData?.personIsCaptive}
-                  onChange={handleCheckBoxChange}
-                  sx={{
-                    padding: 0.5,
-                  }}
-                />
-                <label
-                  htmlFor="personIsCaptive"
-                  className={
-                    !editable
-                      ? "checkboxContainer__label--disabled"
-                      : "checkboxContainer__label"
-                  }
-                >
-                  آزاده
-                </label>
-              </div>
-            </div>
-
-            <div className="inputBox__form">
-              <div className="inputBox__form--readOnly-input">
-                <div className="inputBox__form--readOnly-label">
-                  شماره بازنشستگی
-                </div>
-                <div className="inputBox__form--readOnly-content">
-                  {convertToPersianNumber(personData?.retiredID) || "-"}
+                  <div className="inputBox__form--readOnly-content">
+                    {convertToPersianNumber(personData?.retiredID) || "-"}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="personPhone"
-                name="personPhone"
-                className="inputBox__form--input"
-                value={convertToPersianNumber(personData?.personPhone) ?? ""}
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label htmlFor="personPhone" className="inputBox__form--label">
-                تلفن ثابت
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="personCellPhone"
-                name="personCellPhone"
-                className="inputBox__form--input"
-                value={
-                  convertToPersianNumber(personData?.personCellPhone) ?? ""
-                }
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label
-                htmlFor="personCellPhone"
-                className="inputBox__form--label"
-              >
-                تلفن همراه
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="backupNum"
-                name="personCellPhone2"
-                className="inputBox__form--input"
-                value={
-                  convertToPersianNumber(personData?.personCellPhone2) ?? ""
-                }
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label htmlFor="backupNum" className="inputBox__form--label">
-                تلفن پشتیبان
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="backupName"
-                value={personData?.backupFirstName || ""}
-                name="backupFirstName"
-                className="inputBox__form--input"
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label htmlFor="backupName" className="inputBox__form--label">
-                نام پشتیبان
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="backupLname"
-                value={personData?.backupLastName || ""}
-                name="backupLastName"
-                className="inputBox__form--input"
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label htmlFor="backupLname" className="inputBox__form--label">
-                نام خانوادگی پشتیبان
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="personEmail"
-                value={personData?.personEmail || ""}
-                name="personEmail"
-                className="inputBox__form--input"
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label htmlFor="personEmail" className="inputBox__form--label">
-                پست الکترونیک
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={educationOptions}
-                onChange={handleSelectOptionChange}
-                isDisabled={!editable}
-                value={educationOptions.find(
-                  (item) => item.value === personData?.educationTypeID
+              <div className="inputBox__form">
+                {errors.personPhone && (
+                  <span className="error-form">
+                    {errors.personPhone.message}
+                  </span>
                 )}
-                name="educationTypeID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">
-                    <span>*</span> مدرک تحصیلی
-                  </div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={educationTypesIsLoading || educationTypesIsFetching}
-              />
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="personPhone"
+                  name="personPhone"
+                  className="inputBox__form--input"
+                  value={convertToPersianNumber(form_data?.personPhone) ?? ""}
+                  required
+                  {...register("personPhone", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "تلفن باید فقط شامل اعداد باشد",
+                    },
+                    minLength: {
+                      value: 8,
+                      message: "تلفن باید ۸ رقم باشد",
+                    },
+                    maxLength: {
+                      value: 8,
+                      message: "تلفن باید ۸ رقم باشد",
+                    },
+                  })}
+                />
+                <label htmlFor="personPhone" className="inputBox__form--label">
+                  تلفن ثابت
+                </label>
+              </div>
 
-              <label
-                className={
-                  personData?.educationTypeID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                <span>*</span> مدرک تحصیلی
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={countryOptions}
-                onChange={handleSelectOptionChange}
-                isDisabled={!editable}
-                value={countryOptions.find(
-                  (item) => item.value === personData?.personCountryID
+              <div className="inputBox__form">
+                {errors.personCellPhone && (
+                  <span className="error-form">
+                    {errors.personCellPhone.message}
+                  </span>
                 )}
-                name="personCountryID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">کشور</div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={countriesIsLoading || countriesIsFetching}
-                aria-label="country"
-              />
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="personCellPhone"
+                  name="personCellPhone"
+                  className="inputBox__form--input"
+                  value={
+                    convertToPersianNumber(form_data?.personCellPhone) ?? ""
+                  }
+                  onChange={handlePersonDataChange}
+                  required
+                  {...register("personCellPhone", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "تلفن باید فقط شامل اعداد باشد",
+                    },
+                    minLength: {
+                      value: 11,
+                      message: "تلفن همراه باید ۱۱ رقم باشد",
+                    },
+                    maxLength: {
+                      value: 11,
+                      message: "تلفن همراه باید ۱۱ رقم باشد",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="personCellPhone"
+                  className="inputBox__form--label"
+                >
+                  تلفن همراه
+                </label>
+              </div>
 
-              <label
-                className={
-                  personData?.personCountryID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                کشور
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={stateOptions}
-                onChange={handleSelectOptionChange}
-                isDisabled={!editable}
-                value={stateOptions.find(
-                  (item) => item.value === personData?.personStateID
+              <div className="inputBox__form">
+                {errors.personCellPhone2 && (
+                  <span className="error-form">
+                    {errors.personCellPhone2.message}
+                  </span>
                 )}
-                name="personStateID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">استان</div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={statesIsLoading || statesIsFetching}
-              />
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="backupNum"
+                  name="personCellPhone2"
+                  className="inputBox__form--input"
+                  value={
+                    convertToPersianNumber(form_data?.personCellPhone2) ?? ""
+                  }
+                  required
+                  {...register("personCellPhone2", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "تلفن باید فقط شامل اعداد باشد",
+                    },
+                    minLength: {
+                      value: 11,
+                      message: "تلفن همراه باید ۱۱ رقم باشد",
+                    },
+                    maxLength: {
+                      value: 11,
+                      message: "تلفن همراه باید ۱۱ رقم باشد",
+                    },
+                  })}
+                />
+                <label htmlFor="backupNum" className="inputBox__form--label">
+                  تلفن پشتیبان
+                </label>
+              </div>
 
-              <label
-                className={
-                  personData?.personStateID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                استان
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={cityOptions}
-                onChange={handleSelectOptionChange}
-                isDisabled={!editable}
-                value={cityOptions.find(
-                  (item) => item.value === personData?.personCityID
+              <div className="inputBox__form">
+                {errors.backupFirstName && (
+                  <span className="error-form">
+                    {errors.backupFirstName.message}
+                  </span>
                 )}
-                name="personCityID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">شهر</div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={citiesIsLoading || citiesIsFetching}
-              />
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="backupName"
+                  value={form_data?.backupFirstName || ""}
+                  name="backupFirstName"
+                  className="inputBox__form--input"
+                  required
+                  {...register("backupFirstName", {
+                    pattern: {
+                      value: /^[آ-ی\s]+$/,
+                      message: "از حروف فارسی استفاده کنید",
+                    },
+                  })}
+                />
+                <label htmlFor="backupName" className="inputBox__form--label">
+                  نام پشتیبان
+                </label>
+              </div>
 
-              <label
-                className={
-                  personData?.personCityID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                شهر
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="personRegion"
-                value={convertToPersianNumber(personData?.personRegion) ?? ""}
-                name="personRegion"
-                className="inputBox__form--input"
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label htmlFor="personRegion" className="inputBox__form--label">
-                منطقه سکونت
-              </label>
-            </div>
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="personArea"
-                value={convertToPersianNumber(personData?.personArea) ?? ""}
-                name="personArea"
-                className="inputBox__form--input"
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label htmlFor="personArea" className="inputBox__form--label">
-                ناحیه سکونت
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="personPostalCode"
-                value={
-                  convertToPersianNumber(personData?.personPostalCode) ?? ""
-                }
-                name="personPostalCode"
-                className="inputBox__form--input"
-                onChange={handlePersonDataChange}
-                required
-              />
-              <label
-                htmlFor="personPostalCode"
-                className="inputBox__form--label"
-              >
-                کد پستی
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={housingOptions}
-                onChange={handleSelectOptionChange}
-                isDisabled={!editable}
-                value={housingOptions.find(
-                  (item) => item.value === personData?.housingTypeID
+              <div className="inputBox__form">
+                {errors.backupLastName && (
+                  <span className="error-form">
+                    {errors.backupLastName.message}
+                  </span>
                 )}
-                name="housingTypeID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">وضعیت مسکن</div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={housingTypesIsLoading || housingTypesIsFetching}
-              />
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="backupLname"
+                  value={form_data?.backupLastName || ""}
+                  name="backupLastName"
+                  className="inputBox__form--input"
+                  required
+                  {...register("backupLastName", {
+                    pattern: {
+                      value: /^[آ-ی\s]+$/,
+                      message: "از حروف فارسی استفاده کنید",
+                    },
+                  })}
+                />
+                <label htmlFor="backupLname" className="inputBox__form--label">
+                  نام خانوادگی پشتیبان
+                </label>
+              </div>
 
-              <label
-                className={
-                  personData?.housingTypeID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                وضعیت مسکن
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={maritalStatusOptions}
-                onChange={handleSelectOptionChange}
-                value={maritalStatusOptions.find(
-                  (item) => item.value === personData?.maritalStatusID
+              <div className="inputBox__form">
+                {errors.personEmail && (
+                  <span className="error-form">
+                    {errors.personEmail.message}
+                  </span>
                 )}
-                isDisabled={!editable}
-                name="maritalStatusID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">وضعیت تاهل</div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={
-                  maritalStatusItemsIsLoading || maritalStatusItemsIsFetching
-                }
-              />
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="personEmail"
+                  value={form_data?.personEmail || ""}
+                  name="personEmail"
+                  className="inputBox__form--input"
+                  required
+                  {...register("personEmail", {
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "ایمیل نامعتبر است",
+                    },
+                  })}
+                />
+                <label htmlFor="personEmail" className="inputBox__form--label">
+                  پست الکترونیک
+                </label>
+              </div>
 
-              <label
-                className={
-                  personData?.maritalStatusID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
+              <div className="inputBox__form">
+                <Controller
+                  name="educationTypeID"
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={educationOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      isDisabled={!editable}
+                      value={educationOptions.find(
+                        (c) => c.value === form_data?.educationTypeID
+                      )}
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">
+                          مدرک تحصیلی
+                        </div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={
+                        educationTypesIsLoading || educationTypesIsFetching
+                      }
+                    />
+                  )}
+                />
+
+                <label
+                  className={
+                    personData?.educationTypeID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  مدرک تحصیلی
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <Controller
+                  name="personCountryID"
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={countryOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      isDisabled={!editable}
+                      value={countryOptions.find(
+                        (c) => c.value === form_data?.personCountryID
+                      )}
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">کشور</div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={countriesIsLoading || countriesIsFetching}
+                      aria-label="country"
+                    />
+                  )}
+                />
+
+                <label
+                  className={
+                    personData?.personCountryID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  کشور
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <Controller
+                  name="personStateID"
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={stateOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      isDisabled={!editable}
+                      value={stateOptions.find(
+                        (c) => c.value === form_data?.personStateID
+                      )}
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">استان</div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={statesIsLoading || statesIsFetching}
+                    />
+                  )}
+                />
+
+                <label
+                  className={
+                    personData?.personStateID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  استان
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <Controller
+                  name="personCityID"
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={cityOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      isDisabled={!editable}
+                      value={cityOptions.find(
+                        (c) => c.value === form_data?.personCityID
+                      )}
+                      name="personCityID"
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">شهر</div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={citiesIsLoading || citiesIsFetching}
+                    />
+                  )}
+                />
+
+                <label
+                  className={
+                    personData?.personCityID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  شهر
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                {errors.personRegion && (
+                  <span className="error-form">
+                    {errors.personRegion.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="personRegion"
+                  value={convertToPersianNumber(form_data?.personRegion) ?? ""}
+                  name="personRegion"
+                  className="inputBox__form--input"
+                  required
+                  {...register("personRegion", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "منطقه باید فقط شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label htmlFor="personRegion" className="inputBox__form--label">
+                  منطقه سکونت
+                </label>
+              </div>
+              <div className="inputBox__form">
+                {errors.personArea && (
+                  <span className="error-form">
+                    {errors.personArea.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="personArea"
+                  value={convertToPersianNumber(form_data?.personArea) ?? ""}
+                  name="personArea"
+                  className="inputBox__form--input"
+                  required
+                  {...register("personArea", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "ناحیه باید فقط شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label htmlFor="personArea" className="inputBox__form--label">
+                  ناحیه سکونت
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                {errors.personPostalCode && (
+                  <span className="error-form">
+                    {errors.personPostalCode.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="personPostalCode"
+                  value={
+                    convertToPersianNumber(form_data?.personPostalCode) ?? ""
+                  }
+                  name="personPostalCode"
+                  className="inputBox__form--input"
+                  required
+                  {...register("personPostalCode", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "کد پستی باید فقط شامل اعداد باشد",
+                    },
+                    minLength: {
+                      value: 10,
+                      message: "کد پستی باید ۱۰ رقمی باشد",
+                    },
+                    maxLength: {
+                      value: 10,
+                      message: "کد پستی باید ۱۰ رقمی باشد",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="personPostalCode"
+                  className="inputBox__form--label"
+                >
+                  کد پستی
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <Controller
+                  name="housingTypeID"
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={housingOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      isDisabled={!editable}
+                      value={housingOptions.find(
+                        (c) => c.value === form_data?.housingTypeID
+                      )}
+                      name="housingTypeID"
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">
+                          وضعیت مسکن
+                        </div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={
+                        housingTypesIsLoading || housingTypesIsFetching
+                      }
+                    />
+                  )}
+                />
+
+                <label
+                  className={
+                    personData?.housingTypeID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  وضعیت مسکن
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <Controller
+                  name="maritalStatusID"
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={maritalStatusOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      value={maritalStatusOptions.find(
+                        (c) => c.value === form_data?.maritalStatusID
+                      )}
+                      isDisabled={!editable}
+                      name="maritalStatusID"
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">
+                          وضعیت تاهل
+                        </div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={
+                        maritalStatusItemsIsLoading ||
+                        maritalStatusItemsIsFetching
+                      }
+                    />
+                  )}
+                />
+
+                <label
+                  className={
+                    personData?.maritalStatusID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  وضعیت تاهل
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <InputDatePicker
+                  disabled={!editable}
+                  value={selectedDeathDate}
+                  format={"jYYYY/jMM/jDD"}
+                  onChange={handleDeathDateChange}
+                  onOpenChange={handleDeathOpenChange}
+                  open={isDeathCalenderOpen}
+                  suffixIcon={<CalenderIcon color="action" />}
+                  style={datePickerStyles}
+                  wrapperStyle={datePickerWrapperStyles}
+                  pickerProps={{
+                    ref: deathDateCalenderRef,
+                  }}
+                />
+                <div className="inputBox__form--readOnly-label">تاریخ فوت</div>
+              </div>
+
+              <div className="inputBox__form col-span-3">
+                <textarea
+                  disabled={!editable}
+                  type="text"
+                  id="personAddress"
+                  value={form_data?.personAddress || ""}
+                  name="personAddress"
+                  className="inputBox__form--input"
+                  required
+                  {...register("personAddress")}
+                ></textarea>
+                <label
+                  htmlFor="personAddress"
+                  className="inputBox__form--label"
+                >
+                  نشانی
+                </label>
+              </div>
+
+              <div className="inputBox__form row-col-span-3">
+                <textarea
+                  disabled={!editable}
+                  type="text"
+                  id="personDescription"
+                  value={form_data?.personDescription || ""}
+                  name="personDescription"
+                  className="inputBox__form--input"
+                  required
+                  {...register("personDescription")}
+                ></textarea>
+                <label
+                  htmlFor="personDescription"
+                  className="inputBox__form--label"
+                >
+                  توضیحات
+                </label>
+              </div>
+            </div>
+
+            <div style={{ marginRight: "auto" }} className="flex-row">
+              <LoadingButton
+                dir="ltr"
+                endIcon={<SaveIcon />}
+                loading={isUpdating}
+                disabled={!editable}
+                onClick={handleSubmit}
+                variant="contained"
+                type="submit"
+                color="success"
+                sx={{ fontFamily: "sahel" }}
               >
-                وضعیت تاهل
-              </label>
-            </div>
+                <span>ذخیره</span>
+              </LoadingButton>
 
-            <div className="inputBox__form">
-              <InputDatePicker
-                disabled={!editable}
-                value={selectedDeathDate}
-                format={"jYYYY/jMM/jDD"}
-                onChange={handleDeathDateChange}
-                onOpenChange={handleDeathOpenChange}
-                open={isDeathCalenderOpen}
-                suffixIcon={<CalenderIcon color="action" />}
-                style={datePickerStyles}
-                wrapperStyle={datePickerWrapperStyles}
-                pickerProps={{
-                  ref: deathDateCalenderRef,
-                }}
-              />
-              <div className="inputBox__form--readOnly-label">تاریخ فوت</div>
-            </div>
-
-            <div className="inputBox__form col-span-3">
-              <textarea
-                disabled={!editable}
-                type="text"
-                id="personAddress"
-                value={personData?.personAddress || ""}
-                name="personAddress"
-                className="inputBox__form--input"
-                onChange={handlePersonDataChange}
-                required
-              ></textarea>
-              <label htmlFor="personAddress" className="inputBox__form--label">
-                نشانی
-              </label>
-            </div>
-
-            <div className="inputBox__form row-col-span-3">
-              <textarea
-                disabled={!editable}
-                type="text"
-                id="personDescription"
-                value={personData?.personDescription || ""}
-                name="personDescription"
-                className="inputBox__form--input"
-                onChange={handlePersonDataChange}
-                required
-              ></textarea>
-              <label
-                htmlFor="personDescription"
-                className="inputBox__form--label"
+              <Button
+                dir="ltr"
+                endIcon={<EditIcon />}
+                onClick={handleEditable}
+                disabled={editable}
+                variant="contained"
+                color="primary"
+                sx={{ fontFamily: "sahel" }}
               >
-                توضیحات
-              </label>
+                <span>ویرایش</span>
+              </Button>
             </div>
           </form>
-
-          <div style={{ marginRight: "auto" }} className="flex-row">
-            <LoadingButton
-              dir="ltr"
-              endIcon={<SaveIcon />}
-              loading={isUpdating}
-              disabled={!editable}
-              onClick={handleUpdateRetired}
-              variant="contained"
-              color="success"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>ذخیره</span>
-            </LoadingButton>
-
-            <Button
-              dir="ltr"
-              endIcon={<EditIcon />}
-              onClick={handleEditable}
-              disabled={editable}
-              variant="contained"
-              color="primary"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>ویرایش</span>
-            </Button>
-          </div>
         </section>
       )}
     </>

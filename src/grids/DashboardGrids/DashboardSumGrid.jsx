@@ -10,33 +10,61 @@ import { defaultTableOptions } from "../../utils.js";
 // helpers
 import { convertToPersianNumber } from "../../helper.js";
 
-export const DashboardSumGrid = ({ data }) => {
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: "AliveRetireds",
-        header: "مجموع مرد و زن",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-      {
-        accessorKey: "AliveRetiredsMen",
-        header: "تعداد مرد",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-      {
-        accessorKey: "AliveRetiredsWomen",
-        header: "تعداد زن",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-    ],
-    []
-  );
+export const DashboardSumGrid = ({ data, retiredType }) => {
+  const columns = useMemo(() => {
+    let baseColumns;
+
+    if (retiredType === "true") {
+      baseColumns = [
+        {
+          accessorKey: "AliveRetireds",
+          header: "کل",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "AliveRetiredsMen",
+          header: "مرد",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "AliveRetiredsWomen",
+          header: "زن",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+      ];
+    } else {
+      baseColumns = [
+        {
+          accessorKey: "DeadRetireds",
+          header: "کل",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "DeadMenRetireds",
+          header: "مرد",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "DeadWomenRetireds",
+          header: "زن",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+      ];
+    }
+    return baseColumns;
+  }, [retiredType]);
 
   const table = useMaterialReactTable({
     ...defaultTableOptions,
@@ -63,7 +91,6 @@ export const DashboardSumGrid = ({ data }) => {
       align: "center",
       sx: {
         border: "1px solid rgba(81, 81, 81, .5)",
-        fontStyle: "italic",
         fontWeight: "normal",
         fontFamily: "IranYekan",
       },
@@ -74,7 +101,7 @@ export const DashboardSumGrid = ({ data }) => {
         border: "1px solid rgba(81, 81, 81, .5)",
       },
     },
-    renderCaption: () => "مجموع مستمری بگیران",
+    renderCaption: () => "مجموع",
   });
 
   return <MRT_Table table={table} />;

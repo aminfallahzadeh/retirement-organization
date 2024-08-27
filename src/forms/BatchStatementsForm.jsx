@@ -264,7 +264,7 @@ function BatchStatementsForm() {
       />
 
       <section className="flex-col formContainer">
-        <form className="grid grid--col-4">
+        <form className="grid grid--col-4" noValidate>
           <div className="checkboxContainer">
             <span className="checkboxContainer__label">فایل اکسل</span>
             <Switch checked={isExcel} onChange={handleIsExcelChange} />
