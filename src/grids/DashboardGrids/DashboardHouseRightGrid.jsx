@@ -11,33 +11,6 @@ import { defaultTableOptions } from "../../utils.js";
 import { convertToPersianNumber } from "../../helper.js";
 
 export const DashboardHouseRightGrid = ({ data, retiredType }) => {
-  // const columns = useMemo(
-  //   () => [
-  //     {
-  //       accessorKey: "HomeRightOfAllAliveRetireds",
-  //       header: "کل",
-  //       Cell: ({ renderedCellValue }) => (
-  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
-  //       ),
-  //     },
-  //     {
-  //       accessorKey: "HomeRightOfAliveMenRetireds",
-  //       header: "زن",
-  //       Cell: ({ renderedCellValue }) => (
-  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
-  //       ),
-  //     },
-  //     {
-  //       accessorKey: "HomeRightOfAliveWomenRetireds",
-  //       header: "مرد",
-  //       Cell: ({ renderedCellValue }) => (
-  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
-  //       ),
-  //     },
-  //   ],
-  //   []
-  // );
-
   const columns = useMemo(() => {
     let baseColumns;
 
@@ -65,7 +38,7 @@ export const DashboardHouseRightGrid = ({ data, retiredType }) => {
           ),
         },
       ];
-    } else {
+    } else if (retiredType === "false") {
       baseColumns = [
         {
           accessorKey: "HomeRightOfAllDeadRetireds",
@@ -83,6 +56,30 @@ export const DashboardHouseRightGrid = ({ data, retiredType }) => {
         },
         {
           accessorKey: "HomeRightOfDeadWomenRetireds",
+          header: "زن",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+      ];
+    } else {
+      baseColumns = [
+        {
+          accessorKey: "HomeRightOfAllRetireds",
+          header: "کل",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "HomeRightOfAllMenRetireds",
+          header: "مرد",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "HomeRightOfAllWomenRetireds",
           header: "زن",
           Cell: ({ renderedCellValue }) => (
             <span>{convertToPersianNumber(renderedCellValue)}</span>

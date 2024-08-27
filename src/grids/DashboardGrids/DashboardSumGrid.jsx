@@ -38,7 +38,7 @@ export const DashboardSumGrid = ({ data, retiredType }) => {
           ),
         },
       ];
-    } else {
+    } else if (retiredType === "false") {
       baseColumns = [
         {
           accessorKey: "DeadRetireds",
@@ -56,6 +56,30 @@ export const DashboardSumGrid = ({ data, retiredType }) => {
         },
         {
           accessorKey: "DeadWomenRetireds",
+          header: "زن",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+      ];
+    } else {
+      baseColumns = [
+        {
+          accessorKey: "AllRetireds",
+          header: "کل",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "AllMenRetireds",
+          header: "مرد",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "AllWomenRetireds",
           header: "زن",
           Cell: ({ renderedCellValue }) => (
             <span>{convertToPersianNumber(renderedCellValue)}</span>

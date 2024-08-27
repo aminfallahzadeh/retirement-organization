@@ -120,6 +120,8 @@ function DashboardForm() {
     "DeadWomenRetireds",
   ];
 
+  const allSumTableKeys = ["AllRetireds", "AllMenRetireds", "AllWomenRetireds"];
+
   // HOME RIGHT KEYS
   const retiredHomeRightKeys = [
     "HomeRightOfAllAliveRetireds",
@@ -133,16 +135,48 @@ function DashboardForm() {
     "HomeRightOfDeadWomenRetireds",
   ];
 
-  const underWarantyMenSumKeys = [
+  const allHomeRightKeys = [
+    "HomeRightOfAllRetireds",
+    "HomeRightOfAllMenRetireds",
+    "HomeRightOfAllWomenRetireds",
+  ];
+
+  // UNDER WARRANTY MEN KEYS
+  const underWarantyMenAliveKeys = [
     "SpouseOfAliveMenRetireds",
     "SonOfAliveMenRetireds",
     "DaughterOfAliveMenRetireds",
   ];
 
-  const uderWarantyWomenKeys = [
+  const underWarantyMenDeadKeys = [
+    "SpouseOfDeadMenRetireds",
+    "SonOfDeadMenRetireds",
+    "DaughterOfDeadMenRetireds",
+  ];
+
+  const underWarantyMenAllKeys = [
+    "SpouseOfAllMenRetireds",
+    "SonOfAllMenRetireds",
+    "DaughterOfAllMenRetireds",
+  ];
+
+  // UNDER WARTANTY WOMEN KEYS
+  const uderWarantyWomenAliveKeys = [
     "SpouseOfAliveWomenRetireds",
     "SonOfAliveWomenRetireds",
     "DaughterOfAliveWomenRetireds",
+  ];
+
+  const uderWarantyWomenDeadKeys = [
+    "SpouseOfDeadWomenRetireds",
+    "SonOfDeadWomenRetireds",
+    "DaughterOfDeadWomenRetireds",
+  ];
+
+  const uderWarantyWomenAllKeys = [
+    "SpouseOfAllWomenRetireds",
+    "SonOfAllWomenRetireds",
+    "DaughterOfAllWomenRetireds",
   ];
 
   const relatedRightMenKeys = [
@@ -243,6 +277,8 @@ function DashboardForm() {
       // TABLE DATA
       let sumTableKeys;
       let homeRightKeys;
+      let underWarantyMenKeys;
+      let uderWarantyWomenKeys;
 
       if (selectedFromDate) {
         startDate = new Date(selectedFromDate);
@@ -281,14 +317,34 @@ function DashboardForm() {
 
       if (data.applicantTypeIsRetired === "true") {
         sumTableKeys = retiredSumTableKeys;
-      } else {
+      } else if (data.applicantTypeIsRetired === "false") {
         sumTableKeys = deadSumTableKeys;
+      } else {
+        sumTableKeys = allSumTableKeys;
       }
 
       if (data.applicantTypeIsRetired === "true") {
         homeRightKeys = retiredHomeRightKeys;
-      } else {
+      } else if (data.applicantTypeIsRetired === "false") {
         homeRightKeys = deadHomeRightKeys;
+      } else {
+        homeRightKeys = allHomeRightKeys;
+      }
+
+      if (data.applicantTypeIsRetired === "true") {
+        underWarantyMenKeys = underWarantyMenAliveKeys;
+      } else if (data.applicantTypeIsRetired === "false") {
+        underWarantyMenKeys = underWarantyMenDeadKeys;
+      } else {
+        underWarantyMenKeys = underWarantyMenAllKeys;
+      }
+
+      if (data.applicantTypeIsRetired === "true") {
+        uderWarantyWomenKeys = uderWarantyWomenAliveKeys;
+      } else if (data.applicantTypeIsRetired === "false") {
+        uderWarantyWomenKeys = uderWarantyWomenDeadKeys;
+      } else {
+        uderWarantyWomenKeys = uderWarantyWomenAllKeys;
       }
 
       const res = await getDashboardReport({
@@ -306,7 +362,7 @@ function DashboardForm() {
       createSumTableData(res.itemList, homeRightKeys, setHouseRightTableData);
       createSumTableData(
         res.itemList,
-        underWarantyMenSumKeys,
+        underWarantyMenKeys,
         setUderWarantyMenTableData
       );
       createSumTableData(
@@ -534,12 +590,16 @@ function DashboardForm() {
 
             <div className="flex-row">
               <div className="flex-col">
-                <UnderWarantyAmountMenGrid data={uderWarantyMenTableData} />
+                <UnderWarantyAmountMenGrid
+                  data={uderWarantyMenTableData}
+                  retiredType={data.applicantTypeIsRetired}
+                />
                 <SupplementaryGrid data={supplementaryTableData} />
               </div>
               <div className="flex-col">
                 <UnderWarantyAmountWomenGrid
                   data={underWarantyWomenTableData}
+                  retiredType={data.applicantTypeIsRetired}
                 />
                 <SacrificeCondtionsGrid data={ssacrificeTableData} />
               </div>

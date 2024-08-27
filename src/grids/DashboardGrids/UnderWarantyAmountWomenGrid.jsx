@@ -10,33 +10,91 @@ import { defaultTableOptions } from "../../utils.js";
 // helpers
 import { convertToPersianNumber } from "../../helper.js";
 
-export const UnderWarantyAmountWomenGrid = ({ data }) => {
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: "SpouseOfAliveWomenRetireds",
-        header: "عائله مندی",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-      {
-        accessorKey: "DaughterOfAliveWomenRetireds",
-        header: "دختر",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-      {
-        accessorKey: "SonOfAliveWomenRetireds",
-        header: "پسر",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-    ],
-    []
-  );
+export const UnderWarantyAmountWomenGrid = ({ data, retiredType }) => {
+  const columns = useMemo(() => {
+    let baseColumns;
+
+    switch (retiredType) {
+      case "true":
+        baseColumns = [
+          {
+            accessorKey: "SpouseOfAliveWomenRetireds",
+            header: "عائله مندی",
+            Cell: ({ renderedCellValue }) => (
+              <span>{convertToPersianNumber(renderedCellValue)}</span>
+            ),
+          },
+          {
+            accessorKey: "DaughterOfAliveWomenRetireds",
+            header: "دختر",
+            Cell: ({ renderedCellValue }) => (
+              <span>{convertToPersianNumber(renderedCellValue)}</span>
+            ),
+          },
+          {
+            accessorKey: "SonOfAliveWomenRetireds",
+            header: "پسر",
+            Cell: ({ renderedCellValue }) => (
+              <span>{convertToPersianNumber(renderedCellValue)}</span>
+            ),
+          },
+        ];
+        break;
+
+      case "false":
+        baseColumns = [
+          {
+            accessorKey: "SpouseOfDeadWomenRetireds",
+            header: "عائله مندی",
+            Cell: ({ renderedCellValue }) => (
+              <span>{convertToPersianNumber(renderedCellValue)}</span>
+            ),
+          },
+          {
+            accessorKey: "DaughterOfDeadWomenRetireds",
+            header: "دختر",
+            Cell: ({ renderedCellValue }) => (
+              <span>{convertToPersianNumber(renderedCellValue)}</span>
+            ),
+          },
+          {
+            accessorKey: "SonOfDeadWomenRetireds",
+            header: "پسر",
+            Cell: ({ renderedCellValue }) => (
+              <span>{convertToPersianNumber(renderedCellValue)}</span>
+            ),
+          },
+        ];
+        break;
+
+      default:
+        baseColumns = [
+          {
+            accessorKey: "SpouseOfAllWomenRetireds",
+            header: "عائله مندی",
+            Cell: ({ renderedCellValue }) => (
+              <span>{convertToPersianNumber(renderedCellValue)}</span>
+            ),
+          },
+          {
+            accessorKey: "DaughterOfAllWomenRetireds",
+            header: "دختر",
+            Cell: ({ renderedCellValue }) => (
+              <span>{convertToPersianNumber(renderedCellValue)}</span>
+            ),
+          },
+          {
+            accessorKey: "SonOfAllWomenRetireds",
+            header: "پسر",
+            Cell: ({ renderedCellValue }) => (
+              <span>{convertToPersianNumber(renderedCellValue)}</span>
+            ),
+          },
+        ];
+    }
+
+    return baseColumns;
+  }, [retiredType]);
 
   const table = useMaterialReactTable({
     ...defaultTableOptions,

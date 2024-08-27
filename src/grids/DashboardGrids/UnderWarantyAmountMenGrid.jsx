@@ -10,33 +10,113 @@ import { defaultTableOptions } from "../../utils.js";
 // helpers
 import { convertToPersianNumber } from "../../helper.js";
 
-export const UnderWarantyAmountMenGrid = ({ data }) => {
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: "SpouseOfAliveMenRetireds",
-        header: "عائله مندی",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-      {
-        accessorKey: "DaughterOfAliveMenRetireds",
-        header: "دختر",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-      {
-        accessorKey: "SonOfAliveMenRetireds",
-        header: "پسر",
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
-      },
-    ],
-    []
-  );
+export const UnderWarantyAmountMenGrid = ({ data, retiredType }) => {
+  // const columns = useMemo(
+  //   () => [
+  //     {
+  //       accessorKey: "SpouseOfAliveMenRetireds",
+  //       header: "عائله مندی",
+  //       Cell: ({ renderedCellValue }) => (
+  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
+  //       ),
+  //     },
+  //     {
+  //       accessorKey: "DaughterOfAliveMenRetireds",
+  //       header: "دختر",
+  //       Cell: ({ renderedCellValue }) => (
+  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
+  //       ),
+  //     },
+  //     {
+  //       accessorKey: "SonOfAliveMenRetireds",
+  //       header: "پسر",
+  //       Cell: ({ renderedCellValue }) => (
+  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
+  //       ),
+  //     },
+  //   ],
+  //   []
+  // );
+
+  const columns = useMemo(() => {
+    let baseColumns;
+
+    if (retiredType === "true") {
+      baseColumns = [
+        {
+          accessorKey: "SpouseOfAliveMenRetireds",
+          header: "عائله مندی",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "DaughterOfAliveMenRetireds",
+          header: "دختر",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "SonOfAliveMenRetireds",
+          header: "پسر",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+      ];
+    } else if (retiredType === "false") {
+      baseColumns = [
+        {
+          accessorKey: "SpouseOfDeadMenRetireds",
+          header: "عائله مندی",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "SonOfDeadMenRetireds",
+          header: "دختر",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "DaughterOfDeadMenRetireds",
+          header: "پسر",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+      ];
+    } else {
+      baseColumns = [
+        {
+          accessorKey: "SpouseOfAllMenRetireds",
+          header: "عائله مندی",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "SonOfAllMenRetireds",
+          header: "دختر",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+        {
+          accessorKey: "DaughterOfAllMenRetireds",
+          header: "پسر",
+          Cell: ({ renderedCellValue }) => (
+            <span>{convertToPersianNumber(renderedCellValue)}</span>
+          ),
+        },
+      ];
+    }
+
+    return baseColumns;
+  }, [retiredType]);
 
   const table = useMaterialReactTable({
     ...defaultTableOptions,
@@ -74,7 +154,7 @@ export const UnderWarantyAmountMenGrid = ({ data }) => {
         border: "1px solid rgba(81, 81, 81, .5)",
       },
     },
-    renderCaption: () => "مستمری بگیر مرد",
+    renderCaption: () => "مرد",
   });
 
   return <MRT_Table table={table} />;
