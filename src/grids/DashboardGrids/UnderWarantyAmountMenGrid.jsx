@@ -11,33 +11,6 @@ import { defaultTableOptions } from "../../utils.js";
 import { convertToPersianNumber } from "../../helper.js";
 
 export const UnderWarantyAmountMenGrid = ({ data, retiredType }) => {
-  // const columns = useMemo(
-  //   () => [
-  //     {
-  //       accessorKey: "SpouseOfAliveMenRetireds",
-  //       header: "عائله مندی",
-  //       Cell: ({ renderedCellValue }) => (
-  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
-  //       ),
-  //     },
-  //     {
-  //       accessorKey: "DaughterOfAliveMenRetireds",
-  //       header: "دختر",
-  //       Cell: ({ renderedCellValue }) => (
-  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
-  //       ),
-  //     },
-  //     {
-  //       accessorKey: "SonOfAliveMenRetireds",
-  //       header: "پسر",
-  //       Cell: ({ renderedCellValue }) => (
-  //         <span>{convertToPersianNumber(renderedCellValue)}</span>
-  //       ),
-  //     },
-  //   ],
-  //   []
-  // );
-
   const columns = useMemo(() => {
     let baseColumns;
 

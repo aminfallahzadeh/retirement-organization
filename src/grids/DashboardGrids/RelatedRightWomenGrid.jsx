@@ -74,7 +74,7 @@ export const RelatedRightWomenGrid = ({ data }) => {
         border: "1px solid rgba(81, 81, 81, .5)",
       },
     },
-    renderCaption: () => "مستمری بگیر زن",
+    renderCaption: () => "زن",
   });
 
   return <MRT_Table table={table} />;

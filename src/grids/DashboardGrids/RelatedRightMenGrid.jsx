@@ -74,7 +74,7 @@ export const RelatedRightMenGrid = ({ data }) => {
         border: "1px solid rgba(81, 81, 81, .5)",
       },
     },
-    renderCaption: () => "مستمری بگیر مرد",
+    renderCaption: () => "مرد",
   });
 
   return <MRT_Table table={table} />;
