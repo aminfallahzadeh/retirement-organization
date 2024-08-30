@@ -2,9 +2,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 
-// rrd imports
-import { useLocation } from "react-router-dom";
-
 // redux imports
 import { useDispatch } from "react-redux";
 import {
@@ -22,9 +19,6 @@ import {
   ImportExportOutlined as ExportIcon,
   UploadOutlined as UploadIcon,
 } from "@mui/icons-material";
-
-// helpers
-import { convertToEnglishNumber } from "../helper";
 
 // library imports
 import { toast } from "react-toastify";
@@ -46,15 +40,12 @@ function GroupSlipsForm() {
     formState: { errors },
     control,
     watch,
+    setValue,
   } = useForm();
 
   // DEBUGGING
   // ACCESS REACT HOOK FORM DATA
   const form_data = watch();
-
-  useEffect(() => {
-    console.log(form_data);
-  }, [form_data]);
 
   // SELECT OPTIONS
   const issueTypeOptions = [
@@ -100,28 +91,14 @@ function GroupSlipsForm() {
     { value: "12", label: "اسفند" },
   ];
 
-  const personsOptions = [
-    { value: "49e66fb39a124555b9329c9b7994509a", label: "amin amin" },
-    { value: "810e59798cc54b94b45cd0c776fff16b", label: "علی اسدی" },
-    { value: "4fba2ae8420348fc9d16b21a55fef23f", label: "امیر بابیک" },
-    { value: "e931cee492514557a6cba93fa7f3fbd4", label: "زهرا بابیک" },
-    { value: "110000256", label: "مهدی بشارت صنعتی" },
-    { value: "7777701a948e411aa204bc350utkt5", label: "سونیا گلدوست" },
-    { value: "1c81794b5d4447aba8bea1ae915ae756", label: "بهمن محمدی" },
-    { value: "19d06de3cf8c44a3b832b46ed0276b90", label: "مریم مهرجو" },
-    { value: "7777701a948e411aa204bc350a56f155", label: "شیما میرباقری" },
-    { value: "8b2a301a948e411aa204bc350a56f155", label: "احسان میرباقری" },
-  ];
-
   // ACCESS QUERIES
   const [existPaySlip, { isLoading: isChecking }] = useLazyExistPaySlipQuery();
   const [getPayList, { isLoading: isGettingPayList }] =
     useLazyGetPayListQuery();
 
-  const location = useLocation();
-
   const searchParams = new URLSearchParams(location.search);
   const requestID = searchParams.get("requestID");
+  const personID = searchParams.get("personID");
 
   const [issuePay, { isLoading: isIssuing }] = useIssuePayMutation();
   const [insertPay, { isLoading: isInserting }] = useInsertPayMutation();
@@ -184,17 +161,26 @@ function GroupSlipsForm() {
     }
   };
 
-  // ON SUBMIT hANDLER
-  const onSubmit = async (data) => {
-    if (data.issueType === "2") {
+  // SET ISSUE TYPE BASED ON REQUEST TYPE
+  useEffect(() => {
+    if (personID) {
+      setValue("issueType", "2");
+    } else {
+      setValue("issueType", "1");
+    }
+  }, [personID, setValue]);
+
+  // ON SUBMIT HADNLER
+  const onSubmit = async () => {
+    if (form_data.issueType === "2") {
       try {
         const date = new Date();
         const res = await insertPay({
           payDate: date.toISOString(),
-          currentYear: parseInt(data.currentYear),
-          currentMonth: parseInt(data.currentMonth),
+          currentYear: parseInt(form_data.currentYear),
+          currentMonth: parseInt(form_data.currentMonth),
           requestID,
-          personID: convertToEnglishNumber(data.personID),
+          personID,
         }).unwrap();
         setIsSlipExists(true);
         toast.success(res.message, {
@@ -202,7 +188,7 @@ function GroupSlipsForm() {
         });
       } catch (err) {
         console.log(err);
-        toast.error(err?.data?.message || err.error, {
+        toast.error(err?.form_data?.message || err.error, {
           autoClose: 2000,
         });
       }
@@ -229,6 +215,8 @@ function GroupSlipsForm() {
     }
   };
 
+  // const onSubmit = console.log(form_data);
+
   const content = (
     <section className="formContainer flex-col">
       <form
@@ -242,14 +230,15 @@ function GroupSlipsForm() {
             <Controller
               name="issueType"
               control={control}
-              rules={{ required: true }}
               render={({ field: { onChange } }) => (
                 <Select
                   closeMenuOnSelect={true}
                   components={animatedComponents}
                   options={issueTypeOptions}
                   onChange={(val) => onChange(val ? val.value : null)}
-                  value={issueTypeOptions.find((c) => c.value === "1")}
+                  value={issueTypeOptions.find(
+                    (c) => c.value === form_data?.issueType
+                  )}
                   isClearable={true}
                   isDisabled={true}
                   placeholder={
@@ -273,10 +262,6 @@ function GroupSlipsForm() {
             >
               <span>*</span> نوع صدور
             </label>
-
-            {errors.issueType && (
-              <span className="error-form">نوع صدور اجباری است</span>
-            )}
           </div>
 
           <div className="inputBox__form">
@@ -398,50 +383,6 @@ function GroupSlipsForm() {
               <span className="error-form">ماه اجباری است</span>
             )}
           </div>
-
-          {form_data.issueType === "2" && isSlipExists === false && (
-            <div className="inputBox__form">
-              <Controller
-                name="personID"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, value } }) => (
-                  <Select
-                    closeMenuOnSelect={true}
-                    components={animatedComponents}
-                    options={personsOptions}
-                    isClearable={true}
-                    onChange={(val) => onChange(val ? val.value : null)}
-                    value={personsOptions.find((c) => c.value === value)}
-                    placeholder={
-                      <div className="react-select-placeholder">
-                        <span>*</span> شماره کارمندی
-                      </div>
-                    }
-                    noOptionsMessage={selectSettings.noOptionsMessage}
-                    loadingMessage={selectSettings.loadingMessage}
-                    styles={selectStyles}
-                  />
-                )}
-              />
-
-              <label
-                className={
-                  form_data?.personID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                <span>*</span> شماره کارمندی
-              </label>
-
-              {errors.personID && (
-                <span className="error-form">شماره کارمندی اجباری است</span>
-              )}
-            </div>
-          )}
-
-          {/* <input type="submit" /> */}
         </div>
         <div style={{ marginRight: "auto" }} className="flex-row">
           {isSlipExists === true && (

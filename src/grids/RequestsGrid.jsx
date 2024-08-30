@@ -157,6 +157,9 @@ function RequestsGrid({ isLoading, roles }) {
                 "62A54585-F331-434A-9027-C9F3060F683A"
                   ? `/retirement-organization/group-slips?requestID=${row.original.id}`
                   : row.original.requestTypeID ===
+                    "EC1E7E50-9815-442F-9CCB-27F47AB05199"
+                  ? `/retirement-organization/group-slips?requestID=${row.original.id}&personID=${row.original.personID}`
+                  : row.original.requestTypeID ===
                     "6E7BA26E-A1DC-4A5E-9700-17820A36158D"
                   ? `/retirement-organization/batch-statements?requestID=${row.original.id}`
                   : `/retirement-organization/retired?personID=${row.original.personID}&Role=${Role}&requestID=${row.original.id}`

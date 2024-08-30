@@ -283,10 +283,6 @@ function RetiredPersonForm() {
     [setIsBirthCalenderOpen, setIsDeathCalenderOpen]
   );
 
-  useEffect(() => {
-    console.log(selectedDeathDate);
-  }, [selectedDeathDate]);
-
   const content = (
     <>
       {isLoading || isFetching ? (
