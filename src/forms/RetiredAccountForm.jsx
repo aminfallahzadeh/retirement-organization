@@ -1,5 +1,6 @@
 // react imports
 import { useState, useEffect, useCallback } from "react";
+import { useForm, Controller } from "react-hook-form";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -43,8 +44,18 @@ function RetiredAccountForm() {
   // LOOP UP STATES
   const [bankBranchCombo, setBankBranchCombo] = useState([]);
 
-  // ACCOUNT DATA STATE
-  const [accountData, setAccountData] = useState({});
+  // ACCESS REACT HOOK FORM CONTROL
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+    register,
+    watch,
+    setValue,
+  } = useForm();
+
+  // ACCESS REACT HOOK FORM DATA
+  const form_data = watch();
 
   // ACCESS QUERY PARAMS
   const location = useLocation();
@@ -104,9 +115,11 @@ function RetiredAccountForm() {
   // FETCH MAIN DATA
   useEffect(() => {
     if (isSuccess) {
-      setAccountData(retiredAccountData);
+      Object.keys(retiredAccountData).forEach((key) => {
+        setValue(key, retiredAccountData[key]);
+      });
     }
-  }, [isSuccess, retiredAccountData]);
+  }, [isSuccess, retiredAccountData, setValue]);
 
   // ERROR HANDLING
   useEffect(() => {
@@ -119,33 +132,27 @@ function RetiredAccountForm() {
 
   // GET & FETCH BANK BRANCH ON USER BANK SELECT
   useEffect(() => {
-    if (accountData.bankID) {
-      fetchBankBranchData(accountData.bankID);
+    if (form_data.bankID) {
+      fetchBankBranchData(form_data.bankID);
       // setAccountData({ ...accountData, bankBranchID: null });
     }
-  }, [accountData.bankID, fetchBankBranchData]);
+  }, [form_data.bankID, fetchBankBranchData]);
 
   const handleEditable = () => {
     setEditable(true);
   };
 
-  const handleAccountDataChange = (e) => {
-    const { name, value } = e.target;
-    setAccountData({ ...accountData, [name]: value });
-  };
-
-  const handleUpdateRetiredAccount = async () => {
+  const onSubmit = async () => {
     try {
       const updateRes = await updateRetiredAccount({
-        ...accountData,
+        ...form_data,
         ledgerCode:
-          parseInt(convertToEnglishNumber(accountData.ledgerCode)) || null,
+          parseInt(convertToEnglishNumber(form_data.ledgerCode)) || null,
         insuranceAmount:
-          parseFloat(convertToEnglishNumber(accountData.insuranceAmount)) ||
-          null,
+          parseFloat(convertToEnglishNumber(form_data.insuranceAmount)) || null,
         insuranceCoef:
-          parseFloat(convertToEnglishNumber(accountData.insuranceCoef)) || null,
-        accountNo: convertToEnglishNumber(accountData.accountNo),
+          parseFloat(convertToEnglishNumber(form_data.insuranceCoef)) || null,
+        accountNo: convertToEnglishNumber(form_data.accountNo),
         personID,
       }).unwrap();
       setEditable(false);
@@ -157,17 +164,6 @@ function RetiredAccountForm() {
       toast.error(err?.data?.message || err.error, {
         autoClose: 2000,
       });
-    }
-  };
-
-  // HANDLE SELECT OPTION CHANGE
-  const handleSelectOptionChange = (selectedOption, actionMeta) => {
-    const { name } = actionMeta;
-    if (selectedOption) {
-      const { value } = selectedOption;
-      setAccountData({ ...accountData, [name]: value || "" });
-    } else {
-      setAccountData({ ...accountData, [name]: null });
     }
   };
 
@@ -185,179 +181,240 @@ function RetiredAccountForm() {
         </Box>
       ) : (
         <section className="flex-col">
-          <form method="POST" className="grid grid--col-3" noValidate>
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={bankOptions}
-                onChange={handleSelectOptionChange}
-                isDisabled={!editable}
-                value={bankOptions.find(
-                  (item) => item.value === accountData?.bankID
+          <form
+            method="POST"
+            className="flex-col"
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+          >
+            <div className="grid grid--col-4">
+              <div className="inputBox__form">
+                <Controller
+                  name="bankID"
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={bankOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      isDisabled={!editable}
+                      value={bankOptions.find(
+                        (c) => c.value === form_data?.bankID
+                      )}
+                      id="bankID"
+                      name="bankID"
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">بانک</div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={bankItemsIsLoading || bankItemsIsFetching}
+                    />
+                  )}
+                />
+
+                <label
+                  htmlFor="bankID"
+                  className={
+                    form_data?.bankID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  بانک
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <Controller
+                  name="bankBranchID"
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={bankBranchOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      isDisabled={
+                        !editable ||
+                        isBankBranchComboLoading ||
+                        isBankBranchComboFetching ||
+                        !form_data.bankID
+                      }
+                      value={
+                        bankBranchOptions.find(
+                          (c) => c.value === form_data?.bankBranchID
+                        ) || null
+                      }
+                      id="bankBranchID"
+                      name="bankBranchID"
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">شعبه</div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={
+                        isBankBranchComboLoading || isBankBranchComboFetching
+                      }
+                    />
+                  )}
+                />
+
+                <label
+                  htmlFor="bankBranchID"
+                  className={
+                    form_data?.bankBranchID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  شعبه
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                {errors.accountNo && (
+                  <span className="error-form">{errors.accountNo.message}</span>
                 )}
-                id="bankID"
-                name="bankID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">بانک</div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={bankItemsIsLoading || bankItemsIsFetching}
-              />
+                <input
+                  disabled={!editable || isLoading}
+                  type="text"
+                  id="accountNo"
+                  name="accountNo"
+                  value={convertToPersianNumber(form_data?.accountNo) ?? ""}
+                  className="inputBox__form--input"
+                  required
+                  {...register("accountNo", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "شماره حساب باید فقط شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label htmlFor="accountNo" className="inputBox__form--label">
+                  شماره حساب
+                </label>
+              </div>
 
-              <label
-                htmlFor="bankID"
-                className={
-                  accountData?.bankID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                بانک
-              </label>
+              <div className="inputBox__form">
+                {errors.ledgerCode && (
+                  <span className="error-form">
+                    {errors.ledgerCode.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="ledgerCode"
+                  name="ledgerCode"
+                  value={convertToPersianNumber(form_data?.ledgerCode) ?? ""}
+                  className="inputBox__form--input"
+                  required
+                  {...register("ledgerCode", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "دفتر کل باید فقط شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label htmlFor="ledgerCode" className="inputBox__form--label">
+                  دفتر کل
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                {errors.insuranceCoef && (
+                  <span className="error-form">
+                    {errors.insuranceCoef.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="insuranceCoef"
+                  name="insuranceCoef"
+                  value={convertToPersianNumber(form_data?.insuranceCoef) ?? ""}
+                  className="inputBox__form--input"
+                  required
+                  {...register("insuranceCoef", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "ضریب بیمه باید فقط شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="insuranceCoef"
+                  className="inputBox__form--label"
+                >
+                  ضریب بیمه
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                {errors.insuranceAmount && (
+                  <span className="error-form">
+                    {errors.insuranceAmount.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="insuranceAmount"
+                  name="insuranceAmount"
+                  value={
+                    convertToPersianNumber(form_data?.insuranceAmount) ?? ""
+                  }
+                  className="inputBox__form--input"
+                  required
+                  {...register("insuranceAmount", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "بیمه تبعی باید فقط شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="insuranceAmount"
+                  className="inputBox__form--label"
+                >
+                  بیمه تبعی
+                </label>
+              </div>
             </div>
-
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={bankBranchOptions}
-                onChange={handleSelectOptionChange}
-                isDisabled={
-                  !editable ||
-                  isBankBranchComboLoading ||
-                  isBankBranchComboFetching ||
-                  !accountData.bankID
-                }
-                value={
-                  bankBranchOptions.find(
-                    (item) => item.value === accountData?.bankBranchID
-                  ) || null
-                }
-                id="bankBranchID"
-                name="bankBranchID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">شعبه</div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={
-                  isBankBranchComboLoading || isBankBranchComboFetching
-                }
-              />
-
-              <label
-                htmlFor="bankBranchID"
-                className={
-                  accountData?.bankBranchID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                شعبه
-              </label>
-            </div>
-            <div className="inputBox__form">
-              <input
-                disabled={!editable || isLoading}
-                type="text"
-                id="accountNo"
-                name="accountNo"
-                value={convertToPersianNumber(accountData?.accountNo) ?? ""}
-                onChange={handleAccountDataChange}
-                className="inputBox__form--input"
-                required
-              />
-              <label htmlFor="accountNo" className="inputBox__form--label">
-                شماره حساب
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
+            <div style={{ marginRight: "auto" }} className="flex-row">
+              <LoadingButton
+                dir="ltr"
+                endIcon={<SaveIcon />}
+                loading={isUpdating}
                 disabled={!editable}
-                type="text"
-                id="ledgerCode"
-                name="ledgerCode"
-                value={convertToPersianNumber(accountData?.ledgerCode) ?? ""}
-                onChange={handleAccountDataChange}
-                className="inputBox__form--input"
-                required
-              />
-              <label htmlFor="ledgerCode" className="inputBox__form--label">
-                دفتر کل
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="insuranceCoef"
-                name="insuranceCoef"
-                value={convertToPersianNumber(accountData?.insuranceCoef) ?? ""}
-                onChange={handleAccountDataChange}
-                className="inputBox__form--input"
-                required
-              />
-              <label htmlFor="insuranceCoef" className="inputBox__form--label">
-                ضریب بیمه
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="insuranceAmount"
-                name="insuranceAmount"
-                value={
-                  convertToPersianNumber(accountData?.insuranceAmount) ?? ""
-                }
-                onChange={handleAccountDataChange}
-                className="inputBox__form--input"
-                required
-              />
-              <label
-                htmlFor="insuranceAmount"
-                className="inputBox__form--label"
+                onClick={handleSubmit}
+                type="submit"
+                variant="contained"
+                color="success"
+                sx={{ fontFamily: "sahel" }}
               >
-                بیمه تبعی
-              </label>
+                <span>ذخیره</span>
+              </LoadingButton>
+
+              <Button
+                dir="ltr"
+                endIcon={<EditIcon />}
+                onClick={handleEditable}
+                disabled={editable}
+                variant="contained"
+                color="primary"
+                sx={{ fontFamily: "sahel" }}
+              >
+                <span>ویرایش</span>
+              </Button>
             </div>
           </form>
-
-          <div style={{ marginRight: "auto" }} className="flex-row">
-            <LoadingButton
-              dir="ltr"
-              endIcon={<SaveIcon />}
-              loading={isUpdating}
-              disabled={!editable}
-              onClick={handleUpdateRetiredAccount}
-              variant="contained"
-              color="success"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>ذخیره</span>
-            </LoadingButton>
-
-            <Button
-              dir="ltr"
-              endIcon={<EditIcon />}
-              onClick={handleEditable}
-              disabled={editable}
-              variant="contained"
-              color="primary"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>ویرایش</span>
-            </Button>
-          </div>
         </section>
       )}
     </>
