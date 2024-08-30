@@ -78,6 +78,7 @@ function RetiredPersonForm() {
   // ACCESS REACT HOOK FORM DATA
   const form_data = watch();
 
+  // ACCESS UPDATE QUERY
   const [updateRetiredPerson, { isLoading: isUpdating }] =
     useUpdateRetiredPersonMutation();
 
@@ -94,18 +95,13 @@ function RetiredPersonForm() {
   useEffect(() => {
     if (isSuccess) {
       const data = retiredPersonData?.itemList[0];
-      // setPersonData(data);
 
       Object.keys(data).forEach((key) => {
         setValue(key, data[key]);
       });
 
       dispatch(
-        setPersonDeathDate(
-          retiredPersonData?.itemList[0]?.personDeathDate === null
-            ? false
-            : true
-        )
+        setPersonDeathDate(data?.personDeathDate === null ? false : true)
       );
     }
 

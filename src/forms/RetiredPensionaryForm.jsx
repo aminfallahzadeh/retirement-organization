@@ -1,5 +1,6 @@
 // react imports
 import { useState, useEffect, useRef } from "react";
+import { useForm, Controller } from "react-hook-form";
 
 // redux imports
 import { useSelector } from "react-redux";
@@ -55,6 +56,7 @@ function RetiredPensionaryForm() {
   const retirementCalenderRef = useRef(null);
   const changeStatusCalenderRef = useRef(null);
 
+  // CONTORL STATES
   const [editable, setEditable] = useState(false);
 
   const animatedComponents = makeAnimated();
@@ -73,9 +75,20 @@ function RetiredPensionaryForm() {
   // TABLE STATES
   const [statusHistoryTableData, setStatusHistoryTableData] = useState([]);
 
-  // PENSIONARY STATES
-  const [pensionaryData, setPensionaryData] = useState(null);
+  // ACCESS REACT HOOK FORM CONTROL
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+    register,
+    watch,
+    setValue,
+  } = useForm();
 
+  // ACCESS REACT HOOK FORM DATA
+  const form_data = watch();
+
+  // ACCESS UPDATE QUERY
   const [updateRetiredPensionary, { isLoading: isUpdating }] =
     useUpdateRetiredPensionaryMutation();
 
@@ -126,9 +139,13 @@ function RetiredPensionaryForm() {
   // FETCH MAIN DATA
   useEffect(() => {
     if (isPensionarySuccess) {
-      setPensionaryData(pensionary?.itemList[0]);
+      const data = pensionary?.itemList[0];
+
+      Object.keys(data).forEach((key) => {
+        setValue(key, data[key]);
+      });
     }
-  }, [isPensionarySuccess, pensionary]);
+  }, [isPensionarySuccess, pensionary, setValue]);
 
   // HANDLE MAIN DATA ERROR
   useEffect(() => {
@@ -192,16 +209,14 @@ function RetiredPensionaryForm() {
 
   // HANDLE DATEs
   useEffect(() => {
-    setSelectedRetriementDate(
-      convertToPersianDate(pensionaryData?.retirementDate)
-    );
-  }, [pensionaryData?.retirementDate]);
+    setSelectedRetriementDate(convertToPersianDate(form_data?.retirementDate));
+  }, [form_data?.retirementDate]);
 
   useEffect(() => {
     setSelectedChangeStatusDate(
-      convertToPersianDate(pensionaryData?.pensionaryStartDate)
+      convertToPersianDate(form_data?.pensionaryStartDate)
     );
-  }, [pensionaryData?.pensionaryStartDate]);
+  }, [form_data?.pensionaryStartDate]);
 
   // CHANGE HANDLERs
   const handleEditable = () => {
@@ -230,25 +245,8 @@ function RetiredPensionaryForm() {
     setIsChangeStatusCalenderOpen(false);
   };
 
-  // HADNLE DATA CHANGE
-  const handlePensionaryDataChange = (e) => {
-    const { name, value } = e.target;
-    setPensionaryData({ ...pensionaryData, [name]: value });
-  };
-
-  // HANDLE SELECT OPTION CHANGE
-  const handleSelectOptionChange = (selectedOption, actionMeta) => {
-    const { name } = actionMeta;
-    if (selectedOption) {
-      const { value } = selectedOption;
-      setPensionaryData({ ...pensionaryData, [name]: value || "" });
-    } else {
-      setPensionaryData({ ...pensionaryData, [name]: null });
-    }
-  };
-
   // hanlde update retired pensionary
-  const handleUpdateRetiredPensionary = async () => {
+  const onSubmit = async () => {
     try {
       // Adjusting for timezone difference
       let retirementDate;
@@ -274,21 +272,19 @@ function RetiredPensionaryForm() {
       }
 
       const updateRes = await updateRetiredPensionary({
-        ...pensionaryData,
-        retiredGroup: parseInt(
-          convertToEnglishNumber(pensionaryData.retiredGroup)
-        ),
+        ...form_data,
+        retiredGroup: parseInt(convertToEnglishNumber(form_data.retiredGroup)),
         retiredOrganizationID: convertToEnglishNumber(
-          pensionaryData.retiredOrganizationID
+          form_data.retiredOrganizationID
         ),
         retiredJobDegreeCoef: parseInt(
-          convertToEnglishNumber(pensionaryData.retiredJobDegreeCoef)
+          convertToEnglishNumber(form_data.retiredJobDegreeCoef)
         ),
         retiredRealDuration: parseInt(
-          convertToEnglishNumber(pensionaryData.retiredRealDuration)
+          convertToEnglishNumber(form_data.retiredRealDuration)
         ),
         retiredGrantDuration: parseInt(
-          convertToEnglishNumber(pensionaryData.retiredGrantDuration)
+          convertToEnglishNumber(form_data.retiredGrantDuration)
         ),
         retirementDate,
         pensionaryStartDate,
@@ -329,296 +325,387 @@ function RetiredPensionaryForm() {
         </Box>
       ) : (
         <section className="flex-col">
-          <form method="POST" className="grid grid--col-3" noValidate>
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="retiredGroup"
-                name="retiredGroup"
-                className="inputBox__form--input"
-                value={
-                  convertToPersianNumber(pensionaryData?.retiredGroup) ?? ""
-                }
-                onChange={handlePensionaryDataChange}
-                required
-              />
-              <label htmlFor="retiredGroup" className="inputBox__form--label">
-                <span>*</span> گروه
-              </label>
-            </div>
-
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={organizationOptions}
-                onChange={handleSelectOptionChange}
-                isDisabled={!editable}
-                value={organizationOptions.find(
-                  (item) => item.value === pensionaryData?.retiredOrganizationID
+          <form
+            method="POST"
+            className="flex-col"
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+          >
+            <div className="grid grid--col-4">
+              <div className="inputBox__form">
+                {errors.retiredGroup && (
+                  <span className="error-form">
+                    {errors.retiredGroup.message}
+                  </span>
                 )}
-                name="retiredOrganizationID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">
-                    <span>*</span> آخرین محل خدمت
-                  </div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={organizationIsLoading || organizationIsFetching}
-              />
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="retiredGroup"
+                  name="retiredGroup"
+                  className="inputBox__form--input"
+                  value={convertToPersianNumber(form_data?.retiredGroup) ?? ""}
+                  required
+                  {...register("retiredGroup", {
+                    required: "گروه اجباری است",
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "گروه باید فقط شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label htmlFor="retiredGroup" className="inputBox__form--label">
+                  <span>*</span> گروه
+                </label>
+              </div>
 
-              <label
-                className={
-                  pensionaryData?.retiredOrganizationID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                <span>*</span> آخرین محل خدمت
-              </label>
-            </div>
+              <div className="inputBox__form">
+                <Controller
+                  name="retiredOrganizationID"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={organizationOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      isDisabled={!editable}
+                      value={organizationOptions.find(
+                        (c) => c.value === form_data?.retiredOrganizationID
+                      )}
+                      name="retiredOrganizationID"
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">
+                          <span>*</span> آخرین محل خدمت
+                        </div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={
+                        organizationIsLoading || organizationIsFetching
+                      }
+                    />
+                  )}
+                />
 
-            <div className="inputBox__form">
-              <input
-                disabled={!editable}
-                type="text"
-                id="retiredLastPosition"
-                name="retiredLastPosition"
-                value={pensionaryData?.retiredLastPosition || ""}
-                onChange={handlePensionaryDataChange}
-                className="inputBox__form--input"
-                required
-              />
-              <label
-                htmlFor="retiredLastPosition"
-                className="inputBox__form--label"
-              >
-                <span>*</span> سمت
-              </label>
-            </div>
+                <label
+                  className={
+                    form_data?.retiredOrganizationID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  <span>*</span> آخرین محل خدمت
+                </label>
 
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={employmentOptions}
-                onChange={handleSelectOptionChange}
-                isDisabled={!editable}
-                value={employmentOptions.find(
-                  (item) => item.value === pensionaryData?.employmentTypeID
+                {errors.retiredOrganizationID && (
+                  <span className="error-form"> محل خدمت اجباری است</span>
                 )}
-                name="employmentTypeID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">
-                    <span>*</span> نوع استخدام
-                  </div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={
-                  employmentTypesIsLoading || employmentTypesIsFetching
-                }
-              />
+              </div>
 
-              <label
-                className={
-                  pensionaryData?.employmentTypeID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                <span>*</span> نوع استخدام
-              </label>
-            </div>
+              <div className="inputBox__form">
+                {errors.retiredLastPosition && (
+                  <span className="error-form">
+                    {errors.retiredLastPosition.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="retiredLastPosition"
+                  name="retiredLastPosition"
+                  value={form_data?.retiredLastPosition || ""}
+                  className="inputBox__form--input"
+                  required
+                  {...register("retiredLastPosition", {
+                    pattern: {
+                      value: /^[آ-ی\s]+$/,
+                      message: "از حروف فارسی استفاده کنید",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="retiredLastPosition"
+                  className="inputBox__form--label"
+                >
+                  سمت
+                </label>
+              </div>
 
-            <div className="inputBox__form">
-              <InputDatePicker
-                disabled={!editable}
-                value={selectedRetriementDate}
-                defaultValue={null}
-                onChange={handleRetiredDateChange}
-                onOpenChange={handleRetiredOpenChange}
-                format={"jYYYY/jMM/jDD"}
-                suffixIcon={<CalenderIcon color="action" />}
-                open={isRetriementCalenderOpen}
-                style={datePickerStyles}
-                wrapperStyle={datePickerWrapperStyles}
-                pickerProps={{
-                  ref: retirementCalenderRef,
-                }}
-              />
-              <div className="inputBox__form--readOnly-label">
-                تاریخ بازنشستگی
+              <div className="inputBox__form">
+                <Controller
+                  name="employmentTypeID"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={employmentOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      isDisabled={!editable}
+                      value={employmentOptions.find(
+                        (c) => c.value === form_data?.employmentTypeID
+                      )}
+                      name="employmentTypeID"
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">
+                          <span>*</span> نوع استخدام
+                        </div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={
+                        employmentTypesIsLoading || employmentTypesIsFetching
+                      }
+                    />
+                  )}
+                />
+
+                <label
+                  className={
+                    form_data?.employmentTypeID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  <span>*</span> نوع استخدام
+                </label>
+
+                {errors.employmentTypeID && (
+                  <span className="error-form">نوع استخدام اجباری است</span>
+                )}
+              </div>
+
+              <div className="inputBox__form">
+                <InputDatePicker
+                  disabled={!editable}
+                  value={selectedRetriementDate}
+                  defaultValue={null}
+                  onChange={handleRetiredDateChange}
+                  onOpenChange={handleRetiredOpenChange}
+                  format={"jYYYY/jMM/jDD"}
+                  suffixIcon={<CalenderIcon color="action" />}
+                  open={isRetriementCalenderOpen}
+                  style={datePickerStyles}
+                  wrapperStyle={datePickerWrapperStyles}
+                  pickerProps={{
+                    ref: retirementCalenderRef,
+                  }}
+                />
+                <div className="inputBox__form--readOnly-label">
+                  تاریخ بازنشستگی
+                </div>
+              </div>
+
+              <div className="inputBox__form">
+                <Controller
+                  name="pensionaryStatusID"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { onChange } }) => (
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={pensionaryStatusOptions}
+                      onChange={(val) => onChange(val ? val.value : null)}
+                      isDisabled={!editable}
+                      value={pensionaryStatusOptions.find(
+                        (c) => c.value === form_data?.pensionaryStatusID
+                      )}
+                      name="pensionaryStatusID"
+                      isClearable={true}
+                      placeholder={
+                        <div className="react-select-placeholder">
+                          <span>*</span> وضعیت
+                        </div>
+                      }
+                      noOptionsMessage={selectSettings.noOptionsMessage}
+                      loadingMessage={selectSettings.loadingMessage}
+                      styles={selectStyles}
+                      isLoading={
+                        pensionaryStatusIsLoading || pensionaryStatusIsFetching
+                      }
+                    />
+                  )}
+                />
+
+                <label
+                  className={
+                    form_data?.pensionaryStatusID
+                      ? "inputBox__form--readOnly-label"
+                      : "inputBox__form--readOnly-label-hidden"
+                  }
+                >
+                  <span>*</span> وضعیت
+                </label>
+
+                {errors.pensionaryStatusID && (
+                  <span className="error-form">وضعیت اجباری است</span>
+                )}
+              </div>
+
+              <div className="inputBox__form">
+                <InputDatePicker
+                  disabled={!editable}
+                  value={selectedChangeStatusDate}
+                  defaultValue={null}
+                  onChange={handleChangeStatusDateChange}
+                  onOpenChange={handleChangeStatusOpenChange}
+                  format={"jYYYY/jMM/jDD"}
+                  suffixIcon={<CalenderIcon color="action" />}
+                  open={isChangeStatusCalenderOpen}
+                  style={datePickerStyles}
+                  wrapperStyle={datePickerWrapperStyles}
+                  pickerProps={{
+                    ref: changeStatusCalenderRef,
+                  }}
+                />
+                <div className="inputBox__form--readOnly-label">
+                  تاریخ تغییر وضعیت
+                </div>
+              </div>
+
+              <div className="inputBox__form">
+                {errors.retiredJobDegreeCoef && (
+                  <span className="error-form">
+                    {errors.retiredJobDegreeCoef.message}
+                  </span>
+                )}
+
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="retiredJobDegreeCoef"
+                  className="inputBox__form--input"
+                  value={
+                    convertToPersianNumber(form_data?.retiredJobDegreeCoef) ??
+                    ""
+                  }
+                  name="retiredJobDegreeCoef"
+                  required
+                  {...register("retiredJobDegreeCoef", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "ضریب مدیریتی باید شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="retiredJobDegreeCoef"
+                  className="inputBox__form--label"
+                >
+                  ضریب مدیریتی
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                {errors.retiredRealDuration && (
+                  <span className="error-form">
+                    {errors.retiredRealDuration.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="retiredRealDuration"
+                  className="inputBox__form--input"
+                  value={
+                    convertToPersianNumber(form_data?.retiredRealDuration) ?? ""
+                  }
+                  name="retiredRealDuration"
+                  required
+                  {...register("retiredRealDuration", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "سابفه حقیقی باید شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="retiredRealDuration"
+                  className="inputBox__form--label"
+                >
+                  سابقه حقیقی بازنشسته
+                </label>
+              </div>
+              <div className="inputBox__form">
+                {errors.retiredGrantDuration && (
+                  <span className="error-form">
+                    {errors.retiredGrantDuration.message}
+                  </span>
+                )}
+                <input
+                  disabled={!editable}
+                  type="text"
+                  id="retiredGrantDuration"
+                  className="inputBox__form--input"
+                  value={
+                    convertToPersianNumber(form_data?.retiredGrantDuration) ??
+                    ""
+                  }
+                  name="retiredGrantDuration"
+                  required
+                  {...register("retiredGrantDuration", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "سابقه ارفاقی باید شامل اعداد باشد",
+                    },
+                  })}
+                />
+                <label
+                  htmlFor="retiredGrantDuration"
+                  className="inputBox__form--label"
+                >
+                  سابقه ارفاقی بازنشسته
+                </label>
               </div>
             </div>
 
-            <div className="inputBox__form">
-              <Select
-                closeMenuOnSelect={true}
-                components={animatedComponents}
-                options={pensionaryStatusOptions}
-                onChange={handleSelectOptionChange}
-                isDisabled={!editable}
-                value={pensionaryStatusOptions.find(
-                  (item) => item.value === pensionaryData?.pensionaryStatusID
-                )}
-                name="pensionaryStatusID"
-                isClearable={true}
-                placeholder={
-                  <div className="react-select-placeholder">
-                    <span>*</span> وضعیت
-                  </div>
-                }
-                noOptionsMessage={selectSettings.noOptionsMessage}
-                loadingMessage={selectSettings.loadingMessage}
-                styles={selectStyles}
-                isLoading={
-                  pensionaryStatusIsLoading || pensionaryStatusIsFetching
-                }
-              />
-
-              <label
-                className={
-                  pensionaryData?.pensionaryStatusID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                <span>*</span> وضعیت
-              </label>
+            <div className="flex-col flex-center">
+              <h5 className="title-secondary">تاریخچه وضعیت ها</h5>
             </div>
 
-            <div className="inputBox__form">
-              <InputDatePicker
-                disabled={!editable}
-                value={selectedChangeStatusDate}
-                defaultValue={null}
-                onChange={handleChangeStatusDateChange}
-                onOpenChange={handleChangeStatusOpenChange}
-                format={"jYYYY/jMM/jDD"}
-                suffixIcon={<CalenderIcon color="action" />}
-                open={isChangeStatusCalenderOpen}
-                style={datePickerStyles}
-                wrapperStyle={datePickerWrapperStyles}
-                pickerProps={{
-                  ref: changeStatusCalenderRef,
-                }}
-              />
-              <div className="inputBox__form--readOnly-label">
-                تاریخ تغییر وضعیت
-              </div>
-            </div>
+            <PensionaryStatusHistoryGrid
+              statusHistoryTableData={statusHistoryTableData}
+              isLoading={isStatusHistoryLoading}
+              isFetching={isStatusHistoryFetching}
+              handleRefresh={hadnleRefreshStatusHistoryTable}
+            />
 
-            <div className="inputBox__form StaffInfoForm__flex--item">
-              <input
+            <div style={{ marginRight: "auto" }} className="flex-row">
+              <LoadingButton
+                dir="ltr"
+                endIcon={<SaveIcon />}
+                loading={isUpdating}
                 disabled={!editable}
-                type="text"
-                id="retiredJobDegreeCoef"
-                className="inputBox__form--input"
-                value={
-                  convertToPersianNumber(
-                    pensionaryData?.retiredJobDegreeCoef
-                  ) ?? ""
-                }
-                onChange={handlePensionaryDataChange}
-                name="retiredJobDegreeCoef"
-                required
-              />
-              <label
-                htmlFor="retiredJobDegreeCoef"
-                className="inputBox__form--label"
+                type="submit"
+                onClick={handleSubmit}
+                variant="contained"
+                color="success"
+                sx={{ fontFamily: "sahel" }}
               >
-                ضریب مدیریتی
-              </label>
-            </div>
-            <div className="inputBox__form StaffInfoForm__flex--item">
-              <input
-                disabled={!editable}
-                type="text"
-                id="retiredRealDuration"
-                className="inputBox__form--input"
-                value={
-                  convertToPersianNumber(pensionaryData?.retiredRealDuration) ??
-                  ""
-                }
-                onChange={handlePensionaryDataChange}
-                name="retiredRealDuration"
-                required
-              />
-              <label
-                htmlFor="retiredRealDuration"
-                className="inputBox__form--label"
+                <span>ذخیره</span>
+              </LoadingButton>
+
+              <Button
+                dir="ltr"
+                endIcon={<EditIcon />}
+                onClick={handleEditable}
+                disabled={editable}
+                variant="contained"
+                color="primary"
+                sx={{ fontFamily: "sahel" }}
               >
-                سابقه حقیقی بازنشسته
-              </label>
-            </div>
-            <div className="inputBox__form StaffInfoForm__flex--item">
-              <input
-                disabled={!editable}
-                type="text"
-                id="retiredGrantDuration"
-                className="inputBox__form--input"
-                value={
-                  convertToPersianNumber(
-                    pensionaryData?.retiredGrantDuration
-                  ) ?? ""
-                }
-                onChange={handlePensionaryDataChange}
-                name="retiredGrantDuration"
-                required
-              />
-              <label
-                htmlFor="retiredGrantDuration"
-                className="inputBox__form--label"
-              >
-                سابقه ارفاقی بازنشسته
-              </label>
+                <span>ویرایش</span>
+              </Button>
             </div>
           </form>
-
-          <div className="flex-col flex-center">
-            <h5 className="title-secondary">تاریخچه وضعیت ها</h5>
-          </div>
-
-          <PensionaryStatusHistoryGrid
-            statusHistoryTableData={statusHistoryTableData}
-            isLoading={isStatusHistoryLoading}
-            isFetching={isStatusHistoryFetching}
-            handleRefresh={hadnleRefreshStatusHistoryTable}
-          />
-
-          <div style={{ marginRight: "auto" }} className="flex-row">
-            <LoadingButton
-              dir="ltr"
-              endIcon={<SaveIcon />}
-              loading={isUpdating}
-              disabled={!editable}
-              onClick={handleUpdateRetiredPensionary}
-              variant="contained"
-              color="success"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>ذخیره</span>
-            </LoadingButton>
-
-            <Button
-              dir="ltr"
-              endIcon={<EditIcon />}
-              onClick={handleEditable}
-              disabled={editable}
-              variant="contained"
-              color="primary"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>ویرایش</span>
-            </Button>
-          </div>
         </section>
       )}
     </>
