@@ -60,9 +60,6 @@ function RetiredPersonForm() {
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
   const [isDeathCalenderOpen, setIsDeathCalenderOpen] = useState(false);
 
-  // MAIN STATE
-  const [personData, setPersonData] = useState({});
-
   const dispatch = useDispatch();
 
   const searchParams = new URLSearchParams(location.search);
@@ -78,17 +75,8 @@ function RetiredPersonForm() {
     setValue,
   } = useForm();
 
-  // DEBUGGING
   // ACCESS REACT HOOK FORM DATA
   const form_data = watch();
-
-  useEffect(() => {
-    console.log(form_data);
-  }, [form_data]);
-
-  useEffect(() => {
-    console.log(selectedBirthDate);
-  }, [selectedBirthDate]);
 
   const [updateRetiredPerson, { isLoading: isUpdating }] =
     useUpdateRetiredPersonMutation();
@@ -106,7 +94,7 @@ function RetiredPersonForm() {
   useEffect(() => {
     if (isSuccess) {
       const data = retiredPersonData?.itemList[0];
-      setPersonData(data);
+      // setPersonData(data);
 
       Object.keys(data).forEach((key) => {
         setValue(key, data[key]);
@@ -201,12 +189,12 @@ function RetiredPersonForm() {
 
   // HANDLE DATES
   useEffect(() => {
-    setSelectedBirthDate(convertToPersianDate(personData?.personBirthDate));
-  }, [personData?.personBirthDate]);
+    setSelectedBirthDate(convertToPersianDate(form_data?.personBirthDate));
+  }, [form_data?.personBirthDate]);
 
   useEffect(() => {
-    setSelectedDeathDate(convertToPersianDate(personData?.personDeathDate));
-  }, [personData?.personDeathDate]);
+    setSelectedDeathDate(convertToPersianDate(form_data?.personDeathDate));
+  }, [form_data?.personDeathDate]);
 
   // other handlers
   const handleEditable = () => {
@@ -230,19 +218,6 @@ function RetiredPersonForm() {
   const handleDeathOpenChange = (open) => {
     setIsDeathCalenderOpen(open);
   };
-
-  // handle data change
-  const handlePersonDataChange = (e) => {
-    const { name, value } = e.target;
-    setPersonData({
-      ...personData,
-      [name]: value,
-    });
-  };
-
-  // const onSubmit = () => {
-  //   console.log(form_data);
-  // };
 
   // handle update retired person
   const onSubmit = async () => {
@@ -270,26 +245,26 @@ function RetiredPersonForm() {
       }
 
       const updateRes = await updateRetiredPerson({
-        ...personData,
+        ...form_data,
         personNationalCode: convertToEnglishNumber(
-          personData.personNationalCode
+          form_data.personNationalCode
         ),
         personCertificateNo: convertToEnglishNumber(
-          personData.personCertificateNo
+          form_data.personCertificateNo
         ),
-        genderID: convertToEnglishNumber(personData.genderID),
-        personPhone: convertToEnglishNumber(personData.personPhone),
-        personCellPhone: convertToEnglishNumber(personData.personCellPhone),
-        personCellPhone2: convertToEnglishNumber(personData.personCellPhone2),
-        personRegion: parseInt(convertToEnglishNumber(personData.personRegion)),
-        educationTypeID: convertToEnglishNumber(personData.educationTypeID),
-        personCountryID: convertToEnglishNumber(personData.personCountryID),
-        personCityID: convertToEnglishNumber(personData.personCityID),
-        personStateID: convertToEnglishNumber(personData.personStateID),
-        personArea: parseInt(convertToEnglishNumber(personData.personArea)),
-        personPostalCode: convertToEnglishNumber(personData.personPostalCode),
-        housingTypeID: convertToEnglishNumber(personData.housingTypeID),
-        maritalStatusID: convertToEnglishNumber(personData.maritalStatusID),
+        genderID: convertToEnglishNumber(form_data.genderID),
+        personPhone: convertToEnglishNumber(form_data.personPhone),
+        personCellPhone: convertToEnglishNumber(form_data.personCellPhone),
+        personCellPhone2: convertToEnglishNumber(form_data.personCellPhone2),
+        personRegion: parseInt(convertToEnglishNumber(form_data.personRegion)),
+        educationTypeID: convertToEnglishNumber(form_data.educationTypeID),
+        personCountryID: convertToEnglishNumber(form_data.personCountryID),
+        personCityID: convertToEnglishNumber(form_data.personCityID),
+        personStateID: convertToEnglishNumber(form_data.personStateID),
+        personArea: parseInt(convertToEnglishNumber(form_data.personArea)),
+        personPostalCode: convertToEnglishNumber(form_data.personPostalCode),
+        housingTypeID: convertToEnglishNumber(form_data.housingTypeID),
+        maritalStatusID: convertToEnglishNumber(form_data.maritalStatusID),
         personBirthDate,
         personDeathDate,
       }).unwrap();
@@ -536,7 +511,7 @@ function RetiredPersonForm() {
 
                 <label
                   className={
-                    personData?.genderID
+                    form_data?.genderID
                       ? "inputBox__form--readOnly-label"
                       : "inputBox__form--readOnly-label-hidden"
                   }
@@ -797,7 +772,7 @@ function RetiredPersonForm() {
                     شماره بازنشستگی
                   </div>
                   <div className="inputBox__form--readOnly-content">
-                    {convertToPersianNumber(personData?.retiredID) || "-"}
+                    {convertToPersianNumber(form_data?.retiredID) || "-"}
                   </div>
                 </div>
               </div>
@@ -851,7 +826,6 @@ function RetiredPersonForm() {
                   value={
                     convertToPersianNumber(form_data?.personCellPhone) ?? ""
                   }
-                  onChange={handlePersonDataChange}
                   required
                   {...register("personCellPhone", {
                     pattern: {
@@ -1022,7 +996,7 @@ function RetiredPersonForm() {
 
                 <label
                   className={
-                    personData?.educationTypeID
+                    form_data?.educationTypeID
                       ? "inputBox__form--readOnly-label"
                       : "inputBox__form--readOnly-label-hidden"
                   }
@@ -1060,7 +1034,7 @@ function RetiredPersonForm() {
 
                 <label
                   className={
-                    personData?.personCountryID
+                    form_data?.personCountryID
                       ? "inputBox__form--readOnly-label"
                       : "inputBox__form--readOnly-label-hidden"
                   }
@@ -1097,7 +1071,7 @@ function RetiredPersonForm() {
 
                 <label
                   className={
-                    personData?.personStateID
+                    form_data?.personStateID
                       ? "inputBox__form--readOnly-label"
                       : "inputBox__form--readOnly-label-hidden"
                   }
@@ -1135,7 +1109,7 @@ function RetiredPersonForm() {
 
                 <label
                   className={
-                    personData?.personCityID
+                    form_data?.personCityID
                       ? "inputBox__form--readOnly-label"
                       : "inputBox__form--readOnly-label-hidden"
                   }
@@ -1267,7 +1241,7 @@ function RetiredPersonForm() {
 
                 <label
                   className={
-                    personData?.housingTypeID
+                    form_data?.housingTypeID
                       ? "inputBox__form--readOnly-label"
                       : "inputBox__form--readOnly-label-hidden"
                   }
@@ -1310,7 +1284,7 @@ function RetiredPersonForm() {
 
                 <label
                   className={
-                    personData?.maritalStatusID
+                    form_data?.maritalStatusID
                       ? "inputBox__form--readOnly-label"
                       : "inputBox__form--readOnly-label-hidden"
                   }

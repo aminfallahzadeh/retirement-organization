@@ -216,6 +216,7 @@ function DashboardForm() {
     "MinSalaryWith30YearsExperience",
     "MaxSalary",
     "MinSalaryWithLessThan30YearsExperience",
+    "MaxSalaryMoreThanCeiling",
   ];
 
   useEffect(() => {

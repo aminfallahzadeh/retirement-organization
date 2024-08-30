@@ -38,7 +38,7 @@ export const MinSalaryGrid = ({ data }) => {
         ),
       },
       {
-        accessorKey: "test",
+        accessorKey: "MaxSalaryMoreThanCeiling",
         size: 150,
         header: "حداکثر حقوق بالا سقف",
         Cell: ({ renderedCellValue }) => (
