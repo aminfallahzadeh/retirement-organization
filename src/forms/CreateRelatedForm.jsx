@@ -311,13 +311,8 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
     ]
   );
 
-  // DEBUGGING
-  // const onSubmit = () => {
-  //   console.log(form_data);
-  // };
-
   const content = (
-    <section className="formContainer-transparent formContainer--width-lg flex-col">
+    <section className="formContainer-transparent flex-col">
       <form
         method="POST"
         className="flex-col"
@@ -770,6 +765,12 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
           </div>
 
           <div className="inputBox__form">
+            {errors.universityCaption && (
+              <span className="error-form">
+                {errors.universityCaption.message}
+              </span>
+            )}
+
             <input
               type="text"
               className="inputBox__form--input"
@@ -1307,6 +1308,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
               نام خانوادگی
             </label>
           </div>
+
           <div className="inputBox__form">
             {errors.backupRelation && (
               <span className="error-form">
@@ -1331,6 +1333,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
               نسبت
             </label>
           </div>
+
           <div className="inputBox__form">
             {errors.backupPhone && (
               <span className="error-form">{errors.backupPhone.message}</span>
@@ -1422,7 +1425,6 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
           <LoadingButton
             dir="ltr"
             endIcon={<SaveIcon />}
-            // onClick={handleInsertRelated}
             onClick={handleSubmit}
             loading={isLoading}
             type="submit"
