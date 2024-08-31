@@ -167,6 +167,10 @@ function RetiredAccountForm() {
     }
   };
 
+  useEffect(() => {
+    console.log(form_data);
+  }, [form_data]);
+
   const content = (
     <>
       {isLoading || isFetching ? (
@@ -268,7 +272,10 @@ function RetiredAccountForm() {
                 <label
                   htmlFor="bankBranchID"
                   className={
-                    form_data?.bankBranchID
+                    form_data?.bankBranchID &&
+                    bankBranchOptions.some(
+                      (option) => option.value === form_data.bankBranchID
+                    )
                       ? "inputBox__form--readOnly-label"
                       : "inputBox__form--readOnly-label-hidden"
                   }

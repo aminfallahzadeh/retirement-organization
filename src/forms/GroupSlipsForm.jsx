@@ -158,8 +158,22 @@ function GroupSlipsForm() {
       dispatch(setSlipsTableData(mappedData));
     } catch (err) {
       console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
     }
   };
+
+  // REMOVE TABLE DATA ON ITEM CHANGE OR COMPONENT DISMOUNT
+  useEffect(() => {
+    dispatch(setSlipsTableData([]));
+  }, [
+    dispatch,
+    form_data.issueType,
+    form_data.currentYear,
+    form_data.currentMonth,
+    form_data.payType,
+  ]);
 
   // SET ISSUE TYPE BASED ON REQUEST TYPE
   useEffect(() => {
@@ -188,7 +202,7 @@ function GroupSlipsForm() {
         });
       } catch (err) {
         console.log(err);
-        toast.error(err?.form_data?.message || err.error, {
+        toast.error(err?.data?.message || err.error, {
           autoClose: 2000,
         });
       }
@@ -214,8 +228,6 @@ function GroupSlipsForm() {
       }
     }
   };
-
-  // const onSubmit = console.log(form_data);
 
   const content = (
     <section className="formContainer flex-col">
