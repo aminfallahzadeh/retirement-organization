@@ -1,5 +1,6 @@
 // react imports
 import { useState, useRef } from "react";
+import { useForm, Controller } from "react-hook-form";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -37,10 +38,20 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
   const runDateCalenderRef = useRef(null);
 
   // DATE STATES
-  const [slectedRunDate, setSelectedRunDate] = useState(null);
+  const [selectedRunDate, setSelectedRunDate] = useState(null);
   const [isRunDateCalenderOpen, setIsRunDateCalenderOpen] = useState(false);
 
-  const [statementObject, setStatementObject] = useState({});
+  // ACCESS REACT HOOK FORM CONTROL
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+    register,
+    watch,
+  } = useForm();
+
+  // ACCESS REACT HOOK FORM DATA
+  const form_data = watch();
 
   const location = useLocation();
   const animatedComponents = makeAnimated();
@@ -91,40 +102,20 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
     setIsRunDateCalenderOpen(false);
   };
 
-  // HANDLE MAIN DATA CHANGE
-  const handleStatementDataChange = (e) => {
-    const { name, value } = e.target;
-    setStatementObject((statementObject) => ({
-      ...statementObject,
-      [name]: value,
-    }));
-  };
-
-  // HANDLE SELECT OPTION CHANGE
-  const handleSelectOptionChange = (selectedOption, actionMeta) => {
-    const { name } = actionMeta;
-    if (selectedOption) {
-      const { value } = selectedOption;
-      setStatementObject({ ...statementObject, [name]: value || "" });
-    } else {
-      setStatementObject({ ...statementObject, [name]: null });
-    }
-  };
-
-  const handleGenerateStatement = async () => {
+  const onSubmit = async () => {
     try {
       // Adjusting for timezone difference
-      const retirementStatementRunDate = new Date(slectedRunDate);
+      const retirementStatementRunDate = new Date(selectedRunDate);
       retirementStatementRunDate.setMinutes(
         retirementStatementRunDate.getMinutes() -
           retirementStatementRunDate.getTimezoneOffset()
       );
       const generateRes = await generateNewRetirementStatement({
-        ...statementObject,
+        ...form_data,
         retirementStatementRunDate,
         personID,
         requestID,
-        newAmount: convertToEnglishNumber(statementObject?.newAmount) || 0,
+        newAmount: convertToEnglishNumber(form_data?.newAmount) || 0,
       }).unwrap();
       setShowGenerateStatementModal(false);
       toast.success(generateRes.message, {
@@ -143,144 +134,182 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
 
   const content = (
     <section className="formContainer-transparent flex-col">
-      <form method="POST" className="grid grid--col-2">
-        <div className="inputBox__form">
-          <InputDatePicker
-            value={slectedRunDate}
-            format={"jYYYY/jMM/jDD"}
-            onChange={handleRunDateChange}
-            onOpenChange={handleRunDateOpenChange}
-            suffixIcon={<CalenderIcon color="action" />}
-            open={isRunDateCalenderOpen}
-            style={datePickerStyles}
-            wrapperStyle={datePickerWrapperStyles}
-            pickerProps={{
-              ref: runDateCalenderRef,
-            }}
-          />
-          <div className="inputBox__form--readOnly-label">
-            <span>*</span> تاریخ اجرا
-          </div>
-        </div>
-        <div className="inputBox__form">
-          <Select
-            closeMenuOnSelect={true}
-            components={animatedComponents}
-            options={statementTypeOptions}
-            onChange={handleSelectOptionChange}
-            value={statementTypeOptions.find(
-              (item) =>
-                item.value === statementObject?.retirementStatementTypeID
-            )}
-            name="retirementStatementTypeID"
-            isClearable={true}
-            placeholder={
-              <div className="react-select-placeholder">
-                <span>*</span> نوع حکم
-              </div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            styles={{
-              container: (base) => ({
-                ...base,
-                position: "relative",
-                height: "100%",
-              }),
-              control: (base) => ({
-                ...base,
-                fontFamily: "IranYekan",
-                cursor: "pointer",
-                fontSize: "12px",
-                height: "100%",
-                maxWidth: "100%",
-                maxHeight: "100%",
-                overflow: "auto",
-                textOverflow: "ellipsis",
-                position: "relative",
-              }),
-              menu: (base) => ({
-                ...base,
-                fontFamily: "IranYekan",
-                zIndex: "5",
-                height: "200px",
-              }),
-              option: (base) => ({
-                ...base,
-                cursor: "pointer",
-              }),
-              menuList: (base) => ({
-                ...base,
-                fontFamily: "IranYekan",
-                zIndex: "5",
-                height: "200px",
-              }),
-            }}
-            isLoading={statementTypesIsFetching || statementTypesIsLoading}
-          />
-
-          <label
-            className={
-              statementObject?.retirementStatementTypeID
-                ? "inputBox__form--readOnly-label"
-                : "inputBox__form--readOnly-label-hidden"
-            }
-          >
-            <span>*</span> نوع حکم
-          </label>
-        </div>
-
-        {baseSalaryOptions.includes(
-          statementObject?.retirementStatementTypeID
-        ) && (
+      <form
+        method="POST"
+        className="flex-col"
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+      >
+        <div className="grid grid--col-2">
           <div className="inputBox__form">
-            <input
+            <InputDatePicker
+              value={selectedRunDate}
+              format={"jYYYY/jMM/jDD"}
+              onChange={handleRunDateChange}
+              onOpenChange={handleRunDateOpenChange}
+              suffixIcon={<CalenderIcon color="action" />}
+              open={isRunDateCalenderOpen}
+              style={datePickerStyles}
+              wrapperStyle={datePickerWrapperStyles}
+              pickerProps={{
+                ref: runDateCalenderRef,
+              }}
+            />
+            <div className="inputBox__form--readOnly-label">
+              <span>*</span> تاریخ اجرا
+            </div>
+          </div>
+
+          <div className="inputBox__form">
+            <Controller
+              name={"retirementStatementTypeID"}
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange } }) => (
+                <Select
+                  closeMenuOnSelect={true}
+                  components={animatedComponents}
+                  options={statementTypeOptions}
+                  onChange={(val) => onChange(val ? val.value : null)}
+                  value={statementTypeOptions.find(
+                    (c) => c.value === form_data?.retirementStatementTypeID
+                  )}
+                  name="retirementStatementTypeID"
+                  isClearable={true}
+                  placeholder={
+                    <div className="react-select-placeholder">
+                      <span>*</span> نوع حکم
+                    </div>
+                  }
+                  noOptionsMessage={selectSettings.noOptionsMessage}
+                  loadingMessage={selectSettings.loadingMessage}
+                  styles={{
+                    container: (base) => ({
+                      ...base,
+                      position: "relative",
+                      height: "100%",
+                    }),
+                    control: (base) => ({
+                      ...base,
+                      fontFamily: "IranYekan",
+                      cursor: "pointer",
+                      fontSize: "12px",
+                      height: "100%",
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                      overflow: "auto",
+                      textOverflow: "ellipsis",
+                      position: "relative",
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      fontFamily: "IranYekan",
+                      zIndex: "5",
+                      height: "200px",
+                    }),
+                    option: (base) => ({
+                      ...base,
+                      cursor: "pointer",
+                    }),
+                    menuList: (base) => ({
+                      ...base,
+                      fontFamily: "IranYekan",
+                      zIndex: "5",
+                      height: "200px",
+                    }),
+                  }}
+                  isLoading={
+                    statementTypesIsFetching || statementTypesIsLoading
+                  }
+                />
+              )}
+            />
+
+            <label
+              className={
+                form_data?.retirementStatementTypeID
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
+            >
+              <span>*</span> نوع حکم
+            </label>
+
+            {errors.retirementStatementTypeID && (
+              <span className="error-form">نوع حکم اجباری است</span>
+            )}
+          </div>
+
+          {baseSalaryOptions.includes(form_data?.retirementStatementTypeID) && (
+            <div className="inputBox__form">
+              {errors.newAmount && (
+                <span className="error-form">{errors.newAmount.message}</span>
+              )}
+              <input
+                type="text"
+                className="inputBox__form--input"
+                name="newAmount"
+                value={convertToPersianNumber(form_data?.newAmount) || ""}
+                id="newAmount"
+                required
+                {...register("newAmount", {
+                  required: "حقوق مبنا اجباری است",
+                  pattern: {
+                    value: /^[۰-۹0-9]+$/,
+                    message: "از اعداد استفاده کنید",
+                  },
+                })}
+              />
+              <label className="inputBox__form--label" htmlFor="newAmount">
+                <span>*</span> حقوق مبنا
+              </label>
+            </div>
+          )}
+
+          <div className="inputBox__form col-span-2 row-span-2">
+            {errors.retirementStatementDesc && (
+              <span className="error-form">
+                {errors.retirementStatementDesc.message}
+              </span>
+            )}
+            <textarea
               type="text"
               className="inputBox__form--input"
-              onChange={handleStatementDataChange}
-              name="newAmount"
-              value={convertToPersianNumber(statementObject?.newAmount) || ""}
+              value={convertToPersianNumber(form_data?.retirementStatementDesc)}
+              name="retirementStatementDesc"
+              id="retirementStatementDesc"
               required
-              id="newAmount"
-            />
-            <label className="inputBox__form--label" htmlFor="newAmount">
-              <span>*</span> حقوق مبنا
+              {...register("retirementStatementDesc", {
+                pattern: {
+                  value: /^[آ-ی\s۰-۹]+$/,
+                  message: "از حروف و اعداد فارسی استفاده کنید",
+                },
+              })}
+            ></textarea>
+            <label
+              className="inputBox__form--label"
+              htmlFor="retirementStatementDesc"
+            >
+              شرح حکم
             </label>
           </div>
-        )}
-
-        <div className="inputBox__form col-span-2 row-span-2">
-          <textarea
-            type="text"
-            className="inputBox__form--input"
-            value={statementObject?.retirementStatementDesc}
-            name="retirementStatementDesc"
-            onChange={handleStatementDataChange}
-            required
-            id="retirementStatementDesc"
-          ></textarea>
-          <label
-            className="inputBox__form--label"
-            htmlFor="retirementStatementDesc"
+        </div>
+        <div style={{ marginRight: "auto" }}>
+          <LoadingButton
+            dir="ltr"
+            endIcon={<SaveIcon />}
+            onClick={handleSubmit}
+            type="submit"
+            loading={isGenerating}
+            variant="contained"
+            disabled={!selectedRunDate}
+            color="success"
+            sx={{ fontFamily: "sahel" }}
           >
-            شرح حکم
-          </label>
+            <span>ذخیره</span>
+          </LoadingButton>
         </div>
       </form>
-
-      <div style={{ marginRight: "auto" }}>
-        <LoadingButton
-          dir="ltr"
-          endIcon={<SaveIcon />}
-          onClick={handleGenerateStatement}
-          loading={isGenerating}
-          variant="contained"
-          color="success"
-          sx={{ fontFamily: "sahel" }}
-        >
-          <span>ذخیره</span>
-        </LoadingButton>
-      </div>
     </section>
   );
 

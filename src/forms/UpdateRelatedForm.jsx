@@ -698,6 +698,7 @@ function UpdateRelatedForm({
                 />
                 <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
               </div>
+
               <div className="inputBox__form">
                 <InputDatePicker
                   value={selectedMritialDate}
@@ -1105,7 +1106,7 @@ function UpdateRelatedForm({
                   type="text"
                   className="inputBox__form--input"
                   name="personRegion"
-                  // value={convertToPersianNumber(form_data?.personRegion) ?? ""}
+                  value={convertToPersianNumber(form_data?.personRegion) ?? ""}
                   id="personRegion1"
                   required
                   {...register("personRegion", {
