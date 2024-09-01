@@ -512,6 +512,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
               نام پدر
             </label>
           </div>
+
           <div className="inputBox__form">
             <InputDatePicker
               value={selectedBirthDate}
@@ -528,6 +529,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
             />
             <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
           </div>
+
           <div className="inputBox__form">
             <InputDatePicker
               value={selectedMritialDate}
@@ -573,6 +575,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
               محل تولد
             </label>
           </div>
+
           <div className="inputBox__form">
             <Controller
               name="pensionaryStatusID"
@@ -938,6 +941,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
               ناحیه سکونت
             </label>
           </div>
+
           <div className="inputBox__form">
             <Controller
               name="personCountryID"
@@ -1010,6 +1014,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
               استان
             </label>
           </div>
+
           <div className="inputBox__form">
             <Controller
               name="personCityID"
