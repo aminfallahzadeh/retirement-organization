@@ -97,6 +97,52 @@
                 }
             }
         }
+
+        &--theme {
+            position: relative;
+
+            &-icon {
+                &:hover + .nav__profile--theme-dropdown {
+                    visibility: visible;
+                    z-index: 3000;
+                    opacity: 1;
+                    transform: perspective(1px) scale(1) translate(-50%, 0);
+                }
+            }
+
+            &-dropdown {
+                display: flex;
+                opacity: 0;
+                visibility: hidden;
+                z-index: -1;
+
+                transition:
+                    all 0.2s cubic-bezier(0.5, 0, 0, 1.25),
+                    opacity 0.15s ease-out;
+                transform: perspective(1px) scale(0.75);
+                transform-origin: -50% 0;
+
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                row-gap: 3px;
+                z-index: 100000;
+                top: 100%;
+                left: 50%;
+
+                background-color: var(--color-bg-nav-primary);
+                padding: 20px 5px 5px 5px;
+                border-radius: $border-radius-primary;
+
+                &:hover {
+                    visibility: visible;
+                    z-index: 3000;
+                    opacity: 1;
+                    transform: perspective(1px) scale(1) translate(-50%, 0);
+                }
+            }
+        }
     }
 
     &__panel {
@@ -160,7 +206,6 @@
     &__panel--hidden {
         transition: all 0.25s ease;
         height: 0;
-        // overflow: hidden;
     }
 }
 
@@ -179,4 +224,33 @@
     & > * {
         color: var(--color-accent-primary) !important;
     }
+}
+
+.theme-choice {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    transition: all 0.25s ease;
+
+    &:hover {
+        background-color: var(--color-label-primary);
+    }
+
+    &__color {
+        width: 20px !important;
+        height: 20px;
+        border-radius: 50%;
+
+        &[data-theme="a"] {
+            background: conic-gradient(#b7f5ff 0deg 180deg, #f0642d 180deg 360deg);
+        }
+
+        &[data-theme="b"] {
+            background: conic-gradient(#d7bba1 0deg 180deg, #fdd001 180deg 360deg);
+        }
+    }
+}
+
+.selectedTheme {
+    background-color: var(--color-disbaled-input-txt);
 }

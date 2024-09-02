@@ -24,11 +24,10 @@ import useLogout from "../hooks/useLogout";
 
 // mui iomports
 import { LoadingButton } from "@mui/lab";
-import { Box, CircularProgress, Tooltip, Button } from "@mui/material";
+import { Box, Tooltip, Button } from "@mui/material";
 import {
   Logout as LogoutIcon,
-  DarkModeOutlined as DarkModeIcon,
-  LightModeOutlined as LightModeIcon,
+  ColorLensRounded as ThemeIcon,
   Done as DoneIcon,
   Close as CloseIcon,
   ArrowLeftOutlined as ArrowIcon,
@@ -40,7 +39,7 @@ function Nav({ userName }) {
 
   const shouldFetch = !!userID;
 
-  const { data: user } = useGetUserQuery(
+  const { data: user, refetch: userRefetch } = useGetUserQuery(
     { userID },
     {
       skip: !shouldFetch,
@@ -49,6 +48,13 @@ function Nav({ userName }) {
 
   const dispatch = useDispatch();
 
+  // GET THEME WHENEVERN PAGE LOADS
+  useEffect(() => {
+    if (shouldFetch) {
+      userRefetch();
+    }
+  }, [userRefetch, shouldFetch]);
+
   const [activePanel, setActivePanel] = useState(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [theme, setTheme] = useState("default");
@@ -56,7 +62,7 @@ function Nav({ userName }) {
   const { logoutHandler, logoutLoading } = useLogout();
   const location = useLocation();
 
-  const [updateUserTheme, { isLoading }] = useUpdateUserThemeMutation();
+  const [updateUserTheme] = useUpdateUserThemeMutation();
 
   // ACCESS PERMISSIONS FROM REDUX STORE
   const { permissions } = useSelector((state) => state.userPermissionsData);
@@ -104,9 +110,10 @@ function Nav({ userName }) {
     });
   };
 
-  const handleThemeChange = async () => {
+  const handleThemeChange = async (value) => {
+    if (theme === value) return;
     try {
-      const selectedTheme = theme === "default" ? "chocolate" : "default";
+      const selectedTheme = value;
       setTheme(selectedTheme);
       await updateUserTheme({
         userID,
@@ -263,39 +270,42 @@ function Nav({ userName }) {
               </Tooltip>
             </li>
 
-            <li>
-              {isLoading ? (
+            <li className="nav__profile--theme">
+              <div className="nav__profile--theme-icon">
                 <Box
                   sx={{
+                    cursor: "pointer",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
-                  <CircularProgress color="warning" size={20} />
+                  <ThemeIcon />
                 </Box>
-              ) : (
-                <Tooltip
-                  title={
-                    <span style={{ fontFamily: "sahel", fontSize: "12px" }}>
-                      تغییر تم
-                    </span>
+              </div>
+
+              <div className="nav__profile--theme-dropdown">
+                <div
+                  className={
+                    "theme-choice" +
+                    (theme === "default" ? " selectedTheme" : "")
                   }
+                  onClick={() => handleThemeChange("default")}
                 >
-                  <Box
-                    sx={{
-                      cursor: "pointer",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                    onClick={handleThemeChange}
-                  >
-                    {theme === "default" ? <DarkModeIcon /> : <LightModeIcon />}
-                  </Box>
-                </Tooltip>
-              )}
+                  <div className="theme-choice__color" data-theme="a"></div>
+                </div>
+                <div
+                  className={
+                    "theme-choice" +
+                    (theme === "chocolate" ? " selectedTheme" : "")
+                  }
+                  onClick={() => handleThemeChange("chocolate")}
+                >
+                  <div className="theme-choice__color" data-theme="b"></div>
+                </div>
+              </div>
             </li>
+
             <li>
               <Tooltip title="پنل کاربر">
                 <a>{userName}</a>
