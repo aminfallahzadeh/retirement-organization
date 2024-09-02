@@ -294,6 +294,7 @@ function Nav({ userName }) {
                 >
                   <div className="theme-choice__color" data-theme="a"></div>
                 </div>
+
                 <div
                   className={
                     "theme-choice" +
@@ -302,6 +303,15 @@ function Nav({ userName }) {
                   onClick={() => handleThemeChange("chocolate")}
                 >
                   <div className="theme-choice__color" data-theme="b"></div>
+                </div>
+
+                <div
+                  className={
+                    "theme-choice" + (theme === "green" ? " selectedTheme" : "")
+                  }
+                  onClick={() => handleThemeChange("green")}
+                >
+                  <div className="theme-choice__color" data-theme="c"></div>
                 </div>
               </div>
             </li>

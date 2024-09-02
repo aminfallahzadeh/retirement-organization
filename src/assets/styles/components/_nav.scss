@@ -248,6 +248,10 @@
         &[data-theme="b"] {
             background: conic-gradient(#d7bba1 0deg 180deg, #fdd001 180deg 360deg);
         }
+
+        &[data-theme="c"] {
+            background: conic-gradient(#42113c 0deg 180deg, #6bd425 180deg 360deg);
+        }
     }
 }
 

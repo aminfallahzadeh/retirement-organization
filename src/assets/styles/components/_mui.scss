@@ -8,12 +8,12 @@
 
 /* tabs */
 .MuiTabs-indicator {
-    background-color: $color-accent-red !important;
-    color: $color-accent-red !important;
+    background-color: var(--color-accent-primary) !important;
+    color: var(--color-accent-primary) !important;
 }
 
 .MuiTab-root.Mui-selected {
-    color: $color-accent-red !important;
+    color: var(--color-accent-primary) !important;
 }
 
 .MuiTab-root {

@@ -120,3 +120,37 @@
     --color-cell-header: #373737;
     --color-table-bg: #ece9e2;
 }
+
+:root[color-scheme="green"] {
+    /* green theme */
+    /* accent colors */
+    --color-accent-primary: #6bd425;
+    --color-accent-gr-primary: #618b25;
+
+    --color-accent-gr-secondary: #d3ca00;
+    --color-accent-secondary: #4a4700;
+
+    /* navbar colors*/
+    --color-bg-nav-primary: #370926;
+    --color-bg-nav-secondary: #42113c;
+
+    /* background coloras */
+    --color-bg-primary: #c0c0c0;
+    --color-fg-primary: #1c0118;
+
+    /* accordion colors */
+    --color-bg-accordion-primary: #fffcf8;
+    --color-text-accordion-primary: #333;
+    --color-expand-icon-accordion: #333;
+
+    /* grid colors */
+    --color-cell-bg: #618b25;
+    --color-cell-header: #1c0118;
+    --color-table-bg: #ece9e2;
+
+    /* input colors */
+    --color-input-border: #618b25;
+    --color-bg-container: #ebebeb;
+    --color-label-primary: #1a260a;
+    --color-bg-label: #f2f4f3;
+}

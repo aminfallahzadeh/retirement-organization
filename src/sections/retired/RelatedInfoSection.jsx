@@ -27,7 +27,12 @@ function RelatedInfoSection() {
   const content = (
     <section className="u-margin-top-lg u-margin-bottom-lg">
       <TabContext value={value}>
-        <Box sx={{ bgcolor: "background.paper", borderRadius: 1 }}>
+        <Box
+          sx={{
+            bgcolor: "background.paper",
+            borderRadius: 1,
+          }}
+        >
           <TabList
             onChange={handleChange}
             aria-label="tabs"
