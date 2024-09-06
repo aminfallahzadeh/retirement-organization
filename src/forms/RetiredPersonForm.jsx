@@ -339,8 +339,9 @@ function RetiredPersonForm() {
                       <span>*</span> نام
                     </label>
                   </div>
+
                   <div className="inputBox__form">
-                    {errors.personFirstName && (
+                    {errors.personLastName && (
                       <span className="error-form">
                         {errors.personLastName.message}
                       </span>
