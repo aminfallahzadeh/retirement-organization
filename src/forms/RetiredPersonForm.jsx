@@ -1305,15 +1305,26 @@ function RetiredPersonForm() {
               </div>
 
               <div className="inputBox__form col-span-3">
+                {errors.personAddress && (
+                  <span className="error-form">
+                    {errors.personAddress.message}
+                  </span>
+                )}
+
                 <textarea
                   disabled={!editable}
                   type="text"
                   id="personAddress"
-                  value={form_data?.personAddress || ""}
+                  value={convertToPersianNumber(form_data?.personAddress) || ""}
                   name="personAddress"
                   className="inputBox__form--input"
                   required
-                  {...register("personAddress")}
+                  {...register("personAddress", {
+                    pattern: {
+                      value: /^[آ-ی۰-۹0-9\s]+$/,
+                      message: "از حروف فارسی استفاده کنید",
+                    },
+                  })}
                 ></textarea>
                 <label
                   htmlFor="personAddress"
@@ -1324,15 +1335,27 @@ function RetiredPersonForm() {
               </div>
 
               <div className="inputBox__form row-col-span-3">
+                {errors.personDescription && (
+                  <span className="error-form">
+                    {errors.personDescription.message}
+                  </span>
+                )}
                 <textarea
                   disabled={!editable}
                   type="text"
                   id="personDescription"
-                  value={form_data?.personDescription || ""}
+                  value={
+                    convertToPersianNumber(form_data?.personDescription) || ""
+                  }
                   name="personDescription"
                   className="inputBox__form--input"
                   required
-                  {...register("personDescription")}
+                  {...register("personDescription", {
+                    pattern: {
+                      value: /^[آ-ی۰-۹0-9\s]+$/,
+                      message: "از حروف فارسی استفاده کنید",
+                    },
+                  })}
                 ></textarea>
                 <label
                   htmlFor="personDescription"

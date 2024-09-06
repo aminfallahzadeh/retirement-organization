@@ -350,7 +350,7 @@ function RetiredAccountForm() {
                   required
                   {...register("insuranceCoef", {
                     pattern: {
-                      value: /^[۰-۹0-9]+$/,
+                      value: /^[۰-۹0-9]+([.,٫][۰-۹0-9]+)?$/,
                       message: "ضریب بیمه باید فقط شامل اعداد باشد",
                     },
                   })}
