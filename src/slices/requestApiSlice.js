@@ -51,6 +51,13 @@ export const requestApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    insertRequestByNationalCode: builder.mutation({
+      query: (data) => ({
+        url: `${REQUEST_URL_HTTPS}/InsertRequestByNationalCode`,
+        method: "POST",
+        body: data,
+      }),
+    }),
     sendRequestToNextState: builder.mutation({
       query: (data) => ({
         url: `${REQUEST_URL_HTTPS}/SendRequestToNextState`,
@@ -126,4 +133,5 @@ export const {
   useInsertRequestAttachmentMutation,
   useGetRequestTypeAttachmentQuery,
   useDeleteRequestAttachmentMutation,
+  useInsertRequestByNationalCodeMutation,
 } = requestApiSlice;

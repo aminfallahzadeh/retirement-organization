@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // redux imports
-import { useInsertRequestMutation } from "../slices/requestApiSlice";
+import { useInsertRequestByNationalCodeMutation } from "../slices/requestApiSlice";
 
 // mui imports
 import { LoadingButton } from "@mui/lab";
@@ -26,31 +26,18 @@ import {
   optionsGenerator,
 } from "../utils/reactSelect";
 
+// helpers
+import { convertToPersianNumber, convertToEnglishNumber } from "../helper.js";
+
 function CreateRequestForm() {
   const [insertRequest, { isLoading: isInserting }] =
-    useInsertRequestMutation();
+    useInsertRequestByNationalCodeMutation();
 
   const navigate = useNavigate();
   const animatedComponents = makeAnimated();
 
   // REQUEST OBJECT STATE
   const [requestObject, setRequestObject] = useState({});
-
-  // TEST STATE
-  const personIDList = [
-    { value: "49e66fb39a124555b9329c9b7994509a", label: "-------" },
-    { value: "110117846", label: "همه" },
-    { value: "110117846", label: "علیرضا فلاح زاده ابرقويی" },
-    { value: "810e59798cc54b94b45cd0c776fff16b", label: "علی اسدی" },
-    { value: "4fba2ae8420348fc9d16b21a55fef23f", label: "امیر بابا بیک" },
-    { value: "e931cee492514557a6cba93fa7f3fbd4", label: "زهرا بابا بیک" },
-    { value: "110000256", label: "مهدی بشارت صنعتی" },
-    { value: "7777701a948e411aa204bc350utkt5", label: "سونیا گلدوست" },
-    { value: "1c81794b5d4447aba8bea1ae915ae756", label: "بهمن محمدی" },
-    { value: "19d06de3cf8c44a3b832b46ed0276b90", label: "مریم مهرجو" },
-    { value: "7777701a948e411aa204bc350a56f155", label: "شیما میرباقری" },
-    { value: "8b2a301a948e411aa204bc350a56f155", label: "احسان میرباقری" },
-  ];
 
   // GET LOOK UP DATA
   const { requestTypes, requestTypesIsLoading, requestTypesIsFetching } =
@@ -62,8 +49,6 @@ function CreateRequestForm() {
     "requestTypeID",
     "name"
   );
-
-  const personsOptions = optionsGenerator(personIDList, "value", "label");
 
   // HANDLE REQUEST OBJECT CHANGE
   const handleRequestObjectChange = (e) => {
@@ -90,7 +75,7 @@ function CreateRequestForm() {
       const insertRes = await insertRequest({
         ...requestObject,
         requestFrom: 1,
-        personID: requestObject.personID || "49e66fb39a124555b9329c9b7994509a",
+        nationalCode: convertToEnglishNumber(requestObject.nationalCode),
       }).unwrap();
       navigate("/retirement-organization/cartable");
       toast.success(insertRes.message, {
@@ -145,43 +130,27 @@ function CreateRequestForm() {
         </div>
 
         <div className="inputBox__form">
-          <Select
-            closeMenuOnSelect={true}
-            components={animatedComponents}
-            options={personsOptions}
-            onChange={handleSelectOptionChange}
-            value={personsOptions.find(
-              (item) => item.value === requestObject?.personID
-            )}
-            name="personID"
-            isClearable={true}
-            placeholder={
-              <div className="react-select-placeholder">
-                <span>*</span> شماره کارمندی
-              </div>
-            }
-            noOptionsMessage={selectSettings.noOptionsMessage}
-            loadingMessage={selectSettings.loadingMessage}
-            styles={selectStyles}
-            isLoading={requestTypesIsLoading || requestTypesIsFetching}
+          <input
+            type="text"
+            name="nationalCode"
+            id="nationalCode"
+            onChange={handleRequestObjectChange}
+            className="inputBox__form--input"
+            value={convertToPersianNumber(requestObject?.nationalCode) ?? ""}
+            required
           />
-
-          <label
-            className={
-              requestObject?.personID
-                ? "inputBox__form--readOnly-label"
-                : "inputBox__form--readOnly-label-hidden"
-            }
-          >
-            <span>*</span> شماره کارمندی
+          <label htmlFor="nationalCode" className="inputBox__form--label">
+            <span>*</span> کد ملی
           </label>
         </div>
+
         <div className="inputBox__form col-span-4 row-span-3">
           <textarea
             type="text"
             id="requestText"
             name="requestText"
             onChange={handleRequestObjectChange}
+            value={requestObject?.requestText || ""}
             className="inputBox__form--input"
             required
           ></textarea>
