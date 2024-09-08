@@ -24,6 +24,7 @@ import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 function InsertArchiveForm({ setShowAddImageModal }) {
   const [documentID, setDocumentID] = useState("");
   const inputFileRef = useRef(null);
+  const [contentType, setContentType] = useState(null);
   const [image, setImage] = useState(null);
 
   const { selectedArchiveData } = useSelector((state) => state.archiveData);
@@ -51,6 +52,8 @@ function InsertArchiveForm({ setShowAddImageModal }) {
     const file = e.target.files[0];
     const reader = new FileReader();
 
+    setContentType(file.type.split("/")[1]);
+
     reader.onloadend = () => {
       // Get the base64 string
       const base64String = reader.result;
@@ -76,13 +79,11 @@ function InsertArchiveForm({ setShowAddImageModal }) {
   const handleInsertImage = async () => {
     try {
       const insertImageRes = await insertArchive({
-        id: "",
         personID,
-        insertUserID: "",
-        contentType: "",
         documentID: convertToEnglishNumber(documentID),
         archiveStructureID: selectedArchiveData?.id,
         attachment: image,
+        contentType,
       }).unwrap();
       setShowAddImageModal(false);
       toast.success(insertImageRes.message, {
@@ -135,6 +136,7 @@ function InsertArchiveForm({ setShowAddImageModal }) {
           ref={inputFileRef}
           style={{ display: "none" }}
           onChange={handleImageChange}
+          accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"
         />
 
         <LoadingButton

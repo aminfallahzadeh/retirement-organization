@@ -63,7 +63,7 @@ function PersonnelGrid() {
         ),
       },
       {
-        accessorKey: "personID",
+        accessorKey: "personnelID",
         header: "شماره کارمندی",
         size: 20,
 

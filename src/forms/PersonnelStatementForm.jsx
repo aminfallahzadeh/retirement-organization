@@ -59,7 +59,7 @@ function PersonnelStatementForm() {
         id: item.personID,
         personRowNum: index + 1,
         personDeathDate: item.personDeathDate,
-        personID: item.personID,
+        personnelID: item.personnelID,
         personNationalCode: item.personNationalCode,
         personFirstName: item.personFirstName,
         personLastName: item.personLastName,

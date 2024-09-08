@@ -27,6 +27,7 @@ function RequestAttachmentForm({ setShowInsertAttachmentModal, refetch }) {
   // MAIN STATE
   const [data, setData] = useState({});
   const [image, setImage] = useState(null);
+  const [contentType, setContentType] = useState(null);
 
   const searchParams = new URLSearchParams(location.search);
   const requestTypeID = searchParams.get("type");
@@ -62,6 +63,8 @@ function RequestAttachmentForm({ setShowInsertAttachmentModal, refetch }) {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
+
+    setContentType(file.type.split("/")[1]);
 
     reader.onloadend = () => {
       // Get the base64 string
@@ -105,10 +108,9 @@ function RequestAttachmentForm({ setShowInsertAttachmentModal, refetch }) {
   const handleInsertAttachment = async () => {
     try {
       const insertImageRes = await insertAttachment({
-        contentType: "",
-        requestAttachmentID: "",
         attachementTypeID: data.attachementTypeID,
         requestID,
+        contentType,
         attachment: image,
         attachementDesc: data.attachementDesc,
       }).unwrap();

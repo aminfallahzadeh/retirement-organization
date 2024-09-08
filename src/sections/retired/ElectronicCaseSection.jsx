@@ -46,7 +46,9 @@ function ElectronicCaseSection() {
 
       // Detect the image type based on its signature
       const signature = bytes[0] * 256 + bytes[1];
+
       let mimeType;
+
       switch (signature) {
         case 0xffd8: // JPEG
           mimeType = "image/jpeg";

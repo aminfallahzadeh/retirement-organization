@@ -45,12 +45,13 @@ import {
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { RViewer, RViewerTrigger } from "react-viewerjs";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
 
 // helpers
-import { convertToPersianNumber } from "../helper.js";
+import { convertToPersianNumber, findById } from "../helper.js";
 
 function RequestAttachmentsGrid() {
   // CONTOLL STATESS
@@ -65,6 +66,9 @@ function RequestAttachmentsGrid() {
   const [attachmentID, setAttachmentID] = useState("");
   const [showInsertAttachmentModal, setShowInsertAttachmentModal] =
     useState(false);
+
+  // IMAGE VIEWER OPTIONS
+  const [previewImage, setPreviewImage] = useState(null);
 
   const location = useLocation();
 
@@ -87,16 +91,44 @@ function RequestAttachmentsGrid() {
     refetch();
   };
 
+  // IMAGE VIWER OPTIONS
+  const options = useMemo(
+    () => ({
+      toolbar: {
+        prev: false,
+        next: false,
+        play: false,
+        stop: false,
+      },
+      title: (imageData) =>
+        `(${imageData.naturalWidth} × ${imageData.naturalHeight})`,
+      viewed() {
+        this.viewer.scale(1.2);
+      },
+    }),
+    []
+  );
+
   useEffect(() => {
     refetch();
     if (isSuccess) {
       const data = attachments.itemList.map((item, index) => ({
+        image: item.attachment,
+        contentType: item.contentType,
         id: item.requestAttachmentID,
         attachmentsRowNum: index + 1,
         attachmentDesc: item.attachementDesc || "-",
-        attachmentName: item.attachmentName || "-",
+        attachementTypeName: item.attachementTypeName || "-",
       }));
       setAttachmentsTableData(data);
+
+      // SET A DEFAULT PREVIEW IMAGE
+      const image = attachments.itemList[0].image;
+      const contentType = attachments.itemList[0].contentType;
+
+      const prefix = `data:${contentType};base64,`;
+
+      setPreviewImage(`${prefix}${image}`);
     }
   }, [isSuccess, refetch, attachments]);
 
@@ -147,7 +179,7 @@ function RequestAttachmentsGrid() {
         ),
       },
       {
-        accessorKey: "attachmentName",
+        accessorKey: "attachementTypeName",
         header: "نام پیوست",
         size: 20,
       },
@@ -163,7 +195,7 @@ function RequestAttachmentsGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip title={`حذف "${row.original.attachmentName}"`}>
+          <Tooltip title={`حذف "${row.original.attachementTypeName}"`}>
             <IconButton
               color="error"
               sx={{ padding: "0" }}
@@ -184,17 +216,27 @@ function RequestAttachmentsGrid() {
         },
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip title={`مشاهده "${row.original.attachmentName}"`}>
+          <Tooltip title={`مشاهده "${row.original.attachementTypeName}"`}>
             <span>
-              <IconButton sx={{ padding: "0" }} color="info">
-                <EyeIcon color="info" />
-              </IconButton>
+              {previewImage ? (
+                <RViewer options={options} imageUrls={previewImage}>
+                  <RViewerTrigger>
+                    <IconButton sx={{ padding: "0" }} color="info">
+                      <EyeIcon color="info" />
+                    </IconButton>
+                  </RViewerTrigger>
+                </RViewer>
+              ) : (
+                <IconButton sx={{ padding: "0" }} color="info" disabled>
+                  <EyeIcon color="action" />
+                </IconButton>
+              )}
             </span>
           </Tooltip>
         ),
       },
     ],
-    []
+    [options, previewImage]
   );
 
   const table = useMaterialReactTable({
@@ -278,6 +320,14 @@ function RequestAttachmentsGrid() {
 
     if (id) {
       setAttachmentID(id);
+      const selected = findById(attachmentsTableData, id);
+
+      const image = selected.image;
+      const contentType = selected.contentType;
+
+      const prefix = `data:${contentType};base64,`;
+
+      setPreviewImage(`${prefix}${image}`);
     }
   }, [table, rowSelection, attachmentsTableData]);
 
