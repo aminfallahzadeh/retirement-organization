@@ -120,9 +120,7 @@ function RequestAttachmentsGrid() {
   // HANLDE REMOVE ATTACHMENT
   const handleDeleteAttachment = async () => {
     try {
-      const deleteRes = await deleteAttachment({
-        requestAttachmentID: attachmentID,
-      });
+      const deleteRes = await deleteAttachment(attachmentID).unwrap();
       toast.success(deleteRes.message, {
         autoClose: 2000,
       });
@@ -160,12 +158,12 @@ function RequestAttachmentsGrid() {
       },
       {
         accessorKey: "deleteAttachment",
-        header: "حذف پیوست",
+        header: "حذف",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <Tooltip>
+        Cell: ({ row }) => (
+          <Tooltip title={`حذف "${row.original.attachmentName}"`}>
             <IconButton
               color="error"
               sx={{ padding: "0" }}
@@ -178,15 +176,15 @@ function RequestAttachmentsGrid() {
       },
       {
         accessorKey: "observeAttachment",
-        header: "مشاهده پیوست",
+        header: "مشاهده",
         enableSorting: false,
         enableColumnActions: false,
         muiTableBodyCellProps: {
           align: "center",
         },
         size: 20,
-        Cell: () => (
-          <Tooltip>
+        Cell: ({ row }) => (
+          <Tooltip title={`مشاهده "${row.original.attachmentName}"`}>
             <span>
               <IconButton sx={{ padding: "0" }} color="info">
                 <EyeIcon color="info" />

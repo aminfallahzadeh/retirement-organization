@@ -112,10 +112,9 @@ export const requestApiSlice = apiSlice.injectEndpoints({
           "updateTime": "2024-07-31T18:32:23.781Z"
         }     
       */
-      query: (data) => ({
-        url: `${REQUEST_URL_HTTPS}/DeleteRequestAttachment`,
+      query: (id) => ({
+        url: `${REQUEST_URL_HTTPS}/DeleteRequestAttachment?RequestAttachmentID=${id}`,
         method: "POST",
-        body: data,
       }),
     }),
   }),

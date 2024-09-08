@@ -22,10 +22,16 @@ function ElectronicCaseSection() {
     toolbar: {
       prev: false,
       next: false,
+      play: false,
+      stop: false,
     },
 
     title: (imageData) =>
       `(${imageData.naturalWidth} × ${imageData.naturalHeight})`,
+
+    viewed() {
+      this.viewer.scale(1.2);
+    },
   };
 
   useEffect(() => {
