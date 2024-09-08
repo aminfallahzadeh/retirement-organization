@@ -150,10 +150,6 @@ function RetiredStatementsGrid() {
           RetirementStatementID,
         }).unwrap();
 
-        console.log("retiredRes", retiredRes.itemList[0]);
-        console.log("statementRes", statementRes);
-        console.log("personDeathDate", personDeathDate);
-
         createStatementPDF(
           retiredRes.itemList[0],
           statementRes,
