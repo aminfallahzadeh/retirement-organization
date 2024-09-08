@@ -71,12 +71,13 @@ export const createStatementPDF = async (retired, statement, isDead) => {
         : reverseString(convertToPersianNumber(retired.personNationalCode)),
     personLastName: retired.personLastName || "-",
     personFirstName: retired.personFirstName || "-",
-    retiredID: retired.retiredID || "-",
+    retiredID: reverseString(convertToPersianNumber(retired.retiredID)) || "-",
     personCertificateNo:
       convertToPersianNumber(retired.personCertificateNo) ?? "-",
     personFatherName: retired.personFatherName || "-",
     personBirthDate:
-      convertToPersianDateFormatted(retired.personBirthDate) ?? "-",
+      reverseString(convertToPersianDateFormatted(retired.personBirthDate)) ??
+      "-",
     personBirthPlace: retired.personBirthPlace || "-",
     gender: retired.genderName || "-",
     retirementStatementChildrenCount:
@@ -88,7 +89,9 @@ export const createStatementPDF = async (retired, statement, isDead) => {
         ? "-"
         : reverseString(convertToPersianNumber(retired.insuranceCode)),
     relatedCount:
-      convertToPersianNumber(statement.retirementStatementRelatedCount) ?? "-",
+      convertToPersianNumber(
+        statement.retirementStatementRelatedCount
+      ).toString() ?? "-",
     maritialStatus: retired.maritialStatus || "-",
     personPostalCode: convertToPersianNumber(retired.personPostalCode) || "-",
     retirementStatementSerial:
@@ -262,7 +265,7 @@ export const createStatementPDF = async (retired, statement, isDead) => {
       for (const [fieldName, fieldValue] of Object.entries(row)) {
         const textField = form.getTextField(fieldName);
         if (textField) {
-          textField.setText(fieldValue);
+          textField.setText(String(fieldValue));
           textField.setAlignment(TextAlignment.Center);
           textField.setFontSize(7);
           textField.updateAppearances(customFont);
@@ -274,7 +277,7 @@ export const createStatementPDF = async (retired, statement, isDead) => {
   for (const [fieldName, fieldValue] of Object.entries(fields)) {
     const textField = form.getTextField(fieldName);
     if (textField) {
-      textField.setText(fieldValue);
+      textField.setText(String(fieldValue));
       if (fieldName === "retirementStatementDesc") {
         textField.setAlignment(TextAlignment.Right);
       } else {

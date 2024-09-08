@@ -112,7 +112,7 @@ function RequestAttachmentsGrid() {
   useEffect(() => {
     refetch();
     if (isSuccess) {
-      const data = attachments.itemList.map((item, index) => ({
+      const data = attachments?.itemList.map((item, index) => ({
         image: item.attachment,
         contentType: item.contentType,
         id: item.requestAttachmentID,
@@ -123,12 +123,14 @@ function RequestAttachmentsGrid() {
       setAttachmentsTableData(data);
 
       // SET A DEFAULT PREVIEW IMAGE
-      const image = attachments.itemList[0].image;
-      const contentType = attachments.itemList[0].contentType;
+      if (attachments.itemList.length && attachments.itemList.length > 0) {
+        const image = attachments.itemList[0].image;
+        const contentType = attachments.itemList[0].contentType;
 
-      const prefix = `data:${contentType};base64,`;
+        const prefix = `data:${contentType};base64,`;
 
-      setPreviewImage(`${prefix}${image}`);
+        setPreviewImage(`${prefix}${image}`);
+      }
     }
   }, [isSuccess, refetch, attachments]);
 
@@ -322,12 +324,14 @@ function RequestAttachmentsGrid() {
       setAttachmentID(id);
       const selected = findById(attachmentsTableData, id);
 
-      const image = selected.image;
-      const contentType = selected.contentType;
+      if (selected) {
+        const image = selected.image;
+        const contentType = selected.contentType;
 
-      const prefix = `data:${contentType};base64,`;
+        const prefix = `data:${contentType};base64,`;
 
-      setPreviewImage(`${prefix}${image}`);
+        setPreviewImage(`${prefix}${image}`);
+      }
     }
   }, [table, rowSelection, attachmentsTableData]);
 
