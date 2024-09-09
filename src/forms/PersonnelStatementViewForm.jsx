@@ -30,15 +30,16 @@ function PersonnelStatementViewForm({ statementID }) {
   // FETCH DATA
   useEffect(() => {
     if (isSuccess) {
+      console.log(personnelStatement.itemList[0]);
       setData(personnelStatement.itemList[0]);
 
       const mappedData =
         personnelStatement.itemList[0].personnelStatementItems.map(
           (item, index) => ({
             id: item.personnelStatementID,
-            personnelStatementRowNum: index + 1,
-            personnelStatementDesc: item.personnelStatementItemTypeName,
-            personnelStatementAmount: item.personnelStatementItemAmount,
+            personnelStatementItemRowNum: index + 1,
+            personnelStatementItemDesc: item.personnelStatementItemTypeName,
+            personnelStatementItemAmount: item.personnelStatementItemAmount,
           })
         );
 
@@ -74,6 +75,7 @@ function PersonnelStatementViewForm({ statementID }) {
                 className="inputBox__form--input"
                 name="firstName"
                 disabled
+                value={data.personFirstName || "-"}
                 id="firstName"
               />
               <label className="inputBox__form--label" htmlFor="firstName">
@@ -87,6 +89,7 @@ function PersonnelStatementViewForm({ statementID }) {
                 className="inputBox__form--input"
                 name="lastName"
                 disabled
+                value={data.personLastName || "-"}
                 id="lastName"
               />
               <label className="inputBox__form--label" htmlFor="firstName">
@@ -114,7 +117,7 @@ function PersonnelStatementViewForm({ statementID }) {
                 className="inputBox__form--input"
                 name="personID"
                 disabled
-                value={convertToPersianNumber(data.personID) || "-"}
+                value={convertToPersianNumber(data.personnelID) || "-"}
                 id="personID"
               />
               <label className="inputBox__form--label" htmlFor="firstName">

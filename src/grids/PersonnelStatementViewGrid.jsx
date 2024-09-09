@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // mui imports
 import {
@@ -29,7 +29,7 @@ function PersonnelStatementViewGrid({ data }) {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "personnelStatementRowNum",
+        accessorKey: "personnelStatementItemRowNum",
         header: "ردیف",
         size: 20,
         enableSorting: false,
@@ -39,13 +39,13 @@ function PersonnelStatementViewGrid({ data }) {
         ),
       },
       {
-        accessorKey: "personnelStatementDesc",
+        accessorKey: "personnelStatementItemDesc",
         header: "شرح آیتم",
         size: 20,
       },
 
       {
-        accessorKey: "personnelStatementAmount",
+        accessorKey: "personnelStatementItemAmount",
         header: "مبلغ",
         size: 20,
         Cell: ({ renderedCellValue }) => (
@@ -100,6 +100,10 @@ function PersonnelStatementViewGrid({ data }) {
       },
     },
   });
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const content = <MaterialReactTable table={table} />;
 
