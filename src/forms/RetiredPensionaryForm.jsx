@@ -141,9 +141,11 @@ function RetiredPensionaryForm() {
     if (isPensionarySuccess) {
       const data = pensionary?.itemList[0];
 
-      Object.keys(data).forEach((key) => {
-        setValue(key, data[key]);
-      });
+      if (data) {
+        Object.keys(data).forEach((key) => {
+          setValue(key, data[key]);
+        });
+      }
     }
   }, [isPensionarySuccess, pensionary, setValue]);
 
