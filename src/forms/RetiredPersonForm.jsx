@@ -96,13 +96,14 @@ function RetiredPersonForm() {
     if (isSuccess) {
       const data = retiredPersonData?.itemList[0];
 
-      Object.keys(data).forEach((key) => {
-        setValue(key, data[key]);
-      });
-
-      dispatch(
-        setPersonDeathDate(data?.personDeathDate === null ? false : true)
-      );
+      if (data) {
+        Object.keys(data).forEach((key) => {
+          setValue(key, data[key]);
+        });
+        dispatch(
+          setPersonDeathDate(data?.personDeathDate === null ? false : true)
+        );
+      }
     }
 
     return () => {
