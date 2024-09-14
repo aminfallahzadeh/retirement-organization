@@ -83,6 +83,7 @@ function RetiredPensionaryForm() {
     register,
     watch,
     setValue,
+    reset,
   } = useForm();
 
   // ACCESS REACT HOOK FORM DATA
@@ -138,6 +139,7 @@ function RetiredPensionaryForm() {
 
   // FETCH MAIN DATA
   useEffect(() => {
+    refetchPensionary();
     if (isPensionarySuccess) {
       const data = pensionary?.itemList[0];
 
@@ -147,7 +149,11 @@ function RetiredPensionaryForm() {
         });
       }
     }
-  }, [isPensionarySuccess, pensionary, setValue]);
+
+    return () => {
+      reset();
+    };
+  }, [isPensionarySuccess, pensionary, setValue, reset, refetchPensionary]);
 
   // HANDLE MAIN DATA ERROR
   useEffect(() => {
