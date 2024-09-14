@@ -21,15 +21,15 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { defaultTableOptions } from "../utils.js";
 
 // helpers
-import { convertToPersianNumber, separateByThousands } from "../helper.js";
+import { convertToPersianNumber } from "../helper.js";
 
-function PersonnelStatementViewGrid({ data }) {
+function PersonnelStatementRelatedGrid() {
   const [rowSelection, setRowSelection] = useState({});
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "personnelStatementItemRowNum",
+        accessorKey: "personnelRelatedRowNum",
         header: "ردیف",
         size: 20,
         enableSorting: false,
@@ -39,19 +39,63 @@ function PersonnelStatementViewGrid({ data }) {
         ),
       },
       {
-        accessorKey: "personnelStatementItemDesc",
-        header: "شرح آیتم",
+        accessorKey: "personnelRelatedNationalCode",
+        header: "کد ملی",
         size: 20,
-      },
-
-      {
-        accessorKey: "personnelStatementItemAmount",
-        header: "مبلغ",
-        size: 20,
+        enableSorting: false,
+        enableColumnActions: false,
         Cell: ({ renderedCellValue }) => (
-          <div>
-            {separateByThousands(convertToPersianNumber(renderedCellValue))}
-          </div>
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "personnelRelatedName",
+        header: "نام",
+        size: 20,
+        enableSorting: false,
+        enableColumnActions: false,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "personnelRelatedFamilyName",
+        header: "نام خانوادگی",
+        size: 20,
+        enableSorting: false,
+        enableColumnActions: false,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "personnelRelatedFatherName",
+        header: "نام پدر",
+        size: 20,
+        enableSorting: false,
+        enableColumnActions: false,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "personnelRelatedRelation",
+        header: "نسبت",
+        size: 20,
+        enableSorting: false,
+        enableColumnActions: false,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
+      },
+      {
+        accessorKey: "personnelRealtedBirthDate",
+        header: "تاریخ تولد",
+        size: 20,
+        enableSorting: false,
+        enableColumnActions: false,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
         ),
       },
     ],
@@ -61,7 +105,7 @@ function PersonnelStatementViewGrid({ data }) {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data,
+    data: [],
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -106,4 +150,4 @@ function PersonnelStatementViewGrid({ data }) {
   return content;
 }
 
-export default PersonnelStatementViewGrid;
+export default PersonnelStatementRelatedGrid;

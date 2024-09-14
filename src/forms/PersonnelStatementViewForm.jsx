@@ -9,6 +9,7 @@ import { CircularProgress, Box } from "@mui/material";
 
 // components
 import PersonnelStatementViewGrid from "../grids/PersonnelStatementViewGrid";
+import PersonnelStatementRelatedGrid from "../grids/PersonnelStatementRelatedGrid";
 
 // helpers
 import { convertToPersianNumber } from "../helper";
@@ -420,6 +421,13 @@ function PersonnelStatementViewForm({ statementID }) {
               </div>
             </div>
 
+            <div
+              className="Modal__header u-margin-top-sm"
+              style={{ textAlign: "center" }}
+            >
+              <h4 className="title-secondary">مشخصات فردی</h4>
+            </div>
+
             <div className="grid grid--col-3 u-margin-top-md">
               <div className="inputBox__form">
                 <input
@@ -517,6 +525,183 @@ function PersonnelStatementViewForm({ statementID }) {
                   htmlFor="retirementDuration"
                 >
                   سنوات بازنشستگی
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  name="group"
+                  disabled
+                  value={"-"}
+                  id="group"
+                />
+                <label className="inputBox__form--label" htmlFor="group">
+                  گروه
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  name="martabe"
+                  disabled
+                  value={"-"}
+                  id="martabe"
+                />
+                <label className="inputBox__form--label" htmlFor="martabe">
+                  مرتبه
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  name="educationDegree"
+                  disabled
+                  value={"-"}
+                  id="educationDegree"
+                />
+                <label
+                  className="inputBox__form--label"
+                  htmlFor="educationDegree"
+                >
+                  مدرک تحصیلی
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  name="statementType"
+                  disabled
+                  value={"-"}
+                  id="statementType"
+                />
+                <label
+                  className="inputBox__form--label"
+                  htmlFor="statementType"
+                >
+                  نوع حکم
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  name="employmentTypeName"
+                  disabled
+                  value={"-"}
+                  id="employmentTypeName"
+                />
+                <label
+                  className="inputBox__form--label"
+                  htmlFor="employmentTypeName"
+                >
+                  عنوان شغل
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  name="personDeathDate"
+                  disabled
+                  value={"-"}
+                  id="personDeathDate"
+                />
+                <label
+                  className="inputBox__form--label"
+                  htmlFor="personDeathDate"
+                >
+                  تاریخ فوت
+                </label>
+              </div>
+            </div>
+
+            <div
+              className="Modal__header u-margin-top-sm"
+              style={{ textAlign: "center" }}
+            >
+              <h4 className="title-secondary">مشخصات افراد تحت تکفل</h4>
+            </div>
+
+            <PersonnelStatementRelatedGrid />
+
+            <div className="grid grid--col-3 u-margin-top-md">
+              <div className="inputBox__form col-span-3">
+                <textarea
+                  disabled
+                  type="text"
+                  id="statemetnDesc"
+                  value={"-"}
+                  name="statemetnDesc"
+                  className="inputBox__form--input"
+                  style={{ overflow: "hidden" }}
+                  required
+                ></textarea>
+                <label
+                  htmlFor="statemetnDesc"
+                  className="inputBox__form--label"
+                >
+                  شرح حکم
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  name="statementRunDate"
+                  disabled
+                  value={"-"}
+                  id="statementRunDate"
+                />
+                <label
+                  className="inputBox__form--label"
+                  htmlFor="statementRunDate"
+                >
+                  تاریخ اجرا
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  name="statementIssueDate"
+                  disabled
+                  value={"-"}
+                  id="statementIssueDate"
+                />
+                <label
+                  className="inputBox__form--label"
+                  htmlFor="statementIssueDate"
+                >
+                  تاریخ صدور
+                </label>
+              </div>
+
+              <div className="inputBox__form">
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  name="statementIssueNumber"
+                  disabled
+                  value={"-"}
+                  id="statementIssueNumber"
+                />
+                <label
+                  className="inputBox__form--label"
+                  htmlFor="statementIssueNumber"
+                >
+                  شماره صدور
                 </label>
               </div>
             </div>
