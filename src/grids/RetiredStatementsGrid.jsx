@@ -73,6 +73,9 @@ function RetiredStatementsGrid() {
   const [showDeleteStatementModal, setShowDeleteStatementModal] =
     useState(false);
 
+  const [showStatModal, setShowStatModal] = useState(false);
+  const [statMessage, setStatMessage] = useState("");
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
@@ -432,7 +435,13 @@ function RetiredStatementsGrid() {
             >
               <GenerateStatementForm
                 setShowGenerateStatementModal={setShowGenerateStatementModal}
+                setShowStatModal={setShowStatModal}
+                setStatMessage={setStatMessage}
               />
+            </Modal>
+          ) : showStatModal ? (
+            <Modal closeModal={() => setShowStatModal(false)}>
+              <p className="paragraph-primary">{statMessage}</p>
             </Modal>
           ) : isStatementFetching || isRetiredFetching ? (
             <Modal title="در حال بارگذاری ...">

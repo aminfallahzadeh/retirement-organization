@@ -26,9 +26,6 @@ import { InputDatePicker } from "jalaali-react-date-picker";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
-// components
-import Modal from "../components/Modal.jsx";
-
 // helpers
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
@@ -36,13 +33,13 @@ import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 import { selectSettings, optionsGenerator } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
-function GenerateStatementForm({ setShowGenerateStatementModal }) {
+function GenerateStatementForm({
+  setShowGenerateStatementModal,
+  setStatMessage,
+  setShowStatModal,
+}) {
   // CALENDER REFS
   const runDateCalenderRef = useRef(null);
-
-  // MODAL STATS
-  const [showStatModal, setShowStatModal] = useState(false);
-  const [statMessage, setStatMessage] = useState("");
 
   // DATE STATES
   const [selectedRunDate, setSelectedRunDate] = useState(null);
@@ -145,195 +142,184 @@ function GenerateStatementForm({ setShowGenerateStatementModal }) {
   useCloseCalender([runDateCalenderRef], [setIsRunDateCalenderOpen]);
 
   const content = (
-    <>
-      {showStatModal && (
-        <Modal closeModal={() => setShowStatModal(false)}>
-          <p className="paragraph-primary">{statMessage}</p>
-        </Modal>
-      )}
-      <section className="formContainer-transparent flex-col">
-        <form
-          method="POST"
-          className="flex-col"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-        >
-          <div className="grid grid--col-2">
-            <div className="inputBox__form">
-              <InputDatePicker
-                value={selectedRunDate}
-                format={"jYYYY/jMM/jDD"}
-                onChange={handleRunDateChange}
-                onOpenChange={handleRunDateOpenChange}
-                suffixIcon={<CalenderIcon color="action" />}
-                open={isRunDateCalenderOpen}
-                style={datePickerStyles}
-                wrapperStyle={datePickerWrapperStyles}
-                pickerProps={{
-                  ref: runDateCalenderRef,
-                }}
-              />
-              <div className="inputBox__form--readOnly-label">
-                <span>*</span> تاریخ اجرا
-              </div>
+    <section className="formContainer-transparent flex-col">
+      <form
+        method="POST"
+        className="flex-col"
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+      >
+        <div className="grid grid--col-2">
+          <div className="inputBox__form">
+            <InputDatePicker
+              value={selectedRunDate}
+              format={"jYYYY/jMM/jDD"}
+              onChange={handleRunDateChange}
+              onOpenChange={handleRunDateOpenChange}
+              suffixIcon={<CalenderIcon color="action" />}
+              open={isRunDateCalenderOpen}
+              style={datePickerStyles}
+              wrapperStyle={datePickerWrapperStyles}
+              pickerProps={{
+                ref: runDateCalenderRef,
+              }}
+            />
+            <div className="inputBox__form--readOnly-label">
+              <span>*</span> تاریخ اجرا
             </div>
+          </div>
 
-            <div className="inputBox__form">
-              <Controller
-                name={"retirementStatementTypeID"}
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange } }) => (
-                  <Select
-                    closeMenuOnSelect={true}
-                    components={animatedComponents}
-                    options={statementTypeOptions}
-                    onChange={(val) => onChange(val ? val.value : null)}
-                    value={statementTypeOptions.find(
-                      (c) => c.value === form_data?.retirementStatementTypeID
-                    )}
-                    name="retirementStatementTypeID"
-                    isClearable={true}
-                    placeholder={
-                      <div className="react-select-placeholder">
-                        <span>*</span> نوع حکم
-                      </div>
-                    }
-                    noOptionsMessage={selectSettings.noOptionsMessage}
-                    loadingMessage={selectSettings.loadingMessage}
-                    styles={{
-                      container: (base) => ({
-                        ...base,
-                        position: "relative",
-                        height: "100%",
-                      }),
-                      control: (base) => ({
-                        ...base,
-                        fontFamily: "IranYekan",
-                        cursor: "pointer",
-                        fontSize: "12px",
-                        height: "100%",
-                        maxWidth: "100%",
-                        maxHeight: "100%",
-                        overflow: "auto",
-                        textOverflow: "ellipsis",
-                        position: "relative",
-                      }),
-                      menu: (base) => ({
-                        ...base,
-                        fontFamily: "IranYekan",
-                        zIndex: "5",
-                        height: "200px",
-                      }),
-                      option: (base) => ({
-                        ...base,
-                        cursor: "pointer",
-                      }),
-                      menuList: (base) => ({
-                        ...base,
-                        fontFamily: "IranYekan",
-                        zIndex: "5",
-                        height: "200px",
-                      }),
-                    }}
-                    isLoading={
-                      statementTypesIsFetching || statementTypesIsLoading
-                    }
-                  />
-                )}
-              />
-
-              <label
-                className={
-                  form_data?.retirementStatementTypeID
-                    ? "inputBox__form--readOnly-label"
-                    : "inputBox__form--readOnly-label-hidden"
-                }
-              >
-                <span>*</span> نوع حکم
-              </label>
-
-              {errors.retirementStatementTypeID && (
-                <span className="error-form">نوع حکم اجباری است</span>
-              )}
-            </div>
-
-            {baseSalaryOptions.includes(
-              form_data?.retirementStatementTypeID
-            ) && (
-              <div className="inputBox__form">
-                {errors.newAmount && (
-                  <span className="error-form">{errors.newAmount.message}</span>
-                )}
-                <input
-                  type="text"
-                  className="inputBox__form--input"
-                  name="newAmount"
-                  value={convertToPersianNumber(form_data?.newAmount) || ""}
-                  id="newAmount"
-                  required
-                  {...register("newAmount", {
-                    required: "حقوق مبنا اجباری است",
-                    pattern: {
-                      value: /^[۰-۹0-9]+$/,
-                      message: "از اعداد استفاده کنید",
-                    },
-                  })}
+          <div className="inputBox__form">
+            <Controller
+              name={"retirementStatementTypeID"}
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange } }) => (
+                <Select
+                  closeMenuOnSelect={true}
+                  components={animatedComponents}
+                  options={statementTypeOptions}
+                  onChange={(val) => onChange(val ? val.value : null)}
+                  value={statementTypeOptions.find(
+                    (c) => c.value === form_data?.retirementStatementTypeID
+                  )}
+                  name="retirementStatementTypeID"
+                  isClearable={true}
+                  placeholder={
+                    <div className="react-select-placeholder">
+                      <span>*</span> نوع حکم
+                    </div>
+                  }
+                  noOptionsMessage={selectSettings.noOptionsMessage}
+                  loadingMessage={selectSettings.loadingMessage}
+                  styles={{
+                    container: (base) => ({
+                      ...base,
+                      position: "relative",
+                      height: "100%",
+                    }),
+                    control: (base) => ({
+                      ...base,
+                      fontFamily: "IranYekan",
+                      cursor: "pointer",
+                      fontSize: "12px",
+                      height: "100%",
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                      overflow: "auto",
+                      textOverflow: "ellipsis",
+                      position: "relative",
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      fontFamily: "IranYekan",
+                      zIndex: "5",
+                      height: "200px",
+                    }),
+                    option: (base) => ({
+                      ...base,
+                      cursor: "pointer",
+                    }),
+                    menuList: (base) => ({
+                      ...base,
+                      fontFamily: "IranYekan",
+                      zIndex: "5",
+                      height: "200px",
+                    }),
+                  }}
+                  isLoading={
+                    statementTypesIsFetching || statementTypesIsLoading
+                  }
                 />
-                <label className="inputBox__form--label" htmlFor="newAmount">
-                  <span>*</span> حقوق مبنا
-                </label>
-              </div>
-            )}
-
-            <div className="inputBox__form col-span-2 row-span-2">
-              {errors.retirementStatementDesc && (
-                <span className="error-form">
-                  {errors.retirementStatementDesc.message}
-                </span>
               )}
-              <textarea
+            />
+
+            <label
+              className={
+                form_data?.retirementStatementTypeID
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
+            >
+              <span>*</span> نوع حکم
+            </label>
+
+            {errors.retirementStatementTypeID && (
+              <span className="error-form">نوع حکم اجباری است</span>
+            )}
+          </div>
+
+          {baseSalaryOptions.includes(form_data?.retirementStatementTypeID) && (
+            <div className="inputBox__form">
+              {errors.newAmount && (
+                <span className="error-form">{errors.newAmount.message}</span>
+              )}
+              <input
                 type="text"
                 className="inputBox__form--input"
-                value={convertToPersianNumber(
-                  form_data?.retirementStatementDesc
-                )}
-                name="retirementStatementDesc"
-                id="retirementStatementDesc"
+                name="newAmount"
+                value={convertToPersianNumber(form_data?.newAmount) || ""}
+                id="newAmount"
                 required
-                {...register("retirementStatementDesc", {
+                {...register("newAmount", {
+                  required: "حقوق مبنا اجباری است",
                   pattern: {
-                    value: /^[آ-ی\s۰-۹]+$/,
-                    message: "از حروف و اعداد فارسی استفاده کنید",
+                    value: /^[۰-۹0-9]+$/,
+                    message: "از اعداد استفاده کنید",
                   },
                 })}
-              ></textarea>
-              <label
-                className="inputBox__form--label"
-                htmlFor="retirementStatementDesc"
-              >
-                شرح حکم
+              />
+              <label className="inputBox__form--label" htmlFor="newAmount">
+                <span>*</span> حقوق مبنا
               </label>
             </div>
-          </div>
-          <div style={{ marginRight: "auto" }}>
-            <LoadingButton
-              dir="ltr"
-              endIcon={<SaveIcon />}
-              onClick={handleSubmit}
-              type="submit"
-              loading={isGenerating}
-              variant="contained"
-              disabled={!selectedRunDate}
-              color="success"
-              sx={{ fontFamily: "sahel" }}
+          )}
+
+          <div className="inputBox__form col-span-2 row-span-2">
+            {errors.retirementStatementDesc && (
+              <span className="error-form">
+                {errors.retirementStatementDesc.message}
+              </span>
+            )}
+            <textarea
+              type="text"
+              className="inputBox__form--input"
+              value={convertToPersianNumber(form_data?.retirementStatementDesc)}
+              name="retirementStatementDesc"
+              id="retirementStatementDesc"
+              required
+              {...register("retirementStatementDesc", {
+                pattern: {
+                  value: /^[آ-ی\s۰-۹]+$/,
+                  message: "از حروف و اعداد فارسی استفاده کنید",
+                },
+              })}
+            ></textarea>
+            <label
+              className="inputBox__form--label"
+              htmlFor="retirementStatementDesc"
             >
-              <span>ذخیره</span>
-            </LoadingButton>
+              شرح حکم
+            </label>
           </div>
-        </form>
-      </section>
-    </>
+        </div>
+        <div style={{ marginRight: "auto" }}>
+          <LoadingButton
+            dir="ltr"
+            endIcon={<SaveIcon />}
+            onClick={handleSubmit}
+            type="submit"
+            loading={isGenerating}
+            variant="contained"
+            disabled={!selectedRunDate}
+            color="success"
+            sx={{ fontFamily: "sahel" }}
+          >
+            <span>ذخیره</span>
+          </LoadingButton>
+        </div>
+      </form>
+    </section>
   );
 
   return content;
