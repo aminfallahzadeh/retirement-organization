@@ -22,6 +22,8 @@ function SlipFormTemplate({ payID }) {
   const [formData, setFormData] = useState(null);
   const [negativeItems, setNegativeItems] = useState([]);
   const [positiveItems, setPositiveItems] = useState([]);
+  const [negativeSum, setNegativeSum] = useState(0);
+  const [positiveSum, setPositiveSum] = useState(0);
 
   // GET MAIN DATA
   const {
@@ -47,17 +49,31 @@ function SlipFormTemplate({ payID }) {
         (item) => item.payItemAmount >= 0
       );
 
+      // Calculate sum for both arrays
+      const negativeSum = negative.reduce(
+        (sum, item) => sum + item.payItemAmount,
+        0
+      );
+      const positiveSum = positive.reduce(
+        (sum, item) => sum + item.payItemAmount,
+        0
+      );
+
       // Update the state with the separated arrays
       setNegativeItems(negative);
       setPositiveItems(positive);
+      setNegativeSum(negativeSum);
+      setPositiveSum(positiveSum);
     }
 
     return () => {
       setFormData(null);
       setNegativeItems([]);
       setPositiveItems([]);
+      setNegativeSum(0);
+      setPositiveSum(0);
     };
-  }, [isSuccess, slipInfo, payID]);
+  }, [isSuccess, slipInfo, payID, negativeSum, positiveSum]);
 
   // HANDLE ERROR
   useEffect(() => {
@@ -79,7 +95,7 @@ function SlipFormTemplate({ payID }) {
           <CircularProgress color="primary" />
         </Box>
       ) : (
-        <div className="slip-container" dir="rtl">
+        <div className="slip-container">
           <div className="slip-container" ref={targetRef}>
             <div className="slip-container__logo">
               <img
@@ -121,7 +137,7 @@ function SlipFormTemplate({ payID }) {
               <table className="form-table">
                 <thead>
                   <tr>
-                    <th>ردیف</th>
+                    <th width="100">ردیف</th>
                     <th>حقوق مزایا</th>
                     <th>مبلغ</th>
                   </tr>
@@ -145,7 +161,7 @@ function SlipFormTemplate({ payID }) {
               <table className="form-table">
                 <thead>
                   <tr>
-                    <th>ردیف</th>
+                    <th width="100">ردیف</th>
                     <th>کسور</th>
                     <th>مبلغ</th>
                     <th>مانده</th>
@@ -174,11 +190,19 @@ function SlipFormTemplate({ payID }) {
                 <thead>
                   <tr>
                     <th>جمع حقوق و مزایا :</th>
+                    <th>
+                      {convertToPersianNumber(separateByThousands(positiveSum))}
+                    </th>
                     <th>جمع کسور :</th>
+                    <th dir="ltr">
+                      {convertToPersianNumber(separateByThousands(negativeSum))}
+                    </th>
                   </tr>
                   <tr>
                     <th>مبلغ قابل پرداخت :</th>
+                    <th></th>
                     <th>مبلغ قابل پرداخت به حروف :</th>
+                    <th></th>
                   </tr>
                 </thead>
               </table>

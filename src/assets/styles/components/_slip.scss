@@ -48,10 +48,18 @@
         align-items: flex-start;
         width: 100%;
         row-gap: 50px;
+
+        & thead tr th {
+            text-align: center;
+        }
     }
 
     &__total-table-container {
         width: 100%;
+
+        & thead tr th {
+            text-align: center;
+        }
 
         & tr {
             background-color: #fbe4d5;

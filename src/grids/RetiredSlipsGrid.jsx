@@ -20,7 +20,7 @@ import {
   ChevronRight,
   FirstPage,
   LastPage,
-  DownloadOutlined as DownloadIcon,
+  VisibilityOutlined as EyeIcon,
 } from "@mui/icons-material";
 import {
   MaterialReactTable,
@@ -185,7 +185,7 @@ function RetiredSlipsGrid() {
               sx={{ padding: "0" }}
               onClick={handleShowSlipModal}
             >
-              <DownloadIcon />
+              <EyeIcon />
             </IconButton>
           </Tooltip>
         ),
