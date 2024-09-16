@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useEffect, useState, useCallback } from "react";
+import { useMemo, useEffect, useState } from "react";
 
 // rrd imports
 import { useLocation } from "react-router-dom";
@@ -34,11 +34,13 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
-import { createSlipsPDF } from "../generateSlipsPDF.js";
+
+// components
+import SlipFormTemplate from "../components/SlipFormTemplate";
+import Modal from "../components/Modal";
 
 // helpers
 import {
-  findById,
   convertToPersianNumber,
   convertToPersianDateFormatted,
   separateByThousands,
@@ -46,8 +48,13 @@ import {
 
 function RetiredSlipsGrid() {
   const [rowSelection, setRowSelection] = useState({});
+
+  // MAIN STATES
   const [slipsTableData, setSlipsTableData] = useState([]);
-  const [selectedSlip, setSelectedSlip] = useState([]);
+  const [payID, setPayID] = useState(null);
+
+  // CONTROLL STATES
+  const [showSlipModal, setShowSlipModal] = useState(false);
 
   const location = useLocation();
 
@@ -93,10 +100,10 @@ function RetiredSlipsGrid() {
     }
   }, [error]);
 
-  // SLIP DOWNLOAD HANDLER
-  const handleDownload = useCallback(() => {
-    createSlipsPDF();
-  }, []);
+  // HANDLERS
+  const handleShowSlipModal = () => {
+    setShowSlipModal(true);
+  };
 
   const columns = useMemo(
     () => [
@@ -176,7 +183,7 @@ function RetiredSlipsGrid() {
             <IconButton
               color="primary"
               sx={{ padding: "0" }}
-              onClick={handleDownload}
+              onClick={handleShowSlipModal}
             >
               <DownloadIcon />
             </IconButton>
@@ -184,7 +191,7 @@ function RetiredSlipsGrid() {
         ),
       },
     ],
-    [handleDownload]
+    []
   );
 
   const table = useMaterialReactTable({
@@ -247,17 +254,21 @@ function RetiredSlipsGrid() {
 
   useEffect(() => {
     const id = Object.keys(table.getState().rowSelection)[0];
-    const selected = findById(slipsTableData, id);
 
     if (id) {
-      setSelectedSlip(selected);
+      setPayID(id);
     } else {
-      setSelectedSlip([]);
+      setPayID(null);
     }
-  }, [table, rowSelection, slipsTableData]);
+  }, [table, rowSelection]);
 
   const content = (
     <>
+      {showSlipModal && payID && (
+        <Modal key={payID} closeModal={() => setShowSlipModal(false)}>
+          <SlipFormTemplate payID={payID} />
+        </Modal>
+      )}
       {isLoading ? (
         <div className="skeleton-lg">
           <Skeleton

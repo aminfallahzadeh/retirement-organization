@@ -438,7 +438,7 @@ function UpdateHeirForm({
           <CircularProgress color="primary" />
         </Box>
       ) : (
-        <section className="formContainer-transparent flex-col">
+        <section className="formContainer-transparent formConmtainer--width-lg flex-col">
           <form
             method="POST"
             className="flex-col"
