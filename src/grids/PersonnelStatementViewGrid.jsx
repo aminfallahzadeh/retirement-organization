@@ -62,6 +62,9 @@ function PersonnelStatementViewGrid({ data }) {
     ...defaultTableOptions,
     columns,
     data,
+    enablePagination: false,
+    enableBottomToolbar: false,
+    muiTableContainerProps: { sx: { height: "300px" } },
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
