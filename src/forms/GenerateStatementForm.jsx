@@ -290,7 +290,7 @@ function GenerateStatementForm({
               required
               {...register("retirementStatementDesc", {
                 pattern: {
-                  value: /^[آ-ی\s۰-۹]+$/,
+                  value: /^[آ-ی\s۰-۹.,;!؟@#$%^&*×،()_+=-]+$/,
                   message: "از حروف و اعداد فارسی استفاده کنید",
                 },
               })}

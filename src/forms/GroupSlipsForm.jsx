@@ -138,29 +138,57 @@ function GroupSlipsForm() {
 
   // GET PAY LST HANDLER
   const getPayListHandler = async () => {
-    try {
-      const res = await getPayList({
-        currentYear: parseInt(form_data.currentYear),
-        currentMonth: parseInt(form_data.currentMonth),
-        payType: form_data.payType,
-      }).unwrap();
-      const mappedData = res.itemList.map((item, index) => ({
-        id: item.payID,
-        rowNum: index + 1,
-        payFirstName: item.payFirstName,
-        payLastName: item.payLastName,
-        accountNo: item.accountNo,
-        payDebitAmount: item.payDebitAmount,
-        payCreditAmount: item.payCreditAmount,
-        payAmount: item.payAmount,
-        payDate: item.payDate,
-      }));
-      dispatch(setSlipsTableData(mappedData));
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error, {
-        autoClose: 2000,
-      });
+    if (form_data.issueType === "2") {
+      try {
+        const res = await getPayList({
+          currentYear: parseInt(form_data.currentYear),
+          currentMonth: parseInt(form_data.currentMonth),
+          payType: form_data.payType,
+          personID,
+        }).unwrap();
+        const mappedData = res.itemList.map((item, index) => ({
+          id: item.payID,
+          rowNum: index + 1,
+          payFirstName: item.payFirstName,
+          payLastName: item.payLastName,
+          accountNo: item.accountNo,
+          payDebitAmount: item.payDebitAmount,
+          payCreditAmount: item.payCreditAmount,
+          payAmount: item.payAmount,
+          payDate: item.payDate,
+        }));
+        dispatch(setSlipsTableData(mappedData));
+      } catch (err) {
+        console.log(err);
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
+    } else {
+      try {
+        const res = await getPayList({
+          currentYear: parseInt(form_data.currentYear),
+          currentMonth: parseInt(form_data.currentMonth),
+          payType: form_data.payType,
+        }).unwrap();
+        const mappedData = res.itemList.map((item, index) => ({
+          id: item.payID,
+          rowNum: index + 1,
+          payFirstName: item.payFirstName,
+          payLastName: item.payLastName,
+          accountNo: item.accountNo,
+          payDebitAmount: item.payDebitAmount,
+          payCreditAmount: item.payCreditAmount,
+          payAmount: item.payAmount,
+          payDate: item.payDate,
+        }));
+        dispatch(setSlipsTableData(mappedData));
+      } catch (err) {
+        console.log(err);
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
     }
   };
 
