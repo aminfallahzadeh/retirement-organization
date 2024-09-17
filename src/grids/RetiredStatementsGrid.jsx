@@ -34,6 +34,7 @@ import {
   DeleteOutline as DeleteIcon,
   Close as CloseIcon,
   Done as DoneIcon,
+  InfoOutlined as InfoIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -440,8 +441,32 @@ function RetiredStatementsGrid() {
               />
             </Modal>
           ) : showStatModal ? (
-            <Modal closeModal={() => setShowStatModal(false)}>
-              <p className="paragraph-primary">{statMessage}</p>
+            <Modal>
+              <div
+                className="paragraph-primary"
+                style={{
+                  width: "60ch",
+                  textAlign: "center",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <InfoIcon color="info" fontSize="large" />
+                <span style={{ marginRight: "5px" }}>{statMessage}</span>
+              </div>
+
+              <div className="flex-row flex-center">
+                <Button
+                  dir="ltr"
+                  endIcon={<DoneIcon />}
+                  onClick={() => setShowStatModal(false)}
+                  variant="contained"
+                  color="success"
+                  sx={{ fontFamily: "sahel" }}
+                >
+                  <span>تایید</span>
+                </Button>
+              </div>
             </Modal>
           ) : isStatementFetching || isRetiredFetching ? (
             <Modal title="در حال بارگذاری ...">
