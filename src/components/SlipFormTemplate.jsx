@@ -48,7 +48,7 @@ function SlipFormTemplate({ payID }) {
     }
 
     if (slipInfo?.payItemList) {
-      // Separate positive and negative amounts
+      // SEPERATE NEGATIVE AND POSITIVE ITEMS
       const negative = slipInfo.payItemList.filter(
         (item) => item.payItemAmount < 0
       );
@@ -56,7 +56,7 @@ function SlipFormTemplate({ payID }) {
         (item) => item.payItemAmount >= 0
       );
 
-      // Calculate sum for both arrays
+      // CALCULATE SUM
       const negativeSum = negative.reduce(
         (sum, item) => sum + item.payItemAmount,
         0
@@ -66,7 +66,7 @@ function SlipFormTemplate({ payID }) {
         0
       );
 
-      // Update the state with the separated arrays
+      // UPDATE STATE
       setNegativeItems(negative);
       setPositiveItems(positive);
       setNegativeSum(negativeSum);
@@ -151,7 +151,7 @@ function SlipFormTemplate({ payID }) {
                   <tr>
                     <th width="100">ردیف</th>
                     <th>حقوق مزایا</th>
-                    <th>مبلغ</th>
+                    <th>مبلغ به ریال</th>
                   </tr>
                 </thead>
 
@@ -161,11 +161,9 @@ function SlipFormTemplate({ payID }) {
                       <td>{convertToPersianNumber(index + 1)}</td>
                       <td>{item.payItemTypeName}</td>
                       <td>
-                        <span dir="rtl">
-                          {`${convertToPersianNumber(
-                            separateByThousands(item.payItemAmount)
-                          )} ریال`}
-                        </span>
+                        {convertToPersianNumber(
+                          separateByThousands(item.payItemAmount)
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -177,7 +175,7 @@ function SlipFormTemplate({ payID }) {
                   <tr>
                     <th width="100">ردیف</th>
                     <th>کسور</th>
-                    <th>مبلغ</th>
+                    <th>مبلغ به ریال</th>
                     <th>مانده</th>
                   </tr>
                 </thead>
@@ -188,11 +186,9 @@ function SlipFormTemplate({ payID }) {
                       <td>{convertToPersianNumber(index + 1)}</td>
                       <td>{item.payItemTypeName}</td>
                       <td>
-                        <span dir="rtl">
-                          {`${convertToPersianNumber(
-                            separateByThousands(Math.abs(item.payItemAmount))
-                          )} ریال`}
-                        </span>
+                        {convertToPersianNumber(
+                          separateByThousands(Math.abs(item.payItemAmount))
+                        )}
                       </td>
                       <td>{convertToPersianNumber(item.payItemBalance)}</td>
                     </tr>
@@ -238,7 +234,9 @@ function SlipFormTemplate({ payID }) {
 
             <div className="slip-container__footer">
               <h5>مبلغ قابل پرداخت به حروف : </h5>
-              <p>{convertToPersianWords(formData?.payAmount)}</p>
+              <p style={{ fontSize: "12px" }}>
+                {`${convertToPersianWords(formData?.payAmount)} ریال`}
+              </p>
             </div>
           </div>
 

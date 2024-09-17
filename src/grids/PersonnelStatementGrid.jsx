@@ -27,6 +27,7 @@ import {
 // components
 import Modal from "../components/Modal";
 import PersonnelStatementViewForm from "../forms/PersonnelStatementViewForm";
+import PersonnelStatementTemplate from "../components/PersonnelStatementTemplate";
 
 // helper imports
 import {
@@ -279,11 +280,9 @@ function PersonnelStatementGrid() {
       ) : (
         <>
           {showStatementInfoModal && statementID ? (
-            <Modal
-              title="نمایش اطلاعات حکم"
-              closeModal={() => setShowStatementInfoModal(false)}
-            >
-              <PersonnelStatementViewForm statementID={statementID} />
+            <Modal closeModal={() => setShowStatementInfoModal(false)}>
+              {/* <PersonnelStatementViewForm statementID={statementID} /> */}
+              <PersonnelStatementTemplate statementID={statementID} />
             </Modal>
           ) : null}
           <MaterialReactTable table={table} />

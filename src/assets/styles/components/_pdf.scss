@@ -1,0 +1,211 @@
+.slip-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    row-gap: 25px;
+    width: 800px;
+
+    &__header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        row-gap: 20px;
+    }
+
+    &__logo {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        right: 25px;
+
+        &--img {
+            width: 110px;
+        }
+
+        &--sub {
+            font-size: 15px;
+            text-align: center;
+        }
+    }
+
+    &__qr {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 5px;
+        left: 20px;
+
+        &--box {
+            width: 90px;
+            height: 90px;
+            background-color: #fff;
+            border: 1px solid #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        &--serial {
+            text-align: right;
+            font-size: 13px;
+        }
+    }
+
+    /* SLIP PDF */
+
+    &__info-table {
+        table-layout: auto !important;
+        margin-top: 20px;
+
+        & tr {
+            background-color: #e2efd9;
+        }
+    }
+
+    &__items-table-container {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        row-gap: 50px;
+
+        & thead tr th {
+            text-align: center;
+        }
+
+        & tbody tr td {
+            text-align: center;
+        }
+    }
+
+    &__total-table-container {
+        width: 100%;
+        & thead tr th {
+            text-align: center;
+        }
+
+        & tr {
+            background-color: #fbe4d5;
+        }
+    }
+
+    &__footer {
+        width: 100%;
+    }
+
+    /* REALTED STATEMENT PDF */
+
+    &__person-info-table {
+        margin-top: 20px;
+
+        & tr {
+            background-color: #e2efd9;
+        }
+
+        & thead tr:first-child th {
+            text-align: center !important;
+        }
+
+        &--checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            column-gap: 10px;
+        }
+    }
+
+    &__personnel-info-table {
+        & tr {
+            background-color: #fff;
+        }
+
+        & thead tr:first-child th {
+            text-align: center !important;
+        }
+    }
+
+    &__related-table {
+        width: 100%;
+        table-layout: auto !important;
+
+        & tr {
+            background-color: #fbe4d5;
+        }
+
+        & tr th {
+            text-align: center;
+        }
+
+        & thead tr:first-child th {
+            text-align: center !important;
+        }
+    }
+
+    &__statement-items-table-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        width: 100%;
+        column-gap: 20px;
+    }
+
+    &__statement-items-desc-table {
+        & tr {
+            background-color: #fff;
+        }
+    }
+
+    &__statement-footer-table {
+        & tr {
+            background-color: #fff;
+        }
+    }
+
+    &__ending {
+        display: flex;
+        justify-content: right;
+        align-items: right;
+        flex-direction: column;
+        width: 100%;
+
+        p {
+            font-size: 12px;
+        }
+    }
+}
+
+/* APPLY SETTINGS TO ALL TABLES */
+.form-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 13px;
+
+    & th,
+    & td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+
+    & th {
+        text-align: right;
+        padding: 5px;
+    }
+
+    &__body {
+        & td {
+            padding-inline: 5px;
+            // text-align: center;
+        }
+    }
+}
