@@ -1,5 +1,5 @@
 // react imports
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 // redux imports
 import { useSelector } from "react-redux";
@@ -12,7 +12,7 @@ import {
   ChevronRight,
   FirstPage,
   LastPage,
-  DownloadOutlined as DownloadIcon,
+  VisibilityOutlined as EyeIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -29,17 +29,25 @@ import {
 
 // utils imports
 import { defaultTableOptions } from "../utils.js";
-import { createSlipsPDF } from "../generateSlipsPDF.js";
+
+// components
+import SlipFormTemplate from "../components/SlipFormTemplate";
+import Modal from "../components/Modal";
 
 function PersonnelStatementGrid() {
+  // TRABLE STATES
   const [rowSelection, setRowSelection] = useState({});
+
+  // CONTROLL STATES
+  const [showSlipModal, setShowSlipModal] = useState(false);
+  const [payID, setPayID] = useState(null);
 
   const { slipsTableData } = useSelector((state) => state.slipsData);
 
-  // SLIP DOWNLOAD HANDLER
-  const handleDownload = useCallback(() => {
-    createSlipsPDF();
-  }, []);
+  // HANDLERS
+  const handleShowSlipModal = () => {
+    setShowSlipModal(true);
+  };
 
   const columns = useMemo(
     () => [
@@ -96,7 +104,9 @@ function PersonnelStatementGrid() {
         header: "مبلغ کل",
         size: 20,
         Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianNumber(renderedCellValue)}</div>
+          <div>
+            {convertToPersianNumber(separateByThousands(renderedCellValue))}
+          </div>
         ),
       },
       {
@@ -118,15 +128,15 @@ function PersonnelStatementGrid() {
             <IconButton
               color="primary"
               sx={{ padding: "0" }}
-              onClick={handleDownload}
+              onClick={handleShowSlipModal}
             >
-              <DownloadIcon />
+              <EyeIcon />
             </IconButton>
           </Tooltip>
         ),
       },
     ],
-    [handleDownload]
+    []
   );
 
   const table = useMaterialReactTable({
@@ -166,12 +176,26 @@ function PersonnelStatementGrid() {
     state: { rowSelection },
   });
 
-  // useEffect(() => {
-  //   const id = Object.keys(table.getState().rowSelection)[0];
-  //   const selectedGroup = findById(groupsTableData, id);
-  // }, []);
+  useEffect(() => {
+    const id = Object.keys(table.getState().rowSelection)[0];
 
-  const content = <MaterialReactTable table={table} />;
+    if (id) {
+      setPayID(id);
+    } else {
+      setPayID(null);
+    }
+  }, [table, rowSelection]);
+
+  const content = (
+    <>
+      {showSlipModal && payID && (
+        <Modal key={payID} closeModal={() => setShowSlipModal(false)}>
+          <SlipFormTemplate payID={payID} />
+        </Modal>
+      )}
+      <MaterialReactTable table={table} />;
+    </>
+  );
 
   return content;
 }

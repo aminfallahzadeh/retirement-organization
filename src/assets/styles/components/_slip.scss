@@ -36,6 +36,8 @@
     }
 
     &__info-table {
+        table-layout: auto !important;
+
         & tr {
             background-color: #e2efd9;
         }
@@ -52,6 +54,10 @@
         & thead tr th {
             text-align: center;
         }
+
+        & tbody tr td {
+            text-align: center;
+        }
     }
 
     &__total-table-container {
@@ -64,6 +70,13 @@
         & tr {
             background-color: #fbe4d5;
         }
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        column-gap: 10px;
     }
 }
 
@@ -86,7 +99,7 @@
     &__body {
         & td {
             padding-inline: 5px;
-            text-align: center;
+            // text-align: center;
         }
     }
 }

@@ -9,10 +9,17 @@ import { Box, CircularProgress, Button } from "@mui/material";
 import { DownloadOutlined as DownloadIcon } from "@mui/icons-material";
 
 // HELPERS
-import { convertToPersianNumber, separateByThousands } from "../helper";
+import {
+  convertToPersianNumber,
+  separateByThousands,
+  convertToPersianWords,
+} from "../helper";
 
 // LIBRARY IMPROTS
 import generatePDF from "react-to-pdf";
+
+// COMPONENTS
+import Modal from "./Modal";
 
 function SlipFormTemplate({ payID }) {
   // DOWNLOAD REF
@@ -85,15 +92,17 @@ function SlipFormTemplate({ payID }) {
   const content = (
     <>
       {isLoading || isFetching || formData === null ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            padding: "2rem 10rem",
-          }}
-        >
-          <CircularProgress color="primary" />
-        </Box>
+        <Modal title={"در حال بارگذاری..."}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "2rem 10rem",
+            }}
+          >
+            <CircularProgress color="primary" />
+          </Box>
+        </Modal>
       ) : (
         <div className="slip-container">
           <div className="slip-container" ref={targetRef}>
@@ -117,18 +126,21 @@ function SlipFormTemplate({ payID }) {
             <table className="slip-container__info-table form-table">
               <thead>
                 <tr>
-                  <th>{`نام : ${convertToPersianNumber(
-                    formData?.currentMonth
-                  )}`}</th>
-                  <th>نام خانوادگی :</th>
-                  <th>شماره بازنشستگی :</th>
-                  <th>دوره : </th>
+                  <th>{`نام : ${formData?.personFirstName}`}</th>
+                  <th
+                    colSpan={2}
+                  >{`نام خانوادگی : ${formData?.personLastName}`}</th>
+                  <th>{`دوره : ${convertToPersianNumber(
+                    formData?.currentYear
+                  )}/${convertToPersianNumber(formData?.currentMonth)}`}</th>
                 </tr>
                 <tr>
-                  <th>نوع استخدام :</th>
-                  <th>بانک :</th>
-                  <th>شعبه :</th>
-                  <th>شماره حساب : </th>
+                  <th>{`نوع استخدام : ${formData?.personEmploymentTypeName}`}</th>
+                  <th>{`بانک : ${formData?.personBankName}`}</th>
+                  <th>{`شعبه : ${formData?.personBankBranchName}`}</th>
+                  <th>{`شماره حساب : ${convertToPersianNumber(
+                    formData?.personAccount
+                  )}`}</th>
                 </tr>
               </thead>
             </table>
@@ -149,9 +161,11 @@ function SlipFormTemplate({ payID }) {
                       <td>{convertToPersianNumber(index + 1)}</td>
                       <td>{item.payItemTypeName}</td>
                       <td>
-                        {convertToPersianNumber(
-                          separateByThousands(item.payItemAmount)
-                        )}
+                        <span dir="rtl">
+                          {`${convertToPersianNumber(
+                            separateByThousands(item.payItemAmount)
+                          )} ریال`}
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -174,9 +188,11 @@ function SlipFormTemplate({ payID }) {
                       <td>{convertToPersianNumber(index + 1)}</td>
                       <td>{item.payItemTypeName}</td>
                       <td>
-                        {convertToPersianNumber(
-                          separateByThousands(item.payItemAmount)
-                        )}
+                        <span dir="rtl">
+                          {`${convertToPersianNumber(
+                            separateByThousands(Math.abs(item.payItemAmount))
+                          )} ریال`}
+                        </span>
                       </td>
                       <td>{convertToPersianNumber(item.payItemBalance)}</td>
                     </tr>
@@ -191,21 +207,38 @@ function SlipFormTemplate({ payID }) {
                   <tr>
                     <th>جمع حقوق و مزایا :</th>
                     <th>
-                      {convertToPersianNumber(separateByThousands(positiveSum))}
+                      <span dir="rtl">
+                        {`${convertToPersianNumber(
+                          separateByThousands(positiveSum)
+                        )} ریال`}
+                      </span>
                     </th>
                     <th>جمع کسور :</th>
                     <th dir="ltr">
-                      {convertToPersianNumber(separateByThousands(negativeSum))}
+                      <span dir="rtl">
+                        {`${convertToPersianNumber(
+                          separateByThousands(Math.abs(negativeSum))
+                        )} ریال`}
+                      </span>
                     </th>
                   </tr>
                   <tr>
-                    <th>مبلغ قابل پرداخت :</th>
-                    <th></th>
-                    <th>مبلغ قابل پرداخت به حروف :</th>
-                    <th></th>
+                    <th colSpan={2}>مبلغ قابل پرداخت :</th>
+                    <th colSpan={2}>
+                      <span dir="rtl">
+                        {`${convertToPersianNumber(
+                          separateByThousands(formData?.payAmount)
+                        )} ریال`}
+                      </span>
+                    </th>
                   </tr>
                 </thead>
               </table>
+            </div>
+
+            <div className="slip-container__footer">
+              <h5>مبلغ قابل پرداخت به حروف : </h5>
+              <p>{convertToPersianWords(formData?.payAmount)}</p>
             </div>
           </div>
 

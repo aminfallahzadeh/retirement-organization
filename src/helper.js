@@ -1,5 +1,6 @@
 // library imports
 import momentj from "moment-jalaali";
+import PN from "persian-number";
 
 // convert to persian number
 export const convertToPersianNumber = (num) => {
@@ -185,4 +186,9 @@ export const reverseString = (str) => {
   var joinArray = reverseArray.join("");
 
   return joinArray;
+};
+
+// CONVERT TO PERSIAN WORDS
+export const convertToPersianWords = (num) => {
+  return PN.convert(num);
 };
