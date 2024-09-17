@@ -344,13 +344,13 @@ function PersonnelStatementTemplate({ statementID }) {
               dir="ltr"
               endIcon={<DownloadIcon />}
               onClick={() =>
-                generatePDF(targetRef, { filename: "فیش حقوقی.pdf" })
+                generatePDF(targetRef, { filename: "حکم کارمندی.pdf" })
               }
               variant="contained"
               color="primary"
               sx={{ fontFamily: "IranYekan" }}
             >
-              <span>دانلود فیش</span>
+              <span>دانلود حکم</span>
             </Button>
           </div>
         </div>
