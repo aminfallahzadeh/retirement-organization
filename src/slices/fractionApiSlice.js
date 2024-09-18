@@ -23,16 +23,16 @@ export const fractionApiSlice = apiSlice.injectEndpoints({
         let url;
 
         switch (type) {
-          case "5":
+          case "728":
             url = `${FRACTION_URL_HTTPS}/InsertFractionTakmili`;
             break;
-          case "2":
+          case "725":
             url = `${FRACTION_URL_HTTPS}/InsertFractionMogharariMaheAval`;
             break;
-          case "3":
+          case "767":
             url = `${FRACTION_URL_HTTPS}/InsertFractionSanavatMoavaghe`;
             break;
-          case "1":
+          case "723":
             url = `${FRACTION_URL_HTTPS}/InsertFractionJari`;
             break;
           default:
