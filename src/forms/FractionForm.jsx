@@ -287,26 +287,34 @@ function FractionForm() {
       const searchRes = await searchPersons({
         personNationalCode: convertToEnglishNumber(data.personNationalCode),
       }).unwrap();
+
       if (searchRes.itemList.length === 0) {
         toast.error("نتیجه ای یافت نشد", {
           autoClose: 2000,
         });
         return;
-      } else if (searchRes.itemList.length > 1) {
-        toast.error("کد ملی معتبر نمیباشد!", {
-          autoClose: 2000,
-        });
-        return;
       }
 
-      const personID = searchRes.itemList[0].personID;
+      // if (searchRes.itemList.length === 0) {
+      //   toast.error("نتیجه ای یافت نشد", {
+      //     autoClose: 2000,
+      //   });
+      //   return;
+      // } else if (searchRes.itemList.length > 1) {
+      //   toast.error("! کد ملی معتبر نمیباشد", {
+      //     autoClose: 2000,
+      //   });
+      //   return;
+      // }
+
+      const personID = searchRes.itemList[1].personID;
 
       dispatch(
         setData({
           ...data,
-          personFirstName: searchRes.itemList[0].personFirstName,
-          personLastName: searchRes.itemList[0].personLastName,
-          personID: searchRes.itemList[0].personID,
+          personFirstName: searchRes.itemList[1].personFirstName,
+          personLastName: searchRes.itemList[1].personLastName,
+          personID: searchRes.itemList[1].personID,
         })
       );
 
