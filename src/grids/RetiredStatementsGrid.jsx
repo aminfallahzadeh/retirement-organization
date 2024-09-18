@@ -5,13 +5,10 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 
 // redux imports
-import { useSelector } from "react-redux";
 import {
   useGetListOfRetirementStatementsQuery,
   useRemoveRetirementStatementMutation,
-  useLazyGetRetirementStatementQuery,
 } from "../slices/retirementStatementApiSlice.js";
-import { useLazyGetRetiredQuery } from "../slices/retiredApiSlice";
 
 // mui imports
 import {
@@ -45,6 +42,7 @@ import {
 // components
 import Modal from "../components/Modal";
 import GenerateStatementForm from "../forms/GenerateStatementForm.jsx";
+import RetiredStatementTemplate from "../components/RetiredStatementTemplate.jsx";
 
 // library imports
 import Skeleton from "react-loading-skeleton";
@@ -58,7 +56,6 @@ import {
 } from "../helper.js";
 
 // utils imports
-import { createStatementPDF } from "../utils/generateStatementPDF.js";
 import { defaultTableOptions } from "../utils.js";
 
 function RetiredStatementsGrid() {
@@ -66,14 +63,13 @@ function RetiredStatementsGrid() {
 
   const [statementID, setStatementID] = useState(null);
   const [rowSelection, setRowSelection] = useState({});
-  const { personDeathDate } = useSelector((state) => state.retiredState);
 
   // MODAL STATES
   const [showGenerateStatementModal, setShowGenerateStatementModal] =
     useState(false);
   const [showDeleteStatementModal, setShowDeleteStatementModal] =
     useState(false);
-
+  const [showStatementModal, setShowStatementModal] = useState(false);
   const [showStatModal, setShowStatModal] = useState(false);
   const [statMessage, setStatMessage] = useState("");
 
@@ -82,10 +78,6 @@ function RetiredStatementsGrid() {
   const personID = searchParams.get("personID");
 
   // ACTION QUERIES
-  const [getRetired, { isFetching: isRetiredFetching }] =
-    useLazyGetRetiredQuery();
-  const [getRetirementStatement, { isFetching: isStatementFetching }] =
-    useLazyGetRetirementStatementQuery();
   const [removeRetirmentStatement, { isLoading: isDeleting }] =
     useRemoveRetirementStatementMutation();
 
@@ -146,27 +138,9 @@ function RetiredStatementsGrid() {
     setShowDeleteStatementModal(true);
   }, []);
 
-  const handleDownload = useCallback(
-    async (RetirementStatementID) => {
-      try {
-        const retiredRes = await getRetired(personID).unwrap();
-        const statementRes = await getRetirementStatement({
-          RetirementStatementID,
-        }).unwrap();
-
-        createStatementPDF(
-          retiredRes.itemList[0],
-          statementRes,
-          personDeathDate
-        );
-      } catch (err) {
-        console.log(err);
-        toast.error("خطایی رخ داده است", { autoClose: 2000 });
-      }
-    },
-
-    [getRetired, personID, getRetirementStatement, personDeathDate]
-  );
+  const handleShowStatementModalChange = () => {
+    setShowStatementModal(true);
+  };
 
   const handleRemoveStatement = async () => {
     try {
@@ -251,7 +225,7 @@ function RetiredStatementsGrid() {
           >
             <IconButton
               color="primary"
-              onClick={() => handleDownload(row.original.id)}
+              onClick={handleShowStatementModalChange}
               sx={{ padding: "0" }}
             >
               <DownloadIcon />
@@ -298,7 +272,7 @@ function RetiredStatementsGrid() {
     }
 
     return baseColumns;
-  }, [handleDownload, handleDeleteStatementModalChange, location.pathname]);
+  }, [handleDeleteStatementModalChange, location.pathname]);
 
   const table = useMaterialReactTable({
     ...defaultTableOptions,
@@ -440,6 +414,10 @@ function RetiredStatementsGrid() {
                 setStatMessage={setStatMessage}
               />
             </Modal>
+          ) : showStatementModal && statementID ? (
+            <Modal closeModal={() => setShowStatementModal(false)}>
+              <RetiredStatementTemplate statementID={statementID} />
+            </Modal>
           ) : showStatModal ? (
             <Modal>
               <div
@@ -467,18 +445,6 @@ function RetiredStatementsGrid() {
                   <span>تایید</span>
                 </Button>
               </div>
-            </Modal>
-          ) : isStatementFetching || isRetiredFetching ? (
-            <Modal title="در حال بارگذاری ...">
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "2rem 10rem",
-                }}
-              >
-                <CircularProgress color="primary" />
-              </Box>
             </Modal>
           ) : null}
           <MaterialReactTable table={table} />

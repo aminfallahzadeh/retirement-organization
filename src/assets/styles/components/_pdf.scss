@@ -149,6 +149,10 @@
         & thead tr:first-child th {
             text-align: center !important;
         }
+
+        & tbody tr {
+            text-align: center;
+        }
     }
 
     &__statement-items-table-container {
