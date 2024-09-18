@@ -438,6 +438,8 @@ function FractionForm() {
             return obj;
           })
           .filter((item) => item !== null);
+
+        console.log(data);
         const type = data?.fractionTypeID;
         setSavedDataLength(items.length);
         handleInsertExcel(items, type);
