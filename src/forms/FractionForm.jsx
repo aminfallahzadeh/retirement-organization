@@ -306,17 +306,40 @@ function FractionForm() {
       //   });
       //   return;
       // }
+      // const personID = searchRes.itemList[1].personID;
 
-      const personID = searchRes.itemList[1].personID;
+      const personWithE = searchRes.itemList.find((person) =>
+        person.personID.startsWith("E")
+      );
+
+      const selectedPerson = personWithE || searchRes.itemList[1];
+
+      if (!selectedPerson) {
+        toast.error("! کد ملی معتبر نمیباشد", {
+          autoClose: 2000,
+        });
+        return;
+      }
+
+      const personID = selectedPerson.personID;
 
       dispatch(
         setData({
           ...data,
-          personFirstName: searchRes.itemList[1].personFirstName,
-          personLastName: searchRes.itemList[1].personLastName,
-          personID: searchRes.itemList[1].personID,
+          personFirstName: selectedPerson.personFirstName,
+          personLastName: selectedPerson.personLastName,
+          personID: selectedPerson.personID,
         })
       );
+
+      // dispatch(
+      //   setData({
+      //     ...data,
+      //     personFirstName: searchRes.itemList[1].personFirstName,
+      //     personLastName: searchRes.itemList[1].personLastName,
+      //     personID: searchRes.itemList[1].personID,
+      //   })
+      // );
 
       // Update URL params
       const params = new URLSearchParams(window.location.search);
