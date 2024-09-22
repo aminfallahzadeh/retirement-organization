@@ -13,12 +13,12 @@ import {
 // mui imports
 import { CircularProgress, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { KeyboardReturn as ReturnIcon } from "@mui/icons-material";
+import { Done as DoneIcon } from "@mui/icons-material";
 
 // library imports
 import { toast } from "react-toastify";
 
-function ReturnRequestForm({ setShowReturnRequestModal }) {
+function ReturnRequestForm({ setShowModal, value }) {
   const [selectedExpert, setSelectedExpert] = useState(" ");
   const [description, setDescription] = useState("");
   const [expertCombo, setExpertCombo] = useState([]);
@@ -40,7 +40,7 @@ function ReturnRequestForm({ setShowReturnRequestModal }) {
     isLoading,
     isFetching,
     error,
-  } = useGetExpertQuery({ RequestID, conditionValue: 0, Role });
+  } = useGetExpertQuery({ RequestID, conditionValue: value, Role });
 
   useEffect(() => {
     if (isSuccess) {
@@ -71,13 +71,13 @@ function ReturnRequestForm({ setShowReturnRequestModal }) {
     try {
       const sendRes = await sendRequestToNextState({
         requestid: RequestID,
-        conditionValue: 0,
+        conditionValue: value,
         expertUserID: selectedExpert,
         role: Role,
         requestTypeID,
         description,
       });
-      setShowReturnRequestModal(false);
+      setShowModal(false);
       toast.success(sendRes.data.message, {
         autoClose: 2000,
       });
@@ -148,22 +148,18 @@ function ReturnRequestForm({ setShowReturnRequestModal }) {
             </div>
           </form>
 
-          <div style={{ marginRight: "auto" }}>
-            <LoadingButton
-              dir="ltr"
-              loading={isLoading}
-              endIcon={<ReturnIcon />}
-              onClick={handleReturnRequest}
-              disabled={
-                selectedExpert === " " || isSendLoading || description === ""
-              }
-              variant="contained"
-              color="warning"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>برگشت</span>
-            </LoadingButton>
-          </div>
+          <LoadingButton
+            dir="ltr"
+            loading={isLoading}
+            endIcon={<DoneIcon />}
+            onClick={handleReturnRequest}
+            disabled={selectedExpert === " " || isSendLoading}
+            variant="contained"
+            color="success"
+            sx={{ fontFamily: "sahel" }}
+          >
+            <span>تایید</span>
+          </LoadingButton>
         </section>
       )}
     </>

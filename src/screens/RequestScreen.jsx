@@ -1,41 +1,21 @@
 // react imports
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // rrd imports
 import { useNavigate } from "react-router-dom";
 
 // mui imports
-import { Box, Tab, Button, IconButton, Tooltip } from "@mui/material";
+import { Box, Tab, IconButton, Tooltip } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import {
-  ArrowUpwardOutlined as SendIcon,
-  Print as PrintIcon,
-  KeyboardReturn as ReturnIcon,
-  ArrowBack as BackIcon,
-  Done as DoneIcon,
-} from "@mui/icons-material";
+import { ArrowBack as BackIcon } from "@mui/icons-material";
 
 // components
 import RequestAttachmentsGrid from "../grids/RequestAttachmentsGrid";
 import RequestInfoForm from "../forms/RequestInfoForm";
-import SendRequestFrom from "../forms/SendRequestForm";
-import ReturnRequestForm from "../forms/ReturnRequestForm";
-import Modal from "../components/Modal";
 import RequestHistoryGrid from "../grids/RequestHistoryGrid";
 
 function RequestScreen() {
   const [value, setValue] = useState("1");
-
-  // REQUEST CONDTIONS STATE
-  const [requestCondition, setRequestCondition] = useState(null);
-
-  // MODAL STATES
-  const [showSendRequestModal, setShowSendRequestModal] = useState(false);
-  const [showReturnRequestModal, setShowReturnRequestModal] = useState(false);
-
-  // BUTTON STATES
-  const [showBackButton, setShowBackButton] = useState(false);
-  const [sendOrConfirmButton, setSendOrConfirmButton] = useState(false);
 
   const navigate = useNavigate();
 
@@ -43,34 +23,6 @@ function RequestScreen() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  const handleShowSendRequestModal = () => {
-    setShowSendRequestModal(true);
-  };
-
-  const handleShowReturnRequestModal = () => {
-    setShowReturnRequestModal(true);
-  };
-
-  // HANDLE BUTTONS BASED ON REQUEST STATE
-  useEffect(() => {
-    if (requestCondition) {
-      if (requestCondition.length > 1) {
-        setShowBackButton(true);
-      }
-    }
-  }, [requestCondition]);
-
-  useEffect(() => {
-    if (requestCondition) {
-      for (let i = 0; i < requestCondition.length; i++) {
-        if (requestCondition[i].nextState === 1000) {
-          setSendOrConfirmButton(true);
-          break;
-        }
-      }
-    }
-  }, [requestCondition]);
 
   const content = (
     <>
@@ -106,7 +58,7 @@ function RequestScreen() {
                 padding: "0",
               }}
             >
-              <RequestInfoForm setRequestCondition={setRequestCondition} />
+              <RequestInfoForm />
             </TabPanel>
             <TabPanel
               value="2"
@@ -126,65 +78,7 @@ function RequestScreen() {
             </TabPanel>
           </TabContext>
         </div>
-
-        <div style={{ marginRight: "auto" }} className="flex-row">
-          <Button
-            dir="ltr"
-            endIcon={<PrintIcon />}
-            variant="contained"
-            color="primary"
-            sx={{ fontFamily: "Vazir" }}
-          >
-            <span>چاپ</span>
-          </Button>
-          <Button
-            dir="ltr"
-            endIcon={sendOrConfirmButton ? <DoneIcon /> : <SendIcon />}
-            onClick={handleShowSendRequestModal}
-            variant="contained"
-            color="success"
-            sx={{ fontFamily: "Vazir" }}
-          >
-            <span>
-              {sendOrConfirmButton ? "تایید درخواست" : "ارسال درخواست"}
-            </span>
-          </Button>
-          {showBackButton && (
-            <Button
-              dir="ltr"
-              endIcon={<ReturnIcon />}
-              onClick={handleShowReturnRequestModal}
-              variant="contained"
-              color="warning"
-              sx={{ fontFamily: "Vazir" }}
-            >
-              <span>برگشت درخواست</span>
-            </Button>
-          )}
-        </div>
       </section>
-
-      {showSendRequestModal ? (
-        <Modal
-          title="ارسال درخواست"
-          closeModal={() => setShowSendRequestModal(false)}
-        >
-          <p className="paragraph-primary">کارشناس مورد نظر را انتخاب کنید</p>
-
-          <SendRequestFrom setShowSendRequestModal={setShowSendRequestModal} />
-        </Modal>
-      ) : showReturnRequestModal ? (
-        <Modal
-          title="برگشت درخواست"
-          closeModal={() => setShowReturnRequestModal(false)}
-        >
-          <p className="paragraph-primary">کارشناس مورد نظر را انتخاب کنید</p>
-
-          <ReturnRequestForm
-            setShowReturnRequestModal={setShowReturnRequestModal}
-          />
-        </Modal>
-      ) : null}
     </>
   );
 
