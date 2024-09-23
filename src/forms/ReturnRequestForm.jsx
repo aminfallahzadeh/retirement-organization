@@ -104,7 +104,7 @@ function ReturnRequestForm({ setShowModal, value }) {
         </Box>
       ) : (
         <section className="formContainer flex-col">
-          <form method="POST" className="grid grid--col-2" noValidate>
+          <form method="POST" className="grid grid--col-1" noValidate>
             <div className="inputBox__form">
               <select
                 className="inputBox__form--input"
@@ -130,7 +130,7 @@ function ReturnRequestForm({ setShowModal, value }) {
               </label>
             </div>
 
-            <div className="inputBox__form">
+            <div className="inputBox__form row-span-2">
               <textarea
                 className="inputBox__form--input"
                 required
@@ -138,6 +138,7 @@ function ReturnRequestForm({ setShowModal, value }) {
                 onChange={handleDescriptionChange}
                 value={description}
                 disabled={isSendLoading}
+                style={{ overflow: "hidden" }}
               />
               <label
                 className="inputBox__form--label"

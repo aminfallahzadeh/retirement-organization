@@ -1,11 +1,18 @@
 // react imports
 import { useState, useEffect } from "react";
 
+// rrd imports
+import { useNavigate } from "react-router-dom";
+
 // redux imports
-import { useGetRequestQuery } from "../slices/requestApiSlice";
+import {
+  useGetRequestQuery,
+  useSendRequestToNextStateMutation,
+} from "../slices/requestApiSlice";
 
 // mui imports
 import { Box, CircularProgress, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import {
   ArrowUpwardOutlined as SendIcon,
   Print as PrintIcon,
@@ -36,6 +43,12 @@ function RequestInfoForm() {
   const searchParams = new URLSearchParams(location.search);
   const Role = searchParams.get("Role");
   const requestID = searchParams.get("requestID");
+  const requestTypeID = searchParams.get("type");
+
+  const [sendRequestToNextState, { isLoading: isSendLoading }] =
+    useSendRequestToNextStateMutation();
+
+  const navigate = useNavigate();
 
   const {
     data: request,
@@ -47,8 +60,8 @@ function RequestInfoForm() {
 
   useEffect(() => {
     if (isSuccess) {
-      setRequestData(request.itemList[0]);
-      setRequestCondition(request.itemList[0].conditions);
+      setRequestData(request?.itemList[0]);
+      setRequestCondition(request?.itemList[0].conditions);
     }
   }, [isSuccess, request?.itemList, setRequestCondition]);
 
@@ -62,9 +75,30 @@ function RequestInfoForm() {
   }, [error]);
 
   // HANDLERS
-  const handleShowModalChange = (value) => {
+  const handleShowModalChange = async (value, state) => {
+    console.log(value, state);
     setValue(value);
-    setShowModal(true);
+    if (state !== 1000) {
+      setShowModal(true);
+    } else {
+      try {
+        const sendRes = await sendRequestToNextState({
+          requestid: requestID,
+          conditionValue: value,
+          role: Role,
+          requestTypeID,
+        });
+        navigate("/retirement-organization/cartable");
+        toast.success(sendRes.data.message, {
+          autoClose: 2000,
+        });
+      } catch (err) {
+        console.log(err);
+        toast.error(err?.data?.message || err.error, {
+          autoClose: 2000,
+        });
+      }
+    }
   };
 
   const content = (
@@ -175,17 +209,20 @@ function RequestInfoForm() {
             </Button>
 
             {requestCondition?.map((item) => (
-              <Button
+              <LoadingButton
                 dir="ltr"
                 endIcon={<SendIcon />}
                 variant="contained"
-                onClick={() => handleShowModalChange(item.conditionValue)}
+                loading={item.nextSate === 1000 ? isSendLoading : false}
+                onClick={() =>
+                  handleShowModalChange(item.conditionValue, item.nextSate)
+                }
                 color="primary"
                 sx={{ fontFamily: "IranYekan" }}
                 key={item.buttonName}
               >
                 <span>{item.buttonName}</span>
-              </Button>
+              </LoadingButton>
             ))}
           </div>
         </section>
