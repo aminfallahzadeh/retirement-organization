@@ -22,8 +22,6 @@ export const personnelStatementApiSlice = apiSlice.injectEndpoints({
 
         if (queryParams.length > 0) {
           url += `?${queryParams.join("&")}`;
-
-          console.log("url", url);
         }
 
         return {
@@ -42,6 +40,12 @@ export const personnelStatementApiSlice = apiSlice.injectEndpoints({
         url: `${PERSONNEL_STATEMENT_URL_HTTPS}/GetPersonnelStatementOffType`,
       }),
     }),
+
+    getPersonnelStatementDetail: builder.query({
+      query: ({ personnelStatementID }) => ({
+        url: `${PERSONNEL_STATEMENT_URL_HTTPS}/GetPersonnelStatementDetail?PersonnelStatementID=${personnelStatementID}`,
+      }),
+    }),
   }),
 });
 
@@ -49,4 +53,5 @@ export const {
   useGetPersonnelStatementQuery,
   useGetPersonnelStatementOffQuery,
   useGetPersonnelStatementOffTypeQuery,
+  useGetPersonnelStatementDetailQuery,
 } = personnelStatementApiSlice;

@@ -281,7 +281,6 @@ function PersonnelStatementGrid() {
         <>
           {showStatementInfoModal && statementID ? (
             <Modal closeModal={() => setShowStatementInfoModal(false)}>
-              {/* <PersonnelStatementViewForm statementID={statementID} /> */}
               <PersonnelStatementTemplate statementID={statementID} />
             </Modal>
           ) : null}

@@ -186,6 +186,35 @@
             font-size: 12px;
         }
     }
+
+    /* PERSONNEL STATEMENT PDF */
+
+    &__personnel-statement-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    &__personnel-statement-table {
+        & thead {
+            & th {
+                background-color: #c3d69b;
+                padding: 2px !important;
+            }
+        }
+
+        & tbody {
+            & td {
+                padding: 2fpx !important;
+            }
+
+            & th {
+                background-color: #c3d69b;
+                padding: 2px !important;
+            }
+        }
+    }
 }
 
 /* APPLY SETTINGS TO ALL TABLES */
@@ -212,4 +241,21 @@
             // text-align: center;
         }
     }
+}
+
+/* UTILIY CLASSES*/
+.no-border-right {
+    border-right: none !important;
+}
+
+.no-border-left {
+    border-left: none !important;
+}
+
+.no-border-top {
+    border-top: none !important;
+}
+
+.no-border-bottom {
+    border-bottom: none !important;
 }

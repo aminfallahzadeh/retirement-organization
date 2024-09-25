@@ -87,6 +87,7 @@ function GenerateStatementForm({
     "65",
     "96",
     "97",
+    "98",
   ];
 
   // SELECT OPTIONS

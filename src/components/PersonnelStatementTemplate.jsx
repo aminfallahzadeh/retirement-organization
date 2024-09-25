@@ -6,7 +6,7 @@ import { Box, CircularProgress, Button, Checkbox } from "@mui/material";
 import { DownloadOutlined as DownloadIcon } from "@mui/icons-material";
 
 // REDUX IMPORTS
-import { useGetPersonnelStatementQuery } from "../slices/personnelStatementApiSlice";
+import { useGetPersonnelStatementDetailQuery } from "../slices/personnelStatementApiSlice";
 
 // HELPERS
 import { convertToPersianNumber } from "../helper";
@@ -31,7 +31,9 @@ function PersonnelStatementTemplate({ statementID }) {
     isLoading,
     isFetching,
     error,
-  } = useGetPersonnelStatementQuery({ PersonnelStatementID: statementID });
+  } = useGetPersonnelStatementDetailQuery({
+    personnelStatementID: statementID,
+  });
 
   // FETCH DATA
   useEffect(() => {
@@ -63,69 +65,126 @@ function PersonnelStatementTemplate({ statementID }) {
         </Modal>
       ) : (
         <div className="slip-container">
+          {/* HEADER */}
+
           <div className="slip-container" ref={targetRef}>
-            <div className="slip-container__logo">
-              <img
-                src="./images/logo-slip.png"
-                className="slip-container__logo--img"
-              />
-              <p className="slip-container__logo--sub">
-                سازمان بازنشستگی شهرداری تهران
-              </p>
-            </div>
+            <div className="slip-container__personnel-statement-header">
+              <p className="slip-container__logo--sub">شهردری تهران</p>
 
-            <div className="slip-container__qr">
-              <div className="slip-container__qr--box">QR CODE</div>
-
+              <h5>حکم کارگزینی</h5>
               <p className="slip-container__qr--serial">
-                سریال حکم : <span>2222</span>
+                شماره سریال :{" "}
+                <span>
+                  {convertToPersianNumber(formData?.personnelStatementSerial)}
+                </span>
               </p>
-            </div>
-
-            <div className="slip-container__header">
-              <h5>بسمه تعالی</h5>
-              <h5>فیش حقوقی</h5>
             </div>
 
             {/* MAIN INFO TABLE */}
-
-            <table className="slip-container__person-info-table form-table">
+            <table className="slip-container__personnel-statement-table form-table">
               <thead>
                 <tr>
-                  <th colSpan={4}>مشخصات فردی</th>
+                  <th className="no-border-left">۱- شماره مستخدم :</th>
+                  <th className="no-border-right"></th>
+                  <th className="no-border-left">۲- شماره ملی : </th>
+                  <th className="no-border-right">
+                    {convertToPersianNumber(formData?.personNationalCode)}
+                  </th>
+                  <th className="no-border-left">۳- کد پستی :</th>
+                  <th className="no-border-right"></th>
                 </tr>
+              </thead>
+
+              <tbody>
                 <tr>
-                  <th>{`کد ملی : ${convertToPersianNumber(
-                    formData?.personNationalCode
-                  )}`}</th>
-                  <th>{`نام : ${formData?.personFirstName}`}</th>
-                  <th
-                    colSpan={2}
-                  >{`نام خانوادگی : ${formData?.personLastName}`}</th>
-                </tr>
-                <tr>
-                  <th>{`شماره شناسنامه : `}</th>
-                  <th>{`نام پدر : `}</th>
-                  <th>{`تاریخ تولد : `}</th>
-                  <th>{`محل تولد :`}</th>
+                  <td className="no-border-left">۴- نام :</td>
+                  <td className="no-border-right">
+                    {formData?.personFirstName}
+                  </td>
+                  <td className="no-border-left">۵- نام خانوادگی :</td>
+                  <td className="no-border-right">
+                    {formData?.personLastName}
+                  </td>
+                  <td className="no-border-left">۶- نام پدر :</td>
+                  <td className="no-border-right">
+                    {formData?.personFatherName}
+                  </td>
                 </tr>
 
                 <tr>
-                  <th>{`جنسیت : `}</th>
-                  <th>{`تعداد فرزندان : `}</th>
-                  <th>{`تعداد افراد تحت تکفل : `}</th>
-                  <th>{`کد درمانی :`}</th>
+                  <td className="no-border-left">۷- شماره شناسنامه :</td>
+                  <td className="no-border-right"></td>
+                  <td className="no-border-left">۸- محل صدور :‌</td>
+                  <td className="no-border-right"></td>
+                  <td className="no-border-left">۹- استان :</td>
+                  <td className="no-border-right"></td>
                 </tr>
 
                 <tr>
-                  <th>{`وضعیت تاهل : `}</th>
-                  <th colSpan={3}>{`کد پستی : `}</th>
+                  <td className="no-border-left no-border-bottom" colSpan={2}>
+                    ۱۰- تاریخ و محل تولد :
+                  </td>
+                  <td className="no-border-right no-border-bottom">
+                    {formData?.personBirthPlace}
+                  </td>
+                  <td className="no-border-bottom" colSpan={3}>
+                    ۱۱- بالاترین مدرک و رشته تحصیلی‌ :
+                  </td>
                 </tr>
 
                 <tr>
-                  <th colSpan={4}>
+                  <td className="no-border-top no-border-left">روز : </td>
+                  <td className="no-border-top no-border-right no-border-left">
+                    ماه :{" "}
+                  </td>
+                  <td className="no-border-top no-border-right">سال : </td>
+
+                  <td className="no-border-top no-border-left">
+                    مقطع تحصیلی :
+                  </td>
+                  <td className="no-border-top no-border-right no-border-left">
+                    رشته :
+                  </td>
+                  <td className="no-border-top no-border-right">گرایش :</td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2} className="no-border-left">
+                    ۱۲- عنوان پست سازمانی :
+                  </td>
+                  <td className="no-border-right no-border-left"></td>
+                  <td className="no-border-right"></td>
+
+                  <td className="no-border-left">شماره پست :</td>
+                  <td className="no-border-right"></td>
+                </tr>
+
+                <tr>
+                  <td className="no-boorder-left" colSpan={2}>
+                    ۱۳- رسته :
+                  </td>
+
+                  <td className="no-border-left" colSpan={2}>
+                    رشته و طبفه شغلی :
+                  </td>
+
+                  <td>کد شغل :</td>
+                  <td>مرتبه :</td>
+                </tr>
+
+                <tr>
+                  <td>۱۴- گروه :</td>
+                  <td colSpan={3} className="no-border-left">
+                    ۱۵- سنوات فابل قبول از نظر بازنشستگی :
+                  </td>
+
+                  <td colSpan={2}>صندوق بازنشستگی :</td>
+                </tr>
+
+                <tr>
+                  <td colSpan={6}>
                     <div className="slip-container__person-info-table--checkbox">
-                      <span>وضعیت ایثارگری :</span>
+                      <span>۱۶- وضعیت ایثارگری :</span>
                       <div>
                         <Checkbox
                           size="small"
@@ -209,134 +268,216 @@ function PersonnelStatementTemplate({ statementID }) {
                         </label>
                       </div>
                     </div>
-                  </th>
-                </tr>
-              </thead>
-            </table>
-
-            <table className="slip-container__personnel-info-table form-table">
-              <thead>
-                <tr>
-                  <th colSpan={3}>مشخصات پرسونلی</th>
-                </tr>
-                <tr>
-                  <th>{`تاریخ بازنشستگی :`}</th>
-                  <th>{`آخرین پست سازمانی :`}</th>
-                  <th>{`آخرین محل خدمت :`}</th>
-                </tr>
-                <tr>
-                  <th>{`سنوات خدمت واقعی :`}</th>
-                  <th>{`سنوات ارفاقی : `}</th>
-                  <th>{`سنوات بازنشسنگی : `}</th>
+                  </td>
                 </tr>
 
                 <tr>
-                  <th>{`گروه :`}</th>
-                  <th>{`مرتبه : `}</th>
-                  <th>{`مدرک تحصیلی : `}</th>
+                  <td colSpan={3}>۱۷- واحد سازمانی :</td>
+                  <td colSpan={3}>۱۸- محل خدمت</td>
                 </tr>
 
                 <tr>
-                  <th>{`نوع حکم :`}</th>
-                  <th>{`عنوان شغل : `}</th>
-                  <th>{`تاریخ فوت : `}</th>
+                  <td className="no-border-left">۱۹- وضعیت تاهل :</td>
+                  <td className="no-border-right">
+                    {formData?.maritalStatusIDName}
+                  </td>
+                  <td>تعداد فرزندان :</td>
+
+                  <td colSpan={3}>۲۰- ضریب افزایش سنواتی :</td>
                 </tr>
-              </thead>
-            </table>
 
-            <table className="slip-container__related-table form-table">
-              <thead>
                 <tr>
-                  <th colSpan={7}>مشخصات افراد تحت تکفل</th>
+                  <th colSpan={3}>۲۱- نوع حکم :</th>
+                  <th colSpan={3}>حقوق و فوق العاده ها به ریال :</th>
                 </tr>
+
                 <tr>
-                  <th width="100">ردیف</th>
-                  <th>کد ملی</th>
-                  <th>نام</th>
-                  <th>نام خانوادگی</th>
-                  <th>نام پدر</th>
-                  <th>نسبت</th>
-                  <th>تاریخ تولد</th>
+                  <td colSpan={3} rowSpan={22} style={{ verticalAlign: "top" }}>
+                    ۲۲- شرح حکم :
+                  </td>
+                  <td colSpan={2}>حقوق مبنا :</td>
+                  <td></td>
                 </tr>
-              </thead>
-            </table>
 
-            <div className="slip-container__statement-items-table-container">
-              <table className="slip-container__statement-items-desc-table form-table">
-                <thead>
-                  <tr>
-                    <th>شرح حکم :</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr>
-                    <td style={{ verticalAlign: "top" }}>test</td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <table className="slip-container__statement-items-desc-table form-table">
-                <thead>
-                  <tr>
-                    <th colSpan={2}>آیتم های حکم :</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr>
-                    <td>test</td>
-                    <td>test</td>
-                  </tr>
-                </tbody>
-
-                <tfoot>
-                  <tr>
-                    <td colSpan={2}>جمع کل :</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-
-            <table className="slip-container__statement-footer-table form-table">
-              <thead>
                 <tr>
-                  <th>تاریخ اجرا :</th>
-                  <th>تاریخ صدور :</th>
-                  <th>شماره صدور :</th>
+                  <td colSpan={2}>افزایش سنواتی :</td>
+                  <td></td>
                 </tr>
-              </thead>
 
-              <tbody>
                 <tr>
-                  <th
+                  <td colSpan={2}>فوق العاده شغل :</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﻓﻮﻕ‌ﺍﻟﻌﺎﺩﻩ ﺍﺭﺯﺷﯿﺎﺑﯽ ﺳﺎﻟﯿﺎﻧﻪ :</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﺗﻔﺎﻭﺕ ﺣﺪﺍﻗﻞ ﺣﻘﻮﻕ :</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﺗﻔﺎﻭﺕ ﺣﺪﺍﻗﻞ ﺣﻘﻮﻕ ﻣﺎﺩﻩ (۶) :</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2} style={{ fontSize: "12px" }}>
+                    ﺗﻔﺎﻭﺕ ﺑﻨﺪ ﯼ ﻭ ﺗﻔﺎﻭﺕ ﺟﺰ ﯾﮏ ﺑﻨﺪ ﺍﻟﻒ ﺗﺒﺼﺮﻩ ۱۲ :
+                  </td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﺣﻖ ﺟﺬﺏ :</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﺷﺮﺍﯾﻂ ﻣﺤﯿﻂ ﮐﺎﺭ :</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﻓﻮﻕ‌ﺍﻟﻌﺎﺩﻩ ﻭﯾﮋﻩ ﮐﺎﺭﺷﻨﺎﺳﯽ :</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﺍﻟﻒ- ﻓﻮﻕ‌ﺍﻟﻌﺎﺩﻩ ﺣﺮﺍﺳﺖ :</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﺏ- ﻓﻮﻕ‌ﺍﻟﻌﺎﺩﻩ ﮔﺰﯾﻨﺶ :</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﺝ- ﻓﻮﻕ‌ﺍﻟﻌﺎﺩﻩ ﺗﺨﻠﻔﺎﺕ ﺍﺩﺍﺭﯼ :</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>د- فوق العاده صعوبت شغل :</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﻓﻮﻕ‌ﺍﻟﻌﺎﺩﻩ ﺍﯾﺜﺎﺭﮔﺮﯼ</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﺣﻖ ﺟﺬﺏ ﻏﯿﺮﻣﺴﺘﻤﺮ</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﺗﻔﺎﻭﺕ ﺗﻄﺒﯿﻖ</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﮐﻤﮏ ﻫﺰﯾﻨﻪ ﻋﺎﺋﻠﻪ‌ﻣﻨﺪﯼ</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﮐﻤﮏ ﻫﺰﯾﻨﻪ ﺍﻭﻻﺩ</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﻣﺎﺑﻪ‌ﺍﻟﺘﻔﺎﻭﺕ ﻫﻤﺘﺮﺍﺯﯼ</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2} style={{ fontSize: "10px" }}>
+                    ﺗﻔﺎﻭﺕ ﺗﻄﺒﯿﻖ ﺟﺰ(۱) ﺑﻨﺪ ﺍﻟﻒ ﺗﺒﺼﺮﻩ(۱۲) ﻗﺎﻧﻮﻥ ﺑﻮﺩﺟﻪ ﺳﺎﻝ
+                  </td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2}>ﺗﺮﻣﯿﻢ ﺣﻘﻮﻕ</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2} className="no-border-left">
+                    ۲۳- ﺗﺎﺭﯾﺦ ﺍﺟﺮﺍﯼ ﺣﮑﻢ :
+                  </td>
+                  <td className="no-border-right"></td>
+                  <td colSpan={2}>ﻓﻮﻕ‌ﺍﻟﻌﺎﺩﻩ ﺟﺬﺏ ﻭﯾﮋﻩ</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2} className="no-border-left">
+                    ﺷﻤﺎﺭﻩ ﺣﮑﻢ :
+                  </td>
+                  <td className="no-border-right"></td>
+
+                  <td colSpan={3} rowSpan={2} style={{ verticalAlign: "top" }}>
+                    ﺟﻤﻊ :
+                  </td>
+                </tr>
+
+                <tr>
+                  <td colSpan={2} className="no-border-left">
+                    ۲۴- ﺗﺎﺭﯾﺦ ﺻﺪﻭﺭ ﺣﮑﻢ :
+                  </td>
+                  <td className="no-border-right"></td>
+                </tr>
+
+                <tr>
+                  <th colSpan={6}>۲۵- ﺟﻤﻊ ﺣﻘﻮﻕ ﻭ ﻣﺰﺍﯾﺎ ﺑﻪ ﺣﺮﻭﻑ :</th>
+                </tr>
+
+                <tr>
+                  <td colSpan={3} className="no-border-bottom">
+                    ۲۶- ﻧﺎﻡ ﻭ ﻧﺎﻡ ﺧﺎﻧﻮﺍﺩﮔﯽ ﻣﻘﺎﻡ ﻣﺴﺌﻮﻝ :
+                  </td>
+                  <td colSpan={3} className="no-border-bottom">
+                    ﻧﺴﺨﻪ ﻣﺮﺑﻮﻁ ﺑﻪ :
+                  </td>
+                </tr>
+
+                <tr>
+                  <td colSpan={3} className="no-border-top">
+                    ﻋﻨﻮﺍﻥ ﭘﺴﺖ ﺛﺎﺑﺖ ﺳﺎﺯﻣﺎﻧﯽ :
+                  </td>
+                  <td
                     colSpan={3}
-                    style={{ textAlign: "left", padding: "20px" }}
+                    style={{ justifyContent: "center", textAlign: "center" }}
+                    className="no-border-top"
                   >
-                    عضو هیات مدیره و مدیرعامل
-                  </th>
+                    ﺍﺩﺍﺭﻩ ﮐﻞ ﺍﻣﻮﺭ ﺍﺟﺮﺍﺋﯽ ﺷﻮﺭﺍﯼ ﺍﺳﻼﻣﯽ ﺷﻬﺮ ﺗﻬﺮﺍﻥ, ﺍﺩﺍﺭﻩ ﮐﻞ ﺍﻣﻮﺭ
+                    ﻣﺎﻟﯽ ﻭ ﺍﻣﻮﺍﻝ, ﺳﺎﺯﻣﺎﻥ ﺑﺎﺯﻧﺸﺴﺘﮕﯽ, ﺳﺎﺯﻣﺎﻥ ﺑﺴﯿﺞ ﺷﻬﺮﺩﺍﺭﯼ ﺗﻬﺮﺍﻥ,
+                    ﺍﺩﺍﺭﻩ ﮐﻞ ﻣﻨﺎﺑﻊ ﺍﻧﺴﺎﻧﯽ, ﺣﺮﺍﺳﺖ ﮐﻞ, ﺣﻮﺯﻩ ﻣﻌﺎﻭﻧﺖ ﺗﻮﺳﻌﻪ ﻣﻨﺎﺑﻊ
+                    ﺍﻧﺴﺎﻧﯽ - ﺷﺮﮐﺖ ﺷﻬﺮ ﺳﺎﻟﻢ, ﺩﻓﺘﺮ ﻫﻤﺎﻫﻨﮕﯽ ﻫﯿﺌﺖ ﻫﺎﯼ ﺭﺳﯿﺪﮔﯽ ﺑﻪ
+                    ﺗﺨﻠﻔﺎﺕ ﺍﺩﺍﺭﯼ, ﺳﺎﺯﻣﺎﻥ ﺑﺎﺯﺭﺳﯽ, ﺍﺩﺍﺭﻩ ﮐﻞ ﺭﻓﺎﻩ ﺗﻌﺎﻭﻥ ﻭ ﺧﺪﻣﺎﺕ
+                    ﺍﺟﺘﻤﺎﻋﯽ
+                  </td>
                 </tr>
               </tbody>
             </table>
 
-            <div className="slip-container__ending">
-              <span>
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-              </span>
-              <p>
-                ۱. فرزندان اناث بعد از سن ۲۰ سالگی میبایست هر سال با در دست
-                داشتن اصل شناسنامه خود به اداره بازنشستگی مراجعه نمایند.
-              </p>
-              <p>
-                ۲. فرزندان ذکور بعد از سن ۲۰ سالگی و تا پایان ۲۵ سالگی در صورت
-                اشتغال به تحصیل میبایست در هر ترم گواهی دانشجویی معتبر ارائه
-                نمایند.
-              </p>
-              <p>
-                ۳. تک وظیفه بگیران لازم است هر سال یکبار با در دست داشتن اصل
-                شناسنامه خود به اداره بازنشستگی مراجعه نمایند.
-              </p>
-            </div>
+            <p
+              style={{
+                textAlign: "right",
+                fontSize: "12px",
+                justifyContent: "right",
+                width: "100%",
+              }}
+            >
+              ﮐﺎﺭﺑﺮ : ﺭﺣﻤﺎﻧﻲ ﻫﻨﺰﮐﻲ - ۰۸:۳۴:۵۶-۱۴۰۳/۰۶/۱
+            </p>
           </div>
 
           <div style={{ marginRight: "auto" }}>
