@@ -416,7 +416,10 @@ function RetiredStatementsGrid() {
             </Modal>
           ) : showStatementModal && statementID ? (
             <Modal closeModal={() => setShowStatementModal(false)}>
-              <RetiredStatementTemplate statementID={statementID} />
+              <RetiredStatementTemplate
+                statementID={statementID}
+                setShowStatementModal={setShowStatementModal}
+              />
             </Modal>
           ) : showStatModal ? (
             <Modal>

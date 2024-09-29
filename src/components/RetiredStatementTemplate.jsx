@@ -3,18 +3,27 @@ import { useState, useEffect, useRef } from "react";
 
 // MUI IMPORTS
 import { Box, CircularProgress, Button, Checkbox } from "@mui/material";
-import { DownloadOutlined as DownloadIcon } from "@mui/icons-material";
+import {
+  DownloadOutlined as DownloadIcon,
+  Save as SaveIcon,
+} from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 
 // REDUX IMPORTS
 import { useSelector } from "react-redux";
 import { useGetRetiredQuery } from "../slices/retiredApiSlice";
-import { useGetRetirementStatementQuery } from "../slices/retirementStatementApiSlice.js";
+import {
+  useGetRetirementStatementQuery,
+  useUpdateRetirementStatementAmountMutation,
+} from "../slices/retirementStatementApiSlice.js";
 
 // HELPERS
 import {
   convertToPersianNumber,
   separateByThousands,
   convertToPersianDateFormatted,
+  convertToEnglishNumber,
+  removeSeparators,
 } from "../helper";
 
 // LIBRARY IMPROTS
@@ -24,7 +33,7 @@ import { toast } from "react-toastify";
 // COMPONENTS
 import Modal from "./Modal";
 
-function RetiredStatementTemplate({ statementID }) {
+function RetiredStatementTemplate({ statementID, setShowStatementModal }) {
   // DOWNLOAD REF
   const targetRef = useRef();
 
@@ -32,10 +41,16 @@ function RetiredStatementTemplate({ statementID }) {
   const [retiredInfo, setRetiredInfo] = useState(null);
   const [statementInfo, setStatementInfo] = useState(null);
 
+  const [updatedAmount, setUpdatedAmount] = useState({});
+
   // ACCESS KEY DATA
   const searchParams = new URLSearchParams(location.search);
   const personID = searchParams.get("personID");
   const { personDeathDate } = useSelector((state) => state.retiredState);
+
+  // ACCESS UPDATE QUERIES
+  const [updateRetirementStatementAmount, { isLoading }] =
+    useUpdateRetirementStatementAmountMutation();
 
   // GET DATA
   const {
@@ -58,6 +73,21 @@ function RetiredStatementTemplate({ statementID }) {
   useEffect(() => {
     if (isStatementSuccess) {
       setStatementInfo(statement);
+
+      const filteredAmounts = statement?.retirementStatementAmountList?.filter(
+        (item) =>
+          ["1001", "1002", "2001", "2002"].includes(
+            item.retirementStatementItemID
+          )
+      );
+
+      const amountsObject = filteredAmounts.reduce((acc, item) => {
+        acc[item.retirementStatementItemID] =
+          item.retirementStatementItemAmount;
+        return acc;
+      }, {});
+
+      setUpdatedAmount(amountsObject);
     }
   }, [isStatementSuccess, statement]);
 
@@ -85,6 +115,36 @@ function RetiredStatementTemplate({ statementID }) {
       });
     }
   }, [retiredError]);
+
+  // HANLDERS
+  const handleAmountChange = (e, id) => {
+    setUpdatedAmount({
+      ...updatedAmount,
+      [id]: convertToEnglishNumber(removeSeparators(e.target.value)),
+    });
+  };
+
+  const handleUpdateAmounts = async () => {
+    try {
+      const IDs = Object.keys(updatedAmount);
+      const amounts = Object.values(updatedAmount);
+
+      const updateRes = await updateRetirementStatementAmount({
+        retirementStatementID: statementID,
+        retirementStatementItemID: IDs.join(","),
+        retirementStatementItemAmount: amounts.join(","),
+      }).unwrap();
+      toast.success(updateRes.message, {
+        autoClose: 2000,
+      });
+
+      setShowStatementModal(false);
+    } catch (err) {
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
 
   const content = (
     <>
@@ -483,13 +543,44 @@ function RetiredStatementTemplate({ statementID }) {
                       style={{ textAlign: "center" }}
                     >
                       <td>{item.retirementStatementItemName}</td>
-                      <td>
-                        {convertToPersianNumber(
-                          separateByThousands(
-                            item.retirementStatementItemAmount
-                          )
-                        )}
-                      </td>
+                      {item.retirementStatementItemID === "1001" ||
+                      item.retirementStatementItemID === "1002" ||
+                      item.retirementStatementItemID === "2001" ||
+                      item.retirementStatementItemID === "2002" ? (
+                        <td>
+                          <input
+                            type="text"
+                            disabled={
+                              statement?.retirementStatementIssueConfirmDate
+                            }
+                            value={convertToPersianNumber(
+                              separateByThousands(
+                                updatedAmount[item.retirementStatementItemID]
+                              )
+                            )}
+                            style={{
+                              textAlign: "center",
+                              border: "none",
+                              outline: "none",
+                              width: "100%",
+                            }}
+                            onChange={(e) =>
+                              handleAmountChange(
+                                e,
+                                item.retirementStatementItemID
+                              )
+                            }
+                          />
+                        </td>
+                      ) : (
+                        <td>
+                          {convertToPersianNumber(
+                            separateByThousands(
+                              item.retirementStatementItemAmount
+                            )
+                          )}
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -563,7 +654,7 @@ function RetiredStatementTemplate({ statementID }) {
             </div>
           </div>
 
-          <div style={{ marginRight: "auto" }}>
+          <div style={{ marginRight: "auto" }} className="flex-row">
             <Button
               dir="ltr"
               endIcon={<DownloadIcon />}
@@ -576,6 +667,18 @@ function RetiredStatementTemplate({ statementID }) {
             >
               <span>دانلود حکم</span>
             </Button>
+
+            <LoadingButton
+              dir="ltr"
+              endIcon={<SaveIcon />}
+              variant="contained"
+              onClick={handleUpdateAmounts}
+              loading={isLoading}
+              color="success"
+              sx={{ fontFamily: "sahel" }}
+            >
+              <span>ذخیره</span>
+            </LoadingButton>
           </div>
         </div>
       )}

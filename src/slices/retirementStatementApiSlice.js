@@ -138,6 +138,17 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+
+    updateRetirementStatementAmount: builder.mutation({
+      query: ({
+        retirementStatementItemID,
+        retirementStatementID,
+        retirementStatementItemAmount,
+      }) => ({
+        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/UpdateRetirementStatementAmount?retirementStatementItemID=${retirementStatementItemID}&retirementStatementID=${retirementStatementID}&retirementStatementItemAmount=${retirementStatementItemAmount}`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -153,4 +164,6 @@ export const {
   useLazyGetListOfFormulaGroupSettingQuery,
   useUpdateRetirementStatementFormulaGroupSettingMutation,
   useGenerateGroupStatementMutation,
+  useConfirmRetirementStatementMutation,
+  useUpdateRetirementStatementAmountMutation,
 } = retirementStatementApiSlice;
