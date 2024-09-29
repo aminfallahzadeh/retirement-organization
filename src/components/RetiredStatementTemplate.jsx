@@ -41,7 +41,7 @@ function RetiredStatementTemplate({ statementID, setShowStatementModal }) {
   const [retiredInfo, setRetiredInfo] = useState(null);
   const [statementInfo, setStatementInfo] = useState(null);
 
-  const [updatedAmount, setUpdatedAmount] = useState({});
+  const [updatedAmount, setUpdatedAmount] = useState([]);
 
   // ACCESS KEY DATA
   const searchParams = new URLSearchParams(location.search);
@@ -58,6 +58,7 @@ function RetiredStatementTemplate({ statementID, setShowStatementModal }) {
     isSuccess: isStatementSuccess,
     isLoading: isStatementLoading,
     isFetching: isStatementFetching,
+    refetch: statementRefetch,
     error: statementError,
   } = useGetRetirementStatementQuery({ RetirementStatementID: statementID });
 
@@ -71,6 +72,7 @@ function RetiredStatementTemplate({ statementID, setShowStatementModal }) {
 
   // FETCH DATA
   useEffect(() => {
+    statementRefetch();
     if (isStatementSuccess) {
       setStatementInfo(statement);
 
@@ -81,21 +83,24 @@ function RetiredStatementTemplate({ statementID, setShowStatementModal }) {
           )
       );
 
-      const amountsObject = filteredAmounts.reduce((acc, item) => {
-        acc[item.retirementStatementItemID] =
-          item.retirementStatementItemAmount;
-        return acc;
-      }, {});
+      const amountsArray = filteredAmounts.map((item) => ({
+        retirementStatementItemID: item.retirementStatementItemID,
+        retirementStatementItemAmount: item.retirementStatementItemAmount,
+      }));
 
-      setUpdatedAmount(amountsObject);
+      setUpdatedAmount(amountsArray);
     }
-  }, [isStatementSuccess, statement]);
+  }, [isStatementSuccess, statement, statementRefetch]);
 
   useEffect(() => {
     if (isRetiredSuccess) {
       setRetiredInfo(retired.itemList[0]);
     }
   }, [isRetiredSuccess, retired]);
+
+  useEffect(() => {
+    console.log(updatedAmount);
+  }, [updatedAmount]);
 
   // HANDLE ERROR
   useEffect(() => {
@@ -118,21 +123,25 @@ function RetiredStatementTemplate({ statementID, setShowStatementModal }) {
 
   // HANLDERS
   const handleAmountChange = (e, id) => {
-    setUpdatedAmount({
-      ...updatedAmount,
-      [id]: convertToEnglishNumber(removeSeparators(e.target.value)),
-    });
+    setUpdatedAmount((prevAmounts) =>
+      prevAmounts.map((item) =>
+        item.retirementStatementItemID === id
+          ? {
+              ...item,
+              retirementStatementItemAmount: Number(
+                convertToEnglishNumber(removeSeparators(e.target.value))
+              ),
+            }
+          : item
+      )
+    );
   };
 
   const handleUpdateAmounts = async () => {
     try {
-      const IDs = Object.keys(updatedAmount);
-      const amounts = Object.values(updatedAmount);
-
       const updateRes = await updateRetirementStatementAmount({
         retirementStatementID: statementID,
-        retirementStatementItemID: IDs.join(","),
-        retirementStatementItemAmount: amounts.join(","),
+        data: updatedAmount,
       }).unwrap();
       toast.success(updateRes.message, {
         autoClose: 2000,
@@ -555,7 +564,11 @@ function RetiredStatementTemplate({ statementID, setShowStatementModal }) {
                             }
                             value={convertToPersianNumber(
                               separateByThousands(
-                                updatedAmount[item.retirementStatementItemID]
+                                updatedAmount.find(
+                                  (amountObj) =>
+                                    amountObj.retirementStatementItemID ===
+                                    item.retirementStatementItemID
+                                )?.retirementStatementItemAmount || ""
                               )
                             )}
                             style={{

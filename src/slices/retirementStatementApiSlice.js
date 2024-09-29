@@ -140,13 +140,10 @@ export const retirementStatementApiSlice = apiSlice.injectEndpoints({
     }),
 
     updateRetirementStatementAmount: builder.mutation({
-      query: ({
-        retirementStatementItemID,
-        retirementStatementID,
-        retirementStatementItemAmount,
-      }) => ({
-        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/UpdateRetirementStatementAmount?retirementStatementItemID=${retirementStatementItemID}&retirementStatementID=${retirementStatementID}&retirementStatementItemAmount=${retirementStatementItemAmount}`,
+      query: ({ retirementStatementID, data }) => ({
+        url: `${RETIREMENT_STATEMENT_URL_HTTPS}/UpdateRetirementStatementAmount?retirementStatementID=${retirementStatementID}`,
         method: "POST",
+        body: data,
       }),
     }),
   }),
