@@ -364,7 +364,7 @@ function RetiredStatementTemplate({ statementID, setShowStatementModal }) {
             <table className="slip-container__personnel-info-table form-table">
               <thead>
                 <tr>
-                  <th colSpan={3}>مشخصات پرسونلی</th>
+                  <th colSpan={3}>مشخصات پرسنلی</th>
                 </tr>
                 <tr>
                   <th>{`تاریخ بازنشستگی : ${
@@ -532,7 +532,9 @@ function RetiredStatementTemplate({ statementID, setShowStatementModal }) {
                 <tbody>
                   <tr>
                     <td style={{ verticalAlign: "top" }}>
-                      {statementInfo?.retirementStatementDesc || "-"}
+                      {convertToPersianNumber(
+                        statementInfo?.retirementStatementDesc
+                      ) || "-"}
                     </td>
                   </tr>
                 </tbody>
@@ -678,7 +680,7 @@ function RetiredStatementTemplate({ statementID, setShowStatementModal }) {
               color="primary"
               sx={{ fontFamily: "IranYekan" }}
             >
-              <span>دانلود حکم</span>
+              <span>چاپ حکم</span>
             </Button>
 
             <LoadingButton
