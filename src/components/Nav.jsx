@@ -34,7 +34,7 @@ import {
 } from "@mui/icons-material";
 import { toast } from "react-toastify";
 
-function Nav({ userName }) {
+function Nav({ firstName, lastName }) {
   const { userID } = useSelector((state) => state.auth);
 
   const shouldFetch = !!userID;
@@ -318,7 +318,16 @@ function Nav({ userName }) {
 
             <li>
               <Tooltip title="پنل کاربر">
-                <a>{userName}</a>
+                <a
+                  className="flex flex-col flex-center"
+                  style={{
+                    rowGap: "0",
+                    fontSize: "12px",
+                  }}
+                >
+                  <span>{firstName}</span>
+                  <span>{lastName}</span>
+                </a>
               </Tooltip>
             </li>
 

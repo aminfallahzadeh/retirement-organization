@@ -2,11 +2,11 @@
 import Hero from "./Hero";
 import Nav from "./Nav";
 
-function Header({ userName }) {
+function Header({ firstName, lastName }) {
   return (
     <header className="header">
       <Hero />
-      <Nav userName={userName} />
+      <Nav firstName={firstName} lastName={lastName} />
     </header>
   );
 }

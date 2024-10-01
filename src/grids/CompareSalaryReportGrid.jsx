@@ -34,7 +34,7 @@ import { defaultTableOptions } from "../utils.js";
 import SlipFormTemplate from "../components/SlipFormTemplate";
 import Modal from "../components/Modal";
 
-function PersonnelStatementGrid() {
+function CompareSalaryReportGrid() {
   // TRABLE STATES
   const [rowSelection, setRowSelection] = useState({});
 
@@ -42,7 +42,7 @@ function PersonnelStatementGrid() {
   const [showSlipModal, setShowSlipModal] = useState(false);
   const [payID, setPayID] = useState(null);
 
-  const { slipsTableData } = useSelector((state) => state.slipsData);
+  //   const { slipsTableData } = useSelector((state) => state.slipsData);
 
   // HANDLERS
   const handleShowSlipModal = () => {
@@ -63,17 +63,17 @@ function PersonnelStatementGrid() {
       },
       {
         accessorKey: "payFirstName",
-        header: "نام",
+        header: "شماره ملی",
         size: 20,
       },
       {
         accessorKey: "payLastName",
-        header: "نام خانوادگی",
+        header: "شماره کارمندی",
         size: 20,
       },
       {
         accessorKey: "accountNo",
-        header: "شماره حساب",
+        header: "نام",
         size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianNumber(renderedCellValue)}</div>
@@ -81,7 +81,7 @@ function PersonnelStatementGrid() {
       },
       {
         accessorKey: "payCreditAmount",
-        header: "بستانکاری",
+        header: "نام خانوادگی",
         size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>
@@ -91,7 +91,7 @@ function PersonnelStatementGrid() {
       },
       {
         accessorKey: "payDebitAmount",
-        header: "بدهکاری",
+        header: "ماه جاری",
         size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>
@@ -101,7 +101,7 @@ function PersonnelStatementGrid() {
       },
       {
         accessorKey: "payAmount",
-        header: "مبلغ کل",
+        header: "ماه قیل",
         size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>
@@ -111,28 +111,18 @@ function PersonnelStatementGrid() {
       },
       {
         accessorKey: "payDate",
-        header: "تاریخ پرداخت",
+        header: "تفاوت",
         size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>{convertToPersianDateFormatted(renderedCellValue)}</div>
         ),
       },
       {
-        accessorKey: "downloadSlip",
-        header: "مشاهده/چاپ",
-        enableSorting: false,
-        enableColumnActions: false,
+        accessorKey: "payDate",
+        header: "وضعیت",
         size: 20,
-        Cell: () => (
-          <Tooltip title="دانلود و مشاهده فیش">
-            <IconButton
-              color="primary"
-              sx={{ padding: "0" }}
-              onClick={handleShowSlipModal}
-            >
-              <EyeIcon />
-            </IconButton>
-          </Tooltip>
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianDateFormatted(renderedCellValue)}</div>
         ),
       },
     ],
@@ -142,7 +132,7 @@ function PersonnelStatementGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: slipsTableData,
+    data: [],
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -176,15 +166,15 @@ function PersonnelStatementGrid() {
     state: { rowSelection },
   });
 
-  useEffect(() => {
-    const id = Object.keys(table.getState().rowSelection)[0];
+  //   useEffect(() => {
+  //     const id = Object.keys(table.getState().rowSelection)[0];
 
-    if (id) {
-      setPayID(id);
-    } else {
-      setPayID(null);
-    }
-  }, [table, rowSelection]);
+  //     if (id) {
+  //       setPayID(id);
+  //     } else {
+  //       setPayID(null);
+  //     }
+  //   }, [table, rowSelection]);
 
   const content = (
     <>
@@ -200,4 +190,4 @@ function PersonnelStatementGrid() {
   return content;
 }
 
-export default PersonnelStatementGrid;
+export default CompareSalaryReportGrid;
