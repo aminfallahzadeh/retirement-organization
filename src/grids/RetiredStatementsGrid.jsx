@@ -176,6 +176,9 @@ function RetiredStatementsGrid() {
         accessorKey: "retirementStatementNo",
         size: 20,
         header: "شماره حکم",
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
       {
         accessorKey: "retirementStatementSerial",
@@ -289,6 +292,19 @@ function RetiredStatementsGrid() {
         cursor: "pointer",
       },
     }),
+    initialState: {
+      density: "compact",
+      showGlobalFilter: true,
+      sorting: [
+        {
+          id: "retirementStatementIssueDate",
+          desc: true,
+        },
+      ],
+    },
+    enablePagination: false,
+    enableBottomToolbar: false,
+    muiTableContainerProps: { sx: { height: "300px" } },
     renderTopToolbarCustomActions: () => (
       <Box>
         {isFetching ? (
