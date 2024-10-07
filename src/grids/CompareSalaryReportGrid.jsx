@@ -1,18 +1,16 @@
-// react imports
-import { useMemo, useState, useEffect } from "react";
+// REACT IMPORTS
+import { useMemo, useState } from "react";
 
-// redux imports
+// REDUX
 import { useSelector } from "react-redux";
 
-// mui imports
-import { IconButton } from "@mui/material";
-import { PaginationItem, Tooltip } from "@mui/material";
+// MUI
+import { PaginationItem } from "@mui/material";
 import {
   ChevronLeft,
   ChevronRight,
   FirstPage,
   LastPage,
-  VisibilityOutlined as EyeIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -20,39 +18,22 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-// helper imports
-import {
-  convertToPersianNumber,
-  convertToPersianDateFormatted,
-  separateByThousands,
-} from "../helper.js";
+// HELPERS
+import { convertToPersianNumber, separateByThousands } from "../helper.js";
 
-// utils imports
+// UTILS
 import { defaultTableOptions } from "../utils.js";
-
-// components
-import SlipFormTemplate from "../components/SlipFormTemplate";
-import Modal from "../components/Modal";
 
 function CompareSalaryReportGrid() {
   // TRABLE STATES
   const [rowSelection, setRowSelection] = useState({});
 
-  // CONTROLL STATES
-  const [showSlipModal, setShowSlipModal] = useState(false);
-  const [payID, setPayID] = useState(null);
-
-  //   const { slipsTableData } = useSelector((state) => state.slipsData);
-
-  // HANDLERS
-  const handleShowSlipModal = () => {
-    setShowSlipModal(true);
-  };
+  const { payCompareTableData } = useSelector((state) => state.payCompareData);
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "rowNum",
+        accessorKey: "compareRowNum",
         header: "ردیف",
         enableSorting: false,
         enableColumnActions: false,
@@ -62,17 +43,23 @@ function CompareSalaryReportGrid() {
         ),
       },
       {
-        accessorKey: "payFirstName",
+        accessorKey: "payNationalCode",
         header: "شماره ملی",
         size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
       {
-        accessorKey: "payLastName",
+        accessorKey: "payPersonID",
         header: "شماره کارمندی",
         size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <div>{convertToPersianNumber(renderedCellValue)}</div>
+        ),
       },
       {
-        accessorKey: "accountNo",
+        accessorKey: "payFirstName",
         header: "نام",
         size: 20,
         Cell: ({ renderedCellValue }) => (
@@ -80,17 +67,12 @@ function CompareSalaryReportGrid() {
         ),
       },
       {
-        accessorKey: "payCreditAmount",
+        accessorKey: "payLastName",
         header: "نام خانوادگی",
         size: 20,
-        Cell: ({ renderedCellValue }) => (
-          <div>
-            {separateByThousands(convertToPersianNumber(renderedCellValue))}
-          </div>
-        ),
       },
       {
-        accessorKey: "payDebitAmount",
+        accessorKey: "payCurrentMonth",
         header: "ماه جاری",
         size: 20,
         Cell: ({ renderedCellValue }) => (
@@ -100,30 +82,29 @@ function CompareSalaryReportGrid() {
         ),
       },
       {
-        accessorKey: "payAmount",
+        accessorKey: "payLastMonth",
         header: "ماه قیل",
         size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>
-            {convertToPersianNumber(separateByThousands(renderedCellValue))}
+            {separateByThousands(convertToPersianNumber(renderedCellValue))}
           </div>
         ),
       },
       {
-        accessorKey: "payDate",
+        accessorKey: "payDiff",
         header: "تفاوت",
         size: 20,
         Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianDateFormatted(renderedCellValue)}</div>
+          <div>
+            {separateByThousands(convertToPersianNumber(renderedCellValue))}
+          </div>
         ),
       },
       {
-        accessorKey: "payDate",
+        accessorKey: "payStatus",
         header: "وضعیت",
         size: 20,
-        Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianDateFormatted(renderedCellValue)}</div>
-        ),
       },
     ],
     []
@@ -132,7 +113,7 @@ function CompareSalaryReportGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: [],
+    data: payCompareTableData,
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -166,26 +147,7 @@ function CompareSalaryReportGrid() {
     state: { rowSelection },
   });
 
-  //   useEffect(() => {
-  //     const id = Object.keys(table.getState().rowSelection)[0];
-
-  //     if (id) {
-  //       setPayID(id);
-  //     } else {
-  //       setPayID(null);
-  //     }
-  //   }, [table, rowSelection]);
-
-  const content = (
-    <>
-      {showSlipModal && payID && (
-        <Modal key={payID} closeModal={() => setShowSlipModal(false)}>
-          <SlipFormTemplate payID={payID} />
-        </Modal>
-      )}
-      <MaterialReactTable table={table} />
-    </>
-  );
+  const content = <MaterialReactTable table={table} />;
 
   return content;
 }

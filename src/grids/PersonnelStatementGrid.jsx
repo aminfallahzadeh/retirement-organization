@@ -81,7 +81,7 @@ function PersonnelStatementGrid() {
         personnelStatementSerial: item.personnelStatementSerial,
         personnelStatementNumber: item.personnelStatementID,
         personnelStatementTypeName: item.personnelStatementTypeName,
-        personnelStatementIssueDate: item.personnelStatementIssueDate,
+        personnelStatementIssueDate: item.insertTime,
         personnelStatementRunDate: item.personnelStatementRunDate,
         personnelSum: item.fractionBaseAmount || "-",
       }));

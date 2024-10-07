@@ -356,6 +356,10 @@ function Nav({ firstName, lastName }) {
                 رویت احکام و تعرفه
               </Link>
             </li>
+
+            <li className={isActivePath("salary") ? "active" : ""}>
+              <Link to={"/retirement-organization/salary"}>حقوق و دستمزد</Link>
+            </li>
           </ul>
         ) : null}
 

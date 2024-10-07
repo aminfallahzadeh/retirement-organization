@@ -19,6 +19,7 @@ import batchStatementsDataSliceReducer from "./slices/batchStatementsDataSlice";
 import fractionDataSliceReducer from "./slices/fractionDataSlice";
 import calculateFractionDataSliceReducer from "./slices/calculateFractionDataSlice";
 import reportGeneratorDataSliceReducer from "./slices/reportGeneratorDataSlice";
+import payCompareDataSliceReducer from "./slices/payCompareDataSlice";
 
 const store = configureStore({
   reducer: {
@@ -41,6 +42,7 @@ const store = configureStore({
     fractionData: fractionDataSliceReducer,
     calculateFractionData: calculateFractionDataSliceReducer,
     reportGeneratorData: reportGeneratorDataSliceReducer,
+    payCompareData: payCompareDataSliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

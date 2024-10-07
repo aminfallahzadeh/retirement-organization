@@ -8,6 +8,7 @@ import {
   useGetRelationshipQuery,
   useGetRetiredOrganizationQuery,
   useGetRetirementStatementTypeQuery,
+  useGetPayItemTypeQuery,
 } from "../slices/sharedApiSlice.js";
 import { useGetPersonnelStatementOffTypeQuery } from "../slices/personnelStatementApiSlice.js";
 import { useGetFractionTypeQuery } from "../slices/fractionApiSlice.js";
@@ -375,6 +376,40 @@ const useFetchRequestAttachmentTypes = (requestTypeID) => {
   };
 };
 
+// PAY ITEM TYPE LOOK UP LOGIC
+const useFetchPayItemType = (payItemtypeID) => {
+  const [payItemTypes, setPayItemTypes] = useState([]);
+
+  // GET DATA
+  const {
+    data: payItemTypesItems,
+    isSuccess: payItemTypesIsSuccess,
+    isLoading: payItemTypesIsLoading,
+    isFetching: payItemTypesIsFetching,
+    error: payItemTypesError,
+  } = useGetPayItemTypeQuery(payItemtypeID);
+
+  // FETCH DATA
+  useEffect(() => {
+    if (payItemTypesIsSuccess) {
+      setPayItemTypes(payItemTypesItems.itemList);
+    }
+  }, [payItemTypesIsSuccess, payItemTypesItems]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (payItemTypesError) {
+      console.log(payItemTypesError);
+    }
+  }, [payItemTypesError]);
+
+  return {
+    payItemTypes,
+    payItemTypesIsLoading,
+    payItemTypesIsFetching,
+  };
+};
+
 export {
   useFetchRetirementStatementTypes,
   useFetchPensionaryStatus,
@@ -386,4 +421,5 @@ export {
   useFetchPersonnelStatementOffType,
   useFetchReportGeneratorTables,
   useFetchRequestAttachmentTypes,
+  useFetchPayItemType,
 };

@@ -24,7 +24,21 @@ export const reportApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+
+    getPayCompareReport: builder.query({
+      // 1 = retired 0 = heir -1 = both
+      query: ({
+        CurrentYear,
+        CurrentMonth,
+        PayItemTypeID,
+        PreviousMonth,
+        pensionaryIsRetired,
+      }) => ({
+        url: `${REPORT_HTTPS}/GetPayCompareReport?CurrentYear=${CurrentYear}&CurrentMonth=${CurrentMonth}&PayItemTypeID=${PayItemTypeID}&PreviousMonth=${PreviousMonth}&pensionaryIsRetired=${pensionaryIsRetired}`,
+      }),
+    }),
   }),
 });
 
-export const { useLazyDashboardReportQuery } = reportApiSlice;
+export const { useLazyDashboardReportQuery, useLazyGetPayCompareReportQuery } =
+  reportApiSlice;

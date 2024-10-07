@@ -1,19 +1,19 @@
-// react imports
+// REACT IMPORTS
 import { useState, useEffect, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 
-// rrd imports
+// RRD
 import { useLocation } from "react-router-dom";
 
-// redux imports
+// REDUX
 import { useLazyGetLookupDataQuery } from "../slices/sharedApiSlice.js";
 import { useGetRetiredAccountQuery } from "../slices/retiredApiSlice";
 import { useUpdateRetiredAccountMutation } from "../slices/retiredApiSlice";
 
-// hooks
+// HOOKS
 import { useFetchLookUpData } from "../hooks/useFetchLookUpData";
 
-// mui imports
+// MUI
 import { Button, Box, CircularProgress } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -21,15 +21,15 @@ import {
   EditOutlined as EditIcon,
 } from "@mui/icons-material";
 
-// library imports
+// LOBRARIES
 import { toast } from "react-toastify";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
-// helpers
+// HELPERS
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
-// utils
+// UTILS
 import {
   selectStyles,
   selectSettings,

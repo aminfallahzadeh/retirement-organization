@@ -20,7 +20,7 @@ import {
 function PersonnelInfoForm() {
   const [personObject, setPersonObject] = useState({});
 
-  const [education, setEducation] = useState("");
+  // const [education, setEducation] = useState("");
   const [marital, setMarital] = useState("");
   const [gender, setGender] = useState("");
 
@@ -59,22 +59,22 @@ function PersonnelInfoForm() {
       lookUpID: personObject?.maritalStatusID,
     });
 
-  const { data: educationData, isSuccess: educationSuccess } =
-    useGetLookupDataQuery({
-      lookUpType: "EducationType",
-      lookUpID: personObject?.educationTypeID,
-    });
+  // const { data: educationData, isSuccess: educationSuccess } =
+  //   useGetLookupDataQuery({
+  //     lookUpType: "EducationType",
+  //     lookUpID: personObject?.educationTypeID,
+  //   });
 
   // FETCH LOOKUP DATA
-  useEffect(() => {
-    if (educationSuccess) {
-      if (educationData?.itemList?.length > 1) {
-        setEducation(null);
-      } else {
-        setEducation(educationData.itemList[0].lookUpName);
-      }
-    }
-  }, [educationSuccess, educationData?.itemList]);
+  // useEffect(() => {
+  //   if (educationSuccess) {
+  //     if (educationData?.itemList?.length > 1) {
+  //       setEducation(null);
+  //     } else {
+  //       setEducation(educationData.itemList[0].lookUpName);
+  //     }
+  //   }
+  // }, [educationSuccess, educationData?.itemList]);
 
   useEffect(() => {
     if (maritalStatusSuccess) {
@@ -103,7 +103,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">کد ملی</div>
             <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(personObject.personNationalCode)}
+              {convertToPersianNumber(personObject?.personNationalCode)}
             </div>
           </div>
         </div>
@@ -112,7 +112,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">شماره کارمندی</div>
             <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(personObject.personID)}
+              {convertToPersianNumber(personObject?.personnelID || "-")}
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">نام</div>
             <div className="inputBox__form--readOnly-content">
-              {personObject.personFirstName}
+              {personObject?.personFirstName}
             </div>
           </div>
         </div>
@@ -130,7 +130,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">نام خانوادگی</div>
             <div className="inputBox__form--readOnly-content">
-              {personObject.personLastName}
+              {personObject?.personLastName}
             </div>
           </div>
         </div>
@@ -139,7 +139,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">شماره شناسنامه</div>
             <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(personObject.personCertificateNo)}
+              {convertToPersianNumber(personObject?.personCertificateNo || "-")}
             </div>
           </div>
         </div>
@@ -148,7 +148,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">نام پدر</div>
             <div className="inputBox__form--readOnly-content">
-              {personObject.personFatherName || "-"}
+              {personObject?.personFatherName || "-"}
             </div>
           </div>
         </div>
@@ -157,9 +157,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">تاریخ تولد</div>
             <div className="inputBox__form--readOnly-content">
-              {convertToPersianNumber(
-                convertToPersianDateFormatted(personObject.personBirthDate)
-              )}
+              {convertToPersianDateFormatted(personObject?.personBirthDate)}
             </div>
           </div>
         </div>
@@ -168,7 +166,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">محل تولد</div>
             <div className="inputBox__form--readOnly-content">
-              {personObject.personBirthPlace || "-"}
+              {personObject?.personBirthPlace || "-"}
             </div>
           </div>
         </div>
@@ -195,7 +193,7 @@ function PersonnelInfoForm() {
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">مدرک تحصیلی</div>
             <div className="inputBox__form--readOnly-content">
-              {education || "-"}
+              {personObject?.educationTypeCaption || "-"}
             </div>
           </div>
         </div>
@@ -203,7 +201,10 @@ function PersonnelInfoForm() {
         <div className="inputBox__form">
           <div className="inputBox__form--readOnly-input">
             <div className="inputBox__form--readOnly-label">ورود به خدمت</div>
-            <div className="inputBox__form--readOnly-content">-</div>
+            <div className="inputBox__form--readOnly-content">
+              {convertToPersianDateFormatted(personObject?.employmentDate) ||
+                "-"}
+            </div>
           </div>
         </div>
       </form>

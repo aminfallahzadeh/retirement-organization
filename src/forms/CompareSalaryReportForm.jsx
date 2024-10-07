@@ -1,35 +1,112 @@
 // REACT
-import { useState, useEffect, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 // REDUX
 import { useDispatch } from "react-redux";
+import { useLazyGetPayCompareReportQuery } from "../slices/reportApiSlice";
+import { setPayCompareTableData } from "../slices/payCompareDataSlice";
 
 // MUI
 import { LoadingButton } from "@mui/lab";
-import { VisibilityOutlined as EyeIcon } from "@mui/icons-material";
+import { Search as SearchIcon } from "@mui/icons-material";
 
 // LIBRARIES
 import { toast } from "react-toastify";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
+// HOOKS
+import { useFetchPayItemType } from "../hooks/useFetchLookUpData";
+
+// DATA
+import { pensionaryTypeOptions } from "../data/retiredData";
+
 // UTILS
-import { selectStyles, selectSettings } from "../utils/reactSelect";
+import {
+  selectStyles,
+  selectSettings,
+  optionsGenerator,
+} from "../utils/reactSelect";
+
+// HELPERS
+import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
+import { useEffect } from "react";
 
 function CompareSalaryReportForm() {
+  const animatedComponents = makeAnimated();
+
+  const dispatch = useDispatch();
+
+  // ACCESS API QUERY
+  const [getReport, { isLoading, isFetching }] =
+    useLazyGetPayCompareReportQuery();
+
   // ACCESS REACT HOOK FORM CONTROL
   const {
     handleSubmit,
     formState: { errors },
     control,
     watch,
-    setValue,
     register,
   } = useForm();
 
   // ACCESS REACT HOOK FORM DATA
   const form_data = watch();
+
+  const onSubmit = async () => {
+    try {
+      const res = await getReport({
+        CurrentYear: convertToEnglishNumber(form_data.currentYear),
+        CurrentMonth: convertToEnglishNumber(form_data.currentMonth),
+        PayItemTypeID: form_data.payItemTypeID,
+        pensionaryIsRetired: form_data.pensionaryIsRetired,
+      }).unwrap();
+
+      if (res.itemList.length === 0) {
+        toast.error("نتیجه ای یافت نشد", {
+          autoClose: 2000,
+        });
+        return;
+      }
+
+      const mappedData = res.itemList.map((item, index) => ({
+        id: item.personnelID,
+        compareRowNum: index + 1,
+        payNationalCode: item.personNationalCode || "-",
+        payPersonID: item.personnelID || "-",
+        payFirstName: item.personFirstName || "-",
+        payLastName: item.personLastName || "-",
+        payCurrentMonth: item.currentpayItemAmount || "-",
+        payLastMonth: item.prepayItemAmount || "-",
+        payDiff: item.diffpay || "-",
+        payStatus: item.pensionaryStatusName || "-",
+      }));
+
+      dispatch(setPayCompareTableData(mappedData));
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
+    }
+  };
+
+  // GET LOOK UP DATA
+  const { payItemTypes, payItemTypesIsLoading, payItemTypesIsFetching } =
+    useFetchPayItemType();
+
+  // SELECT OPTIONS
+  const payItemTypeOptions = optionsGenerator(
+    payItemTypes,
+    "payItemTypeID",
+    "payItemTypeName"
+  );
+
+  useEffect(() => {
+    return () => {
+      dispatch(setPayCompareTableData([]));
+    };
+  }, [dispatch]);
 
   const content = (
     <section className="formContainer flex-col">
@@ -37,50 +114,88 @@ function CompareSalaryReportForm() {
         method="POST"
         className="flex-col"
         noValidate
-        // onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <div className="grid grid--col-4">
           <div className="inputBox__form">
-            {errors.personFirstName && (
-              <span className="error-form">
-                {errors.personFirstName.message}
-              </span>
+            {errors.currentYear && (
+              <span className="error-form">{errors.currentYear.message}</span>
             )}
             <input
               type="text"
               className="inputBox__form--input"
-              name="personFirstName"
-              value={form_data?.personFirstName || ""}
-              id="personFirstName1"
+              name="currentYear"
+              value={convertToPersianNumber(form_data?.currentYear) || ""}
+              id="currentYear"
               required
-              {...register("personFirstName", {
-                required: "نام اجباری است",
+              {...register("currentYear", {
+                required: "سال جاری اجباری است",
+                minLength: {
+                  value: 4,
+                  message: "ماه باید چهار رقمی باشد",
+                },
+                maxLength: {
+                  value: 4,
+                  message: "ماه باید چهار رقمی باشد",
+                },
                 pattern: {
-                  value: /^[آ-ی\s]+$/,
-                  message: "از حروف فارسی استفاده کنید",
+                  value: /^[۰-۹0-9]+$/,
+                  message: "از اعداد استفاده کنید",
                 },
               })}
             />
-            <label className="inputBox__form--label" htmlFor="personFirstName1">
+            <label className="inputBox__form--label" htmlFor="currentYear">
+              <span>*</span> سال جاری
+            </label>
+          </div>
+
+          <div className="inputBox__form">
+            {errors.currentMonth && (
+              <span className="error-form">{errors.currentMonth.message}</span>
+            )}
+            <input
+              type="text"
+              className="inputBox__form--input"
+              name="currentMonth"
+              value={convertToPersianNumber(form_data?.currentMonth) || ""}
+              id="currentMonth"
+              required
+              {...register("currentMonth", {
+                required: "ماه جاری اجباری است",
+                minLength: {
+                  value: 2,
+                  message: "ماه باید دو رقمی باشد",
+                },
+                maxLength: {
+                  value: 2,
+                  message: "ماه باید دو رقمی باشد",
+                },
+                pattern: {
+                  value: /^[۰-۹0-9]+$/,
+                  message: "از اعداد استفاده کنید",
+                },
+              })}
+            />
+            <label className="inputBox__form--label" htmlFor="currentMonth">
               <span>*</span> ماه جاری
             </label>
           </div>
 
           <div className="inputBox__form">
             <Controller
-              name="issueType"
+              name="payItemID"
               control={control}
+              rules={{ required: true }}
               render={({ field: { onChange } }) => (
                 <Select
                   closeMenuOnSelect={true}
-                  //   components={animatedComponents}
-                  //   options={issueTypeOptions}
-                  //   onChange={(val) => onChange(val ? val.value : null)}
-                  //   value={issueTypeOptions.find(
-                  //     (c) => c.value === form_data?.issueType
-                  //   )}
+                  components={animatedComponents}
+                  options={payItemTypeOptions}
+                  onChange={(val) => onChange(val ? val.value : null)}
+                  value={payItemTypeOptions.find(
+                    (c) => c.value === form_data?.payItemID
+                  )}
                   isClearable={true}
-                  //   isDisabled={true}
                   placeholder={
                     <div className="react-select-placeholder">
                       <span>*</span> آیتم حقوق
@@ -89,36 +204,41 @@ function CompareSalaryReportForm() {
                   noOptionsMessage={selectSettings.noOptionsMessage}
                   loadingMessage={selectSettings.loadingMessage}
                   styles={selectStyles}
+                  isLoading={payItemTypesIsLoading || payItemTypesIsFetching}
                 />
               )}
             />
 
             <label
               className={
-                form_data?.issueType
+                form_data?.payItemID
                   ? "inputBox__form--readOnly-label"
                   : "inputBox__form--readOnly-label-hidden"
               }
             >
               <span>*</span> آیتم حقوق
             </label>
+
+            {errors.payItemID && (
+              <span className="error-form"> آیتم حقوق اجباری است</span>
+            )}
           </div>
 
           <div className="inputBox__form">
             <Controller
-              name="issueType"
+              name="pensionaryIsRetired"
               control={control}
+              rules={{ required: true }}
               render={({ field: { onChange } }) => (
                 <Select
                   closeMenuOnSelect={true}
-                  //   components={animatedComponents}
-                  //   options={issueTypeOptions}
-                  //   onChange={(val) => onChange(val ? val.value : null)}
-                  //   value={issueTypeOptions.find(
-                  //     (c) => c.value === form_data?.issueType
-                  //   )}
+                  components={animatedComponents}
+                  options={pensionaryTypeOptions}
+                  onChange={(val) => onChange(val ? val.value : null)}
+                  value={pensionaryTypeOptions.find(
+                    (c) => c.value === form_data?.pensionaryIsRetired
+                  )}
                   isClearable={true}
-                  //   isDisabled={true}
                   placeholder={
                     <div className="react-select-placeholder">
                       <span>*</span> نوع بازنشسته
@@ -133,22 +253,27 @@ function CompareSalaryReportForm() {
 
             <label
               className={
-                form_data?.issueType
+                form_data?.pensionaryIsRetired
                   ? "inputBox__form--readOnly-label"
                   : "inputBox__form--readOnly-label-hidden"
               }
             >
               <span>*</span> نوع بازنشسته
             </label>
+
+            {errors.pensionaryIsRetired && (
+              <span className="error-form"> نوع بازنشسته اجباری است</span>
+            )}
           </div>
         </div>
 
         <div style={{ marginRight: "auto" }} className="flex-row">
           <LoadingButton
             dir="ltr"
-            endIcon={<EyeIcon />}
-            //   loading={isChecking || isGettingPayList}
-            //   onClick={getPayListHandler}
+            type="submit"
+            endIcon={<SearchIcon />}
+            loading={isLoading || isFetching}
+            onClick={handleSubmit}
             variant="contained"
             color="success"
             sx={{ fontFamily: "IranYekan" }}

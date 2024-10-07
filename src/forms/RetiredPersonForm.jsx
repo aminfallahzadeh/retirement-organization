@@ -10,7 +10,7 @@ import {
 import { setPersonDeathDate } from "../slices/retiredStateSlice.js";
 import { useDispatch } from "react-redux";
 
-// hooks
+// HOOKS
 import { useFetchLookUpData } from "../hooks/useFetchLookUpData.js";
 import { useCloseCalender } from "../hooks/useCloseCalender";
 

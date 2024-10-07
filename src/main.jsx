@@ -44,6 +44,7 @@ import BaseInfoScreen2 from "./screens/BaseInfoScreen2.jsx";
 import InsertAnnounceScreen from "./screens/InsertAnnounceScreen.jsx";
 import DashboardScreen from "./screens/DashboardScreen.jsx";
 import GroupSlipsScreen from "./screens/GroupSlipsScreen.jsx";
+import SalaryScreen from "./screens/SalaryScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -144,6 +145,11 @@ const router = createBrowserRouter(
         <Route
           path="/retirement-organization/dashboard"
           element={<DashboardScreen />}
+        />
+
+        <Route
+          path="/retirement-organization/salary"
+          element={<SalaryScreen />}
         />
       </Route>
       <Route path="*" element={<Error />} />

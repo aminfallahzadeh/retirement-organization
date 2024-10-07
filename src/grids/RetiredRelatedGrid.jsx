@@ -1,16 +1,16 @@
-// react imports
+// REACT IMPORS
 import { useMemo, useState, useEffect } from "react";
 
-// rrd imports
+// RRD
 import { useLocation } from "react-router-dom";
 
-// redux imports
+// REDUX
 import {
   useGetRelatedListByParentPersonIDQuery,
   useRemoveRelatedMutation,
 } from "../slices/relatedApiSlice";
 
-// mui imports
+// MUI
 import {
   IconButton,
   Button,
@@ -38,24 +38,24 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-// components
+// COMPONENTS
 import Modal from "../components/Modal";
 import CreateRelatedForm from "../forms/CreateRelatedForm";
 import UpdateRelatedForm from "../forms/UpdateRelatedForm";
 
-// library imports
+// LIBRARIES
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "react-toastify";
 
-// helper imports
+// HELPERS
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
   findById,
 } from "../helper.js";
 
-// utils imports
+// UTILS
 import { defaultTableOptions } from "../utils.js";
 
 function RetiredRelatedGrid() {

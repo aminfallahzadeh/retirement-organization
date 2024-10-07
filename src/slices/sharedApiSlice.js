@@ -81,6 +81,18 @@ export const sharedApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+
+    getPayItemType: builder.query({
+      query: (payItemtypeID) => {
+        let url = `${SHARED_URL_HTTPS}/GetPayItemType`;
+        if (payItemtypeID) {
+          url += `?payItemtypeID=${payItemtypeID}`;
+        }
+        return {
+          url,
+        };
+      },
+    }),
   }),
 });
 
@@ -92,4 +104,5 @@ export const {
   useGetRetirementStatementTypeQuery,
   useLazyGetRetirementStatementTypeQuery,
   useGetRetiredOrganizationQuery,
+  useGetPayItemTypeQuery,
 } = sharedApiSlice;

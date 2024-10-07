@@ -4,13 +4,14 @@ import { useMemo, useState } from "react";
 // RRD
 import { Link } from "react-router-dom";
 
-//REDUX
+// REDUX
 import { useSelector } from "react-redux";
 
 // MUI
-import { IconButton, PaginationItem, Tooltip } from "@mui/material";
+import { IconButton, Tooltip, PaginationItem } from "@mui/material";
 import {
-  VisibilityOutlined as EyeIcon,
+  EditOutlined as EditIcon,
+  DeleteOutline as DeleteIcon,
   ChevronLeft,
   ChevronRight,
   FirstPage,
@@ -21,20 +22,19 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-// HELPERS
+// HELPS
 import { convertToPersianNumber } from "../helper.js";
 
 // UTILS
 import { defaultTableOptions } from "../utils.js";
 
-function PersonnelGrid() {
+function PayItemSearchGrid() {
   const [rowSelection, setRowSelection] = useState({});
-  const { personTableData } = useSelector((state) => state.personData);
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "personRowNum",
+        accessorKey: "payItemRowNum",
         header: "ردیف",
         size: 20,
         enableSorting: false,
@@ -44,50 +44,43 @@ function PersonnelGrid() {
         ),
       },
       {
-        accessorKey: "personFirstName",
-        header: "نام",
+        accessorKey: "payItemKey",
+        header: "شناسه آیتم",
         size: 20,
-      },
-      {
-        accessorKey: "personLastName",
-        header: "نام خانوادگی",
-        size: 20,
-      },
-      {
-        accessorKey: "personNationalCode",
-        header: "کد ملی",
-        size: 20,
-
         Cell: ({ renderedCellValue }) => (
           <span>{convertToPersianNumber(renderedCellValue)}</span>
         ),
       },
       {
-        accessorKey: "personnelID",
-        header: "شماره کارمندی",
+        accessorKey: "payItemName",
+        header: "نام آیتم",
         size: 20,
-
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
       },
       {
-        accessorKey: "observeStaff",
-        header: "مشاهده",
+        accessorKey: "editPayItem",
+        header: "ویرایش",
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: ({ row }) => (
-          <Tooltip
-            title={`${row.original.personFirstName} ${row.original.personLastName}`}
-          >
-            <Link
-              to={`/retirement-organization/personnel-statements/info?personID=${row.id}&personDeathDate=${row.original.personDeathDate}`}
-            >
-              <IconButton color="primary" sx={{ padding: "0" }}>
-                <EyeIcon />
-              </IconButton>
-            </Link>
+        Cell: () => (
+          <Tooltip>
+            <IconButton color="primary" sx={{ padding: "0" }}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+        ),
+      },
+      {
+        accessorKey: "removePayItem",
+        header: "حذف",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        Cell: () => (
+          <Tooltip>
+            <IconButton color="primary" sx={{ padding: "0" }}>
+              <DeleteIcon />
+            </IconButton>
           </Tooltip>
         ),
       },
@@ -98,7 +91,7 @@ function PersonnelGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: personTableData,
+    data: [],
     muiPaginationProps: {
       size: "small",
       shape: "rounded",
@@ -136,4 +129,4 @@ function PersonnelGrid() {
   return content;
 }
 
-export default PersonnelGrid;
+export default PayItemSearchGrid;

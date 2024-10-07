@@ -1,19 +1,19 @@
-// react imports
+// REACT IMPORTS
 import { useState } from "react";
 
-// redux imports
+// REDUX
 import { useDispatch } from "react-redux";
 import { useLazyGetPersonsQuery } from "../slices/personApiSlice";
 import { setPersonTableData } from "../slices/personDataSlice";
 
-// mui imports
+// MUI
 import { LoadingButton } from "@mui/lab";
 import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 
-// library imports
+// LIBRARIES
 import { toast } from "react-toastify";
 
-// helpers
+// HELPER
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
 function PersonnelStatementForm() {
@@ -74,86 +74,79 @@ function PersonnelStatementForm() {
   };
 
   const content = (
-    <>
-      <section className="formContainer flex-col">
-        <form method="POST" className="grid grid--col-4">
-          <div className="inputBox__form">
-            <input
-              type="text"
-              id="personNationalCode"
-              className="inputBox__form--input"
-              value={convertToPersianNumber(
-                personnelObject?.personNationalCode
-              )}
-              name="personNationalCode"
-              onChange={hadnlePersonnelObjectChange}
-              required
-            />
-            <label
-              htmlFor="personNationalCode"
-              className="inputBox__form--label"
-            >
-              کد ملی
-            </label>
-          </div>
-          <div className="inputBox__form">
-            <input
-              type="text"
-              id="personID"
-              className="inputBox__form--input"
-              value={convertToPersianNumber(personnelObject?.personID)}
-              name="personID"
-              onChange={hadnlePersonnelObjectChange}
-              required
-            />
-            <label htmlFor="personID" className="inputBox__form--label">
-              شماره کارمندی
-            </label>
-          </div>
-          <div className="inputBox__form">
-            <input
-              type="text"
-              id="personFirstName"
-              className="inputBox__form--input"
-              name="personFirstName"
-              onChange={hadnlePersonnelObjectChange}
-              required
-            />
-            <label htmlFor="personFirstName" className="inputBox__form--label">
-              نام
-            </label>
-          </div>
-          <div className="inputBox__form">
-            <input
-              type="text"
-              id="personLastName"
-              className="inputBox__form--input"
-              name="personLastName"
-              onChange={hadnlePersonnelObjectChange}
-              required
-            />
-            <label htmlFor="personLastName" className="inputBox__form--label">
-              نام خانوادگی
-            </label>
-          </div>
-        </form>
-
-        <div style={{ marginRight: "auto" }} className="flex-row">
-          <LoadingButton
-            dir="ltr"
-            endIcon={<SearchIcon />}
-            disabled={disableButton}
-            variant="contained"
-            color="primary"
-            loading={isLoading || isFetching}
-            onClick={handleSearchPersonnels}
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>جست و جو</span>
-          </LoadingButton>
+    <section className="formContainer flex-col">
+      <form method="POST" className="grid grid--col-4" noValidate>
+        <div className="inputBox__form">
+          <input
+            type="text"
+            id="personNationalCode"
+            className="inputBox__form--input"
+            value={convertToPersianNumber(personnelObject?.personNationalCode)}
+            name="personNationalCode"
+            onChange={hadnlePersonnelObjectChange}
+            required
+          />
+          <label htmlFor="personNationalCode" className="inputBox__form--label">
+            کد ملی
+          </label>
         </div>
-      </section>
-    </>
+        <div className="inputBox__form">
+          <input
+            type="text"
+            id="personID"
+            className="inputBox__form--input"
+            value={convertToPersianNumber(personnelObject?.personID)}
+            name="personID"
+            onChange={hadnlePersonnelObjectChange}
+            required
+          />
+          <label htmlFor="personID" className="inputBox__form--label">
+            شماره کارمندی
+          </label>
+        </div>
+        <div className="inputBox__form">
+          <input
+            type="text"
+            id="personFirstName"
+            className="inputBox__form--input"
+            name="personFirstName"
+            onChange={hadnlePersonnelObjectChange}
+            required
+          />
+          <label htmlFor="personFirstName" className="inputBox__form--label">
+            نام
+          </label>
+        </div>
+        <div className="inputBox__form">
+          <input
+            type="text"
+            id="personLastName"
+            className="inputBox__form--input"
+            name="personLastName"
+            onChange={hadnlePersonnelObjectChange}
+            required
+          />
+          <label htmlFor="personLastName" className="inputBox__form--label">
+            نام خانوادگی
+          </label>
+        </div>
+      </form>
+
+      <div style={{ marginRight: "auto" }} className="flex-row">
+        <LoadingButton
+          dir="ltr"
+          endIcon={<SearchIcon />}
+          disabled={disableButton}
+          variant="contained"
+          color="primary"
+          loading={isLoading || isFetching}
+          onClick={handleSearchPersonnels}
+          sx={{ fontFamily: "sahel" }}
+        >
+          <span>جست و جو</span>
+        </LoadingButton>
+      </div>
+    </section>
   );
 
   return content;

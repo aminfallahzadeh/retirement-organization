@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 // RRD
 import { Link } from "react-router-dom";
 
-//REDUX
+// REDUX
 import { useSelector } from "react-redux";
 
 // MUI
@@ -21,13 +21,13 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-// HELPERS
+// HELPS
 import { convertToPersianNumber } from "../helper.js";
 
 // UTILS
 import { defaultTableOptions } from "../utils.js";
 
-function PersonnelGrid() {
+function PersonnelPayGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const { personTableData } = useSelector((state) => state.personData);
 
@@ -136,4 +136,4 @@ function PersonnelGrid() {
   return content;
 }
 
-export default PersonnelGrid;
+export default PersonnelPayGrid;
