@@ -19,7 +19,7 @@ import {
 } from "material-react-table";
 
 // HELPERS
-import { convertToPersianNumber, separateByThousands } from "../helper.js";
+import { convertToPersianNumber } from "../helper.js";
 
 // UTILS
 import { defaultTableOptions } from "../utils.js";
@@ -38,33 +38,21 @@ function CompareSalaryReportGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianNumber(renderedCellValue)}</div>
-        ),
       },
       {
         accessorKey: "payNationalCode",
         header: "شماره ملی",
         size: 20,
-        Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianNumber(renderedCellValue)}</div>
-        ),
       },
       {
         accessorKey: "payPersonID",
         header: "شماره کارمندی",
         size: 20,
-        Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianNumber(renderedCellValue)}</div>
-        ),
       },
       {
         accessorKey: "payFirstName",
         header: "نام",
         size: 20,
-        Cell: ({ renderedCellValue }) => (
-          <div>{convertToPersianNumber(renderedCellValue)}</div>
-        ),
       },
       {
         accessorKey: "payLastName",
@@ -75,31 +63,16 @@ function CompareSalaryReportGrid() {
         accessorKey: "payCurrentMonth",
         header: "ماه جاری",
         size: 20,
-        Cell: ({ renderedCellValue }) => (
-          <div>
-            {separateByThousands(convertToPersianNumber(renderedCellValue))}
-          </div>
-        ),
       },
       {
         accessorKey: "payLastMonth",
         header: "ماه قیل",
         size: 20,
-        Cell: ({ renderedCellValue }) => (
-          <div>
-            {separateByThousands(convertToPersianNumber(renderedCellValue))}
-          </div>
-        ),
       },
       {
         accessorKey: "payDiff",
         header: "تفاوت",
         size: 20,
-        Cell: ({ renderedCellValue }) => (
-          <div>
-            {separateByThousands(convertToPersianNumber(renderedCellValue))}
-          </div>
-        ),
       },
       {
         accessorKey: "payStatus",

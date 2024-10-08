@@ -20,6 +20,7 @@ import { useFetchPayItemType } from "../hooks/useFetchLookUpData";
 
 // DATA
 import { pensionaryTypeOptions } from "../data/retiredData";
+import { currentMonthOptions } from "../data/groupSlipsData";
 
 // UTILS
 import {
@@ -29,7 +30,11 @@ import {
 } from "../utils/reactSelect";
 
 // HELPERS
-import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
+import {
+  convertToPersianNumber,
+  convertToEnglishNumber,
+  separateByThousands,
+} from "../helper";
 import { useEffect } from "react";
 
 function CompareSalaryReportForm() {
@@ -71,14 +76,20 @@ function CompareSalaryReportForm() {
 
       const mappedData = res.itemList.map((item, index) => ({
         id: item.personnelID,
-        compareRowNum: index + 1,
-        payNationalCode: item.personNationalCode || "-",
-        payPersonID: item.personnelID || "-",
+        compareRowNum: convertToPersianNumber(index + 1),
+        payNationalCode: convertToPersianNumber(item.personNationalCode) || "-",
+        payPersonID: convertToPersianNumber(item.personnelID) || "-",
         payFirstName: item.personFirstName || "-",
         payLastName: item.personLastName || "-",
-        payCurrentMonth: item.currentpayItemAmount || "-",
-        payLastMonth: item.prepayItemAmount || "-",
-        payDiff: item.diffpay || "-",
+        payCurrentMonth:
+          separateByThousands(
+            convertToPersianNumber(item.currentpayItemAmount)
+          ) || "-",
+        payLastMonth:
+          separateByThousands(convertToPersianNumber(item.prepayItemAmount)) ||
+          "-",
+        payDiff:
+          separateByThousands(convertToPersianNumber(item.diffpay)) || "-",
         payStatus: item.pensionaryStatusName || "-",
       }));
 
@@ -149,7 +160,7 @@ function CompareSalaryReportForm() {
             </label>
           </div>
 
-          <div className="inputBox__form">
+          {/* <div className="inputBox__form">
             {errors.currentMonth && (
               <span className="error-form">{errors.currentMonth.message}</span>
             )}
@@ -179,6 +190,48 @@ function CompareSalaryReportForm() {
             <label className="inputBox__form--label" htmlFor="currentMonth">
               <span>*</span> ماه جاری
             </label>
+          </div> */}
+
+          <div className="inputBox__form">
+            <Controller
+              name="currentMonth"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange } }) => (
+                <Select
+                  closeMenuOnSelect={true}
+                  components={animatedComponents}
+                  options={currentMonthOptions}
+                  onChange={(val) => onChange(val ? val.value : null)}
+                  value={currentMonthOptions.find(
+                    (c) => c.value === form_data?.currentMonth
+                  )}
+                  isClearable={true}
+                  placeholder={
+                    <div className="react-select-placeholder">
+                      <span>*</span> ماه جاری
+                    </div>
+                  }
+                  noOptionsMessage={selectSettings.noOptionsMessage}
+                  loadingMessage={selectSettings.loadingMessage}
+                  styles={selectStyles}
+                />
+              )}
+            />
+
+            <label
+              className={
+                form_data?.currentMonth
+                  ? "inputBox__form--readOnly-label"
+                  : "inputBox__form--readOnly-label-hidden"
+              }
+            >
+              <span>*</span> ماه جاری
+            </label>
+
+            {errors.currentMonth && (
+              <span className="error-form">ماه اجباری است</span>
+            )}
           </div>
 
           <div className="inputBox__form">
