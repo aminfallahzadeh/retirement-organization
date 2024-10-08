@@ -1,25 +1,25 @@
-// react imports
+// REACT IMPORTS
 import { useState, useEffect } from "react";
 import useLogout from "./hooks/useLogout";
 
-// rrd imports
+// RRD
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
-// redux imports
+// REDUX
 import { useSelector, useDispatch } from "react-redux";
 import { setPersonTableData } from "./slices/personDataSlice";
 import { setUserID } from "./slices/authSlice";
 
-// mui imports
+// MUI
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-// library imports
+// LIBRARIES
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useIdleTimer } from "react-idle-timer";
 import { jwtDecode } from "jwt-decode";
 
-// components
+// COMPONENTS
 import Header from "./components/Header";
 
 function App() {
@@ -32,7 +32,7 @@ function App() {
   });
 
   // LOGOUT USER AFTER 30mins OF INACTIVITY
-  // states for user activity
+  // USER ACTIVITY STATES
   const [isActive, setIsActive] = useState(true);
   const [remaining, setRemaining] = useState(0);
   const [firstName, setFirstName] = useState("");

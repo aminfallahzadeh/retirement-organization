@@ -31,10 +31,9 @@ export const reportApiSlice = apiSlice.injectEndpoints({
         CurrentYear,
         CurrentMonth,
         PayItemTypeID,
-        PreviousMonth,
         pensionaryIsRetired,
       }) => ({
-        url: `${REPORT_HTTPS}/GetPayCompareReport?CurrentYear=${CurrentYear}&CurrentMonth=${CurrentMonth}&PayItemTypeID=${PayItemTypeID}&PreviousMonth=${PreviousMonth}&pensionaryIsRetired=${pensionaryIsRetired}`,
+        url: `${REPORT_HTTPS}/GetPayCompareReport?CurrentYear=${CurrentYear}&CurrentMonth=${CurrentMonth}&PayItemTypeID=${PayItemTypeID}&pensionaryIsRetired=${pensionaryIsRetired}`,
       }),
     }),
   }),

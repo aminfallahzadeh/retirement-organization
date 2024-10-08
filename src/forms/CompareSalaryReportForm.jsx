@@ -58,7 +58,7 @@ function CompareSalaryReportForm() {
       const res = await getReport({
         CurrentYear: convertToEnglishNumber(form_data.currentYear),
         CurrentMonth: convertToEnglishNumber(form_data.currentMonth),
-        PayItemTypeID: form_data.payItemTypeID,
+        PayItemTypeID: form_data.payItemID,
         pensionaryIsRetired: form_data.pensionaryIsRetired,
       }).unwrap();
 
