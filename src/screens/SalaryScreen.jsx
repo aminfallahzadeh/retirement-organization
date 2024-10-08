@@ -45,7 +45,7 @@ function SalaryScreen() {
             aria-controls="panel-content"
             expandIcon={<ArrowDropDownIcon />}
           >
-            جست و جو
+            کسر و پرداخت
           </AccordionSummary>
           <AccordionDetails>
             <PersonnelStatementForm />

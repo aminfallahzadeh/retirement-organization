@@ -1,9 +1,6 @@
 // REACT IMPORTS
 import { useMemo, useState } from "react";
 
-// RRD
-import { Link } from "react-router-dom";
-
 // REDUX
 import { useSelector } from "react-redux";
 
@@ -31,10 +28,13 @@ import { defaultTableOptions } from "../utils.js";
 function PayItemSearchGrid() {
   const [rowSelection, setRowSelection] = useState({});
 
+  // TABLE DATA
+  const { financialTableData } = useSelector((state) => state.financialData);
+
   const columns = useMemo(
     () => [
       {
-        accessorKey: "payItemRowNum",
+        accessorKey: "financialItemRowNum",
         header: "ردیف",
         size: 20,
         enableSorting: false,
@@ -44,7 +44,7 @@ function PayItemSearchGrid() {
         ),
       },
       {
-        accessorKey: "payItemKey",
+        accessorKey: "payItemTypeID",
         header: "شناسه آیتم",
         size: 20,
         Cell: ({ renderedCellValue }) => (
@@ -52,7 +52,7 @@ function PayItemSearchGrid() {
         ),
       },
       {
-        accessorKey: "payItemName",
+        accessorKey: "payItemTypeName",
         header: "نام آیتم",
         size: 20,
       },
@@ -78,7 +78,7 @@ function PayItemSearchGrid() {
         size: 20,
         Cell: () => (
           <Tooltip>
-            <IconButton color="primary" sx={{ padding: "0" }}>
+            <IconButton color="error" sx={{ padding: "0" }}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -91,7 +91,7 @@ function PayItemSearchGrid() {
   const table = useMaterialReactTable({
     ...defaultTableOptions,
     columns,
-    data: [],
+    data: financialTableData,
     muiPaginationProps: {
       size: "small",
       shape: "rounded",

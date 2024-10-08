@@ -1,7 +1,7 @@
-// constant imports
+// CONSTANT
 import { FRACTION_URL_HTTPS } from "../constants";
 
-// slice imports
+// SLICES
 import { apiSlice } from "./apiSlice";
 
 export const fractionApiSlice = apiSlice.injectEndpoints({

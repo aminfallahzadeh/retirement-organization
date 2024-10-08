@@ -1,14 +1,22 @@
 // REACT IMPORTS
-import { useMemo, useState } from "react";
-
-// RRD
-import { Link } from "react-router-dom";
+import { useMemo, useState, useCallback } from "react";
 
 // REDUX
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useLazyGetFinancialItemsQuery } from "../slices/financialItemApiSlice.js";
+import { setFinancialTableData } from "../slices/financialDataSlice.js";
+
+// COMPONENTS
+import Modal from "../components/Modal";
 
 // MUI
-import { IconButton, PaginationItem, Tooltip } from "@mui/material";
+import {
+  IconButton,
+  PaginationItem,
+  Tooltip,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import {
   VisibilityOutlined as EyeIcon,
   ChevronLeft,
@@ -30,6 +38,32 @@ import { defaultTableOptions } from "../utils.js";
 function PersonnelPayGrid() {
   const [rowSelection, setRowSelection] = useState({});
   const { personTableData } = useSelector((state) => state.personData);
+
+  const dispatch = useDispatch();
+
+  // ACCESS QUERIES
+  const [getFinancialItems, { isLoading, isFetching }] =
+    useLazyGetFinancialItemsQuery();
+
+  // HANDLERS
+  const handleGetFinancialItems = useCallback(
+    async (personID) => {
+      try {
+        const res = await getFinancialItems(personID).unwrap();
+        console.log(res);
+        const mappedData = res.itemList.map((item, index) => ({
+          id: item.financialItemID,
+          financialItemRowNum: index + 1,
+          payItemTypeID: item.payItemTypeID || "-",
+          payItemTypeName: item.payItemTypeName || "-",
+        }));
+        dispatch(setFinancialTableData(mappedData));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [getFinancialItems, dispatch]
+  );
 
   const columns = useMemo(
     () => [
@@ -78,21 +112,19 @@ function PersonnelPayGrid() {
         enableColumnActions: false,
         size: 20,
         Cell: ({ row }) => (
-          <Tooltip
-            title={`${row.original.personFirstName} ${row.original.personLastName}`}
-          >
-            <Link
-              to={`/retirement-organization/personnel-statements/info?personID=${row.id}&personDeathDate=${row.original.personDeathDate}`}
+          <Tooltip title="مشاهده آیتمها">
+            <IconButton
+              color="primary"
+              sx={{ padding: "0" }}
+              onClick={() => handleGetFinancialItems(row.original.id)}
             >
-              <IconButton color="primary" sx={{ padding: "0" }}>
-                <EyeIcon />
-              </IconButton>
-            </Link>
+              <EyeIcon />
+            </IconButton>
           </Tooltip>
         ),
       },
     ],
-    []
+    [handleGetFinancialItems]
   );
 
   const table = useMaterialReactTable({
@@ -132,7 +164,28 @@ function PersonnelPayGrid() {
     state: { rowSelection },
   });
 
-  const content = <MaterialReactTable table={table} />;
+  const content = (
+    <>
+      {isLoading || isFetching ? (
+        <Modal title={"در حال ایجاد گزارش"}>
+          <p className="paragraph-primary" style={{ textAlign: "center" }}>
+            لطفا منتظر بمانید...
+          </p>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "2rem 10rem",
+            }}
+          >
+            <CircularProgress color="primary" />
+          </Box>
+        </Modal>
+      ) : null}
+
+      <MaterialReactTable table={table} />
+    </>
+  );
   return content;
 }
 
