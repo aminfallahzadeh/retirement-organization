@@ -1,5 +1,5 @@
 // REACT IMPORTS
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 
 // REDUX
 import { useSelector, useDispatch } from "react-redux";
@@ -53,8 +53,8 @@ function PersonnelPayGrid() {
         console.log(res);
         const mappedData = res.itemList.map((item, index) => ({
           id: item.financialItemID,
-          financialItemRowNum: index + 1,
-          payItemTypeID: item.payItemTypeID || "-",
+          financialItemRowNum: convertToPersianNumber(index + 1),
+          payItemTypeID: convertToPersianNumber(item.payItemTypeID) || "-",
           payItemTypeName: item.payItemTypeName || "-",
         }));
         dispatch(setFinancialTableData(mappedData));
@@ -64,6 +64,13 @@ function PersonnelPayGrid() {
     },
     [getFinancialItems, dispatch]
   );
+
+  // CLEARE CACHE
+  useEffect(() => {
+    return () => {
+      dispatch(setFinancialTableData([]));
+    };
+  }, [dispatch]);
 
   const columns = useMemo(
     () => [
@@ -167,7 +174,7 @@ function PersonnelPayGrid() {
   const content = (
     <>
       {isLoading || isFetching ? (
-        <Modal title={"در حال ایجاد گزارش"}>
+        <Modal title={"در حال بارگیری"}>
           <p className="paragraph-primary" style={{ textAlign: "center" }}>
             لطفا منتظر بمانید...
           </p>

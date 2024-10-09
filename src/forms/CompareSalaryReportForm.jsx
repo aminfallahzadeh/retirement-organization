@@ -113,6 +113,7 @@ function CompareSalaryReportForm() {
     "payItemTypeName"
   );
 
+  // CLEAR CACHE
   useEffect(() => {
     return () => {
       dispatch(setPayCompareTableData([]));
@@ -159,38 +160,6 @@ function CompareSalaryReportForm() {
               <span>*</span> سال جاری
             </label>
           </div>
-
-          {/* <div className="inputBox__form">
-            {errors.currentMonth && (
-              <span className="error-form">{errors.currentMonth.message}</span>
-            )}
-            <input
-              type="text"
-              className="inputBox__form--input"
-              name="currentMonth"
-              value={convertToPersianNumber(form_data?.currentMonth) || ""}
-              id="currentMonth"
-              required
-              {...register("currentMonth", {
-                required: "ماه جاری اجباری است",
-                minLength: {
-                  value: 2,
-                  message: "ماه باید دو رقمی باشد",
-                },
-                maxLength: {
-                  value: 2,
-                  message: "ماه باید دو رقمی باشد",
-                },
-                pattern: {
-                  value: /^[۰-۹0-9]+$/,
-                  message: "از اعداد استفاده کنید",
-                },
-              })}
-            />
-            <label className="inputBox__form--label" htmlFor="currentMonth">
-              <span>*</span> ماه جاری
-            </label>
-          </div> */}
 
           <div className="inputBox__form">
             <Controller

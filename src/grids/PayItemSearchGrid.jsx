@@ -5,7 +5,12 @@ import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 // MUI
-import { IconButton, Tooltip, PaginationItem } from "@mui/material";
+import {
+  IconButton,
+  Tooltip,
+  PaginationItem,
+  CircularProgress,
+} from "@mui/material";
 import {
   EditOutlined as EditIcon,
   DeleteOutline as DeleteIcon,
@@ -13,11 +18,16 @@ import {
   ChevronRight,
   FirstPage,
   LastPage,
+  Add as AddIcon,
 } from "@mui/icons-material";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
+
+// COMPONENTS
+import Modal from "../components/Modal.jsx";
+import PayItemForm from "../forms/PayItemForm.jsx";
 
 // HELPS
 import { convertToPersianNumber } from "../helper.js";
@@ -25,11 +35,21 @@ import { convertToPersianNumber } from "../helper.js";
 // UTILS
 import { defaultTableOptions } from "../utils.js";
 
-function PayItemSearchGrid() {
+function PayItemSearchGrid({ isFetching }) {
   const [rowSelection, setRowSelection] = useState({});
+
+  // MODAL STATES
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+  const [itemModalType, setItemModalType] = useState(null);
 
   // TABLE DATA
   const { financialTableData } = useSelector((state) => state.financialData);
+
+  // HANDLERS
+  const handleItemModalOpenChange = (type) => {
+    setItemModalType(type);
+    setIsItemModalOpen(true);
+  };
 
   const columns = useMemo(
     () => [
@@ -39,17 +59,11 @@ function PayItemSearchGrid() {
         size: 20,
         enableSorting: false,
         enableColumnActions: false,
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
       },
       {
         accessorKey: "payItemTypeID",
         header: "شناسه آیتم",
         size: 20,
-        Cell: ({ renderedCellValue }) => (
-          <span>{convertToPersianNumber(renderedCellValue)}</span>
-        ),
       },
       {
         accessorKey: "payItemTypeName",
@@ -62,9 +76,13 @@ function PayItemSearchGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <Tooltip>
-            <IconButton color="primary" sx={{ padding: "0" }}>
+        Cell: ({ row }) => (
+          <Tooltip title={`ویرایش "${row.original.payItemTypeName}"`}>
+            <IconButton
+              color="primary"
+              sx={{ padding: "0" }}
+              onClick={() => handleItemModalOpenChange("edit")}
+            >
               <EditIcon />
             </IconButton>
           </Tooltip>
@@ -76,8 +94,8 @@ function PayItemSearchGrid() {
         enableSorting: false,
         enableColumnActions: false,
         size: 20,
-        Cell: () => (
-          <Tooltip>
+        Cell: ({ row }) => (
+          <Tooltip title={`حذف "${row.original.payItemTypeName}"`}>
             <IconButton color="error" sx={{ padding: "0" }}>
               <DeleteIcon />
             </IconButton>
@@ -109,6 +127,20 @@ function PayItemSearchGrid() {
         />
       ),
     },
+    renderTopToolbarCustomActions: () => (
+      <Tooltip title="افزودن آیتم">
+        <span>
+          <IconButton
+            aria-label="refresh"
+            color="success"
+            onClick={() => handleItemModalOpenChange("add")}
+            disabled={financialTableData.length > 0 ? false : true}
+          >
+            <AddIcon fontSize="small" />
+          </IconButton>
+        </span>
+      </Tooltip>
+    ),
     muiTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
@@ -125,7 +157,17 @@ function PayItemSearchGrid() {
     state: { rowSelection },
   });
 
-  const content = <MaterialReactTable table={table} />;
+  const content = (
+    <>
+      {isItemModalOpen && (
+        <Modal closeModal={() => setIsItemModalOpen(false)}>
+          <PayItemForm type={itemModalType} />
+        </Modal>
+      )}
+      <MaterialReactTable table={table} />
+    </>
+  );
+
   return content;
 }
 

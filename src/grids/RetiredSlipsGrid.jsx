@@ -75,7 +75,7 @@ function RetiredSlipsGrid() {
   };
 
   useEffect(() => {
-    refetch();
+    // refetch();
     if (isSuccess) {
       const data = slips.itemList.map((item, index) => ({
         id: item.payID,

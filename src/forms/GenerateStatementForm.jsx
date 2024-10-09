@@ -271,7 +271,7 @@ function GenerateStatementForm({
                 })}
               />
               <label className="inputBox__form--label" htmlFor="newAmount">
-                <span>*</span> حقوق مبنا
+                <span>*</span> میزان افزایش حقوق مبنا
               </label>
             </div>
           )}
