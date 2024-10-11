@@ -161,13 +161,19 @@ select {
 }
 
 .title-tertiary {
-    font-size: 1.2rem;
+    font-size: 18px;
     position: relative;
     text-align: center;
     width: max-content;
     color: var(--color-accent-primary);
     cursor: default;
-    padding-bottom: 0.2rem;
+}
+
+.title-quaternary {
+    font-size: 15px;
+    text-align: center;
+    color: var(--color-black);
+    cursor: default;
 }
 
 .paragraph-primary {

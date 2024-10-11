@@ -4,21 +4,29 @@ import { useForm } from "react-hook-form";
 
 // MUI
 import { Box, CircularProgress, Checkbox } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { Save as SaveIcon } from "@mui/icons-material";
 
 // REDUX
+import { useGetFinancialItemQuery } from "../slices/financialItemApiSlice";
 
 // HELPERS
-import { convertToPersianNumber, separateByThousands } from "../helper";
+import {
+  convertToPersianNumber,
+  separateByThousands,
+  removeSeparators,
+  convertToEnglishNumber,
+} from "../helper";
 
-function PayItemForm({ isLoading }) {
+// LIBRARIES
+import { toast } from "react-toastify";
+
+function ViewPayItemForm({ id }) {
   // ACCESS REACT HOOK FORM CONTROL
   const {
     handleSubmit,
     formState: { errors },
     register,
     watch,
+    setValue,
   } = useForm();
 
   // DEBUGGING
@@ -29,15 +37,46 @@ function PayItemForm({ isLoading }) {
   // ACCESS FORM DATA
   const form_data = watch();
 
-  // FETCH DATA FUNCTION
+  const {
+    data,
+    isLoading: isgetItemLoading,
+    isFetching: isGetItemFetching,
+    isSuccess,
+    error,
+  } = useGetFinancialItemQuery(id);
 
+  // FETCH MAIN DATA
   useEffect(() => {
-    console.log(form_data);
-  }, [form_data]);
+    if (isSuccess) {
+      const item = data?.itemList[0];
+      Object.keys(item).forEach((key) => {
+        setValue(key, item[key]);
+
+        if (item.instalementAmount || item.instalementAmount) {
+          setValue("isInstallment", true);
+        }
+      });
+    }
+  }, [isSuccess, data?.itemList, setValue]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (error && error.status !== "FETCH_ERROR") {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
+
+  // CUSTOM ONCHANGE HANDLER
+  const customOnChange = (e) => {
+    let value = convertToEnglishNumber(removeSeparators(e.target.value));
+    setValue(e.target.name, value);
+  };
 
   const content = (
     <>
-      {isLoading ? (
+      {isgetItemLoading || isGetItemFetching ? (
         <Box
           sx={{
             display: "flex",
@@ -69,6 +108,7 @@ function PayItemForm({ isLoading }) {
                   name="payItemTypeID"
                   id="payItemTypeID"
                   required
+                  disabled
                   {...register("payItemTypeID", {
                     required: "شناسه آیتم اجباری است",
                     pattern: {
@@ -81,7 +121,7 @@ function PayItemForm({ isLoading }) {
                   className="inputBox__form--label"
                   htmlFor="payItemTypeID"
                 >
-                  <span>*</span> شناسه آیتم
+                  شناسه آیتم
                 </label>
               </div>
 
@@ -98,6 +138,7 @@ function PayItemForm({ isLoading }) {
                   name="payItemTypeName"
                   id="payItemTypeName"
                   required
+                  disabled
                   {...register("payItemTypeName", {
                     required: "شرح آیتم اجباری است",
                     pattern: {
@@ -110,7 +151,7 @@ function PayItemForm({ isLoading }) {
                   className="inputBox__form--label"
                   htmlFor="payItemTypeName"
                 >
-                  <span>*</span> شرح آیتم
+                  شرح آیتم
                 </label>
               </div>
 
@@ -123,6 +164,7 @@ function PayItemForm({ isLoading }) {
                 <input
                   type="text"
                   className="inputBox__form--input"
+                  disabled
                   value={
                     separateByThousands(
                       convertToPersianNumber(form_data.financialItemAmount)
@@ -132,6 +174,7 @@ function PayItemForm({ isLoading }) {
                   id="financialItemAmount"
                   required
                   {...register("financialItemAmount", {
+                    onChange: customOnChange,
                     required: "مبلغ اجباری است",
                     pattern: {
                       value: /^[۰-۹0-9]+$/,
@@ -143,7 +186,7 @@ function PayItemForm({ isLoading }) {
                   className="inputBox__form--label"
                   htmlFor="financialItemAmount"
                 >
-                  <span>*</span> مبلغ کل
+                  مبلغ کل
                 </label>
               </div>
 
@@ -162,6 +205,7 @@ function PayItemForm({ isLoading }) {
                 )}
                 <input
                   type="text"
+                  disabled
                   className="inputBox__form--input"
                   value={convertToPersianNumber(form_data?.executeYear) || ""}
                   name="executeYear"
@@ -184,7 +228,7 @@ function PayItemForm({ isLoading }) {
                   })}
                 />
                 <label className="inputBox__form--label" htmlFor="executeYear">
-                  <span>*</span> سال
+                  سال
                 </label>
               </div>
 
@@ -201,6 +245,7 @@ function PayItemForm({ isLoading }) {
                   name="executeMonth"
                   id="executeMonth"
                   required
+                  disabled
                   {...register("executeMonth", {
                     required: "ماه اجباری است",
                     minLength: {
@@ -218,7 +263,7 @@ function PayItemForm({ isLoading }) {
                   })}
                 />
                 <label className="inputBox__form--label" htmlFor="executeYear">
-                  <span>*</span> ماه
+                  ماه
                 </label>
               </div>
 
@@ -232,6 +277,7 @@ function PayItemForm({ isLoading }) {
                   checked={!!form_data?.isInstallment}
                   name="isInstallment"
                   id="isInstallment"
+                  disabled
                   sx={{
                     padding: 0.5,
                   }}
@@ -255,6 +301,7 @@ function PayItemForm({ isLoading }) {
                     )}
                     <input
                       type="text"
+                      disabled
                       className="inputBox__form--input"
                       value={
                         convertToPersianNumber(form_data?.instalementCount) ||
@@ -275,7 +322,7 @@ function PayItemForm({ isLoading }) {
                       className="inputBox__form--label"
                       htmlFor="instalementCount"
                     >
-                      <span>*</span> تعداد قسط
+                      تعداد قسط
                     </label>
                   </div>
 
@@ -295,6 +342,7 @@ function PayItemForm({ isLoading }) {
                       name="instalementAmount"
                       id="instalementAmount"
                       required
+                      disabled
                       {...register("instalementAmount", {
                         required: "مبلغ قسط اجباری است",
                         pattern: {
@@ -307,14 +355,14 @@ function PayItemForm({ isLoading }) {
                       className="inputBox__form--label"
                       htmlFor="instalementAmount"
                     >
-                      <span>*</span> مبلغ قسط
+                      مبلغ قسط
                     </label>
                   </div>
                 </>
               )}
             </div>
 
-            <div style={{ marginRight: "auto" }}>
+            {/* <div style={{ marginRight: "auto" }}>
               <LoadingButton
                 dir="ltr"
                 endIcon={<SaveIcon />}
@@ -327,7 +375,7 @@ function PayItemForm({ isLoading }) {
               >
                 <span>ذخیره</span>
               </LoadingButton>
-            </div>
+            </div> */}
           </form>
         </section>
       )}
@@ -335,4 +383,4 @@ function PayItemForm({ isLoading }) {
   );
   return content;
 }
-export default PayItemForm;
+export default ViewPayItemForm;

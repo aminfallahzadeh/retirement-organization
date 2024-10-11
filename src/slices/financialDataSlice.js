@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   financialTableData: [],
+  payPersonID: null,
 };
 
 const financialDataSlice = createSlice({
@@ -11,9 +12,14 @@ const financialDataSlice = createSlice({
     setFinancialTableData: (state, action) => {
       state.financialTableData = action.payload;
     },
+
+    setPayPersonID: (state, action) => {
+      state.payPersonID = action.payload;
+    },
   },
 });
 
-export const { setFinancialTableData } = financialDataSlice.actions;
+export const { setFinancialTableData, setPayPersonID } =
+  financialDataSlice.actions;
 
 export default financialDataSlice.reducer;

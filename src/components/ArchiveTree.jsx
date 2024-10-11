@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 // rrd imports
 import { useLocation } from "react-router-dom";
 
-// redux imports
+// REDUX
 import { useSelector, useDispatch } from "react-redux";
 import {
   setArchiveStructureData,

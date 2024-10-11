@@ -58,6 +58,7 @@ function Nav({ firstName, lastName }) {
   const [activePanel, setActivePanel] = useState(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [theme, setTheme] = useState("default");
+  const [itemList, setItemList] = useState([]);
 
   const { logoutHandler, logoutLoading } = useLogout();
   const location = useLocation();
@@ -65,7 +66,54 @@ function Nav({ firstName, lastName }) {
   const [updateUserTheme] = useUpdateUserThemeMutation();
 
   // ACCESS PERMISSIONS FROM REDUX STORE
-  const { permissions } = useSelector((state) => state.userPermissionsData);
+  // const { permissions } = useSelector((state) => state.userPermissionsData);
+
+  // FUNCTION TO CREATE DATA TREE
+  const createTree = (items) => {
+    const itemMap = {};
+    const nestedItems = [];
+
+    // Create a mapping of items by their ID
+    items.forEach((item) => {
+      itemMap[item.itemID] = { ...item, children: [] };
+    });
+
+    // Build the nested structure
+    items.forEach((item) => {
+      const parentID = item.parentID;
+      if (parentID === "0") {
+        // This is a top-level item
+        nestedItems.push(itemMap[item.itemID]);
+      } else if (itemMap[parentID]) {
+        // If the parent exists, add the item to its parent's children
+        itemMap[parentID].children.push(itemMap[item.itemID]);
+      }
+    });
+
+    return nestedItems;
+  };
+
+  const renderChildren = (itemList, activePanel) => {
+    const activeItem = itemList.find((item) => item.itemID === activePanel);
+
+    if (activeItem && activeItem.children.length > 0) {
+      return (
+        <ul className="nav__panel--list">
+          {activeItem.children.map((child) => (
+            <li
+              key={child.itemID}
+              className={isActivePath(child.url) ? "active" : ""}
+            >
+              <Link to={`/retirement-organization/${child.url}`}>
+                {child.itemName}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+    return null;
+  };
 
   const baseURL = "/retirement-organization/";
   const isActivePath = (path) => location.pathname === baseURL + path;
@@ -84,6 +132,8 @@ function Nav({ firstName, lastName }) {
     if (isPermissionsSuccess) {
       const extractedData = permissionsList.itemList.map((item) => item.url);
       dispatch(setUserPermissionsData(extractedData));
+      const tree = createTree(permissionsList.itemList);
+      setItemList(tree);
     }
   }, [isPermissionsSuccess, permissionsList, dispatch, refetch]);
 
@@ -175,81 +225,32 @@ function Nav({ firstName, lastName }) {
               <div className="nav__links--loading">در حال بارگزاری ...</div>
             ) : (
               <ul className="nav__links--list">
-                <li
-                  className={isActivePath("cartable") ? "active" : ""}
-                  onClick={() => handlePanelToggle(null)}
-                >
-                  <Link to={"/retirement-organization/cartable"}>کارتابل</Link>
-                </li>
-                <li
-                  className={isActivePath("create-request") ? "active" : ""}
-                  onClick={() => handlePanelToggle(null)}
-                >
-                  <Link to={"/retirement-organization/create-request"}>
-                    ایجاد درخواست
-                  </Link>
-                </li>
-                {permissions && permissions.includes("Fractions") && (
-                  <li
-                    className={isActivePath("fraction") ? "active" : ""}
-                    onClick={() => handlePanelToggle(null)}
-                  >
-                    <Link to={"/retirement-organization/fraction"}>کسورات</Link>
-                  </li>
-                )}
-                <li
-                  className={isActivePath("dashboard") ? "active" : ""}
-                  onClick={() => handlePanelToggle(null)}
-                >
-                  <Link to={"/retirement-organization/dashboard"}>
-                    داشبورد مدیریتی
-                  </Link>
-                </li>
-                <li
-                  onClick={() => handlePanelToggle("reports")}
-                  className={activePanel === "reports" ? "active" : ""}
-                >
-                  <a>گزارشات</a>
-                  <ArrowIcon
-                    sx={{
-                      color: "#fff",
-                      transition: "all 0.25s ease",
-                      transform:
-                        activePanel === "reports" ? "rotate(-90deg)" : "",
-                    }}
-                  />
-                </li>
-                <li
-                  onClick={() => handlePanelToggle("systemManagement")}
-                  className={activePanel === "systemManagement" ? "active" : ""}
-                >
-                  <a>مدیریت سیستم</a>
-                  <ArrowIcon
-                    sx={{
-                      color: "#fff",
-                      transition: "all 0.25s ease",
-                      transform:
-                        activePanel === "systemManagement"
-                          ? "rotate(-90deg)"
-                          : "",
-                    }}
-                  />
-                </li>
-                {permissions && permissions.includes("BaseInfoManagement") && (
-                  <li
-                    onClick={() => handlePanelToggle("baseInfo")}
-                    className={activePanel === "baseInfo" ? "active" : ""}
-                  >
-                    <a>مدیریت اطلاعات پایه</a>
-                    <ArrowIcon
-                      sx={{
-                        color: "#fff",
-                        transition: "all 0.25s ease",
-                        transform:
-                          activePanel === "baseInfo" ? "rotate(-90deg)" : "",
-                      }}
-                    />
-                  </li>
+                {itemList.map((item) =>
+                  item.children.length === 0 ? (
+                    <li
+                      key={item.itemID}
+                      className={isActivePath(item.url) ? "active" : ""}
+                      onClick={() => handlePanelToggle(null)}
+                    >
+                      <Link to={baseURL + item.url}>{item.itemName}</Link>
+                    </li>
+                  ) : (
+                    <li
+                      key={item.itemID}
+                      className={isActivePath(item.itemID) ? "active" : ""}
+                      onClick={() => handlePanelToggle(item.itemID)}
+                    >
+                      <a>{item.itemName}</a>
+                      <ArrowIcon
+                        sx={{
+                          color: "#fff",
+                          transition: "all 0.25s ease",
+                          transform:
+                            activePanel === item.itemID ? "rotate(-90deg)" : "",
+                        }}
+                      />
+                    </li>
+                  )
                 )}
               </ul>
             )}
@@ -341,80 +342,7 @@ function Nav({ firstName, lastName }) {
       </nav>
 
       <div className={activePanel ? "nav__panel" : "nav__panel--hidden"}>
-        {activePanel === "reports" ? (
-          <ul className="nav__panel--list">
-            <li className={isActivePath("report-creator") ? "active" : ""}>
-              <Link to={"/retirement-organization/report-creator"}>
-                گزارش ساز
-              </Link>
-            </li>
-
-            <li
-              className={isActivePath("personnel-statements") ? "active" : ""}
-            >
-              <Link to={"/retirement-organization/personnel-statements"}>
-                رویت احکام و تعرفه
-              </Link>
-            </li>
-
-            <li className={isActivePath("salary") ? "active" : ""}>
-              <Link to={"/retirement-organization/salary"}>حقوق و دستمزد</Link>
-            </li>
-          </ul>
-        ) : null}
-
-        {activePanel === "baseInfo" ? (
-          <ul className="nav__panel--list">
-            <li
-              className={isActivePath("electronic-statement") ? "active" : ""}
-            >
-              <Link to="/retirement-organization/electronic-statement">
-                پرونده الکترونیک
-              </Link>
-            </li>
-            <li className={isActivePath("base-info") ? "active" : ""}>
-              <Link to="/retirement-organization/base-info">
-                اطلاعات پایه ۱
-              </Link>
-            </li>
-            <li className={isActivePath("base-info-2") ? "active" : ""}>
-              <Link to="/retirement-organization/base-info-2">
-                اطلاعات پایه ۲
-              </Link>
-            </li>
-            <li className={isActivePath("insert-announce") ? "active" : ""}>
-              <Link to="/retirement-organization/insert-announce">
-                ثبت اطلاعیه
-              </Link>
-            </li>
-          </ul>
-        ) : activePanel === "systemManagement" ? (
-          <ul className="nav__panel--list">
-            {permissions && permissions.includes("Groups") && (
-              <li
-                className={
-                  isActivePath("groups") || isActivePath("create-group")
-                    ? "active"
-                    : ""
-                }
-              >
-                <Link to="/retirement-organization/groups">گروه ها</Link>
-              </li>
-            )}
-
-            {permissions && permissions.includes("Users") && (
-              <li
-                className={
-                  isActivePath("users") || isActivePath("create-user")
-                    ? "active"
-                    : ""
-                }
-              >
-                <Link to="/retirement-organization/users">کاربران</Link>
-              </li>
-            )}
-          </ul>
-        ) : null}
+        {renderChildren(itemList, activePanel)}
       </div>
     </>
   );

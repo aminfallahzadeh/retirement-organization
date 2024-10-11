@@ -105,4 +105,5 @@ export const {
   useLazyGetRetirementStatementTypeQuery,
   useGetRetiredOrganizationQuery,
   useGetPayItemTypeQuery,
+  useLazyGetPayItemTypeQuery,
 } = sharedApiSlice;

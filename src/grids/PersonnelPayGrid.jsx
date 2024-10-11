@@ -1,13 +1,15 @@
 // REACT IMPORTS
-import { useMemo, useState, useCallback, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 // REDUX
 import { useSelector, useDispatch } from "react-redux";
-import { useLazyGetFinancialItemsQuery } from "../slices/financialItemApiSlice.js";
 import { setFinancialTableData } from "../slices/financialDataSlice.js";
 
 // COMPONENTS
 import Modal from "../components/Modal";
+
+// HOOKS
+import useGetFinancialItems from "../hooks/useGetFinancialItems";
 
 // MUI
 import {
@@ -42,28 +44,7 @@ function PersonnelPayGrid() {
   const dispatch = useDispatch();
 
   // ACCESS QUERIES
-  const [getFinancialItems, { isLoading, isFetching }] =
-    useLazyGetFinancialItemsQuery();
-
-  // HANDLERS
-  const handleGetFinancialItems = useCallback(
-    async (personID) => {
-      try {
-        const res = await getFinancialItems(personID).unwrap();
-        console.log(res);
-        const mappedData = res.itemList.map((item, index) => ({
-          id: item.financialItemID,
-          financialItemRowNum: convertToPersianNumber(index + 1),
-          payItemTypeID: convertToPersianNumber(item.payItemTypeID) || "-",
-          payItemTypeName: item.payItemTypeName || "-",
-        }));
-        dispatch(setFinancialTableData(mappedData));
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [getFinancialItems, dispatch]
-  );
+  const { getFinancialItems, isLoading, isFetching } = useGetFinancialItems();
 
   // CLEARE CACHE
   useEffect(() => {
@@ -123,7 +104,7 @@ function PersonnelPayGrid() {
             <IconButton
               color="primary"
               sx={{ padding: "0" }}
-              onClick={() => handleGetFinancialItems(row.original.id)}
+              onClick={() => getFinancialItems(row.original.id)}
             >
               <EyeIcon />
             </IconButton>
@@ -131,7 +112,7 @@ function PersonnelPayGrid() {
         ),
       },
     ],
-    [handleGetFinancialItems]
+    [getFinancialItems]
   );
 
   const table = useMaterialReactTable({

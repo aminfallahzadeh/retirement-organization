@@ -128,52 +128,6 @@ export const separateByThousands = (num) => {
     : convertToPersianNumber(result);
 };
 
-// export const separateByThousands = (num) => {
-//   if (num) {
-//     var result = "";
-//     const [integerPart, decimalPart] = num.toString().split(".");
-
-//     for (var i = 0; i < integerPart.length; i++) {
-//       var c = integerPart.substr(integerPart.length - i - 1, 1);
-//       if ((i % 3 == 0) & (i > 0)) {
-//         result = c + "," + result;
-//       } else {
-//         result = c + result;
-//       }
-//     }
-//     return decimalPart ? result + "." + decimalPart : result;
-//   }
-
-//   return;
-// };
-
-// export const separateByThousands = (num) => {
-//   // Convert input to a float
-//   num = parseFloat(num);
-
-//   // Check if the conversion resulted in NaN
-//   if (isNaN(num)) {
-//     return "";
-//   }
-
-//   let result = "";
-//   const isNegative = num < 0;
-//   const absoluteNum = Math.abs(num);
-//   const [integerPart, decimalPart] = absoluteNum.toString().split(".");
-
-//   for (let i = 0; i < integerPart.length; i++) {
-//     const c = integerPart.substr(integerPart.length - i - 1, 1);
-//     if (i % 3 === 0 && i > 0) {
-//       result = c + "," + result;
-//     } else {
-//       result = c + result;
-//     }
-//   }
-
-//   result = decimalPart ? result + "." + decimalPart : result;
-//   return isNegative ? "-" + result : result;
-// };
-
 export const removeSeparators = (str) => {
   return str.toString().replace(/,/g, "");
 };

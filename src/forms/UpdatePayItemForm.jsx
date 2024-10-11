@@ -8,17 +8,27 @@ import { LoadingButton } from "@mui/lab";
 import { Save as SaveIcon } from "@mui/icons-material";
 
 // REDUX
+import { useGetFinancialItemQuery } from "../slices/financialItemApiSlice";
 
 // HELPERS
-import { convertToPersianNumber, separateByThousands } from "../helper";
+import {
+  convertToPersianNumber,
+  separateByThousands,
+  removeSeparators,
+  convertToEnglishNumber,
+} from "../helper";
 
-function PayItemForm({ isLoading }) {
+// LIBRARIES
+import { toast } from "react-toastify";
+
+function UpdatePayItemForm({ id }) {
   // ACCESS REACT HOOK FORM CONTROL
   const {
     handleSubmit,
     formState: { errors },
     register,
     watch,
+    setValue,
   } = useForm();
 
   // DEBUGGING
@@ -29,7 +39,39 @@ function PayItemForm({ isLoading }) {
   // ACCESS FORM DATA
   const form_data = watch();
 
-  // FETCH DATA FUNCTION
+  const {
+    data,
+    isLoading: isgetItemLoading,
+    isFetching: isGetItemFetching,
+    isSuccess,
+    refetch,
+    error,
+  } = useGetFinancialItemQuery(id);
+
+  // FETCH MAIN DATA
+  useEffect(() => {
+    if (isSuccess) {
+      const item = data?.itemList[0];
+      Object.keys(item).forEach((key) => {
+        setValue(key, item[key]);
+      });
+    }
+  }, [isSuccess, data?.itemList, setValue]);
+
+  // HANDLE ERROR
+  useEffect(() => {
+    if (error && error.status !== "FETCH_ERROR") {
+      toast.error(error?.data?.message || error.error, {
+        autoClose: 2000,
+      });
+    }
+  }, [error]);
+
+  // CUSTOM ONCHANGE HANDLER
+  const customOnChange = (e) => {
+    let value = convertToEnglishNumber(removeSeparators(e.target.value));
+    setValue(e.target.name, value);
+  };
 
   useEffect(() => {
     console.log(form_data);
@@ -37,7 +79,7 @@ function PayItemForm({ isLoading }) {
 
   const content = (
     <>
-      {isLoading ? (
+      {isgetItemLoading || isGetItemFetching ? (
         <Box
           sx={{
             display: "flex",
@@ -132,6 +174,7 @@ function PayItemForm({ isLoading }) {
                   id="financialItemAmount"
                   required
                   {...register("financialItemAmount", {
+                    onChange: customOnChange,
                     required: "مبلغ اجباری است",
                     pattern: {
                       value: /^[۰-۹0-9]+$/,
@@ -335,4 +378,4 @@ function PayItemForm({ isLoading }) {
   );
   return content;
 }
-export default PayItemForm;
+export default UpdatePayItemForm;

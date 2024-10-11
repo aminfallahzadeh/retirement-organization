@@ -75,7 +75,6 @@ function RetiredSlipsGrid() {
   };
 
   useEffect(() => {
-    // refetch();
     if (isSuccess) {
       const data = slips.itemList.map((item, index) => ({
         id: item.payID,
@@ -90,7 +89,7 @@ function RetiredSlipsGrid() {
 
       setSlipsTableData(data);
     }
-  }, [isSuccess, refetch, slips?.itemList]);
+  }, [isSuccess, refetch, slips]);
 
   useEffect(() => {
     if (error) {
