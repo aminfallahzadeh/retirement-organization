@@ -14,6 +14,9 @@ import GroupSlipsForm from "../forms/GroupSlipsForm";
 import SlipsPreviewGrid from "../grids/SlipsPreviewGrid";
 import CompareSalaryReportForm from "../forms/CompareSalaryReportForm";
 import CompareSalaryReportGrid from "../grids/CompareSalaryReportGrid";
+import PersonnelStatementForm from "../forms/PersonnelStatementForm";
+import PersonnelPayGrid from "../grids/PersonnelPayGrid";
+import PayItemSearchGrid from "../grids/PayItemSearchGrid";
 
 function GroupSlipsScreen() {
   const navigate = useNavigate();
@@ -39,6 +42,31 @@ function GroupSlipsScreen() {
       <GroupSlipsForm />
       <SlipsPreviewGrid />
       <div>
+        <Accordion>
+          <AccordionSummary
+            id="panel-header"
+            aria-controls="panel-content"
+            expandIcon={<ArrowDropDownIcon />}
+          >
+            کسر و پرداخت
+          </AccordionSummary>
+          <AccordionDetails>
+            <PersonnelStatementForm />
+
+            <div className="flex-col flex-center">
+              <h4 className="title-secondary">جدول افراد</h4>
+            </div>
+
+            <PersonnelPayGrid />
+
+            <div className="flex-col flex-center u-margin-top-md">
+              <h4 className="title-secondary">جدول آیتم ها</h4>
+            </div>
+
+            <PayItemSearchGrid />
+          </AccordionDetails>
+        </Accordion>
+
         <Accordion>
           <AccordionSummary
             id="panel-header"

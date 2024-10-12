@@ -12,9 +12,9 @@ import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 // COMPONENTS
 import CompareSalaryReportForm from "../forms/CompareSalaryReportForm";
 import CompareSalaryReportGrid from "../grids/CompareSalaryReportGrid";
-import PersonnelStatementForm from "../forms/PersonnelStatementForm";
-import PersonnelPayGrid from "../grids/PersonnelPayGrid";
-import PayItemSearchGrid from "../grids/PayItemSearchGrid";
+// import PersonnelStatementForm from "../forms/PersonnelStatementForm";
+// import PersonnelPayGrid from "../grids/PersonnelPayGrid";
+// import PayItemSearchGrid from "../grids/PayItemSearchGrid";
 
 function SalaryScreen() {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ function SalaryScreen() {
       </div>
 
       <div>
-        <Accordion>
+        {/* <Accordion>
           <AccordionSummary
             id="panel-header"
             aria-controls="panel-content"
@@ -62,7 +62,7 @@ function SalaryScreen() {
 
             <PayItemSearchGrid />
           </AccordionDetails>
-        </Accordion>
+        </Accordion> */}
 
         <Accordion>
           <AccordionSummary
