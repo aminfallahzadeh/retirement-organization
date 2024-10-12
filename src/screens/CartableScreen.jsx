@@ -23,12 +23,10 @@ function CartableScreen() {
     isLoading,
     error: rolesError,
     isSuccess: isRolesSuccess,
-    refetch,
   } = useGetRoleQuery();
 
   // set selected role default to first role
   useEffect(() => {
-    refetch();
     if (isRolesSuccess) {
       dispatch(
         setSelectedRole({
@@ -43,7 +41,7 @@ function CartableScreen() {
       dispatch(setSelectedRole(null));
       setAllRoles([]);
     };
-  }, [isRolesSuccess, dispatch, roles, refetch]);
+  }, [isRolesSuccess, dispatch, roles]);
 
   useEffect(() => {
     if (rolesError) {
