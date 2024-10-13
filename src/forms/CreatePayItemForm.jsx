@@ -43,7 +43,7 @@ function CreatePayItemForm({ setIsInsertItemModalOpen }) {
   const personID = useSelector((state) => state.financialData.payPersonID);
 
   // ACCESS QUERIS
-  const { refetch } = useGetFinancialItems();
+  const { getFinancialItems } = useGetFinancialItems();
   const [insertItem, { isLoading: isItemInserting }] =
     useInsertFinancialItemMutation();
 
@@ -76,11 +76,11 @@ function CreatePayItemForm({ setIsInsertItemModalOpen }) {
         personID,
       }).unwrap();
       console.log(res);
-      refetch();
       setIsInsertItemModalOpen(false);
       toast.success(res.message, {
         autoClose: 2000,
       });
+      getFinancialItems(personID);
     } catch (error) {
       console.log(error);
       toast.error(error?.data?.message || error.error, {
@@ -238,7 +238,7 @@ function CreatePayItemForm({ setIsInsertItemModalOpen }) {
             <input
               type="text"
               className="inputBox__form--input"
-              value={payItemTypeName}
+              value={convertToPersianNumber(form_data.payItemTypeID) || ""}
               name="payItemTypeName"
               id="payItemTypeName"
               disabled
