@@ -1,9 +1,9 @@
 // react imports
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // redux improts
 import { setSelectedRole } from "../slices/roleDataSlice.js";
-import { useGetRoleQuery } from "../slices/requestApiSlice";
+import { useLazyGetRoleQuery } from "../slices/requestApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 // component imports
@@ -18,39 +18,36 @@ function CartableScreen() {
 
   const { selectedRole } = useSelector((state) => state.roleData);
 
-  const {
-    data: roles,
-    isLoading,
-    error: rolesError,
-    isSuccess: isRolesSuccess,
-  } = useGetRoleQuery();
+  // ACCESS ROLE QUERY
+  const [getRoles, { isLoading, isFetching }] = useLazyGetRoleQuery();
 
-  // set selected role default to first role
-  useEffect(() => {
-    if (isRolesSuccess) {
+  const fetchRoles = useCallback(async () => {
+    try {
+      const res = await getRoles().unwrap();
+      console.log(res);
       dispatch(
         setSelectedRole({
-          value: roles.itemList[0].url,
-          label: roles.itemList[0].itemName,
+          value: res?.itemList[0].url,
+          label: res?.itemList[0].itemName,
         })
       );
-      setAllRoles(roles.itemList);
+      setAllRoles(res?.itemList);
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error, {
+        autoClose: 2000,
+      });
     }
+  }, [dispatch, getRoles]);
+
+  useEffect(() => {
+    fetchRoles();
 
     return () => {
       dispatch(setSelectedRole(null));
       setAllRoles([]);
     };
-  }, [isRolesSuccess, dispatch, roles]);
-
-  useEffect(() => {
-    if (rolesError) {
-      console.log(rolesError);
-      toast.error(rolesError?.data?.message || rolesError.error, {
-        autoClose: 2000,
-      });
-    }
-  }, [rolesError]);
+  }, [fetchRoles, dispatch]);
 
   return (
     <section className="flex-col">
@@ -60,7 +57,9 @@ function CartableScreen() {
         </h4>
       </div>
 
-      {selectedRole && <RequestsGrid isLoading={isLoading} roles={allRoles} />}
+      {selectedRole && (
+        <RequestsGrid isLoading={isLoading || isFetching} roles={allRoles} />
+      )}
     </section>
   );
 }

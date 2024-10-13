@@ -122,6 +122,7 @@ export const requestApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetRoleQuery,
+  useLazyGetRoleQuery,
   useGetExpertQuery,
   useGetRequestQuery,
   useGetRequestTypeQuery,
