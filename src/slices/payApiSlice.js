@@ -30,6 +30,7 @@ export const payApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+
     getPay: builder.query({
       query: ({ payID }) => ({
         url: `${PAY_URL_HTTPS}/GetPay?payID=${payID}`,
@@ -49,6 +50,13 @@ export const payApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
+
+    removePayItem: builder.mutation({
+      query: ({ payItemID }) => ({
+        url: `${PAY_URL_HTTPS}/RemovePayItem?payItemID=${payItemID}`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -59,4 +67,5 @@ export const {
   useGetPayQuery,
   useIssuePayMutation,
   useInsertPayMutation,
+  useRemovePayItemMutation,
 } = payApiSlice;

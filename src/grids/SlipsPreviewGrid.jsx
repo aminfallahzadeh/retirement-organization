@@ -1,10 +1,10 @@
-// react imports
+// REACT IMPORTS
 import { useMemo, useState, useEffect } from "react";
 
-// redux imports
+// REDUX
 import { useSelector } from "react-redux";
 
-// mui imports
+// MUI
 import { IconButton } from "@mui/material";
 import { PaginationItem, Tooltip } from "@mui/material";
 import {
@@ -21,19 +21,20 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-// helper imports
+// HELPERS
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,
   separateByThousands,
 } from "../helper.js";
 
-// utils imports
+// UTILS
 import { defaultTableOptions } from "../utils.js";
 
-// components
+// COMPONENTS
 import SlipFormTemplate from "../components/SlipFormTemplate";
 import Modal from "../components/Modal";
+import EditPayItemsGrid from "./EditPayItemsGrid";
 
 function PersonnelStatementGrid() {
   // TRABLE STATES
@@ -41,13 +42,20 @@ function PersonnelStatementGrid() {
 
   // CONTROLL STATES
   const [showSlipModal, setShowSlipModal] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [payID, setPayID] = useState(null);
+  const [personID, setPersonID] = useState(null);
 
   const { slipsTableData } = useSelector((state) => state.slipsData);
 
   // HANDLERS
   const handleShowSlipModal = () => {
     setShowSlipModal(true);
+  };
+
+  const handleEditModalOpenChange = (id) => {
+    setIsEditModalOpen(true);
+    setPersonID(id);
   };
 
   const columns = useMemo(
@@ -144,7 +152,11 @@ function PersonnelStatementGrid() {
         size: 20,
         Cell: ({ row }) => (
           <Tooltip title="ویرایش فیش">
-            <IconButton color="success" sx={{ padding: "0" }}>
+            <IconButton
+              color="success"
+              sx={{ padding: "0" }}
+              onClick={() => handleEditModalOpenChange(row.original.personID)}
+            >
               <EditIcon />
             </IconButton>
           </Tooltip>
@@ -204,10 +216,25 @@ function PersonnelStatementGrid() {
   const content = (
     <>
       {showSlipModal && payID && (
-        <Modal key={payID} closeModal={() => setShowSlipModal(false)}>
+        <Modal closeModal={() => setShowSlipModal(false)}>
           <SlipFormTemplate payID={payID} />
         </Modal>
       )}
+
+      {isEditModalOpen && payID && (
+        <Modal
+          title="ویرایش آیتم ها"
+          closeModal={() => setIsEditModalOpen(false)}
+          key={payID}
+        >
+          <EditPayItemsGrid
+            payID={payID}
+            personID={personID}
+            setIsEditModalOpen={setIsEditModalOpen}
+          />
+        </Modal>
+      )}
+
       <MaterialReactTable table={table} />
     </>
   );

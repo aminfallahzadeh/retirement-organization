@@ -46,12 +46,18 @@ import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 function CreateHeirForm({ setShowCreateHeirModal, refetch }) {
   const birthCalenderRef = useRef(null);
   const endSubCalenderRef = useRef(null);
+  const changeStatusCalenderRef = useRef(null);
 
   // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
+  const [selectedChangeStatusDate, setSelectedChangeStatusDate] =
+    useState(null);
+
   const [selectedBaseFinishDate, setSelectedBaseFinishDate] = useState(null);
   const [isBaseFinishDateCalenderOpen, setIsBaseFinishDateCalenderOpen] =
+    useState(false);
+  const [isChangeStatusCalenderOpen, setIsChangeStatusCalenderOpen] =
     useState(false);
 
   // ACCESS REACT HOOK FORM CONTROL
@@ -194,6 +200,15 @@ function CreateHeirForm({ setShowCreateHeirModal, refetch }) {
     setIsBaseFinishDateCalenderOpen(false);
   };
 
+  const handleChangeStatusDateChange = (date) => {
+    setSelectedChangeStatusDate(date);
+    setIsChangeStatusCalenderOpen(false);
+  };
+
+  const handleChangeStatusOpenChange = (open) => {
+    setIsChangeStatusCalenderOpen(open);
+  };
+
   const handleBirthOpenChange = (open) => {
     setIsBirthCalenderOpen(open);
   };
@@ -204,9 +219,10 @@ function CreateHeirForm({ setShowCreateHeirModal, refetch }) {
 
   const onSubmit = async () => {
     try {
-      // Adjusting for timezone difference
+      //
       let personBirthDate;
       let personBaseFinishDate;
+      let pensionaryStartDate;
 
       if (selectedBirthDate) {
         personBirthDate = new Date(selectedBirthDate);
@@ -215,6 +231,16 @@ function CreateHeirForm({ setShowCreateHeirModal, refetch }) {
         );
       } else {
         personBirthDate = null;
+      }
+
+      if (selectedChangeStatusDate) {
+        pensionaryStartDate = new Date(selectedChangeStatusDate);
+        pensionaryStartDate.setMinutes(
+          pensionaryStartDate.getMinutes() -
+            pensionaryStartDate.getTimezoneOffset()
+        );
+      } else {
+        pensionaryStartDate = null;
       }
 
       if (selectedBaseFinishDate) {
@@ -263,6 +289,7 @@ function CreateHeirForm({ setShowCreateHeirModal, refetch }) {
           parseFloat(convertToEnglishNumber(form_data?.insuranceAmount)) || 0,
         ledgerCode: parseInt(convertToEnglishNumber(form_data.ledgerCode)) || 0,
         parentPersonID,
+        pensionaryStartDate,
       }).unwrap();
       setShowCreateHeirModal(false);
       refetch();
@@ -960,6 +987,26 @@ function CreateHeirForm({ setShowCreateHeirModal, refetch }) {
             {errors.pensionaryStatusID && (
               <span className="error-form"> نسبت اجباری است</span>
             )}
+          </div>
+
+          <div className="inputBox__form">
+            <InputDatePicker
+              value={selectedChangeStatusDate}
+              defaultValue={null}
+              onChange={handleChangeStatusDateChange}
+              onOpenChange={handleChangeStatusOpenChange}
+              format={"jYYYY/jMM/jDD"}
+              suffixIcon={<CalenderIcon color="action" />}
+              open={isChangeStatusCalenderOpen}
+              style={datePickerStyles}
+              wrapperStyle={datePickerWrapperStyles}
+              pickerProps={{
+                ref: changeStatusCalenderRef,
+              }}
+            />
+            <div className="inputBox__form--readOnly-label">
+              تاریخ تغییر وضعیت
+            </div>
           </div>
 
           <div className="inputBox__form">

@@ -47,6 +47,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
   const maritialCalenderRef = useRef(null);
   const startCalenderRef = useRef(null);
   const endCalenderRef = useRef(null);
+  const changeStatusCalenderRef = useRef(null);
 
   // DATE STATES
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
@@ -55,6 +56,12 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
     useState(null);
   const [selectedSelfEmployeeEndDate, setSelectedSelfEmployeeEndDate] =
     useState(null);
+  const [selectedChangeStatusDate, setSelectedChangeStatusDate] =
+    useState(null);
+  const [isChangeStatusCalenderOpen, setIsChangeStatusCalenderOpen] =
+    useState(false);
+
+  // CALENDER STATES
   const [isBirthCalenderOpen, setIsBirthCalenderOpen] = useState(false);
   const [isMritialCalenderOpen, setIsMritialCalenderOpen] = useState(false);
   const [isSelfEmployeeStartCalenderOpen, setIsSelfEmployeeStartCalenderOpen] =
@@ -191,12 +198,21 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
     setIsSelfEmployeeEndCalenderOpen(false);
   };
 
+  const handleChangeStatusDateChange = (date) => {
+    setSelectedChangeStatusDate(date);
+    setIsChangeStatusCalenderOpen(false);
+  };
+
   const handleBirthOpenChange = (open) => {
     setIsBirthCalenderOpen(open);
   };
 
   const handleMaritialOpenChange = (open) => {
     setIsMritialCalenderOpen(open);
+  };
+
+  const handleChangeStatusOpenChange = (open) => {
+    setIsChangeStatusCalenderOpen(open);
   };
 
   const handleSelfEmployeeStartOpenChange = (open) => {
@@ -214,6 +230,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
       let personMaritalDate;
       let selfEmployeeStartDate;
       let selfEmployeeEndDate;
+      let pensionaryStartDate;
 
       if (selectedBirthDate) {
         personBirthDate = new Date(selectedBirthDate);
@@ -222,6 +239,16 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
         );
       } else {
         personBirthDate = null;
+      }
+
+      if (selectedChangeStatusDate) {
+        pensionaryStartDate = new Date(selectedChangeStatusDate);
+        pensionaryStartDate.setMinutes(
+          pensionaryStartDate.getMinutes() -
+            pensionaryStartDate.getTimezoneOffset()
+        );
+      } else {
+        pensionaryStartDate = null;
       }
 
       if (selectedMritialDate) {
@@ -286,6 +313,7 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
         personMaritalDate,
         selfEmployeeStartDate,
         selfEmployeeEndDate,
+        pensionaryStartDate,
       }).unwrap();
       setShowCreateRelatedModal(false);
       refetch();
@@ -302,12 +330,19 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
 
   // FIX CLOSE CALENDER BUG
   useCloseCalender(
-    [birthCalenderRef, maritialCalenderRef, startCalenderRef, endCalenderRef],
+    [
+      birthCalenderRef,
+      maritialCalenderRef,
+      startCalenderRef,
+      endCalenderRef,
+      changeStatusCalenderRef,
+    ],
     [
       setIsBirthCalenderOpen,
       setIsMritialCalenderOpen,
       setIsSelfEmployeeStartCalenderOpen,
       setIsSelfEmployeeEndCalenderOpen,
+      setIsChangeStatusCalenderOpen,
     ]
   );
 
@@ -620,6 +655,26 @@ function CreateRelatedForm({ setShowCreateRelatedModal, refetch }) {
             {errors.pensionaryStatusID && (
               <span className="error-form">وضعیت اجباری است</span>
             )}
+          </div>
+
+          <div className="inputBox__form">
+            <InputDatePicker
+              value={selectedChangeStatusDate}
+              defaultValue={null}
+              onChange={handleChangeStatusDateChange}
+              onOpenChange={handleChangeStatusOpenChange}
+              format={"jYYYY/jMM/jDD"}
+              suffixIcon={<CalenderIcon color="action" />}
+              open={isChangeStatusCalenderOpen}
+              style={datePickerStyles}
+              wrapperStyle={datePickerWrapperStyles}
+              pickerProps={{
+                ref: changeStatusCalenderRef,
+              }}
+            />
+            <div className="inputBox__form--readOnly-label">
+              تاریخ تغییر وضعیت
+            </div>
           </div>
 
           <div className="inputBox__form">

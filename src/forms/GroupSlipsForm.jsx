@@ -1,8 +1,8 @@
-// react imports
+// REACT IMPORTS
 import { useState, useEffect, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 
-// redux imports
+// REDUX
 import { useDispatch } from "react-redux";
 import {
   useLazyExistPaySlipQuery,
@@ -12,20 +12,24 @@ import {
 } from "../slices/payApiSlice";
 import { setSlipsTableData } from "../slices/slipsDataSlice";
 
-// mui imports
+// MUI
 import { LoadingButton } from "@mui/lab";
+import { Box, CircularProgress } from "@mui/material";
 import {
   VisibilityOutlined as EyeIcon,
   ImportExportOutlined as ExportIcon,
   UploadOutlined as UploadIcon,
 } from "@mui/icons-material";
 
-// library imports
+// LIBRARIES
 import { toast } from "react-toastify";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
-// utils
+// COMPONENTS
+import Modal from "../components/Modal";
+
+// UTILS
 import { selectStyles, selectSettings } from "../utils/reactSelect";
 
 // DATA
@@ -56,8 +60,10 @@ function GroupSlipsForm() {
 
   // ACCESS QUERIES
   const [existPaySlip, { isLoading: isChecking }] = useLazyExistPaySlipQuery();
-  const [getPayList, { isLoading: isGettingPayList }] =
-    useLazyGetPayListQuery();
+  const [
+    getPayList,
+    { isLoading: isGettingPayList, isFetching: isFetchingPayList },
+  ] = useLazyGetPayListQuery();
 
   const searchParams = new URLSearchParams(location.search);
   const requestID = searchParams.get("requestID");
@@ -112,6 +118,7 @@ function GroupSlipsForm() {
         const mappedData = res.itemList.map((item, index) => ({
           id: item.payID,
           rowNum: index + 1,
+          personID: item.personID,
           payFirstName: item.payFirstName,
           payLastName: item.payLastName,
           accountNo: item.accountNo,
@@ -221,220 +228,239 @@ function GroupSlipsForm() {
   };
 
   const content = (
-    <section className="formContainer flex-col">
-      <form
-        method="POST"
-        className="flex-col"
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="grid grid--col-4">
-          <div className="inputBox__form">
-            <Controller
-              name="issueType"
-              control={control}
-              render={({ field: { onChange } }) => (
-                <Select
-                  closeMenuOnSelect={true}
-                  components={animatedComponents}
-                  options={issueTypeOptions}
-                  onChange={(val) => onChange(val ? val.value : null)}
-                  value={issueTypeOptions.find(
-                    (c) => c.value === form_data?.issueType
-                  )}
-                  isClearable={true}
-                  isDisabled={true}
-                  placeholder={
-                    <div className="react-select-placeholder">
-                      <span>*</span> نوع صدور
-                    </div>
-                  }
-                  noOptionsMessage={selectSettings.noOptionsMessage}
-                  loadingMessage={selectSettings.loadingMessage}
-                  styles={selectStyles}
-                />
-              )}
-            />
+    <>
+      {isGettingPayList || isFetchingPayList ? (
+        <Modal title={"در حال بارگیری"}>
+          <p className="paragraph-primary" style={{ textAlign: "center" }}>
+            لطفا منتظر بمانید...
+          </p>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "2rem 10rem",
+            }}
+          >
+            <CircularProgress color="primary" />
+          </Box>
+        </Modal>
+      ) : null}
+      <section className="formContainer flex-col">
+        <form
+          method="POST"
+          className="flex-col"
+          noValidate
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div className="grid grid--col-4">
+            <div className="inputBox__form">
+              <Controller
+                name="issueType"
+                control={control}
+                render={({ field: { onChange } }) => (
+                  <Select
+                    closeMenuOnSelect={true}
+                    components={animatedComponents}
+                    options={issueTypeOptions}
+                    onChange={(val) => onChange(val ? val.value : null)}
+                    value={issueTypeOptions.find(
+                      (c) => c.value === form_data?.issueType
+                    )}
+                    isClearable={true}
+                    isDisabled={true}
+                    placeholder={
+                      <div className="react-select-placeholder">
+                        <span>*</span> نوع صدور
+                      </div>
+                    }
+                    noOptionsMessage={selectSettings.noOptionsMessage}
+                    loadingMessage={selectSettings.loadingMessage}
+                    styles={selectStyles}
+                  />
+                )}
+              />
 
-            <label
-              className={
-                form_data?.issueType
-                  ? "inputBox__form--readOnly-label"
-                  : "inputBox__form--readOnly-label-hidden"
-              }
-            >
-              <span>*</span> نوع صدور
-            </label>
+              <label
+                className={
+                  form_data?.issueType
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                <span>*</span> نوع صدور
+              </label>
+            </div>
+
+            <div className="inputBox__form">
+              <Controller
+                name="payType"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    closeMenuOnSelect={true}
+                    components={animatedComponents}
+                    options={payTypeOptions}
+                    onChange={(val) => onChange(val ? val.value : null)}
+                    value={payTypeOptions.find((c) => c.value === value)}
+                    isClearable={true}
+                    placeholder={
+                      <div className="react-select-placeholder">
+                        <span>*</span> نوع فیش
+                      </div>
+                    }
+                    noOptionsMessage={selectSettings.noOptionsMessage}
+                    loadingMessage={selectSettings.loadingMessage}
+                    styles={selectStyles}
+                  />
+                )}
+              />
+
+              <label
+                className={
+                  form_data?.payType
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                <span>*</span> نوع فیش
+              </label>
+
+              {errors.payType && (
+                <span className="error-form">نوع فیش اجباری است</span>
+              )}
+            </div>
+
+            <div className="inputBox__form">
+              <Controller
+                name="currentYear"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    closeMenuOnSelect={true}
+                    components={animatedComponents}
+                    options={currentYearOptions}
+                    onChange={(val) => onChange(val ? val.value : null)}
+                    value={currentYearOptions.find((c) => c.value === value)}
+                    isClearable={true}
+                    placeholder={
+                      <div className="react-select-placeholder">
+                        <span>*</span> سال مالی
+                      </div>
+                    }
+                    noOptionsMessage={selectSettings.noOptionsMessage}
+                    loadingMessage={selectSettings.loadingMessage}
+                    styles={selectStyles}
+                  />
+                )}
+              />
+
+              <label
+                className={
+                  form_data?.currentYear
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                <span>*</span> سال مالی
+              </label>
+
+              {errors.currentYear && (
+                <span className="error-form">سال مالی اجباری است</span>
+              )}
+            </div>
+
+            <div className="inputBox__form">
+              <Controller
+                name="currentMonth"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    closeMenuOnSelect={true}
+                    components={animatedComponents}
+                    options={currentMonthOptions}
+                    isClearable={true}
+                    onChange={(val) => onChange(val ? val.value : null)}
+                    value={currentMonthOptions.find((c) => c.value === value)}
+                    placeholder={
+                      <div className="react-select-placeholder">
+                        <span>*</span> ماه
+                      </div>
+                    }
+                    noOptionsMessage={selectSettings.noOptionsMessage}
+                    loadingMessage={selectSettings.loadingMessage}
+                    styles={selectStyles}
+                  />
+                )}
+              />
+
+              <label
+                className={
+                  form_data?.currentMonth
+                    ? "inputBox__form--readOnly-label"
+                    : "inputBox__form--readOnly-label-hidden"
+                }
+              >
+                <span>*</span> ماه
+              </label>
+
+              {errors.currentMonth && (
+                <span className="error-form">ماه اجباری است</span>
+              )}
+            </div>
           </div>
-
-          <div className="inputBox__form">
-            <Controller
-              name="payType"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  closeMenuOnSelect={true}
-                  components={animatedComponents}
-                  options={payTypeOptions}
-                  onChange={(val) => onChange(val ? val.value : null)}
-                  value={payTypeOptions.find((c) => c.value === value)}
-                  isClearable={true}
-                  placeholder={
-                    <div className="react-select-placeholder">
-                      <span>*</span> نوع فیش
-                    </div>
-                  }
-                  noOptionsMessage={selectSettings.noOptionsMessage}
-                  loadingMessage={selectSettings.loadingMessage}
-                  styles={selectStyles}
-                />
-              )}
-            />
-
-            <label
-              className={
-                form_data?.payType
-                  ? "inputBox__form--readOnly-label"
-                  : "inputBox__form--readOnly-label-hidden"
-              }
-            >
-              <span>*</span> نوع فیش
-            </label>
-
-            {errors.payType && (
-              <span className="error-form">نوع فیش اجباری است</span>
+          <div style={{ marginRight: "auto" }} className="flex-row">
+            {isSlipExists === true && (
+              <LoadingButton
+                dir="ltr"
+                endIcon={<EyeIcon />}
+                loading={isChecking || isGettingPayList}
+                onClick={getPayListHandler}
+                variant="contained"
+                color="primary"
+                sx={{ fontFamily: "sahel" }}
+              >
+                <span>مشاهده</span>
+              </LoadingButton>
             )}
-          </div>
 
-          <div className="inputBox__form">
-            <Controller
-              name="currentYear"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  closeMenuOnSelect={true}
-                  components={animatedComponents}
-                  options={currentYearOptions}
-                  onChange={(val) => onChange(val ? val.value : null)}
-                  value={currentYearOptions.find((c) => c.value === value)}
-                  isClearable={true}
-                  placeholder={
-                    <div className="react-select-placeholder">
-                      <span>*</span> سال مالی
-                    </div>
-                  }
-                  noOptionsMessage={selectSettings.noOptionsMessage}
-                  loadingMessage={selectSettings.loadingMessage}
-                  styles={selectStyles}
-                />
-              )}
-            />
-
-            <label
-              className={
-                form_data?.currentYear
-                  ? "inputBox__form--readOnly-label"
-                  : "inputBox__form--readOnly-label-hidden"
-              }
-            >
-              <span>*</span> سال مالی
-            </label>
-
-            {errors.currentYear && (
-              <span className="error-form">سال مالی اجباری است</span>
+            {form_data.payType === "C" && (
+              <LoadingButton
+                dir="ltr"
+                variant="contained"
+                color="warning"
+                //  disabled={
+                //    uploadProgress > 0 || excelFile
+                //      ? true
+                //      : false || !data.fractionTypeID
+                //  }
+                sx={{ fontFamily: "sahel" }}
+                endIcon={<UploadIcon />}
+                //  loading={isJariLoading || isJariFetching}
+                //  onClick={handleExcelFileUpload}
+              >
+                <span>بارگزاری اکسل</span>
+              </LoadingButton>
             )}
-          </div>
-
-          <div className="inputBox__form">
-            <Controller
-              name="currentMonth"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  closeMenuOnSelect={true}
-                  components={animatedComponents}
-                  options={currentMonthOptions}
-                  isClearable={true}
-                  onChange={(val) => onChange(val ? val.value : null)}
-                  value={currentMonthOptions.find((c) => c.value === value)}
-                  placeholder={
-                    <div className="react-select-placeholder">
-                      <span>*</span> ماه
-                    </div>
-                  }
-                  noOptionsMessage={selectSettings.noOptionsMessage}
-                  loadingMessage={selectSettings.loadingMessage}
-                  styles={selectStyles}
-                />
-              )}
-            />
-
-            <label
-              className={
-                form_data?.currentMonth
-                  ? "inputBox__form--readOnly-label"
-                  : "inputBox__form--readOnly-label-hidden"
-              }
-            >
-              <span>*</span> ماه
-            </label>
-
-            {errors.currentMonth && (
-              <span className="error-form">ماه اجباری است</span>
-            )}
-          </div>
-        </div>
-        <div style={{ marginRight: "auto" }} className="flex-row">
-          {isSlipExists === true && (
             <LoadingButton
               dir="ltr"
-              endIcon={<EyeIcon />}
-              loading={isChecking || isGettingPayList}
-              onClick={getPayListHandler}
-              variant="contained"
-              color="primary"
-              sx={{ fontFamily: "sahel" }}
-            >
-              <span>مشاهده</span>
-            </LoadingButton>
-          )}
-
-          {form_data.payType === "C" && (
-            <LoadingButton
-              dir="ltr"
+              endIcon={<ExportIcon />}
+              type="submit"
+              loading={isChecking || isInserting || isIssuing}
+              onClick={handleSubmit}
               variant="contained"
               color="warning"
-              //  disabled={
-              //    uploadProgress > 0 || excelFile
-              //      ? true
-              //      : false || !data.fractionTypeID
-              //  }
               sx={{ fontFamily: "sahel" }}
-              endIcon={<UploadIcon />}
-              //  loading={isJariLoading || isJariFetching}
-              //  onClick={handleExcelFileUpload}
+              disabled={isSlipExists}
             >
-              <span>بارگزاری اکسل</span>
+              <span>صدور</span>
             </LoadingButton>
-          )}
-          <LoadingButton
-            dir="ltr"
-            endIcon={<ExportIcon />}
-            type="submit"
-            loading={isChecking || isInserting || isIssuing}
-            onClick={handleSubmit}
-            variant="contained"
-            color="warning"
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>صدور</span>
-          </LoadingButton>
-        </div>
-      </form>
-    </section>
+          </div>
+        </form>
+      </section>
+    </>
   );
 
   return content;
