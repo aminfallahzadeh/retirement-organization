@@ -51,6 +51,9 @@ function PayItemSearchGrid() {
   const [isRemoveItemModalOpen, setIsRemoveItemModalOpen] = useState(false);
   const [itemID, setItemID] = useState(null);
 
+  // STORE STATE
+  const { canAddNewItem } = useSelector((state) => state.financialData);
+
   // TABLE DATA
   const { financialTableData } = useSelector((state) => state.financialData);
 
@@ -180,7 +183,7 @@ function PayItemSearchGrid() {
             aria-label="refresh"
             color="success"
             onClick={handleInsertModalOpenChange}
-            disabled={financialTableData.length > 0 ? false : true}
+            disabled={!canAddNewItem}
           >
             <AddIcon fontSize="small" />
           </IconButton>

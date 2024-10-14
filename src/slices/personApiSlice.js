@@ -12,6 +12,7 @@ export const personApiSlice = apiSlice.injectEndpoints({
         personFirstName,
         personLastName,
         personNationalCode,
+        personnelID,
       }) => {
         let url = `${PERSON_URL_HTTPS}/GetPersons`;
 
@@ -20,6 +21,11 @@ export const personApiSlice = apiSlice.injectEndpoints({
         if (personID) {
           queryParams.push(`personID=${personID}`);
         }
+
+        if (personnelID) {
+          queryParams.push(`personnelID=${personnelID}`);
+        }
+
         if (personFirstName) {
           queryParams.push(`personFirstName=${personFirstName}`);
         }

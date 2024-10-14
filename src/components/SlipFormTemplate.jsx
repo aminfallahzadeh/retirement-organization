@@ -177,6 +177,7 @@ function SlipFormTemplate({ payID }) {
                     <th>کسور</th>
                     <th>مبلغ به ریال</th>
                     <th>مانده</th>
+                    <th>اصل وام</th>
                   </tr>
                 </thead>
 
@@ -190,7 +191,13 @@ function SlipFormTemplate({ payID }) {
                           separateByThousands(Math.abs(item.payItemAmount))
                         )}
                       </td>
-                      <td>{convertToPersianNumber(item.payItemBalance)}</td>
+                      <td>
+                        {convertToPersianNumber(item.remainedAmount) || "-"}
+                      </td>
+                      <td>
+                        {convertToPersianNumber(item.financialItemAmount) ||
+                          "-"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

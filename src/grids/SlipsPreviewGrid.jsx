@@ -13,6 +13,7 @@ import {
   FirstPage,
   LastPage,
   VisibilityOutlined as EyeIcon,
+  EditOutlined as EditIcon,
 } from "@mui/icons-material";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
@@ -131,6 +132,20 @@ function PersonnelStatementGrid() {
               onClick={handleShowSlipModal}
             >
               <EyeIcon />
+            </IconButton>
+          </Tooltip>
+        ),
+      },
+      {
+        accessorKey: "editSlip",
+        header: "ویرایش",
+        enableSorting: false,
+        enableColumnActions: false,
+        size: 20,
+        Cell: ({ row }) => (
+          <Tooltip title="ویرایش فیش">
+            <IconButton color="success" sx={{ padding: "0" }}>
+              <EditIcon />
             </IconButton>
           </Tooltip>
         ),

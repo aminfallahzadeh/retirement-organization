@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   financialTableData: [],
   payPersonID: null,
+  canAddNewItem: false,
 };
 
 const financialDataSlice = createSlice({
@@ -16,10 +17,14 @@ const financialDataSlice = createSlice({
     setPayPersonID: (state, action) => {
       state.payPersonID = action.payload;
     },
+
+    setCanAddNewItem: (state, action) => {
+      state.canAddNewItem = action.payload;
+    },
   },
 });
 
-export const { setFinancialTableData, setPayPersonID } =
+export const { setFinancialTableData, setPayPersonID, setCanAddNewItem } =
   financialDataSlice.actions;
 
 export default financialDataSlice.reducer;

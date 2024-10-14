@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import {
   setFinancialTableData,
   setPayPersonID,
+  setCanAddNewItem,
 } from "../slices/financialDataSlice.js";
 
 // HELPS
@@ -18,7 +19,6 @@ function useGetFinancialItems() {
   const getFinancialItems = async (personID) => {
     try {
       const res = await getItems(personID).unwrap();
-      console.log(res);
       const mappedData = res.itemList.map((item, index) => ({
         id: item.financialItemID,
         personID: item.personID,
@@ -28,6 +28,7 @@ function useGetFinancialItems() {
       }));
       dispatch(setFinancialTableData(mappedData));
       dispatch(setPayPersonID(personID));
+      dispatch(setCanAddNewItem(true));
     } catch (error) {
       console.log(error);
     }

@@ -33,18 +33,18 @@ function PersonnelStatementForm() {
     (!personnelObject.personFirstName &&
       !personnelObject.personLastName &&
       !personnelObject.personNationalCode &&
-      !personnelObject.personID);
+      !personnelObject.personnelID);
 
   // SEARCH HANDLER
   const handleSearchPersonnels = async () => {
     try {
-      const personID = personnelObject?.personID || "";
+      const personnelID = personnelObject?.personnelID || "";
       const personFirstName = personnelObject?.personFirstName || "";
       const personLastName = personnelObject?.personLastName || "";
       const personNationalCode = personnelObject?.personNationalCode || "";
 
       const searchRes = await searchPersons({
-        personID: convertToEnglishNumber(personID),
+        personnelID: convertToEnglishNumber(personnelID),
         personFirstName,
         personLastName,
         personNationalCode: convertToEnglishNumber(personNationalCode),
@@ -93,14 +93,14 @@ function PersonnelStatementForm() {
         <div className="inputBox__form">
           <input
             type="text"
-            id="personID"
+            id="personnelID"
             className="inputBox__form--input"
-            value={convertToPersianNumber(personnelObject?.personID)}
-            name="personID"
+            value={convertToPersianNumber(personnelObject?.personnelID)}
+            name="personnelID"
             onChange={hadnlePersonnelObjectChange}
             required
           />
-          <label htmlFor="personID" className="inputBox__form--label">
+          <label htmlFor="personnelID" className="inputBox__form--label">
             شماره کارمندی
           </label>
         </div>
