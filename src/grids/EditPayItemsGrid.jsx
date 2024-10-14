@@ -37,7 +37,7 @@ import { toast } from "react-toastify";
 
 // COMPONENTS
 import Modal from "../components/Modal";
-import CreatePayItemForm from "../forms/CreatePayItemForm.jsx";
+import InsertPayItemForm from "../forms/InsertPayItemForm.jsx";
 
 // HELPS
 import { convertToPersianNumber } from "../helper.js";
@@ -61,6 +61,7 @@ function EditPayItemGrid({ payID, setIsEditModalOpen }) {
     isLoading: isPayListLoading,
     isFetching: isPayListFetching,
     error: isPayListError,
+    refetch,
   } = useGetPayQuery({ payID });
 
   // FETCH PAY LIST
@@ -74,7 +75,15 @@ function EditPayItemGrid({ payID, setIsEditModalOpen }) {
       }));
       setTableData(mappedData);
     }
+
+    return () => {
+      setTableData([]);
+    };
   }, [isPayListSuccess, payList]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   // HANDLE ERRORS
   useEffect(() => {
@@ -212,8 +221,10 @@ function EditPayItemGrid({ payID, setIsEditModalOpen }) {
           title="افزودن آیتم"
           closeModal={() => setIsInsertItemModalOpen(false)}
         >
-          <CreatePayItemForm
+          <InsertPayItemForm
             setIsInsertItemModalOpen={setIsInsertItemModalOpen}
+            payID={payID}
+            refetch={refetch}
           />
         </Modal>
       )}

@@ -57,6 +57,14 @@ export const payApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
+
+    insertPayItem: builder.mutation({
+      query: (data) => ({
+        url: `${PAY_URL_HTTPS}/InsertPayItem`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -68,4 +76,5 @@ export const {
   useIssuePayMutation,
   useInsertPayMutation,
   useRemovePayItemMutation,
+  useInsertPayItemMutation,
 } = payApiSlice;

@@ -44,7 +44,6 @@ function PersonnelStatementGrid() {
   const [showSlipModal, setShowSlipModal] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [payID, setPayID] = useState(null);
-  const [personID, setPersonID] = useState(null);
 
   const { slipsTableData } = useSelector((state) => state.slipsData);
 
@@ -55,7 +54,7 @@ function PersonnelStatementGrid() {
 
   const handleEditModalOpenChange = (id) => {
     setIsEditModalOpen(true);
-    setPersonID(id);
+    setPayID(id);
   };
 
   const columns = useMemo(
@@ -155,7 +154,7 @@ function PersonnelStatementGrid() {
             <IconButton
               color="success"
               sx={{ padding: "0" }}
-              onClick={() => handleEditModalOpenChange(row.original.personID)}
+              onClick={() => handleEditModalOpenChange(row.original.id)}
             >
               <EditIcon />
             </IconButton>
@@ -229,7 +228,6 @@ function PersonnelStatementGrid() {
         >
           <EditPayItemsGrid
             payID={payID}
-            personID={personID}
             setIsEditModalOpen={setIsEditModalOpen}
           />
         </Modal>
