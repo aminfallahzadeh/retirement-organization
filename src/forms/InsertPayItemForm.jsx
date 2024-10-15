@@ -130,7 +130,7 @@ function InsertPayItemForm({ payID, setIsInsertItemModalOpen, refetch }) {
               isClearable={true}
               placeholder={
                 <div className="react-select-placeholder">
-                  <span>*</span> شناسه آیتم
+                  <span>*</span> شرح آیتم
                 </div>
               }
               noOptionsMessage={selectSettings.noOptionsMessage}
@@ -179,7 +179,7 @@ function InsertPayItemForm({ payID, setIsInsertItemModalOpen, refetch }) {
                   : "inputBox__form--readOnly-label-hidden"
               }
             >
-              <span>*</span> شناسه آیتم
+              <span>*</span> شرح آیتم
             </label>
           </div>
 
@@ -195,7 +195,7 @@ function InsertPayItemForm({ payID, setIsInsertItemModalOpen, refetch }) {
               required
             />
             <label className="inputBox__form--label" htmlFor="payItemTypeName">
-              <span>*</span> شرح آیتم
+              <span>*</span> شناسه آیتم
             </label>
           </div>
 

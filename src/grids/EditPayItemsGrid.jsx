@@ -69,8 +69,8 @@ function EditPayItemGrid({ payID, setIsEditModalOpen }) {
     if (isPayListSuccess) {
       const mappedData = payList.payItemList.map((item, index) => ({
         id: item.payItemID,
-        financialItemRowNum: index + 1,
-        payItemTypeID: item.payItemTypeID,
+        financialItemRowNum: convertToPersianNumber(index + 1),
+        payItemTypeID: convertToPersianNumber(item.payItemTypeID),
         payItemTypeName: item.payItemTypeName,
       }));
       setTableData(mappedData);
