@@ -89,7 +89,7 @@ function PersonnelStatementGrid() {
       },
       {
         accessorKey: "payCreditAmount",
-        header: "بستانکاری",
+        header: "مبلغ پرداختی",
         size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>
@@ -99,7 +99,7 @@ function PersonnelStatementGrid() {
       },
       {
         accessorKey: "payDebitAmount",
-        header: "بدهکاری",
+        header: "کسورات",
         size: 20,
         Cell: ({ renderedCellValue }) => (
           <div>
