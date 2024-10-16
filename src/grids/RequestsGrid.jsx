@@ -276,7 +276,7 @@ function RequestsGrid({ isLoading, roles }) {
     },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
-    state: { rowSelection, showColumnFilters: true },
+    state: { rowSelection },
   });
 
   const content = (
