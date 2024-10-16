@@ -7,9 +7,6 @@ import {
   setCanAddNewItem,
 } from "../slices/financialDataSlice.js";
 
-// HELPS
-import { convertToPersianNumber } from "../helper.js";
-
 function useGetFinancialItems() {
   const dispatch = useDispatch();
 
@@ -22,8 +19,8 @@ function useGetFinancialItems() {
       const mappedData = res.itemList.map((item, index) => ({
         id: item.financialItemID,
         personID: item.personID,
-        financialItemRowNum: convertToPersianNumber(index + 1),
-        payItemTypeID: convertToPersianNumber(item.payItemTypeID) || "-",
+        financialItemRowNum: index + 1,
+        payItemTypeID: item.payItemTypeID || "-",
         payItemTypeName: item.payItemTypeName || "-",
       }));
       dispatch(setFinancialTableData(mappedData));

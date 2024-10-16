@@ -10,6 +10,7 @@ export const defaultTableOptions = {
   enableStickyHeader: true,
   enableStickyFooter: true,
   enableDensityToggle: false,
+  enableFilterMatchHighlighting: false,
   muiTableBodyCellProps: {
     align: "center",
     sx: {

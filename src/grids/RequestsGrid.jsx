@@ -146,7 +146,7 @@ function RequestsGrid({ isLoading, roles }) {
           <Tooltip
             title={
               <>
-                <span>{row.original.requestTypeNameFa}</span> <br />{" "}
+                <span>{row.original.requestTypeNameFa}</span> <br />
                 <span>{row.original.personName}</span>
               </>
             }
@@ -205,7 +205,6 @@ function RequestsGrid({ isLoading, roles }) {
     ...defaultTableOptions,
     columns,
     data: requestTableData,
-    enableColumnFilters: true,
     renderTopToolbarCustomActions: () => (
       <Box
         sx={{

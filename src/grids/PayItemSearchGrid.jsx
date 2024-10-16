@@ -104,11 +104,17 @@ function PayItemSearchGrid() {
         size: 20,
         enableSorting: false,
         enableColumnActions: false,
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
       },
       {
         accessorKey: "payItemTypeID",
         header: "شناسه آیتم",
         size: 20,
+        Cell: ({ renderedCellValue }) => (
+          <span>{convertToPersianNumber(renderedCellValue)}</span>
+        ),
       },
       {
         accessorKey: "payItemTypeName",
