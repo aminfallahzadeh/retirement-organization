@@ -205,6 +205,7 @@ function RequestsGrid({ isLoading, roles }) {
     ...defaultTableOptions,
     columns,
     data: requestTableData,
+    enableColumnFilters: true,
     renderTopToolbarCustomActions: () => (
       <Box
         sx={{
@@ -275,7 +276,7 @@ function RequestsGrid({ isLoading, roles }) {
     },
     getRowId: (originalRow) => originalRow.id,
     onRowSelectionChange: setRowSelection,
-    state: { rowSelection },
+    state: { rowSelection, showColumnFilters: true },
   });
 
   const content = (
