@@ -1,6 +1,5 @@
 // react imports
 import ReactDOM from "react-dom/client";
-import React from "react";
 
 // rrd imports
 import {

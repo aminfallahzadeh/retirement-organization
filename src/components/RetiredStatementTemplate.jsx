@@ -202,7 +202,7 @@ function RetiredStatementTemplate({ statementID, setShowStatementModal }) {
 
             <div className="slip-container__header">
               <h5>بسمه تعالی</h5>
-              <h5>فیش حقوقی</h5>
+              <h5>حکم بازنشستگی</h5>
             </div>
 
             {/* MAIN INFO TABLE */}

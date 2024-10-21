@@ -22,6 +22,7 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
+// HADNLE AUTO REFRESH TOKEN
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   await mutex.waitForUnlock();
   let result = await baseQuery(args, api, extraOptions);

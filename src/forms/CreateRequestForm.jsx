@@ -1,32 +1,35 @@
-// react imports
+// REACT IMPORTS
 import { useState } from "react";
 
-// rrd imports
+// RRD
 import { useNavigate } from "react-router-dom";
 
-// redux imports
+// REDUX
 import { useInsertRequestByNationalCodeMutation } from "../slices/requestApiSlice";
 
-// mui imports
+// MUI
 import { LoadingButton } from "@mui/lab";
 import { ArrowUpwardOutlined as SendIcon } from "@mui/icons-material";
 
-// hooks
+// HOOKS
 import { useFetchRequestType } from "../hooks/useFetchLookUpData";
 
-// library imports
+// LIBRARIES
 import { toast } from "react-toastify";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
-// utils
+// DATA
+import { noNationalCodeRequestData } from "../data/noNationalCodeRequestData.js";
+
+// UTILS
 import {
   selectStyles,
   selectSettings,
   optionsGenerator,
 } from "../utils/reactSelect";
 
-// helpers
+// HELPERS
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper.js";
 
 function CreateRequestForm() {
@@ -72,10 +75,13 @@ function CreateRequestForm() {
 
   const handleInsertRequest = async () => {
     try {
+      const nationalCode = requestObject?.nationalCode
+        ? convertToEnglishNumber(requestObject.nationalCode)
+        : "-1";
       const insertRes = await insertRequest({
         ...requestObject,
         requestFrom: 1,
-        nationalCode: convertToEnglishNumber(requestObject.nationalCode),
+        nationalCode,
       }).unwrap();
       navigate("/retirement-organization/cartable");
       toast.success(insertRes.message, {
@@ -129,20 +135,22 @@ function CreateRequestForm() {
           </label>
         </div>
 
-        <div className="inputBox__form">
-          <input
-            type="text"
-            name="nationalCode"
-            id="nationalCode"
-            onChange={handleRequestObjectChange}
-            className="inputBox__form--input"
-            value={convertToPersianNumber(requestObject?.nationalCode) ?? ""}
-            required
-          />
-          <label htmlFor="nationalCode" className="inputBox__form--label">
-            <span>*</span> کد ملی
-          </label>
-        </div>
+        {!noNationalCodeRequestData.includes(requestObject?.requestTypeID) && (
+          <div className="inputBox__form">
+            <input
+              type="text"
+              name="nationalCode"
+              id="nationalCode"
+              onChange={handleRequestObjectChange}
+              className="inputBox__form--input"
+              value={convertToPersianNumber(requestObject?.nationalCode) ?? ""}
+              required
+            />
+            <label htmlFor="nationalCode" className="inputBox__form--label">
+              <span>*</span> کد ملی
+            </label>
+          </div>
+        )}
 
         <div className="inputBox__form col-span-4 row-span-3">
           <textarea

@@ -47,7 +47,10 @@ const store = configureStore({
     financialData: financialDataSliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    }).concat(apiSlice.middleware),
   devTools: true,
 });
 
