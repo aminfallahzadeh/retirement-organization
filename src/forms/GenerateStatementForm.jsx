@@ -1,35 +1,35 @@
-// react imports
+// REACT IMPORTS
 import { useState, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 
-// rrd imports
+// RRD
 import { useLocation } from "react-router-dom";
 
-// redux imports
+// REDUX
 import { useGenerateNewRetirementStatementMutation } from "../slices/retirementStatementApiSlice.js";
 
-// mui imports
+// MUI
 import { LoadingButton } from "@mui/lab";
 import {
   Save as SaveIcon,
   CalendarTodayOutlined as CalenderIcon,
 } from "@mui/icons-material";
 
-// hooks
+// HOOKS
 import { useFetchRetirementStatementTypes } from "../hooks/useFetchLookUpData";
 import { useCloseCalender } from "../hooks/useCloseCalender";
 
-// libary imports
+// LIBRARIES
 import { toast } from "react-toastify";
 import "jalaali-react-date-picker/lib/styles/index.css";
 import { InputDatePicker } from "jalaali-react-date-picker";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
-// helpers
+// HELPERS
 import { convertToPersianNumber, convertToEnglishNumber } from "../helper";
 
-// utils
+// UTILS
 import { selectSettings, optionsGenerator } from "../utils/reactSelect";
 import { datePickerStyles, datePickerWrapperStyles } from "../utils/datePicker";
 
@@ -94,7 +94,7 @@ function GenerateStatementForm({
   const statementTypeOptions = optionsGenerator(
     statementTypes,
     "retirementStatementTypeID",
-    "retirementStatementTypeName"
+    "retirementStatementTypeName",
   );
 
   // CHANGE HANDLERS
@@ -113,7 +113,7 @@ function GenerateStatementForm({
       const retirementStatementRunDate = new Date(selectedRunDate);
       retirementStatementRunDate.setMinutes(
         retirementStatementRunDate.getMinutes() -
-          retirementStatementRunDate.getTimezoneOffset()
+          retirementStatementRunDate.getTimezoneOffset(),
       );
       const generateRes = await generateNewRetirementStatement({
         ...form_data,
@@ -121,6 +121,7 @@ function GenerateStatementForm({
         personID,
         requestID,
         newAmount: convertToEnglishNumber(form_data?.newAmount) || 0,
+        newSup: convertToEnglishNumber(form_data?.newSup) || 0,
       }).unwrap();
       setShowGenerateStatementModal(false);
       toast.success(generateRes.message, {
@@ -182,7 +183,7 @@ function GenerateStatementForm({
                   options={statementTypeOptions}
                   onChange={(val) => onChange(val ? val.value : null)}
                   value={statementTypeOptions.find(
-                    (c) => c.value === form_data?.retirementStatementTypeID
+                    (c) => c.value === form_data?.retirementStatementTypeID,
                   )}
                   name="retirementStatementTypeID"
                   isClearable={true}
@@ -251,29 +252,53 @@ function GenerateStatementForm({
           </div>
 
           {baseSalaryOptions.includes(form_data?.retirementStatementTypeID) && (
-            <div className="inputBox__form">
-              {errors.newAmount && (
-                <span className="error-form">{errors.newAmount.message}</span>
-              )}
-              <input
-                type="text"
-                className="inputBox__form--input"
-                name="newAmount"
-                value={convertToPersianNumber(form_data?.newAmount) || ""}
-                id="newAmount"
-                required
-                {...register("newAmount", {
-                  required: "حقوق مبنا اجباری است",
-                  pattern: {
-                    value: /^[۰-۹0-9]+$/,
-                    message: "از اعداد استفاده کنید",
-                  },
-                })}
-              />
-              <label className="inputBox__form--label" htmlFor="newAmount">
-                <span>*</span> میزان افزایش حقوق مبنا
-              </label>
-            </div>
+            <>
+              {" "}
+              <div className="inputBox__form">
+                {errors.newAmount && (
+                  <span className="error-form">{errors.newAmount.message}</span>
+                )}
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  name="newAmount"
+                  value={convertToPersianNumber(form_data?.newAmount) || ""}
+                  id="newAmount"
+                  required
+                  {...register("newAmount", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "از اعداد استفاده کنید",
+                    },
+                  })}
+                />
+                <label className="inputBox__form--label" htmlFor="newAmount">
+                  میزان افزایش حقوق مبنا
+                </label>
+              </div>
+              <div className="inputBox__form">
+                {errors.newSup && (
+                  <span className="error-form">{errors.newSup.message}</span>
+                )}
+                <input
+                  type="text"
+                  className="inputBox__form--input"
+                  name="newSup"
+                  value={convertToPersianNumber(form_data?.newSup) || ""}
+                  id="newSup"
+                  required
+                  {...register("newAmount", {
+                    pattern: {
+                      value: /^[۰-۹0-9]+$/,
+                      message: "از اعداد استفاده کنید",
+                    },
+                  })}
+                />
+                <label className="inputBox__form--label" htmlFor="newSup">
+                  میزان افزایش حقوق تکمیلی
+                </label>
+              </div>
+            </>
           )}
 
           <div className="inputBox__form col-span-2 row-span-2">
