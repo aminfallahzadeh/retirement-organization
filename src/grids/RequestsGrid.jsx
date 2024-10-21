@@ -1,17 +1,17 @@
-// react imports
+// REACT IMPORTS
 import { useMemo, useEffect, useState } from "react";
 
-// rrd imports
+// RRD
 import { Link } from "react-router-dom";
 
-// redux imports
+// REDUX
 import { useSelector } from "react-redux";
 import { useGetRequestQuery } from "../slices/requestApiSlice";
 
-// components
+// COMPONENTS
 import RoleSelectionForm from "../forms/RoleSelectionForm";
 
-// mui imports
+// MUI
 import {
   Box,
   IconButton,
@@ -33,15 +33,15 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 
-// library imports
+// LIBRARIES
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-// utils imports
+// UTILS
 import { defaultTableOptions } from "../utils.js";
 
-// helpers
+// HELPERS
 import {
   convertToPersianDateFormatted,
   convertToPersianNumber,

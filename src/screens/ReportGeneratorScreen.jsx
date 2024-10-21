@@ -1,4 +1,4 @@
-// components
+// COMPONETNS
 import ReportGeneratorTableForm from "../forms/ReportGeneratorTableForm";
 
 function ReportGeneratorScreen() {

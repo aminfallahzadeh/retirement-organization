@@ -1,12 +1,12 @@
-// redux imports
+// REDUX
 import { setSelectedRole } from "../slices/roleDataSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-// library imports
+// LIBRARIES
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
-// utils
+// UTILS
 import { selectStyles, selectSettings } from "../utils/reactSelect";
 import { optionsGenerator } from "../utils/reactSelect";
 

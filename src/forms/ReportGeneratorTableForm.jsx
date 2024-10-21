@@ -1,7 +1,7 @@
-// react import
+// REACT IMPORTS
 import { useState, useEffect, useCallback } from "react";
 
-// redux import
+// REDUX
 import {
   setSelectIDs,
   setQueryCondi,
@@ -12,27 +12,27 @@ import {
   useLazyGetLookupValueQuery,
 } from "../slices/reportGeneratorsApiSlice";
 
-// hooks
+// HOOKS
 import { useFetchReportGeneratorTables } from "../hooks/useFetchLookUpData";
 
-// mui imports
+// MUI
 import { IconButton, Tooltip, Button } from "@mui/material";
 import {
   DeleteOutline as RemoveIcon,
   Add as AddIcon,
 } from "@mui/icons-material";
 
-// components
+// COMPONENTS
 import ConditionSelectionForm from "./ConditionSelectionForm";
 
-// library imports
+// LIBRARIES
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
-// helpers
+// HELPERS
 import { findById } from "../helper";
 
-// utils
+// UTILS
 import {
   selectStyles,
   selectSettings,
@@ -66,13 +66,14 @@ function ReportGeneratorTableForm() {
   const dispatch = useDispatch();
 
   const { queryCondi } = useSelector((state) => state.reportGeneratorData);
+  const { selectedRole } = useSelector((state) => state.roleData);
 
   // GET LOOK UP DATA
   const {
     reportGeneratorTables,
     reportGeneratorTablesIsLoading,
     reportGeneratorTablesIsFetching,
-  } = useFetchReportGeneratorTables();
+  } = useFetchReportGeneratorTables(selectedRole?.value);
 
   // SELECT OPTIONS
   const tableOptions = optionsGenerator(

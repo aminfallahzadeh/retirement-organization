@@ -5,7 +5,7 @@ const initialState = {
   selectedRequestData: [],
   allRequestTableData: [],
   selectedRequestAllRequests: [],
-  selectedRole: "",
+  selectedRole: null,
 };
 
 const roleDataSlice = createSlice({

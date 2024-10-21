@@ -309,7 +309,7 @@ const useFetchPersonnelStatementOffType = () => {
 };
 
 // REPORT GENERATOR TABLES LOOK UP LOGIC
-const useFetchReportGeneratorTables = () => {
+const useFetchReportGeneratorTables = (role) => {
   const [reportGeneratorTables, setReportGeneratorTables] = useState([]);
 
   // GET DATA
@@ -319,7 +319,7 @@ const useFetchReportGeneratorTables = () => {
     isLoading: reportGeneratorTablesIsLoading,
     isFetching: reportGeneratorTablesIsFetching,
     error: reportGeneratorTablesError,
-  } = useGetTablesQuery({});
+  } = useGetTablesQuery(role);
 
   // FETCH DATA
   useEffect(() => {

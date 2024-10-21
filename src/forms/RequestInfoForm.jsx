@@ -1,16 +1,16 @@
-// react imports
+// REACT IMPORTS
 import { useState, useEffect } from "react";
 
-// rrd imports
+// RRD
 import { useNavigate } from "react-router-dom";
 
-// redux imports
+// REDUX
 import {
   useGetRequestQuery,
   useSendRequestToNextStateMutation,
 } from "../slices/requestApiSlice";
 
-// mui imports
+// MUI
 import { Box, CircularProgress, Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -24,7 +24,7 @@ import { toast } from "react-toastify";
 import Modal from "../components/Modal";
 import ReturnRequestForm from "../forms/ReturnRequestForm";
 
-// helpers
+// HELPERS
 import {
   convertToPersianNumber,
   convertToPersianDateFormatted,

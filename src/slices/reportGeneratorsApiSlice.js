@@ -7,9 +7,18 @@ import { apiSlice } from "./apiSlice";
 export const reportGeneratorApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getTables: builder.query({
-      query: () => ({
-        url: `${REPORT_GENERATOR_HTTPS}/GetTables`,
-      }),
+      query: (role) => {
+        let url = "${REPORT_GENERATOR_HTTPS}/GetTables";
+
+        if (role) {
+          url += `?Role=${role}`;
+        }
+        // url: `${REPORT_GENERATOR_HTTPS}/GetTables?Role=${role}`,
+
+        return {
+          url,
+        };
+      },
     }),
 
     getCols: builder.query({

@@ -43,11 +43,11 @@ function CartableScreen() {
   useEffect(() => {
     fetchRoles();
 
-    return () => {
-      dispatch(setSelectedRole(null));
-      setAllRoles([]);
-    };
-  }, [fetchRoles, dispatch]);
+    // return () => {
+    //   dispatch(setSelectedRole(null));
+    //   setAllRoles([]);
+    // };
+  }, [fetchRoles]);
 
   return (
     <section className="flex-col">

@@ -1,21 +1,21 @@
 // react imports
 import { useState, useEffect } from "react";
 
-// rrd imports
+// RRD
 import { useNavigate } from "react-router-dom";
 
-// redux imports
+// REDUX
 import {
   useGetExpertQuery,
   useSendRequestToNextStateMutation,
 } from "../slices/requestApiSlice";
 
-// mui imports
+// MUI
 import { CircularProgress, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Done as DoneIcon } from "@mui/icons-material";
 
-// library imports
+// LIBRARIES
 import { toast } from "react-toastify";
 
 function ReturnRequestForm({ setShowModal, value }) {
@@ -104,63 +104,70 @@ function ReturnRequestForm({ setShowModal, value }) {
         </Box>
       ) : (
         <section className="formContainer flex-col">
-          <form method="POST" className="grid grid--col-1" noValidate>
-            <div className="inputBox__form">
-              <select
-                className="inputBox__form--input"
-                required
-                id="expertList"
-                onChange={handleSelectedExpertChange}
-                value={selectedExpert}
-                disabled={isSendLoading}
-              >
-                <option value=" " disabled>
-                  انتخاب کنید
-                </option>
-
-                {expertCombo?.map((expert) => (
-                  <option key={expert.userID} value={expert.userID}>
-                    {expert.firstName} {expert.lastName}
+          <form method="POST" className="flex-col" noValidate>
+            <div className="flex-col">
+              <div className="inputBox__form">
+                <select
+                  className="inputBox__form--input"
+                  required
+                  id="expertList"
+                  onChange={handleSelectedExpertChange}
+                  value={selectedExpert}
+                  disabled={isSendLoading}
+                  style={{ height: "40px", width: "180px" }}
+                >
+                  <option value=" " disabled>
+                    انتخاب کنید
                   </option>
-                ))}
-              </select>
 
-              <label className="inputBox__form--label" htmlFor="expertList">
-                لیست کارشناسان
-              </label>
+                  {expertCombo?.map((expert) => (
+                    <option key={expert.userID} value={expert.userID}>
+                      {expert.firstName} {expert.lastName}
+                    </option>
+                  ))}
+                </select>
+
+                <label className="inputBox__form--label" htmlFor="expertList">
+                  لیست کارشناسان
+                </label>
+              </div>
+
+              <div></div>
+
+              <div className="inputBox__form">
+                <textarea
+                  className="inputBox__form--input"
+                  required
+                  id="expertDescription"
+                  onChange={handleDescriptionChange}
+                  value={description}
+                  disabled={isSendLoading}
+                  style={{ overflow: "hidden", width: "400px" }}
+                />
+                <label
+                  className="inputBox__form--label"
+                  htmlFor="expertDescription"
+                >
+                  توضیحات
+                </label>
+              </div>
             </div>
 
-            <div className="inputBox__form row-span-2">
-              <textarea
-                className="inputBox__form--input"
-                required
-                id="expertDescription"
-                onChange={handleDescriptionChange}
-                value={description}
-                disabled={isSendLoading}
-                style={{ overflow: "hidden" }}
-              />
-              <label
-                className="inputBox__form--label"
-                htmlFor="expertDescription"
+            <div style={{ marginRight: "auto" }}>
+              <LoadingButton
+                dir="ltr"
+                loading={isLoading}
+                endIcon={<DoneIcon />}
+                onClick={handleReturnRequest}
+                disabled={selectedExpert === " " || isSendLoading}
+                variant="contained"
+                color="success"
+                sx={{ fontFamily: "sahel" }}
               >
-                توضیحات
-              </label>
+                <span>تایید</span>
+              </LoadingButton>
             </div>
           </form>
-
-          <LoadingButton
-            dir="ltr"
-            loading={isLoading}
-            endIcon={<DoneIcon />}
-            onClick={handleReturnRequest}
-            disabled={selectedExpert === " " || isSendLoading}
-            variant="contained"
-            color="success"
-            sx={{ fontFamily: "sahel" }}
-          >
-            <span>تایید</span>
-          </LoadingButton>
         </section>
       )}
     </>
