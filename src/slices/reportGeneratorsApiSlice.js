@@ -8,7 +8,7 @@ export const reportGeneratorApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getTables: builder.query({
       query: (role) => {
-        let url = "${REPORT_GENERATOR_HTTPS}/GetTables";
+        let url = `${REPORT_GENERATOR_HTTPS}/GetTables`;
 
         if (role) {
           url += `?Role=${role}`;
