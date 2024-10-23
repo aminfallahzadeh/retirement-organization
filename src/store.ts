@@ -5,7 +5,7 @@ import authSliceReducer from "@/slices/authSlice";
 import userPermissionsDataSliceReducer from "@/slices/userPermissionsDataSlice";
 import captchaSliceReducer from "@/slices/captchaSlice";
 import retiredStateSliceReducer from "@/slices/retiredStateSlice";
-import roleDataSliceReducer from "@/slices/roleDataSlice";
+import roleDataReducer from "@/slices/roleDataSlice";
 import itemsDataSliceReducer from "@/slices/itemsDataSlice";
 import groupItemsDataSliceReducer from "@/slices/groupItemsDataSlice";
 import userGroupsDataSliceReducer from "@/slices/userGroupsDataSlice";
@@ -26,6 +26,7 @@ const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authSliceReducer,
+    roleData: roleDataReducer,
     userPermissionsData: userPermissionsDataSliceReducer,
     captcha: captchaSliceReducer,
     retiredState: retiredStateSliceReducer,
@@ -33,7 +34,6 @@ const store = configureStore({
     groupItemsData: groupItemsDataSliceReducer,
     userGroupsData: userGroupsDataSliceReducer,
     groupsUserData: groupsUserDataSliceReducer,
-    roleData: roleDataSliceReducer,
     archiveData: archiveDataSliceReducer,
     heirData: heirDataSliceReducer,
     personData: personDataSliceReducer,

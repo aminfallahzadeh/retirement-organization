@@ -1,26 +1,28 @@
-// react imports
+// REACT IMPORTS
 import { useCallback, useEffect, useState } from "react";
 
-// redux improts
-import { setSelectedRole } from "@/slices/roleDataSlice.js";
-import { useLazyGetRoleQuery } from "@/slices/requestApiSlice";
-import { useDispatch, useSelector } from "react-redux";
-
 // TYPES
-import { useAppSelector } from "@/hooks/usePreTypesHooks";
-// import { RootState } from "@/store";
+import { ApiError } from "@/types/ApiErrorTypes";
 
-// component imports
+// REDUX
+import { setSelectedRole } from "@/slices/roleDataSlice";
+import { useLazyGetRoleQuery } from "@/slices/requestApiSlice";
+import { useDispatch } from "react-redux";
+
+// HOOKS
+import { useAppSelector } from "@/hooks/usePreTypesHooks";
+
+// COMPONENTS
 import RequestsGrid from "@/grids/RequestsGrid";
 
-// library imports
+// LIBRARIES
 import { toast } from "react-toastify";
 
 function CartableScreen() {
   const dispatch = useDispatch();
   const [allRoles, setAllRoles] = useState([]);
 
-  const { selectedRole } = useSelector((state: any) => state.roleData);
+  const { selectedRole } = useAppSelector((state) => state.roleData);
 
   // ACCESS ROLE QUERY
   const [getRoles, { isLoading, isFetching }] = useLazyGetRoleQuery();
@@ -28,7 +30,6 @@ function CartableScreen() {
   const fetchRoles = useCallback(async () => {
     try {
       const res = await getRoles().unwrap();
-      console.log(res);
       dispatch(
         setSelectedRole({
           value: res?.itemList[0].url,
@@ -36,9 +37,10 @@ function CartableScreen() {
         })
       );
       setAllRoles(res?.itemList);
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error, {
+    } catch (error) {
+      console.log(error);
+      const apiError = error as ApiError;
+      toast.error(apiError.data?.message || apiError.error, {
         autoClose: 2000,
       });
     }
@@ -46,11 +48,6 @@ function CartableScreen() {
 
   useEffect(() => {
     fetchRoles();
-
-    // return () => {
-    //   dispatch(setSelectedRole(null));
-    //   setAllRoles([]);
-    // };
   }, [fetchRoles]);
 
   return (

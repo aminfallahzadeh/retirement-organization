@@ -1,7 +1,7 @@
-// constant imports
+// CONSTANTS
 import { REQUEST_URL_HTTPS } from "../constants";
 
-// slice imports
+// SLICES
 import { apiSlice } from "./apiSlice";
 
 export const requestApiSlice = apiSlice.injectEndpoints({

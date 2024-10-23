@@ -1,10 +1,14 @@
 // REACT IMPORTS
 import { useState } from "react";
 
+// TYPES
+import { GridProps } from "@/types/GridTypes";
+
 // MUI
 import {
   MaterialReactTable,
   useMaterialReactTable,
+  MRT_RowSelectionState,
 } from "material-react-table";
 import { PaginationItem } from "@mui/material";
 import {
@@ -15,10 +19,10 @@ import {
 } from "@mui/icons-material";
 
 // UTILS
-import { defaultTableOptions } from "../utils.js";
+import { defaultTableOptions } from "@/utils.js";
 
 // HELPERS
-import { convertToPersianNumber } from "../helper.js";
+import { convertToPersianNumber } from "@/helper.js";
 
 function Grid({
   columns,
@@ -27,8 +31,8 @@ function Grid({
   bottomBarActions,
   scroll,
   props,
-}) {
-  const [rowSelection, setRowSelection] = useState({});
+}: GridProps) {
+  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
 
   const table = useMaterialReactTable({
     ...defaultTableOptions,
