@@ -1,9 +1,14 @@
 import { defineConfig } from "vite";
-// import { viteSingleFile } from "vite-plugin-singlefile";
+import { resolve } from "path";
 import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   base: "/retirement-organization/",
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "src"),
+    },
+  },
 });

@@ -6,32 +6,23 @@ import { Link } from "react-router-dom";
 
 // REDUX
 import { useSelector } from "react-redux";
-import { useGetRequestQuery } from "../slices/requestApiSlice";
+import { useGetRequestQuery } from "@/slices/requestApiSlice";
 
 // COMPONENTS
 import RoleSelectionForm from "../forms/RoleSelectionForm";
+import Grid from "../components/Grid.jsx";
 
 // MUI
-import {
-  Box,
-  IconButton,
-  Tooltip,
-  CircularProgress,
-  PaginationItem,
-} from "@mui/material";
+import { Box, IconButton, Tooltip, CircularProgress } from "@mui/material";
 import {
   Refresh as RefreshIcon,
-  ChevronLeft,
-  ChevronRight,
-  FirstPage,
-  LastPage,
   VisibilityOutlined as EyeIcon,
   TextSnippetOutlined as CheckIcon,
 } from "@mui/icons-material";
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from "material-react-table";
+// import {
+//   MaterialReactTable,
+//   useMaterialReactTable,
+// } from "material-react-table";
 
 // LIBRARIES
 import { toast } from "react-toastify";
@@ -39,7 +30,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 // UTILS
-import { defaultTableOptions } from "../utils.js";
+// import { defaultTableOptions } from "../utils.js";
 
 // HELPERS
 import {
@@ -48,7 +39,7 @@ import {
 } from "../helper.js";
 
 function RequestsGrid({ isLoading, roles }) {
-  const [rowSelection, setRowSelection] = useState({});
+  // const [rowSelection, setRowSelection] = useState({});
   const [requestTableData, setRequestTableData] = useState([]);
 
   const { selectedRole } = useSelector((state) => state.roleData);
@@ -94,6 +85,38 @@ function RequestsGrid({ isLoading, roles }) {
       });
     }
   }, [error]);
+
+  // FOR TESTING
+  const topBarActions = (
+    <Box
+      sx={{
+        display: "flex",
+        gap: "0.5rem",
+        alignItems: "center",
+        justifyContent: "flex-end",
+      }}
+    >
+      {isRequestsLoading || isRequestsFetching ? (
+        <IconButton aria-label="refresh" color="info" disabled>
+          <CircularProgress size={20} value={100} />
+        </IconButton>
+      ) : (
+        <Tooltip title="بروز رسانی">
+          <span>
+            <IconButton
+              aria-label="refresh"
+              color="info"
+              onClick={handleRefresh}
+            >
+              <RefreshIcon fontSize="small" />
+            </IconButton>
+          </span>
+        </Tooltip>
+      )}
+
+      <RoleSelectionForm isLoading={isLoading} roles={roles} />
+    </Box>
+  );
 
   const columns = useMemo(
     () => [
@@ -201,86 +224,86 @@ function RequestsGrid({ isLoading, roles }) {
     [Role]
   );
 
-  const table = useMaterialReactTable({
-    ...defaultTableOptions,
-    columns,
-    data: requestTableData,
-    renderTopToolbarCustomActions: () => (
-      <Box
-        sx={{
-          display: "flex",
-          gap: "0.5rem",
-          alignItems: "center",
-          justifyContent: "flex-end",
-        }}
-      >
-        {isRequestsFetching ? (
-          <IconButton aria-label="refresh" color="info" disabled>
-            <CircularProgress size={20} value={100} />
-          </IconButton>
-        ) : (
-          <Tooltip title="بروز رسانی">
-            <span>
-              <IconButton
-                aria-label="refresh"
-                color="info"
-                onClick={handleRefresh}
-              >
-                <RefreshIcon fontSize="small" />
-              </IconButton>
-            </span>
-          </Tooltip>
-        )}
+  // const table = useMaterialReactTable({
+  //   ...defaultTableOptions,
+  //   columns,
+  //   data: requestTableData,
+  //   renderTopToolbarCustomActions: () => (
+  //     <Box
+  //       sx={{
+  //         display: "flex",
+  //         gap: "0.5rem",
+  //         alignItems: "center",
+  //         justifyContent: "flex-end",
+  //       }}
+  //     >
+  //       {isRequestsFetching ? (
+  //         <IconButton aria-label="refresh" color="info" disabled>
+  //           <CircularProgress size={20} value={100} />
+  //         </IconButton>
+  //       ) : (
+  //         <Tooltip title="بروز رسانی">
+  //           <span>
+  //             <IconButton
+  //               aria-label="refresh"
+  //               color="info"
+  //               onClick={handleRefresh}
+  //             >
+  //               <RefreshIcon fontSize="small" />
+  //             </IconButton>
+  //           </span>
+  //         </Tooltip>
+  //       )}
 
-        <RoleSelectionForm isLoading={isLoading} roles={roles} />
-      </Box>
-    ),
-    muiTopToolbarProps: {
-      sx: {
-        overflow: "none",
-      },
-    },
-    muiTableHeadProps: {
-      sx: {
-        zIndex: 0,
-      },
-    },
-    muiTableBodyRowProps: ({ row }) => ({
-      //implement row selection click events manually
-      onClick: () =>
-        setRowSelection(() => ({
-          [row.id]: true,
-        })),
-      selected: rowSelection[row.id],
-      sx: {
-        cursor: "pointer",
-      },
-    }),
-    muiPaginationProps: {
-      size: "small",
-      shape: "rounded",
-      showRowsPerPage: false,
-      renderItem: (item) => (
-        <PaginationItem
-          {...item}
-          page={convertToPersianNumber(item.page)}
-          slots={{
-            previous: ChevronRight,
-            next: ChevronLeft,
-            first: LastPage,
-            last: FirstPage,
-          }}
-        />
-      ),
-    },
-    getRowId: (originalRow) => originalRow.id,
-    onRowSelectionChange: setRowSelection,
-    state: { rowSelection },
-  });
+  //       <RoleSelectionForm isLoading={isLoading} roles={roles} />
+  //     </Box>
+  //   ),
+  //   muiTopToolbarProps: {
+  //     sx: {
+  //       overflow: "none",
+  //     },
+  //   },
+  //   muiTableHeadProps: {
+  //     sx: {
+  //       zIndex: 0,
+  //     },
+  //   },
+  //   muiTableBodyRowProps: ({ row }) => ({
+  //     //implement row selection click events manually
+  //     onClick: () =>
+  //       setRowSelection(() => ({
+  //         [row.id]: true,
+  //       })),
+  //     selected: rowSelection[row.id],
+  //     sx: {
+  //       cursor: "pointer",
+  //     },
+  //   }),
+  //   muiPaginationProps: {
+  //     size: "small",
+  //     shape: "rounded",
+  //     showRowsPerPage: false,
+  //     renderItem: (item) => (
+  //       <PaginationItem
+  //         {...item}
+  //         page={convertToPersianNumber(item.page)}
+  //         slots={{
+  //           previous: ChevronRight,
+  //           next: ChevronLeft,
+  //           first: LastPage,
+  //           last: FirstPage,
+  //         }}
+  //       />
+  //     ),
+  //   },
+  //   getRowId: (originalRow) => originalRow.id,
+  //   onRowSelectionChange: setRowSelection,
+  //   state: { rowSelection },
+  // });
 
   const content = (
     <>
-      {isRequestsLoading || isRequestsFetching ? (
+      {isRequestsLoading ? (
         <div className="skeleton-lg">
           <Skeleton
             count={5}
@@ -291,7 +314,11 @@ function RequestsGrid({ isLoading, roles }) {
           />
         </div>
       ) : (
-        <MaterialReactTable table={table} />
+        <Grid
+          columns={columns}
+          data={requestTableData}
+          topBarActions={topBarActions}
+        />
       )}
     </>
   );

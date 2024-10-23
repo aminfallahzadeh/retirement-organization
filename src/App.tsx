@@ -1,14 +1,14 @@
 // REACT IMPORTS
 import { useState, useEffect } from "react";
-import useLogout from "./hooks/useLogout";
+import useLogout from "@/hooks/useLogout";
 
 // RRD
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 // REDUX
 import { useSelector, useDispatch } from "react-redux";
-import { setPersonTableData } from "./slices/personDataSlice";
-import { setUserID } from "./slices/authSlice";
+import { setPersonTableData } from "@/slices/personDataSlice";
+import { setUserID } from "@/slices/authSlice";
 
 // MUI
 import { ThemeProvider, createTheme } from "@mui/material/styles";

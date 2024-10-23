@@ -1,7 +1,7 @@
-// react imports
+// REACT IMPORTS
 import ReactDOM from "react-dom/client";
 
-// rrd imports
+// RRD
 import {
   createBrowserRouter,
   Route,
@@ -9,41 +9,42 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 
-// styles imports
-import "./assets/styles/main.scss";
+// STYLES
+import "@/assets/styles/main.scss";
 
-// redux imports
+// REDUX
 import { Provider } from "react-redux";
-import store from "./store";
+import store from "@/store";
+import { useAppStore } from "@/hooks/usePreTypesHooks";
 
-// component imports
-import App from "./App.jsx";
+// COMPONENTS
+import App from "@/App";
 
-// pages
-import Login from "./pages/Login.jsx";
-import Error from "./pages/Error";
+// PAGES
+import Login from "@/pages/Login.jsx";
+import Error from "@/pages/Error";
 
-// screens
-import CartableScreen from "./screens/CartableScreen";
-import CreateGroupScreen from "./screens/CreateGroupScreen";
-import CreateUserScreen from "./screens/CreateUserScreen";
-import RetiredScreen from "./screens/RetiredScreen";
-import GroupsScreen from "./screens/GroupsScreen";
-import UsersScreen from "./screens/UsersScreen";
-import RequestScreen from "./screens/RequestScreen";
-import BatchStatementsScreen from "./screens/BatchStatementsScreen";
-import PersonnelStatementsScreen from "./screens/PersonnelStatementsScreen";
-import ElectronicStatementScreen from "./screens/ElectronicStatementScreen";
-import CreateRequestScreen from "./screens/CreateRequestScreen";
-import PersonnelInfoScreen from "./screens/PersonnelInfoScreen";
-import FractionScreen from "./screens/FractionScreen.jsx";
-import ReportGeneratorScreen from "./screens/ReportGeneratorScreen.jsx";
-import BaseInfoScreen from "./screens/BaseInfoScreen.jsx";
-import BaseInfoScreen2 from "./screens/BaseInfoScreen2.jsx";
-import InsertAnnounceScreen from "./screens/InsertAnnounceScreen.jsx";
-import DashboardScreen from "./screens/DashboardScreen.jsx";
-import GroupSlipsScreen from "./screens/GroupSlipsScreen.jsx";
-import SalaryScreen from "./screens/SalaryScreen.jsx";
+// SCREENS
+import CartableScreen from "@/screens/CartableScreen";
+import CreateGroupScreen from "@/screens/CreateGroupScreen";
+import CreateUserScreen from "@/screens/CreateUserScreen";
+import RetiredScreen from "@/screens/RetiredScreen";
+import GroupsScreen from "@/screens/GroupsScreen";
+import UsersScreen from "@/screens/UsersScreen";
+import RequestScreen from "@/screens/RequestScreen";
+import BatchStatementsScreen from "@/screens/BatchStatementsScreen";
+import PersonnelStatementsScreen from "@/screens/PersonnelStatementsScreen";
+import ElectronicStatementScreen from "@/screens/ElectronicStatementScreen";
+import CreateRequestScreen from "@/screens/CreateRequestScreen";
+import PersonnelInfoScreen from "@/screens/PersonnelInfoScreen";
+import FractionScreen from "@/screens/FractionScreen.jsx";
+import ReportGeneratorScreen from "@/screens/ReportGeneratorScreen.jsx";
+import BaseInfoScreen from "@/screens/BaseInfoScreen.jsx";
+import BaseInfoScreen2 from "@/screens/BaseInfoScreen2.jsx";
+import InsertAnnounceScreen from "@/screens/InsertAnnounceScreen.jsx";
+import DashboardScreen from "@/screens/DashboardScreen.jsx";
+import GroupSlipsScreen from "@/screens/GroupSlipsScreen.jsx";
+import SalaryScreen from "@/screens/SalaryScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

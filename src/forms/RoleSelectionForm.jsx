@@ -1,5 +1,5 @@
 // REDUX
-import { setSelectedRole } from "../slices/roleDataSlice";
+import { setSelectedRole } from "@/slices/roleDataSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 // LIBRARIES

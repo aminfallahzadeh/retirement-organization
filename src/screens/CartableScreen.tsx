@@ -2,12 +2,16 @@
 import { useCallback, useEffect, useState } from "react";
 
 // redux improts
-import { setSelectedRole } from "../slices/roleDataSlice.js";
-import { useLazyGetRoleQuery } from "../slices/requestApiSlice";
+import { setSelectedRole } from "@/slices/roleDataSlice.js";
+import { useLazyGetRoleQuery } from "@/slices/requestApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 
+// TYPES
+import { useAppSelector } from "@/hooks/usePreTypesHooks";
+// import { RootState } from "@/store";
+
 // component imports
-import RequestsGrid from "../grids/RequestsGrid";
+import RequestsGrid from "@/grids/RequestsGrid";
 
 // library imports
 import { toast } from "react-toastify";
@@ -16,7 +20,7 @@ function CartableScreen() {
   const dispatch = useDispatch();
   const [allRoles, setAllRoles] = useState([]);
 
-  const { selectedRole } = useSelector((state) => state.roleData);
+  const { selectedRole } = useSelector((state: any) => state.roleData);
 
   // ACCESS ROLE QUERY
   const [getRoles, { isLoading, isFetching }] = useLazyGetRoleQuery();

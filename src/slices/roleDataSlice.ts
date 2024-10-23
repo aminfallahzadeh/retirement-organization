@@ -1,6 +1,14 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = {
+interface RoleDataState {
+  requestTableData: any[];
+  selectedRequestData: any[];
+  allRequestTableData: any[];
+  selectedRequestAllRequests: any[];
+  selectedRole: {} | null;
+}
+
+const initialState: RoleDataState = {
   requestTableData: [],
   selectedRequestData: [],
   allRequestTableData: [],
@@ -12,7 +20,7 @@ const roleDataSlice = createSlice({
   name: "requestsData",
   initialState,
   reducers: {
-    setSelectedRole: (state, action) => {
+    setSelectedRole: (state, action: PayloadAction<{} | null>) => {
       state.selectedRole = action.payload;
     },
   },
